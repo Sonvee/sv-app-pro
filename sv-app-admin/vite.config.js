@@ -40,11 +40,9 @@ export default defineConfig(({ mode }) => {
       // 运行是否自动打开浏览器
       open: true,
       proxy: {
-        /** 代理前缀为 /api 的请求  */
         [env.VITE_API_URL]: {
           changeOrigin: true,
-          // 接口地址
-          target: env.VITE_API_PROXY,
+          target: env.VITE_API_PROXY, // 接口基础地址
           rewrite: (path) => path.replace(new RegExp('^' + env.VITE_API_URL), '')
         }
       }
