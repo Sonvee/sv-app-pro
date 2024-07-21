@@ -1,0 +1,115 @@
+@import './common.scss';
+@import './element-dark.scss';
+@import './element.scss';
+@import './var.scss';
+@import '../fonts/font.scss';
+@import '../iconfont/sv-icons.css';
+@import '../iconfont/admin-icons.css';
+@import '../iconfont/uni-icons.css';
+@import '../iconfont/colorui-icons.css';
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  width: 100%;
+  height: 100%;
+}
+
+/* 解决 h1 标签在 webkit 内核浏览器中文字大小失效问题 */
+:-webkit-any(article, aside, nav, section) h1 {
+  font-size: 2em;
+}
+
+/* mask image */
+.mask-image {
+  padding-right: 50px;
+  mask-image: linear-gradient(90deg, #000000 0%, #000000 calc(100% - 50px), transparent);
+}
+
+/* scroll bar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--el-border-color-darker);
+  border-radius: 20px;
+}
+
+/* nprogress */
+#nprogress .bar {
+  background: var(--el-color-primary) !important;
+}
+#nprogress .spinner-icon {
+  border-top-color: var(--el-color-primary) !important;
+  border-left-color: var(--el-color-primary) !important;
+}
+#nprogress .peg {
+  box-shadow: 0 0 10px var(--el-color-primary), 0 0 5px var(--el-color-primary) !important;
+}
+
+// =============================
+
+/* 主内容区域 */
+.page-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.card {
+  padding: 10px;
+  background-color: var(--el-bg-color);
+  border: 1px solid var(--el-border-color-light);
+  border-radius: 6px;
+  box-shadow: 0 0 12px rgb(0 0 0 / 5%);
+}
+
+.table-filter {
+  margin-bottom: 10px;
+  padding-top: 18px;
+  padding-bottom: 0;
+}
+
+.table-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
+
+  .table-control {
+    margin-bottom: 10px;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .el-table {
+    flex: 1;
+
+    // 修复 safari 浏览器表格错位 https://github.com/HalseySpicy/Geeker-Admin/issues/83
+    table {
+      width: 100%;
+    }
+  }
+
+  .avatar-image {
+    width: 30px;
+    height: 30px;
+    display: block;
+    margin: 0 auto;
+  }
+}
+
+// 富文本
+.tox-tinymce-aux {
+  z-index: 99999 !important;
+}

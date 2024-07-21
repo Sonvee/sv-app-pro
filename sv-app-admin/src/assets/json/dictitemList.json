@@ -1,0 +1,277 @@
+{
+  "code": 200,
+  "data": [
+    {
+      "dict_type": "dict_sys_request_status",
+      "dictitem_id": "dict_sys_request_status_200",
+      "label": "200",
+      "value": "200",
+      "remark": "request:ok",
+      "sort": 0,
+      "action_style": "success",
+      "status": 1
+    },
+    {
+      "dict_type": "dict_sys_request_status",
+      "dictitem_id": "dict_sys_request_status_400",
+      "label": "400",
+      "value": "400",
+      "remark": "Bad Request",
+      "sort": 1,
+      "action_style": "danger",
+      "status": 1
+    },
+    {
+      "dict_type": "dict_sys_request_status",
+      "dictitem_id": "dict_sys_request_status_401",
+      "label": "401",
+      "value": "401",
+      "remark": "token过期或无效",
+      "sort": 2,
+      "action_style": "danger",
+      "status": 1
+    },
+    {
+      "dict_type": "dict_sys_request_status",
+      "dictitem_id": "dict_sys_request_status_403",
+      "label": "403",
+      "value": "403",
+      "remark": "403 Forbidden",
+      "sort": 3,
+      "action_style": "danger",
+      "status": 1
+    },
+    {
+      "dict_type": "dict_sys_request_status",
+      "dictitem_id": "dict_sys_request_status_404",
+      "label": "404",
+      "value": "404",
+      "remark": "404 Not Found",
+      "sort": 4,
+      "action_style": "danger",
+      "status": 1
+    },
+    {
+      "dict_type": "dict_sys_request_status",
+      "dictitem_id": "dict_sys_request_status_405",
+      "label": "405",
+      "value": "405",
+      "remark": "Method Not Allowed",
+      "sort": 5,
+      "action_style": "danger",
+      "status": 1
+    },
+    {
+      "dict_type": "dict_sys_request_status",
+      "dictitem_id": "dict_sys_request_status_429",
+      "label": "429",
+      "value": "429",
+      "remark": "Too Many Requests",
+      "sort": 6,
+      "action_style": "danger",
+      "status": 1
+    },
+    {
+      "dict_type": "dict_sys_request_status",
+      "dictitem_id": "dict_sys_request_status_500",
+      "label": "500",
+      "value": "500",
+      "remark": "服务器错误",
+      "sort": 7,
+      "action_style": "danger",
+      "status": 1
+    },
+    {
+      "dict_type": "dict_sys_request_status",
+      "dictitem_id": "dict_sys_request_status_503",
+      "label": "503",
+      "value": "503",
+      "remark": "服务不可用",
+      "sort": 8,
+      "action_style": "danger",
+      "status": 1
+    },
+    {
+      "dict_type": "dict_sys_status",
+      "dictitem_id": "dict_sys_status_0",
+      "label": "禁用",
+      "value": "0",
+      "remark": "禁用状态",
+      "sort": 0,
+      "action_style": "danger",
+      "status": 1
+    },
+    {
+      "dict_type": "dict_sys_status",
+      "dictitem_id": "dict_sys_status_1",
+      "label": "启用",
+      "value": "1",
+      "remark": "启用状态",
+      "sort": 1,
+      "action_style": "primary",
+      "status": 1
+    },
+    {
+      "dict_type": "dict_sys_user_status",
+      "dictitem_id": "dict_sys_user_status_0",
+      "label": "禁用",
+      "value": "0",
+      "remark": "",
+      "sort": 0,
+      "action_style": "danger",
+      "status": 1
+    },
+    {
+      "dict_type": "dict_sys_user_status",
+      "dictitem_id": "dict_sys_user_status_1",
+      "label": "启用",
+      "value": "1",
+      "remark": "",
+      "sort": 1,
+      "action_style": "primary",
+      "status": 1
+    },
+    {
+      "dict_type": "dict_sys_user_status",
+      "dictitem_id": "dict_sys_user_status_2",
+      "label": "已注销",
+      "value": "2",
+      "remark": "用户主动注销，已注销的账号username将被移除，自动解绑所有数据",
+      "sort": 2,
+      "action_style": "info",
+      "status": 1
+    },
+    {
+      "dict_type": "dict_sys_user_gender",
+      "dictitem_id": "dict_sys_user_gender_0",
+      "label": "未知",
+      "value": "0",
+      "remark": "",
+      "sort": 0,
+      "action_style": "",
+      "status": 1
+    },
+    {
+      "dict_type": "dict_sys_user_gender",
+      "dictitem_id": "dict_sys_user_gender_1",
+      "label": "男",
+      "value": "1",
+      "remark": "",
+      "sort": 1,
+      "action_style": "",
+      "status": 1
+    },
+    {
+      "dict_type": "dict_sys_user_gender",
+      "dictitem_id": "dict_sys_user_gender_2",
+      "label": "女",
+      "value": "2",
+      "remark": "",
+      "sort": 2,
+      "action_style": "",
+      "status": 1
+    },
+    {
+      "dict_type": "dict_sys_notice_type",
+      "dictitem_id": "dict_sys_notice_type_0",
+      "label": "通知",
+      "value": "0",
+      "remark": "",
+      "sort": 0,
+      "action_style": "info",
+      "status": 1
+    },
+    {
+      "dict_type": "dict_sys_notice_type",
+      "dictitem_id": "dict_sys_notice_type_1",
+      "label": "公告",
+      "value": "1",
+      "remark": "",
+      "sort": 1,
+      "action_style": "primary",
+      "status": 1
+    },
+    {
+      "dict_type": "dict_sys_login_type",
+      "dictitem_id": "dict_sys_login_type_account",
+      "label": "账号密码",
+      "value": "account",
+      "remark": "",
+      "sort": 0,
+      "status": 1,
+      "action_style": "primary"
+    },
+    {
+      "dict_type": "dict_sys_login_type",
+      "dictitem_id": "dict_sys_login_type_phone",
+      "label": "手机号登录",
+      "value": "phone",
+      "remark": "",
+      "sort": 1,
+      "status": 1,
+      "action_style": "primary"
+    },
+    {
+      "dict_type": "dict_sys_login_type",
+      "dictitem_id": "dict_sys_login_type_email",
+      "label": "邮箱登录",
+      "value": "email",
+      "remark": "",
+      "sort": 2,
+      "status": 1,
+      "action_style": "primary"
+    },
+    {
+      "dict_type": "dict_sys_login_type",
+      "dictitem_id": "dict_sys_login_type_sms",
+      "label": "短信验证码",
+      "value": "sms",
+      "remark": "",
+      "sort": 3,
+      "status": 1,
+      "action_style": "info"
+    },
+    {
+      "dict_type": "dict_sys_login_type",
+      "dictitem_id": "dict_sys_login_type_emailer",
+      "label": "邮箱验证码",
+      "value": "emailer",
+      "remark": "",
+      "sort": 4,
+      "status": 1,
+      "action_style": "info"
+    },
+    {
+      "dict_type": "dict_sys_login_type",
+      "dictitem_id": "dict_sys_login_type_wechat",
+      "label": "微信登录",
+      "value": "wechat",
+      "remark": "",
+      "sort": 5,
+      "status": 1,
+      "action_style": "success"
+    },
+    {
+      "dict_type": "dict_sys_login_type",
+      "dictitem_id": "dict_sys_login_type_register",
+      "label": "注册",
+      "value": "register",
+      "remark": "",
+      "sort": 6,
+      "status": 1,
+      "action_style": "warning"
+    },
+    {
+      "dict_type": "dict_sys_login_type",
+      "dictitem_id": "dict_sys_login_type_logout",
+      "label": "登出",
+      "value": "logout",
+      "remark": "",
+      "sort": 7,
+      "status": 1,
+      "action_style": "danger"
+    }
+  ],
+  "msg": "字典项获取成功",
+  "success": true
+}

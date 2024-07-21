@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink" width="350" height="80"
+  viewBox="0 0 350 80" fill="none">
+  <g clip-path="url(#clip-path-QNbq1MxjbSLqmkcOg8ItO)">
+    <g filter="url(#filter__MHKFemYmoGGYHDTRc_y0)">
+      <rect x="0" y="0" width="350" height="80" rx="10"
+        fill="url(#linear_fill__MHKFemYmoGGYHDTRc_y0_0)">
+      </rect>
+    </g>
+    <g opacity="0.05">
+      <path d="M162 -37.5L287.5 100.5L414.5 -37.5L360.5 -97L214 -97L162 -37.5Z"
+        stroke="rgba(255, 255, 255, 1)" stroke-width="1">
+      </path>
+      <path d="M162.5 -50.5L288 87.5L415 -50.5L361 -110L214.5 -110L162.5 -50.5Z"
+        stroke="rgba(255, 255, 255, 1)" stroke-width="1">
+      </path>
+      <path d="M163 -63.5L288.5 74.5L415.5 -63.5L361.5 -123L215 -123L163 -63.5Z"
+        stroke="rgba(255, 255, 255, 1)" stroke-width="1">
+      </path>
+      <path d="M163.5 -76.5L289 61.5L416 -76.5L362 -136L215.5 -136L163.5 -76.5Z"
+        stroke="rgba(255, 255, 255, 1)" stroke-width="1">
+      </path>
+      <path d="M164 -89.5L289.5 48.5L416.5 -89.5L362.5 -149L216 -149L164 -89.5Z"
+        stroke="rgba(255, 255, 255, 1)" stroke-width="1">
+      </path>
+      <path
+        d="M164.5 -102.5L290 35.5L417 -102.5L363 -162L216.5 -162L164.5 -102.5Z"
+        stroke="rgba(255, 255, 255, 1)" stroke-width="1">
+      </path>
+      <path
+        d="M165 -115.5L290.5 22.5L417.5 -115.5L363.5 -175L217 -175L165 -115.5Z"
+        stroke="rgba(255, 255, 255, 1)" stroke-width="1">
+      </path>
+    </g>
+    <g opacity="0.05">
+      <path d="M-167 137.5L-41.5 275.5L85.5 137.5L31.5 78L-115 78L-167 137.5Z"
+        stroke="rgba(255, 255, 255, 1)" stroke-width="1">
+      </path>
+      <path d="M-166.5 124.5L-41 262.5L86 124.5L32 65L-114.5 65L-166.5 124.5Z"
+        stroke="rgba(255, 255, 255, 1)" stroke-width="1">
+      </path>
+      <path d="M-166 111.5L-40.5 249.5L86.5 111.5L32.5 52L-114 52L-166 111.5Z"
+        stroke="rgba(255, 255, 255, 1)" stroke-width="1">
+      </path>
+      <path d="M-165.5 98.5L-40 236.5L87 98.5L33 39L-113.5 39L-165.5 98.5Z"
+        stroke="rgba(255, 255, 255, 1)" stroke-width="1">
+      </path>
+      <path d="M-165 85.5L-39.5 223.5L87.5 85.5L33.5 26L-113 26L-165 85.5Z"
+        stroke="rgba(255, 255, 255, 1)" stroke-width="1">
+      </path>
+      <path d="M-164.5 72.5L-39 210.5L88 72.5L34 13L-112.5 13L-164.5 72.5Z"
+        stroke="rgba(255, 255, 255, 1)" stroke-width="1">
+      </path>
+      <path d="M-164 59.5L-38.5 197.5L88.5 59.5L34.5 0L-112 0L-164 59.5Z"
+        stroke="rgba(255, 255, 255, 1)" stroke-width="1">
+      </path>
+    </g>
+  </g>
+  <defs>
+    <clipPath id="clip-path-QNbq1MxjbSLqmkcOg8ItO">
+      <path
+        d="M0 70L0 10C0 4.47715 4.47715 0 10 0L340 0C345.523 0 350 4.47715 350 10L350 70C350 75.5229 345.523 80 340 80L10 80C4.47715 80 0 75.5229 0 70Z"
+        fill="white" />
+    </clipPath>
+    <linearGradient id="linear_fill__MHKFemYmoGGYHDTRc_y0_0" x1="148.554"
+      y1="-9.6624" x2="193.30149999999998" y2="151.4904"
+      gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#4F5263" />
+      <stop offset="1" stop-color="#151621" />
+    </linearGradient>
+    <filter id="filter__MHKFemYmoGGYHDTRc_y0" x="-41" y="-32.5" width="432"
+      height="162" filterUnits="userSpaceOnUse"
+      color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="feFloodId__MHKFemYmoGGYHDTRc_y0" />
+      <feColorMatrix in="SourceAlpha" type="matrix"
+        values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"
+        result="hardAlpha__MHKFemYmoGGYHDTRc_y0" />
+      <feMorphology radius="15.5" operator="dilate" in="SourceAlpha" />
+      <feOffset dx="0" dy="8.5" />
+      <feGaussianBlur stdDeviation="12.75" />
+      <feComposite in2="hardAlpha__MHKFemYmoGGYHDTRc_y0" operator="out" />
+      <feColorMatrix type="matrix"
+        values="0 0 0 0 0.9490196078431372 0 0 0 0 0.9607843137254902 0 0 0 0 0.9137254901960784 0 0 0 1 0" />
+      <feBlend mode="normal" in2="feFloodId__MHKFemYmoGGYHDTRc_y0"
+        result="dropShadow_1__MHKFemYmoGGYHDTRc_y0" />
+      <feBlend mode="normal" in="SourceGraphic"
+        in2="dropShadow_1__MHKFemYmoGGYHDTRc_y0"
+        result="shape__MHKFemYmoGGYHDTRc_y0" />
+    </filter>
+  </defs>
+</svg>

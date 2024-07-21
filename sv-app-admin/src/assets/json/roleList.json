@@ -1,0 +1,84 @@
+{
+  "code": 200,
+  "data": [
+    {
+      "role_id": "admin",
+      "role_name": "超级管理员",
+      "permissions": [],
+      "remark": "超级管理员拥有所有权限",
+      "sort": 1
+    },
+    {
+      "role_id": "master",
+      "role_name": "管理员",
+      "permissions": [
+        "userList",
+        "roleList",
+        "permissionList",
+        "menuList",
+        "menuAdd",
+        "menuUpdate",
+        "menuDelete",
+        "menuBatchAdd",
+        "menuBatchDelete",
+        "dictList",
+        "dictAdd",
+        "dictUpdate",
+        "dictDelete",
+        "dictBatchAdd",
+        "dictBatchDelete",
+        "dictitemList",
+        "dictitemAdd",
+        "dictitemUpdate",
+        "dictitemDelete",
+        "dictitemBatchAdd",
+        "dictitemBatchDelete",
+        "logList",
+        "noticeList",
+        "noticeAdd",
+        "noticeUpdate",
+        "noticeDelete",
+        "noticeBatchAdd",
+        "noticeBatchDelete"
+      ],
+      "remark": "",
+      "sort": 2
+    },
+    {
+      "role_id": "test",
+      "role_name": "测试员",
+      "permissions": [
+        "userList",
+        "roleList",
+        "permissionList",
+        "menuList",
+        "dictList",
+        "dictitemList",
+        "noticeList",
+        "noticeAdd",
+        "noticeUpdate",
+        "noticeDelete",
+        "noticeBatchAdd",
+        "noticeBatchDelete"
+      ],
+      "remark": "",
+      "sort": 3
+    },
+    {
+      "role_id": "user",
+      "role_name": "普通用户",
+      "permissions": ["userUpdateSimple", "userDeactivate", "dictList", "dictitemList", "noticeList"],
+      "remark": "",
+      "sort": 4
+    },
+    {
+      "role_id": "visitor",
+      "role_name": "游客",
+      "permissions": ["userList", "roleList", "permissionList", "menuList", "dictList", "dictitemList", "logList", "noticeList"],
+      "remark": "",
+      "sort": 5
+    }
+  ],
+  "msg": "角色列表获取成功",
+  "success": true
+}

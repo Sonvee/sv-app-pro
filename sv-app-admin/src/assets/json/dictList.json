@@ -1,0 +1,49 @@
+{
+  "code": 200,
+  "data": [
+    {
+      "dict_id": "dict_sys_request_status",
+      "dict_name": "HTTP状态码",
+      "remark": "HTTP请求状态码",
+      "sort": 1,
+      "status": 1
+    },
+    {
+      "dict_id": "dict_sys_status",
+      "dict_name": "系统通用状态",
+      "remark": "0：停用；\n1：启用；",
+      "sort": 2,
+      "status": 1
+    },
+    {
+      "dict_id": "dict_sys_user_gender",
+      "dict_name": "用户性别",
+      "remark": "用户性别字典",
+      "sort": 3,
+      "status": 1
+    },
+    {
+      "dict_id": "dict_sys_user_status",
+      "dict_name": "用户状态",
+      "remark": "用户状态字典",
+      "sort": 4,
+      "status": 1
+    },
+    {
+      "dict_id": "dict_sys_notice_type",
+      "dict_name": "通告类型",
+      "remark": "0：通知；\n1：公告；",
+      "sort": 5,
+      "status": 1
+    },
+    {
+      "dict_id": "dict_sys_login_type",
+      "dict_name": "用户登录类型",
+      "remark": "account：账号密码；\nphone：手机号登录；\nemail：邮箱登录；\nsms：短信验证码；\nemailer：邮箱验证码；\nwechat：微信登录；\nregister：注册；\nlogout：登出；",
+      "sort": 6,
+      "status": 1
+    }
+  ],
+  "msg": "字典获取成功",
+  "success": true
+}

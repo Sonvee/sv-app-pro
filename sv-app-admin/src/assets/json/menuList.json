@@ -1,0 +1,547 @@
+{
+  "code": 200,
+  "data": [
+    {
+      "meta": {
+        "isSub": false,
+        "icon": "uni-icons-home-filled",
+        "title": "首页",
+        "isLink": "",
+        "isHide": false,
+        "isFull": false,
+        "isAffix": true,
+        "isKeepAlive": true,
+        "activeMenu": ""
+      },
+      "name": "home",
+      "path": "/home",
+      "component": "/home/index",
+      "sort": 0,
+      "permissions": [],
+      "parent_name": "",
+      "redirect": ""
+    },
+    {
+      "meta": {
+        "icon": "sv-icons-portal",
+        "title": "portal",
+        "isLink": "",
+        "activeMenu": "",
+        "isHide": false,
+        "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "portal",
+      "path": "/portal",
+      "component": "",
+      "parent_name": "",
+      "sort": 400,
+      "redirect": "/portal/pulish",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "icon": "admin-icons-error-app",
+        "title": "统一发布页",
+        "isLink": "",
+        "activeMenu": "",
+        "isHide": false,
+        "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "publish",
+      "path": "/portal/publish",
+      "component": "/portal/publish/index",
+      "parent_name": "portal",
+      "sort": 410,
+      "redirect": "",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "icon": "sv-icons-notice",
+        "title": "通知公告",
+        "isLink": "",
+        "activeMenu": "",
+        "isHide": false,
+        "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "notice",
+      "path": "/portal/notice",
+      "component": "/portal/notice/index",
+      "parent_name": "portal",
+      "sort": 420,
+      "redirect": "",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "isSub": false,
+        "icon": "admin-icons-fl-xitong",
+        "title": "系统管理",
+        "isLink": "",
+        "activeMenu": "",
+        "isHide": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "system",
+      "path": "/system",
+      "component": "",
+      "parent_name": "",
+      "sort": 500,
+      "redirect": "/system/user",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "isSub": false,
+        "icon": "admin-icons-manager-user",
+        "title": "用户管理",
+        "isLink": "",
+        "activeMenu": "",
+        "isHide": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "user",
+      "path": "/system/user",
+      "component": "/system/user/index",
+      "parent_name": "system",
+      "sort": 510,
+      "redirect": "",
+      "permissions": ["userList"]
+    },
+    {
+      "meta": {
+        "isSub": false,
+        "icon": "admin-icons-manager-role",
+        "title": "角色管理",
+        "isLink": "",
+        "activeMenu": "",
+        "isHide": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "role",
+      "path": "/system/role",
+      "component": "/system/role/index",
+      "parent_name": "system",
+      "sort": 520,
+      "redirect": "",
+      "permissions": ["roleList"]
+    },
+    {
+      "meta": {
+        "isSub": false,
+        "icon": "admin-icons-manager-permission",
+        "title": "权限管理",
+        "isLink": "",
+        "activeMenu": "",
+        "isHide": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "permission",
+      "path": "/system/permission",
+      "component": "/system/permission/index",
+      "parent_name": "system",
+      "sort": 530,
+      "redirect": "",
+      "permissions": ["permissionList"]
+    },
+    {
+      "meta": {
+        "isSub": false,
+        "icon": "admin-icons-manager-menu",
+        "title": "菜单管理",
+        "isLink": "",
+        "isHide": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true,
+        "activeMenu": ""
+      },
+      "name": "menu",
+      "path": "/system/menu",
+      "component": "/system/menu/index",
+      "parent_name": "system",
+      "sort": 540,
+      "permissions": [],
+      "redirect": ""
+    },
+    {
+      "meta": {
+        "isSub": false,
+        "icon": "admin-icons-help",
+        "title": "字典管理",
+        "isLink": "",
+        "activeMenu": "",
+        "isHide": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "dict",
+      "path": "/system/dict",
+      "component": "/system/dict/index",
+      "parent_name": "system",
+      "sort": 550,
+      "redirect": "",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "isSub": true,
+        "icon": "admin-icons-help",
+        "title": "字典项",
+        "isLink": "",
+        "activeMenu": "",
+        "isHide": true,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "dictitem",
+      "path": "/system/dict/dictitem/:id",
+      "component": "/system/dict/dictitem/index",
+      "parent_name": "dict",
+      "sort": 551,
+      "redirect": "",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "isSub": false,
+        "icon": "admin-icons-doc",
+        "title": "日志管理",
+        "isLink": "",
+        "activeMenu": "",
+        "isHide": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": false
+      },
+      "name": "logger",
+      "path": "/system/logger",
+      "component": "",
+      "parent_name": "system",
+      "sort": 560,
+      "redirect": "/system/logger/loginlog",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "icon": "admin-icons-doc",
+        "title": "登录日志",
+        "isLink": "",
+        "activeMenu": "",
+        "isHide": false,
+        "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": false
+      },
+      "name": "loginlog",
+      "path": "/system/logger/loginlog",
+      "component": "/system/logger/loginlog/index",
+      "parent_name": "logger",
+      "sort": 561,
+      "redirect": "",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "icon": "admin-icons-doc",
+        "title": "操作日志",
+        "isLink": "",
+        "activeMenu": "",
+        "isHide": false,
+        "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": false
+      },
+      "name": "operationlog",
+      "path": "/system/logger/operationlog",
+      "component": "/system/logger/operationlog/index",
+      "parent_name": "logger",
+      "sort": 562,
+      "redirect": "",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "icon": "admin-icons-dashboard",
+        "title": "系统监控",
+        "isLink": "",
+        "activeMenu": "",
+        "isHide": false,
+        "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "monitor",
+      "path": "/monitor",
+      "component": "",
+      "parent_name": "",
+      "sort": 700,
+      "redirect": "/monitor/statistics",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "icon": "admin-icons-tongji",
+        "title": "统计管理",
+        "isLink": "",
+        "activeMenu": "",
+        "isHide": false,
+        "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "statistics",
+      "path": "/monitor/statistics",
+      "component": "/monitor/statistics/index",
+      "parent_name": "monitor",
+      "sort": 710,
+      "redirect": "",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "icon": "admin-icons-qudaofenxi",
+        "title": "系统分析",
+        "isLink": "",
+        "activeMenu": "",
+        "isHide": false,
+        "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "analysis",
+      "path": "/monitor/analysis",
+      "component": "/monitor/analysis/index",
+      "parent_name": "monitor",
+      "sort": 720,
+      "redirect": "",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "icon": "admin-icons-eco",
+        "title": "缓存监控",
+        "isLink": "",
+        "activeMenu": "",
+        "isHide": false,
+        "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "cache",
+      "path": "/monitor/cache",
+      "component": "",
+      "parent_name": "monitor",
+      "sort": 730,
+      "redirect": "/monitor/cache/redis",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "icon": "sv-icons-redis",
+        "title": "Redis缓存",
+        "isLink": "",
+        "activeMenu": "",
+        "isHide": false,
+        "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "redis",
+      "path": "/monitor/cache/redis",
+      "component": "/monitor/cache/redis/index",
+      "parent_name": "cache",
+      "sort": 731,
+      "redirect": "",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "icon": "sv-icons-storage",
+        "title": "本地缓存",
+        "isLink": "",
+        "activeMenu": "",
+        "isHide": false,
+        "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "local",
+      "path": "/monitor/cache/local",
+      "component": "/monitor/cache/local/index",
+      "parent_name": "cache",
+      "sort": 732,
+      "redirect": "",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "icon": "sv-icons-tool",
+        "title": "系统工具",
+        "isLink": "",
+        "activeMenu": "",
+        "isHide": false,
+        "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "tools",
+      "path": "/tools",
+      "component": "",
+      "parent_name": "",
+      "sort": 800,
+      "redirect": "/tools/iconpage",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "icon": "admin-icons-icon",
+        "title": "系统图标",
+        "isLink": "",
+        "activeMenu": "",
+        "isHide": false,
+        "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "iconpage",
+      "path": "/tools/iconpage",
+      "component": "/tools/iconpage/index",
+      "parent_name": "tools",
+      "sort": 810,
+      "redirect": "",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "icon": "sv-icons-word",
+        "title": "接口文档",
+        "isLink": "",
+        "activeMenu": "",
+        "isHide": false,
+        "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "apidoc",
+      "path": "/tools/apidoc",
+      "component": "/tools/apidoc/index",
+      "parent_name": "tools",
+      "sort": 820,
+      "redirect": "",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "isSub": false,
+        "icon": "cuIcon-link",
+        "title": "友情链接",
+        "isLink": "",
+        "activeMenu": "",
+        "isHide": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "link",
+      "path": "/link",
+      "component": "",
+      "parent_name": "",
+      "sort": 1000,
+      "redirect": "",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "icon": "sv-icons-uni-app-square",
+        "title": "uniapp官网",
+        "isLink": "https://uniapp.dcloud.net.cn/",
+        "activeMenu": "",
+        "isHide": false,
+        "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "uniapp",
+      "path": "/link/uniapp",
+      "component": "",
+      "parent_name": "link",
+      "sort": 1001,
+      "redirect": "",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "icon": "sv-icons-wechat",
+        "title": "微信公众平台",
+        "isLink": "https://mp.weixin.qq.com/",
+        "activeMenu": "",
+        "isHide": false,
+        "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "wxmp",
+      "path": "/link/wxmp",
+      "component": "",
+      "parent_name": "link",
+      "sort": 1002,
+      "redirect": "",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "icon": "sv-icons-vue",
+        "title": "vue",
+        "isLink": "https://cn.vuejs.org/",
+        "activeMenu": "",
+        "isHide": false,
+        "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "vue",
+      "path": "/link/vue",
+      "component": "",
+      "parent_name": "link",
+      "sort": 1003,
+      "redirect": "",
+      "permissions": []
+    }
+  ],
+  "msg": "菜单获取成功",
+  "success": true
+}

@@ -1,0 +1,51 @@
+/* 通用 */
+:root {
+  --primary-color: #409eff;
+  --success-color: #67C23A;
+  --warning-color: #E6A23C;
+  --danger-color: #F56C6C;
+  --error-color: #d83b01;
+  --info-color: #909399;
+}
+
+/* light主题 */
+:root[data-theme='light'] {
+  --bg-color: #f8f8f8;
+
+  --text-color: #141414;
+  --text-hl-color: #000000;
+  --text-sub-color: #414141;
+
+  --border-color: #414243;
+  --border-hl-color: #363637;
+
+  --shadow-color: #dedede;
+  --shadow-color-reverse: #32323288;
+
+  --card-color: #ffffff;
+
+  --popup-color: #f2f2f2;
+
+  --hover-color: #ecf5ff;
+}
+
+/* dark主题 */
+:root[data-theme='dark'] {
+  --bg-color: #141414;
+
+  --text-color: #f8f8f8;
+  --text-hl-color: #ffffff;
+  --text-sub-color: #8f8f8f;
+
+  --border-color: #58585B;
+  --border-hl-color: #636466;
+
+  --shadow-color: #323232;
+  --shadow-color-reverse: #dedede88;
+
+  --card-color: #2f2f2f;
+
+  --popup-color: #262626;
+
+  --hover-color: #243343;
+}

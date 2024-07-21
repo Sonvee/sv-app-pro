@@ -1,0 +1,122 @@
+/* 设置 notification、message 层级在 loading 之上 */
+.el-message,
+.el-notification {
+  z-index: 2070 !important;
+}
+
+/* el-alert */
+.el-alert {
+  border: 1px solid;
+}
+
+/* 当前页面最大化 css */
+.main-maximize {
+  .aside-split,
+  .el-aside,
+  .el-header,
+  .el-footer,
+  .tabs-box {
+    display: none !important;
+  }
+}
+
+/* el-table 组件大小 */
+.el-table--small {
+  .el-table__header th {
+    height: 40px !important;
+    font-size: 14px !important;
+  }
+  .el-table__row {
+    height: 40px !important;
+    font-size: 13px !important;
+  }
+}
+.el-table--large {
+  .el-table__header th {
+    height: 50px !important;
+    font-size: 16px !important;
+  }
+  .el-table__row {
+    height: 50px !important;
+    font-size: 15px !important;
+  }
+}
+
+/* el-drawer */
+.el-drawer {
+  .el-drawer__header {
+    padding: 16px 20px;
+    margin-bottom: 0;
+    border-bottom: 1px solid var(--el-border-color-lighter);
+    span {
+      font-size: 17px;
+      line-height: 17px;
+      color: var(--el-text-color-primary) !important;
+    }
+  }
+  .el-drawer__footer {
+    border-top: 1px solid var(--el-border-color-lighter);
+  }
+
+  // select 样式
+  .el-select {
+    width: 100%;
+  }
+
+  // drawer-form 中存在两列 form-item 样式
+  .drawer-multiColumn-form {
+    display: flex;
+    flex-wrap: wrap;
+    .el-form-item {
+      width: 47%;
+      &:nth-child(2n-1) {
+        margin-right: 5%;
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1400px) {
+  .sv-el-drawer {
+    width: 40% !important;
+  }
+}
+
+@media screen and (max-width: 1400px) {
+  .sv-el-drawer {
+    width: 50% !important;
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .sv-el-drawer {
+    width: 60% !important;
+  }
+}
+
+@media screen and (max-width: 1000px) {
+  .sv-el-drawer {
+    width: 70% !important;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .sv-el-drawer {
+    width: 100% !important;
+  }
+}
+
+/* el-dialog */
+.el-dialog {
+  .el-dialog__header {
+    border-bottom: 1px solid var(--el-border-color-lighter);
+  }
+
+  .el-dialog__body {
+    padding: 16px 0;
+  }
+
+  .el-dialog__headerbtn {
+    top: 6px;
+  }
+}

@@ -1,0 +1,58 @@
+@import './common.scss';
+@import './theme.css';
+@import './var.scss';
+@import './animista.scss';
+@import './sv-amination.scss';
+@import './colorui-animation.css';
+@import './sv-ui.scss';
+@import './uv-ui.scss';
+@import './uni-ui.scss';
+@import '../iconfont/sv-icons.css';
+@import '../iconfont/uni-icons.css';
+@import '../iconfont/admin-icons.css';
+@import '../iconfont/colorui-icons.css';
+
+/* #ifndef MP-WEIXIN */
+* {
+	padding: 0;
+	margin: 0;
+	box-sizing: border-box;
+}
+
+a {
+	text-decoration: none;
+}
+/* #endif */
+
+body,
+page {
+	font-size: 14px;
+	font-family: Helvetica Neue, Helvetica, sans-serif;
+
+	/* #ifndef MP-WEIXIN */
+	// 微信小程序无法直接给根节点设置主题
+	background-color: var(--bg-color);
+	color: var(--text-color);
+	/* #endif */
+}
+
+uni-page-body,
+.sv-page {
+	background-color: var(--bg-color);
+	color: var(--text-color);
+}
+
+/* 
+ * css正则匹配类目规则
+ * [class^="test"]：头部匹配；
+ * [class$="test"]：尾部匹配；
+ * [class*="test"]：任意位置匹配。 
+ * 例如：p[class^="test"] 匹配所有以test开头类名的p标签
+ */
+
+.glass {
+	border-radius: 10px;
+	box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+	backdrop-filter: blur(40rpx) brightness(90%);
+	overflow: hidden;
+}

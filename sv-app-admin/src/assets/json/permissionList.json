@@ -1,0 +1,290 @@
+{
+  "code": 200,
+  "data": [
+    {
+      "permission_id": "userList",
+      "permission_name": "用户列表",
+      "remark": "",
+      "sort": 1
+    },
+    {
+      "permission_id": "userUpdate",
+      "permission_name": "用户修改",
+      "remark": "",
+      "sort": 2
+    },
+    {
+      "permission_id": "userUpdateSimple",
+      "permission_name": "用户简单修改",
+      "remark": "",
+      "sort": 3
+    },
+    {
+      "permission_id": "changeStatus",
+      "permission_name": "用户状态修改",
+      "remark": "",
+      "sort": 4
+    },
+    {
+      "permission_id": "userDeactivate",
+      "permission_name": "用户主动注销",
+      "remark": "",
+      "sort": 5
+    },
+    {
+      "permission_id": "userDelete",
+      "permission_name": "用户删除",
+      "remark": "",
+      "sort": 6
+    },
+
+    {
+      "permission_id": "roleList",
+      "permission_name": "角色列表",
+      "remark": "",
+      "sort": 11
+    },
+    {
+      "permission_id": "roleAdd",
+      "permission_name": "角色新增",
+      "remark": "",
+      "sort": 12
+    },
+    {
+      "permission_id": "roleUpdate",
+      "permission_name": "角色修改",
+      "remark": "",
+      "sort": 13
+    },
+    {
+      "permission_id": "roleDelete",
+      "permission_name": "角色删除",
+      "remark": "",
+      "sort": 14
+    },
+    {
+      "permission_id": "roleBatchAdd",
+      "permission_name": "角色批量新增",
+      "remark": "",
+      "sort": 15
+    },
+    {
+      "permission_id": "roleBatchDelete",
+      "permission_name": "角色批量删除",
+      "remark": "",
+      "sort": 16
+    },
+
+    {
+      "permission_id": "permissionList",
+      "permission_name": "权限列表",
+      "remark": "",
+      "sort": 21
+    },
+    {
+      "permission_id": "permissionAdd",
+      "permission_name": "权限新增",
+      "remark": "",
+      "sort": 22
+    },
+    {
+      "permission_id": "permissionUpdate",
+      "permission_name": "权限修改",
+      "remark": "",
+      "sort": 23
+    },
+    {
+      "permission_id": "permissionDelete",
+      "permission_name": "权限删除",
+      "remark": "",
+      "sort": 24
+    },
+    {
+      "permission_id": "permissionBatchAdd",
+      "permission_name": "权限批量新增",
+      "remark": "",
+      "sort": 25
+    },
+    {
+      "permission_id": "permissionBatchDelete",
+      "permission_name": "权限批量删除",
+      "remark": "",
+      "sort": 26
+    },
+
+    {
+      "permission_id": "menuList",
+      "permission_name": "菜单列表",
+      "remark": "",
+      "sort": 31
+    },
+    {
+      "permission_id": "menuAdd",
+      "permission_name": "菜单新增",
+      "remark": "",
+      "sort": 32
+    },
+    {
+      "permission_id": "menuUpdate",
+      "permission_name": "菜单修改",
+      "remark": "",
+      "sort": 33
+    },
+    {
+      "permission_id": "menuDelete",
+      "permission_name": "菜单删除",
+      "remark": "",
+      "sort": 34
+    },
+    {
+      "permission_id": "menuBatchAdd",
+      "permission_name": "菜单批量新增",
+      "remark": "",
+      "sort": 35
+    },
+    {
+      "permission_id": "menuBatchDelete",
+      "permission_name": "菜单批量删除",
+      "remark": "",
+      "sort": 36
+    },
+
+    {
+      "permission_id": "dictList",
+      "permission_name": "字典列表",
+      "remark": "",
+      "sort": 41
+    },
+    {
+      "permission_id": "dictAdd",
+      "permission_name": "字典新增",
+      "remark": "",
+      "sort": 42
+    },
+    {
+      "permission_id": "dictUpdate",
+      "permission_name": "字典修改",
+      "remark": "",
+      "sort": 43
+    },
+    {
+      "permission_id": "dictDelete",
+      "permission_name": "字典删除",
+      "remark": "",
+      "sort": 44
+    },
+    {
+      "permission_id": "dictBatchAdd",
+      "permission_name": "字典批量新增",
+      "remark": "",
+      "sort": 45
+    },
+    {
+      "permission_id": "dictBatchDelete",
+      "permission_name": "字典批量删除",
+      "remark": "",
+      "sort": 46
+    },
+
+    {
+      "permission_id": "dictitemList",
+      "permission_name": "字典项列表",
+      "remark": "",
+      "sort": 51
+    },
+    {
+      "permission_id": "dictitemAdd",
+      "permission_name": "字典项新增",
+      "remark": "",
+      "sort": 52
+    },
+    {
+      "permission_id": "dictitemUpdate",
+      "permission_name": "字典项修改",
+      "remark": "",
+      "sort": 53
+    },
+    {
+      "permission_id": "dictitemDelete",
+      "permission_name": "字典项删除",
+      "remark": "",
+      "sort": 54
+    },
+    {
+      "permission_id": "dictitemBatchAdd",
+      "permission_name": "字典项批量新增",
+      "remark": "",
+      "sort": 55
+    },
+    {
+      "permission_id": "dictitemBatchDelete",
+      "permission_name": "字典项批量删除",
+      "remark": "",
+      "sort": 56
+    },
+
+    {
+      "permission_id": "logList",
+      "permission_name": "日志列表",
+      "remark": "",
+      "sort": 61
+    },
+    {
+      "permission_id": "logDelete",
+      "permission_name": "日志删除",
+      "remark": "",
+      "sort": 62
+    },
+    {
+      "permission_id": "logBatchDelete",
+      "permission_name": "日志批量删除",
+      "remark": "",
+      "sort": 63
+    },
+    {
+      "permission_id": "logClear",
+      "permission_name": "日志清空",
+      "remark": "",
+      "sort": 64
+    },
+
+    {
+      "permission_id": "noticeList",
+      "permission_name": "通知公告列表",
+      "remark": "",
+      "sort": 71
+    },
+    {
+      "permission_id": "noticeAdd",
+      "permission_name": "通知公告新增",
+      "remark": "",
+      "sort": 72
+    },
+    {
+      "permission_id": "noticeUpdate",
+      "permission_name": "通知公告修改",
+      "remark": "",
+      "sort": 73
+    },
+    {
+      "permission_id": "noticeDelete",
+      "permission_name": "通知公告删除",
+      "remark": "",
+      "sort": 74
+    },
+    {
+      "permission_id": "noticeBatchAdd",
+      "permission_name": "通知公告批量新增",
+      "remark": "",
+      "sort": 75
+    },
+    {
+      "permission_id": "noticeBatchDelete",
+      "permission_name": "通知公告批量删除",
+      "remark": "",
+      "sort": 76
+    }
+  ],
+  "msg": "权限列表获取成功",
+  "success": true
+}
