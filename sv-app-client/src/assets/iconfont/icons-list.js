@@ -530,4 +530,6 @@ export default [
   'sv-icons-storage',
   'sv-icons-cache',
   'sv-icons-redis',
+	'sv-icons-idcard',
+	'sv-icons-idcard-fill'
 ]

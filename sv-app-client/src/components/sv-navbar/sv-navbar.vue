@@ -1,5 +1,5 @@
 <template>
-	<view class="sv-navbar" :style="{ '--navbar-color': bgColor }">
+	<view class="sv-navbar" :style="dynamicStyle">
 		<view class="navbar-left">
 			<slot name="left">
 				<text v-if="!isTabbar" class="cuIcon-back navbar-icon" @click="onBack"></text>
@@ -31,6 +31,30 @@ const props = defineProps({
 	bgColor: {
 		type: String,
 		default: ''
+	},
+	border: {
+		type: Boolean,
+		default: true
+	},
+	effect: {
+		type: [Object, Boolean],
+		default: () => {
+			return {
+				frosted: true, // 磨砂特效
+				glass: true // 毛玻璃特效
+			}
+		}
+	}
+})
+
+const dynamicStyle = computed(() => {
+	let { effect } = props
+	if (effect === true) effect = { frosted: true, glass: true } // 如果 effect 为 true，则默认开启全特效
+	return {
+		'--navbar-color': props.bgColor, // 背景颜色
+		'boxShadow': props.border ? 'var(--navbar-border)' : '', // 边框
+		'backgroundImage': effect?.frosted ? 'var(--frosted-effect)' : '', // 磨砂特效
+		'backdropFilter': effect?.glass ? 'var(--glass-effect)' : '' // 毛玻璃特效
 	}
 })
 
@@ -75,15 +99,19 @@ $sv-navbar-height: calc(44px + v-bind(statusBarHeight));
 	display: flex;
 	align-items: center;
 	box-sizing: border-box;
-	box-shadow: 0 1px var(--shadow-color);
-	backdrop-filter: saturate(50%) blur(4px);
 
-	--navbar-color: var(--bg-color);
+	// 下边框
+	--navbar-border: 0 1px var(--shadow-color);
+	// box-shadow: var(--navbar-border); // 以动态style方式设置
 
 	// 模糊特效
-	// background-image: radial-gradient(transparent 1px, var(--bg-color) 4px);
-	background-image: radial-gradient(transparent 1px, var(--navbar-color) 4px);
+	--navbar-color: var(--bg-color);
+	--frosted-effect: radial-gradient(transparent 1px, var(--navbar-color) 4px);
+	// background-image: var(--frosted-effect); // 以动态style方式设置
 	background-size: 4px 4px;
+
+	--glass-effect: saturate(50%) blur(4px);
+	// backdrop-filter: var(--glass-effect);
 
 	.navbar-left,
 	.navbar-right {

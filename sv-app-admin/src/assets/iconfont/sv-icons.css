@@ -20,6 +20,14 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.sv-icons-idcard:before {
+  content: "\e7de";
+}
+
+.sv-icons-idcard-fill:before {
+  content: "\e860";
+}
+
 .sv-icons-database:before {
   content: "\e64d";
 }

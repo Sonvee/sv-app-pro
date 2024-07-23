@@ -6,6 +6,7 @@ qqwry.speed() // 启用急速模式
 
 /**
  * 日志记录器
+ * 后续可通过使用kafka来进一步优化
  */
 module.exports = (options, app) => {
   return async function logger(ctx, next) {
