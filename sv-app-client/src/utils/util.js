@@ -72,3 +72,29 @@ export function assignOverride(target, source) {
   }
   return target;
 }
+
+/**
+ * 多元判断
+ * @param {any} origin - 判断源
+ * @param {Array<any>} conditions - 条件
+ * @param {Array<any>} result - 处理结果
+ * @returns {any} - 对应的结果值或抛出错误
+ */
+export function multipleJudgment(origin, conditions = [], result = []) {
+  // 检查条件和结果数组的长度是否一致
+  if (conditions.length !== result.length) {
+    throw new Error('条件数组和结果数组长度不一致')
+  }
+
+  // 查找判断源在条件数组中的位置
+  const index = conditions.indexOf(origin)
+
+  // 如果找到，则返回对应的结果值
+  if (index !== -1) {
+    return result[index]
+  }
+
+  // 如果没有找到，可以选择抛出错误或者返回一个默认值
+  // 这里选择抛出错误，可以根据实际需求调整
+  throw new Error(`"${origin}" 不在条件数组中`)
+}

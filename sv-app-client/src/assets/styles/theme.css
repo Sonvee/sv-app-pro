@@ -16,7 +16,7 @@
   --text-hl-color: #000000;
   --text-sub-color: #414141;
 
-  --border-color: #414243;
+  --border-color: #cfcfcf;
   --border-hl-color: #363637;
 
   --shadow-color: #dedede;
@@ -27,6 +27,8 @@
   --popup-color: #f2f2f2;
 
   --hover-color: #ecf5ff;
+
+  --click-color: #ecf5ff;
 }
 
 /* dark主题 */
@@ -43,9 +45,11 @@
   --shadow-color: #323232;
   --shadow-color-reverse: #dedede88;
 
-  --card-color: #2f2f2f;
+  --card-color: #222222;
 
   --popup-color: #262626;
 
   --hover-color: #243343;
+
+  --click-color: #243343;
 }

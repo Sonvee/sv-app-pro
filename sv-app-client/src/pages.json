@@ -60,7 +60,7 @@
       }
     },
     {
-      "path": "pages/usercenter/userinfo/userinfo",
+      "path": "pages/usercenter/userinfo",
       "style": {
         "navigationBarTitleText": "个人资料"
       }

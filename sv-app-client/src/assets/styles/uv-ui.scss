@@ -1,0 +1,32 @@
+.uv-cell-group {
+  background-color: var(--card-color);
+
+  .uv-line {
+    border-bottom: 1px solid var(--border-color) !important;
+  }
+
+  .uv-cell {
+    .uv-cell__body {
+      color: var(--text-color);
+
+      .uv-cell__body__content {
+        :deep(.uv-cell__title-text) {
+          font-size: 28rpx;
+          color: var(--text-color);
+        }
+      }
+    }
+  }
+
+  .uv-cell--clickable {
+    background-color: var(--click-color) !important;
+  }
+}
+
+.uv-upload {
+  .uv-upload__wrap {
+    .uv-upload__button {
+      margin: 0;
+    }
+  }
+}
