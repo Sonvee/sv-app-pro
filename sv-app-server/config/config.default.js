@@ -93,7 +93,7 @@ module.exports = (appInfo) => {
   config.multipart = {
     mode: 'file',
     fileSize: '10mb',
-    fileExtensions: ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']
+    // fileExtensions: ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']
   }
 
   /**
@@ -154,8 +154,8 @@ module.exports = (appInfo) => {
   config.cluster = {
     listen: {
       port: 7001,
-      hostname: '192.168.1.209'
-      // hostname: '192.168.6.115'
+      // hostname: '192.168.1.209'
+      hostname: '192.168.6.115'
     }
   }
 

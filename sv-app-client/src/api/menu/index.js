@@ -1,7 +1,7 @@
-import request from '@/config/request'
+import http from '@/config/request'
 
 export function menuList(data) {
-  return request({
+  return http.request({
     url: '/sys/menuList',
     method: 'post',
     data
@@ -9,7 +9,7 @@ export function menuList(data) {
 }
 
 export function menuAdd(data) {
-  return request({
+  return http.request({
     url: '/sys/menuAdd',
     method: 'post',
     data
@@ -17,7 +17,7 @@ export function menuAdd(data) {
 }
 
 export function menuUpdate(data) {
-  return request({
+  return http.request({
     url: '/sys/menuUpdate',
     method: 'post',
     data
@@ -25,7 +25,7 @@ export function menuUpdate(data) {
 }
 
 export function menuDelete(data) {
-  return request({
+  return http.request({
     url: '/sys/menuDelete',
     method: 'post',
     data
@@ -33,7 +33,7 @@ export function menuDelete(data) {
 }
 
 export function menuBatchAdd(data) {
-  return request({
+  return http.request({
     url: '/sys/menuBatchAdd',
     method: 'post',
     data
@@ -41,7 +41,7 @@ export function menuBatchAdd(data) {
 }
 
 export function menuBatchDelete(data) {
-  return request({
+  return http.request({
     url: '/sys/menuBatchDelete',
     method: 'post',
     data

@@ -1,7 +1,7 @@
-import request from '@/config/request'
+import http from '@/config/request'
 
 export function roleList(data) {
-  return request({
+  return http.request({
     url: '/user/roleList',
     method: 'post',
     data
@@ -9,7 +9,7 @@ export function roleList(data) {
 }
 
 export function findPermissionByRole(data) {
-  return request({
+  return http.request({
     url: '/user/findPermissionByRole',
     method: 'post',
     data
@@ -17,7 +17,7 @@ export function findPermissionByRole(data) {
 }
 
 export function roleAdd(data) {
-  return request({
+  return http.request({
     url: '/user/roleAdd',
     method: 'post',
     data
@@ -25,7 +25,7 @@ export function roleAdd(data) {
 }
 
 export function roleUpdate(data) {
-  return request({
+  return http.request({
     url: '/user/roleUpdate',
     method: 'post',
     data
@@ -33,7 +33,7 @@ export function roleUpdate(data) {
 }
 
 export function roleDelete(data) {
-  return request({
+  return http.request({
     url: '/user/roleDelete',
     method: 'post',
     data
@@ -41,7 +41,7 @@ export function roleDelete(data) {
 }
 
 export function roleBatchAdd(data) {
-  return request({
+  return http.request({
     url: '/user/roleBatchAdd',
     method: 'post',
     data
@@ -49,7 +49,7 @@ export function roleBatchAdd(data) {
 }
 
 export function roleBatchDelete(data) {
-  return request({
+  return http.request({
     url: '/user/roleBatchDelete',
     method: 'post',
     data

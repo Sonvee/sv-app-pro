@@ -1,4 +1,4 @@
-import request from '@/config/request'
+import http from '@/config/request'
 
 /**
  * 查询 post - 权限 permission
@@ -9,7 +9,7 @@ import request from '@/config/request'
  * @property {Number} data.pagenum - 页码
  */
 export function logList(data) {
-  return request({
+  return http.request({
     url: '/sys/logList',
     method: 'post',
     data
@@ -22,7 +22,7 @@ export function logList(data) {
  * @property {String} data._id - id
  */
 export function logDelete(data) {
-  return request({
+  return http.request({
     url: '/sys/logDelete',
     method: 'post',
     data
@@ -35,7 +35,7 @@ export function logDelete(data) {
  * @property {Array} data.list - 批量删除项
  */
 export function logBatchDelete(data) {
-  return request({
+  return http.request({
     url: '/sys/logBatchDelete',
     method: 'post',
     data
@@ -48,7 +48,7 @@ export function logBatchDelete(data) {
  * @property {Array} data.log_type - 类型：login登录日志，operation操作日志
  */
 export function logClear(data) {
-  return request({
+  return http.request({
     url: '/sys/logClear',
     method: 'post',
     data

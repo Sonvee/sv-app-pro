@@ -1,8 +1,8 @@
-import request from '@/config/request'
+import http from '@/config/request'
 
 // 字典
 export function dictList(data) {
-  return request({
+  return http.request({
     url: '/sys/dictList',
     method: 'post',
     data
@@ -10,7 +10,7 @@ export function dictList(data) {
 }
 
 export function dictAdd(data) {
-  return request({
+  return http.request({
     url: '/sys/dictAdd',
     method: 'post',
     data
@@ -18,7 +18,7 @@ export function dictAdd(data) {
 }
 
 export function dictUpdate(data) {
-  return request({
+  return http.request({
     url: '/sys/dictUpdate',
     method: 'post',
     data
@@ -26,7 +26,7 @@ export function dictUpdate(data) {
 }
 
 export function dictDelete(data) {
-  return request({
+  return http.request({
     url: '/sys/dictDelete',
     method: 'post',
     data
@@ -34,7 +34,7 @@ export function dictDelete(data) {
 }
 
 export function dictBatchAdd(data) {
-  return request({
+  return http.request({
     url: '/sys/dictBatchAdd',
     method: 'post',
     data
@@ -42,7 +42,7 @@ export function dictBatchAdd(data) {
 }
 
 export function dictBatchDelete(data) {
-  return request({
+  return http.request({
     url: '/sys/dictBatchDelete',
     method: 'post',
     data
@@ -52,7 +52,7 @@ export function dictBatchDelete(data) {
 // 字典项
 
 export function dictitemList(data) {
-  return request({
+  return http.request({
     url: '/sys/dictitemList',
     method: 'post',
     data
@@ -60,7 +60,7 @@ export function dictitemList(data) {
 }
 
 export function dictitemListByRedis(data) {
-  return request({
+  return http.request({
     url: '/sys/dictitemListByRedis',
     method: 'post',
     data
@@ -68,7 +68,7 @@ export function dictitemListByRedis(data) {
 }
 
 export function dictitemAdd(data) {
-  return request({
+  return http.request({
     url: '/sys/dictitemAdd',
     method: 'post',
     data
@@ -76,7 +76,7 @@ export function dictitemAdd(data) {
 }
 
 export function dictitemUpdate(data) {
-  return request({
+  return http.request({
     url: '/sys/dictitemUpdate',
     method: 'post',
     data
@@ -84,7 +84,7 @@ export function dictitemUpdate(data) {
 }
 
 export function dictitemDelete(data) {
-  return request({
+  return http.request({
     url: '/sys/dictitemDelete',
     method: 'post',
     data
@@ -92,7 +92,7 @@ export function dictitemDelete(data) {
 }
 
 export function dictitemBatchAdd(data) {
-  return request({
+  return http.request({
     url: '/sys/dictitemBatchAdd',
     method: 'post',
     data
@@ -100,7 +100,7 @@ export function dictitemBatchAdd(data) {
 }
 
 export function dictitemBatchDelete(data) {
-  return request({
+  return http.request({
     url: '/sys/dictitemBatchDelete',
     method: 'post',
     data

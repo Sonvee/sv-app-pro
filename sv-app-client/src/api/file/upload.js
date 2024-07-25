@@ -1,28 +1,25 @@
-import request from '@/config/request'
+import http from '@/config/request'
 
 export function avatarUpload(data) {
-  return request({
-    url: '/file/avatarUpload',
-    method: 'post',
-    data,
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-  })
+	return http.upload('/file/avatarUpload', {
+		name: 'file',
+		fileType: 'image',
+		...data,
+	})
 }
 
 export function avatarDelete(data) {
-  return request({
-    url: '/file/avatarDelete',
-    method: 'post',
-    data
-  })
+	return http.request({
+		url: '/file/avatarDelete',
+		method: 'post',
+		data
+	})
 }
 
 export function userfilesDelete(data) {
-  return request({
-    url: '/file/userfilesDelete',
-    method: 'post',
-    data
-  })
+	return http.request({
+		url: '/file/userfilesDelete',
+		method: 'post',
+		data
+	})
 }

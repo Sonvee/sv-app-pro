@@ -1,7 +1,7 @@
-import request from '@/config/request'
+import http from '@/config/request'
 
 export function login(data) {
-  return request({
+  return http.request({
     url: '/user/login',
     method: 'post',
     data
@@ -9,7 +9,7 @@ export function login(data) {
 }
 
 export function loginByEmailer(data) {
-  return request({
+  return http.request({
     url: '/user/loginByEmailer',
     method: 'post',
     data
@@ -17,7 +17,7 @@ export function loginByEmailer(data) {
 }
 
 export function loginByWechat(data) {
-  return request({
+  return http.request({
     url: '/user/loginByWechat',
     method: 'post',
     data
@@ -25,7 +25,7 @@ export function loginByWechat(data) {
 }
 
 export function register(data) {
-  return request({
+  return http.request({
     url: '/user/register',
     method: 'post',
     data
@@ -33,7 +33,7 @@ export function register(data) {
 }
 
 export function logout(data) {
-  return request({
+  return http.request({
     url: '/user/logout',
     method: 'post',
     data
@@ -41,14 +41,14 @@ export function logout(data) {
 }
 
 export function hasAdmin() {
-  return request({
+  return http.request({
     url: '/user/hasAdmin',
     method: 'get'
   })
 }
 
 export function refreshToken(data) {
-  return request({
+  return http.request({
     url: '/user/refreshToken',
     method: 'post',
     data
@@ -56,7 +56,7 @@ export function refreshToken(data) {
 }
 
 export function verifyToken() {
-  return request({
+  return http.request({
     url: '/user/verifyToken',
     method: 'get'
   })
