@@ -14,7 +14,7 @@
         <view class="login-content flex-grow-1 flex-col">
           <!-- 表单 -->
           <view class="flex-grow-1 flex-col">
-            <use-component class="w-h-full" :was="loginType"></use-component>
+            <use-component :was="loginType"></use-component>
           </view>
           <!-- 登录方式 -->
           <view class="login-type-fab">

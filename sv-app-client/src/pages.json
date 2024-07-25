@@ -28,42 +28,62 @@
       }
     },
     {
-      "path": "pages/setting/setting",
-      "style": {
-        "navigationBarTitleText": "设置",
-        "enablePullDownRefresh": false
-      }
-    },
-    {
       "path": "pages/login/login",
       "style": {
         "navigationBarTitleText": "登录",
         "enablePullDownRefresh": false
       }
+    }
+  ],
+  "subPackages": [{
+      "root": "pages/setting",
+      "pages": [{
+        "path": "setting",
+        "style": {
+          "navigationBarTitleText": "设置"
+        }
+      }]
     },
     {
-      "path": "pages/agreements/privacy",
-      "style": {
-        "navigationBarTitleText": "隐私政策条款"
-      }
+      "root": "pages/agreements",
+      "pages": [{
+          "path": "privacy",
+          "style": {
+            "navigationBarTitleText": "隐私政策条款"
+          }
+        },
+        {
+          "path": "service",
+          "style": {
+            "navigationBarTitleText": "用户服务协议"
+          }
+        }
+      ]
     },
     {
-      "path": "pages/agreements/service",
-      "style": {
-        "navigationBarTitleText": "用户服务协议"
-      }
+      "root": "pages/usercenter",
+      "pages": [{
+          "path": "usercenter",
+          "style": {
+            "navigationBarTitleText": "个人中心"
+          }
+        },
+        {
+          "path": "userinfo",
+          "style": {
+            "navigationBarTitleText": "个人资料"
+          }
+        }
+      ]
     },
     {
-      "path": "pages/usercenter/usercenter",
-      "style": {
-        "navigationBarTitleText": "个人中心"
-      }
-    },
-    {
-      "path": "pages/usercenter/userinfo",
-      "style": {
-        "navigationBarTitleText": "个人资料"
-      }
+      "root": "pages/auxiliary",
+      "pages": [{
+        "path": "crop-image/crop-image",
+        "style": {
+          "navigationBarTitleText": "图片裁剪"
+        }
+      }]
     }
   ],
   "globalStyle": {

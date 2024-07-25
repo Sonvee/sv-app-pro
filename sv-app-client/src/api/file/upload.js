@@ -26,14 +26,3 @@ export function userfilesDelete(data) {
     data
   })
 }
-
-export function editorImgUpload(data) {
-  return request({
-    url: '/file/editorImgUpload',
-    method: 'post',
-    data,
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-  })
-}

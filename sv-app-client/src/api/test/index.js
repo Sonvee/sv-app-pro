@@ -1,8 +1,9 @@
-import request from '@/config/request'
+// import request from '@/config/request'
+import http from '@/config/request'
 
 // 测试 开放接口
 export function home() {
-  return request({
+  return http.request({
     url: '/home',
     method: 'get'
   })
@@ -10,7 +11,7 @@ export function home() {
 
 // 测试 需token校验
 export function test() {
-  return request({
+  return http.request({
     url: '/test',
     method: 'get'
   })

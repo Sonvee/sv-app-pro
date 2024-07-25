@@ -11,6 +11,8 @@ export function useLoginModal() {
       title: '系统提示',
       content: '还没有登录哦',
       showCancel: true,
+      cancelText: '取消',
+      confirmText: '去登录',
       success: ({ confirm }) => {
         if (confirm) {
           uni.navigateTo({ url: '/pages/login/login' })

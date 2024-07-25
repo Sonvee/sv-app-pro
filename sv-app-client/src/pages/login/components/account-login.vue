@@ -115,9 +115,13 @@ watch(
 
 const captchaImg = ref('')
 function getCaptchaImg() {
-  getCaptcha({ type: 'login' }).then((res) => {
-    captchaImg.value = res.data
-  })
+  getCaptcha({ type: 'login' })
+    .then((res) => {
+      captchaImg.value = res.data
+    })
+    .catch((err) => {
+      console.log('==== err :', err)
+    })
 }
 
 function reset() {

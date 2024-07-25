@@ -185,7 +185,7 @@ class SysUserService extends Service {
     const db = app.model.SysUser
 
     // 查询条件处理
-    const conditions = { username: data.username }
+    const conditions = { _id: data._id }
 
     const one = await db.findOne(conditions)
     if (!one) ctx.throw(400, { msg: '更新项不存在' })

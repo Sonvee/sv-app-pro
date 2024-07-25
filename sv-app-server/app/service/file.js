@@ -30,6 +30,12 @@ class FileService extends Service {
     // 删除不必要字段
     delete fileRes.ok
 
+    // 更新用户头像数据
+    await ctx.service.sysUser.userUpdateSimple({
+      _id: userid,
+      avatar: fileRes
+    })
+
     return {
       data: fileRes,
       msg: '上传成功'

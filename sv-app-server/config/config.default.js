@@ -79,19 +79,27 @@ module.exports = (appInfo) => {
     }
   }
 
-  // egg-mongoose 配置
+  /**
+   * egg-mongoose 配置
+   */
   config.mongoose = {
     url: 'mongodb://127.0.0.1:27017/egg_mongo',
     options: {}
   }
 
-  // 文件上传
+  /**
+   * 文件上传
+   */
   config.multipart = {
     mode: 'file',
     fileSize: '10mb',
     fileExtensions: ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']
   }
-  // 七牛云 oss
+
+  /**
+   * 七牛云 oss
+   * @tutorial https://github.com/alex-my/egg-full-qiniu
+   */
   config.fullQiniu = {
     default: {
       ak: 'cPls9b0slj64ENnlZ91Bn0OyfB4_xFidmRSH9BT4',
@@ -110,17 +118,23 @@ module.exports = (appInfo) => {
     }
   }
 
-  // egg-redis 配置
+  /**
+   * egg-redis 配置
+   * @tutorial https://www.cnblogs.com/ruozhisi/p/12199311.html Redis密码修改
+   */
   config.redis = {
     client: {
       port: 6379, // Redis port
       host: '127.0.0.1', // Redis host
-      password: 'auth',
+      password: '1949100115', // Redis password
       db: 0
     }
   }
 
-  // nodemailer 配置
+  /**
+   * 邮箱验证 nodemailer 配置
+   * @description 需先开启发送者邮箱的 POP3/SMYP 服务
+   */
   config.nodemailer = {
     default: {
       host: 'smtp.qq.com', // QQ邮箱的SMTP地址
@@ -133,14 +147,21 @@ module.exports = (appInfo) => {
     expires: 60 // 过期时长（分钟）
   }
 
+  /**
+   * 集群配置
+   * @description 可更改 端口号、host 等
+   */
   config.cluster = {
     listen: {
       port: 7001,
-      // hostname: '192.168.1.209'
-      hostname: '192.168.6.115'
+      hostname: '192.168.1.209'
+      // hostname: '192.168.6.115'
     }
   }
 
+  /**
+   * 微信相关参数
+   */
   config.wechat = {
     appid: 'wx417856313e7d8aff',
     appsecret: '13f2907fa847db3360cb1bfd8747608d'

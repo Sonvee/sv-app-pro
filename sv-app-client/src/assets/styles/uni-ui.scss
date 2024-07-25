@@ -1,45 +1,30 @@
 .uni-modal {
-	background-color: var(--card-color);
-	.uni-modal__btn_default {
-		color: var(--text-sub-color) !important;
-	}
+  background-color: var(--card-color);
+  .uni-modal__btn_default {
+    color: var(--text-sub-color) !important;
+  }
 }
 
 .sv-swiper {
-	height: auto !important;
-	.uni-swiper-wrapper {
-		overflow-y: visible !important;
+  height: auto !important;
+  .uni-swiper-wrapper {
+    overflow-y: visible !important;
 
-		.uni-swiper-slides {
-			position: static !important;
-			height: auto !important;
-		}
-		.uni-swiper-slide-frame {
-			position: static !important;
-			height: auto !important;
-			display: flex;
-		}
-	}
-	uni-swiper-item {
-		flex: 0 0 100%;
-		overflow-y: visible !important;
-		position: static !important;
-		height: auto !important;
-		transform: none !important;
-	}
-}
-
-.uni-file-picker {
-	.uni-file-picker__container {
-		margin: 0 !important;
-
-		.file-picker__box-content {
-			margin: 0;
-
-			.icon-add {
-				width: 40rpx;
-				height: 4rpx;
-			}
-		}
-	}
+    .uni-swiper-slides {
+      position: static !important;
+      height: auto !important;
+    }
+    .uni-swiper-slide-frame {
+      position: static !important;
+      height: auto !important;
+      display: flex;
+    }
+  }
+  uni-swiper-item {
+    flex: 0 0 100%;
+    overflow-y: visible !important;
+    position: static !important;
+    height: auto !important;
+    transform: none !important;
+  }
 }

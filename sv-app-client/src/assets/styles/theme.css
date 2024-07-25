@@ -18,6 +18,7 @@
 
   --border-color: #cfcfcf;
   --border-hl-color: #363637;
+  --border-tint-color: #bfbfbf;
 
   --shadow-color: #dedede;
   --shadow-color-reverse: #32323288;
@@ -37,10 +38,11 @@
 
   --text-color: #f8f8f8;
   --text-hl-color: #ffffff;
-  --text-sub-color: #8f8f8f;
+  --text-sub-color: #a8a8a8;
 
   --border-color: #58585B;
   --border-hl-color: #636466;
+  --border-tint-color: #636466;
 
   --shadow-color: #323232;
   --shadow-color-reverse: #dedede88;

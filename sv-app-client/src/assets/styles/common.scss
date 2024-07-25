@@ -4000,7 +4000,7 @@ scroll-view.cu-steps .cu-item {
 /**
  * 自定义
  */
-@for $i from 0 through 60 {
+@for $i from 0 through 200 {
 	.fs-#{$i} {
 		font-size: #{$i}px;
 	}
