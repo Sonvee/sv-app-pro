@@ -186,8 +186,7 @@ module.exports = {
       return result[index]
     }
 
-    // 如果没有找到，可以选择抛出错误或者返回一个默认值
-    // 这里选择抛出错误，可以根据实际需求调整
-    throw new Error(`"${origin}" 不在条件数组中`)
+    // 如果没有找到，则返回本身
+    return origin
   }
 }

@@ -26,3 +26,17 @@
   }
 }
 
+.sv-uv-textarea {
+  :deep(.uv-textarea.uv-border) {
+    background-color: var(--card-color) !important;
+    border-color: var(--border-color) !important;
+
+    .uv-textarea__field {
+      color: var(--text-color);
+    }
+
+    .uv-textarea__count {
+      background-color: unset !important;
+    }
+  }
+}

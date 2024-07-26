@@ -13,9 +13,9 @@
 		/>
 	</sv-page>
 </template>
+
 <script>
 import limeClipper from './limeClipper/limeClipper.vue'
-import { base64ToPath } from './limeClipper/utils'
 export default {
 	components: { limeClipper },
 	data() {
@@ -29,8 +29,7 @@ export default {
 	},
 	methods: {
 		async successFn(e) {
-			const path = await base64ToPath(e.url)
-			this.getOpenerEventChannel().emit('crop_image_success', path)
+			this.getOpenerEventChannel().emit('crop_image_success', e.url)
 			uni.navigateBack()
 		},
 		cancel() {

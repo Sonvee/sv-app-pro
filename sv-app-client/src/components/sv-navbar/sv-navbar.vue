@@ -95,7 +95,7 @@ $sv-navbar-height: calc(44px + v-bind(statusBarHeight));
   position: fixed;
   top: 0;
   padding-top: v-bind(statusBarHeight);
-  z-index: 999;
+  z-index: 988;
   display: flex;
   align-items: center;
   box-sizing: border-box;

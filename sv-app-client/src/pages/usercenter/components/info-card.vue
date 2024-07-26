@@ -33,7 +33,7 @@
           {{ isFold ? '展开' : '收起' }}
         </text>
       </view>
-      <view class="margin-top-xs text-cyan">
+      <view class="margin-top-xs text-cyan text-line-2">
         {{ userInfo?.comment || '这个人很神秘，什么都没有写' }}
       </view>
       <view v-if="!isFold">

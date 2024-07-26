@@ -18,7 +18,7 @@
         <el-table-column prop="_id" label="日志ID" width="240" show-overflow-tooltip></el-table-column>
         <el-table-column prop="login_type" label="登录方式" align="center" width="160" show-overflow-tooltip>
           <template #default="scope">
-            <DictTag :dictList="dictStroe.getDict('dict_sys_login_type')" :value="scope.row.login_type"></DictTag>
+            <DictTag :dictList="dictStore.getDict('dict_sys_login_type')" :value="scope.row.login_type"></DictTag>
           </template>
         </el-table-column>
         <el-table-column prop="operator_info.username" label="操作人员" width="240" show-overflow-tooltip>
@@ -68,12 +68,12 @@ import { logList, logDelete, logBatchDelete, logClear } from '@/api/log'
 import { RefreshRight, Plus, EditPen, Delete, View, Hide } from '@element-plus/icons-vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { isTruthy, timeFormat } from '@/utils'
-import { useDictStroe } from '@/store/dict'
+import { useDictStore } from '@/store/dict'
 
-const dictStroe = useDictStroe()
+const dictStore = useDictStore()
 // 初始化字典
 function dictInit() {
-  if (!isTruthy(dictStroe.getDict('dict_sys_login_type'), 'arr')) dictStroe.initDict(['dict_sys_login_type'])
+  if (!isTruthy(dictStore.getDict('dict_sys_login_type'), 'arr')) dictStore.initDict(['dict_sys_login_type'])
 }
 
 const dataParams = ref({ log_type: 'login', pagenum: 1, pagesize: 20 })

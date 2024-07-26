@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 import { refreshToken, verifyToken } from '@/api/user/login'
 import { assignOverride } from '@/utils/util'
 
-export const useUserStore = defineStore('user', () => {
+export const useUserStore = defineStore('sv-user', () => {
   // token
   const token = ref('')
 

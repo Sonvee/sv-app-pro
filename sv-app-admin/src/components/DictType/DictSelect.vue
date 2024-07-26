@@ -8,7 +8,7 @@
 import { ref, watchEffect } from 'vue'
 import { dictitemListByRedis } from '@/api/dict'
 import { isTruthy } from '@/utils'
-import { useDictStroe } from '@/store/dict'
+import { useDictStore } from '@/store/dict'
 
 const props = defineProps({
   // 字典类型，与dictList二选一，优先级大于dictList
@@ -70,7 +70,7 @@ async function handleDict() {
   const { dictType, dictList, dictApi, apiParams } = props
   if (isTruthy(dictType)) {
     // 先从缓存中获取
-    let dictRes = useDictStroe().getDict(dictType)
+    let dictRes = useDictStore().getDict(dictType)
     if (!isTruthy(dictRes, 'arrobj')) {
       // 缓存中没有则请求接口
       const { data } = await dictitemListByRedis({
@@ -79,7 +79,7 @@ async function handleDict() {
       })
       dictRes = data
       // 设置缓存
-      useDictStroe().setDict(dictType, dictRes)
+      useDictStore().setDict(dictType, dictRes)
     }
     dictData.value = dictRes
     return

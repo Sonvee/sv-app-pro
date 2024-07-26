@@ -120,7 +120,7 @@ $sv-tabbar-height: calc(50px + env(safe-area-inset-bottom));
 	position: fixed;
 	bottom: 0;
 	padding-bottom: env(safe-area-inset-bottom);
-	z-index: 999;
+	z-index: 988;
 	display: flex;
 	box-sizing: border-box;
 	box-shadow: 0 -1px var(--shadow-color);

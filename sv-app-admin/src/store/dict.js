@@ -2,7 +2,7 @@ import { dictitemListByRedis } from '@/api/dict'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-export const useDictStroe = defineStore(
+export const useDictStore = defineStore(
   'sv-dict',
   () => {
     const dict = ref({})
@@ -23,8 +23,14 @@ export const useDictStroe = defineStore(
       dict.value = {}
     }
 
-    // 初始化字典项
-    async function initDict(typelist) {
+    /**
+     * 初始化字典项
+     * @param {Array} typelist 要更新的字典 dict_type
+     */
+    function initDict(typelist) {
+      if (!Array.isArray(typelist)) {
+        return console.error('typelist 必须为数组')
+      }
       typelist.forEach(async (item) => {
         const dictRes = await dictitemListByRedis({ dict_type: item, pagesize: -1 })
         setDict(item, dictRes.data)

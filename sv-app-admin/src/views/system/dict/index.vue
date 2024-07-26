@@ -70,7 +70,7 @@ import { dictList, dictAdd, dictUpdate, dictDelete, dictBatchDelete } from '@/ap
 import { RefreshRight, Plus, EditPen, Delete, View, Hide, Setting } from '@element-plus/icons-vue'
 import { ElNotification, ElMessageBox, ElMessage } from 'element-plus'
 import { isTruthy, timeFormat } from '@/utils'
-import { useDictStroe } from '@/store/dict'
+import { useDictStore } from '@/store/dict'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -217,7 +217,7 @@ function editDictitem(row) {
 }
 
 function updateCache() {
-  useDictStroe().clearDict()
+  useDictStore().clearDict()
 }
 </script>
 

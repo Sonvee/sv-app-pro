@@ -37,12 +37,12 @@
         <el-table-column prop="comment" label="备注" min-width="300" show-overflow-tooltip></el-table-column>
         <el-table-column prop="status" label="状态" align="center" width="120" show-overflow-tooltip>
           <template #default="scope">
-            <DictTag :dictList="dictStroe.getDict('dict_sys_user_status')" :value="scope.row.status"></DictTag>
+            <DictTag :dictList="dictStore.getDict('dict_sys_user_status')" :value="scope.row.status"></DictTag>
           </template>
         </el-table-column>
         <el-table-column prop="gender" label="性别" align="center" width="120" show-overflow-tooltip>
           <template #default="scope">
-            <DictTag :dictList="dictStroe.getDict('dict_sys_user_gender')" :value="scope.row.gender"></DictTag>
+            <DictTag :dictList="dictStore.getDict('dict_sys_user_gender')" :value="scope.row.gender"></DictTag>
           </template>
         </el-table-column>
         <el-table-column
@@ -114,13 +114,13 @@ import { userList, userUpdate, userDelete, userUpdateSimple, changeStatus } from
 import { RefreshRight, Plus, EditPen, Delete, View, Hide } from '@element-plus/icons-vue'
 import { ElNotification, ElMessageBox, ElMessage } from 'element-plus'
 import { isTruthy, timeFormat } from '@/utils'
-import { useDictStroe } from '@/store/dict'
+import { useDictStore } from '@/store/dict'
 
-const dictStroe = useDictStroe()
+const dictStore = useDictStore()
 // 初始化字典
 function dictInit() {
-  if (!isTruthy(dictStroe.getDict('dict_sys_user_status'), 'arr')) dictStroe.initDict(['dict_sys_user_status'])
-  if (!isTruthy(dictStroe.getDict('dict_sys_user_gender'), 'arr')) dictStroe.initDict(['dict_sys_user_gender'])
+  if (!isTruthy(dictStore.getDict('dict_sys_user_status'), 'arr')) dictStore.initDict(['dict_sys_user_status'])
+  if (!isTruthy(dictStore.getDict('dict_sys_user_gender'), 'arr')) dictStore.initDict(['dict_sys_user_gender'])
 }
 
 const dataParams = ref({ pagenum: 1, pagesize: 20 })
