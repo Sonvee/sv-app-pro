@@ -19,16 +19,16 @@
           <!-- 登录方式 -->
           <view class="login-type-fab">
             <view class="fab bg-gradual-blue" @click="switchLoginType('accountLogin')">
-              <i class="cuIcon-peoplefill text-xxl"></i>
+              <text class="cuIcon-peoplefill text-xxl"></text>
             </view>
             <view class="fab bg-gradual-pink" @click="switchLoginType('phoneLogin')">
-              <i class="uni-icons-phone-filled text-xxl"></i>
+              <text class="uni-icons-phone-filled text-xxl"></text>
             </view>
             <view class="fab bg-gradual-red" @click="switchLoginType('emailLogin')">
-              <i class="uni-icons-email-filled text-xxl"></i>
+              <text class="uni-icons-email-filled text-xxl"></text>
             </view>
             <view class="fab bg-gradual-green" @click="switchLoginType('wechatLogin')">
-              <i class="uni-icons-weixin text-xxl"></i>
+              <text class="uni-icons-weixin text-xxl"></text>
             </view>
           </view>
         </view>

@@ -1,7 +1,7 @@
 <template>
   <view class="agreements-privacy-page">
     <h2 class="head-title-2">
-      <i class="uni-icons-back abs-left" @click="goBack"></i>
+      <text class="uni-icons-back abs-left" @click="goBack"></text>
       隐私政策条款
     </h2>
     <article>

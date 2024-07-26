@@ -5,26 +5,27 @@
   }
 }
 
-.sv-swiper {
-  height: auto !important;
-  .uni-swiper-wrapper {
-    overflow-y: visible !important;
+// swiper 高度自适应（微信小程序无效）
+// .sv-swiper {
+//   height: auto !important;
+//   .uni-swiper-wrapper {
+//     overflow-y: visible !important;
 
-    .uni-swiper-slides {
-      position: static !important;
-      height: auto !important;
-    }
-    .uni-swiper-slide-frame {
-      position: static !important;
-      height: auto !important;
-      display: flex;
-    }
-  }
-  uni-swiper-item {
-    flex: 0 0 100%;
-    overflow-y: visible !important;
-    position: static !important;
-    height: auto !important;
-    transform: none !important;
-  }
-}
+//     .uni-swiper-slides {
+//       position: static !important;
+//       height: auto !important;
+//     }
+//     .uni-swiper-slide-frame {
+//       position: static !important;
+//       height: auto !important;
+//       display: flex;
+//     }
+//   }
+//   .uni-swiper-item {
+//     flex: 0 0 100%;
+//     overflow-y: visible !important;
+//     position: static !important;
+//     height: auto !important;
+//     transform: none !important;
+//   }
+// }

@@ -53,11 +53,11 @@ module.exports = {
   // 页面视窗高度（顶部状态栏和底部安全距离除外）
   --page-height: calc(100vh - env(safe-area-inset-bottom) - #{v-bind(statusBarHeight)});
   // 页面内容主高度（页面视窗高度 - navbar - tabbar）
-  --page-main-height: calc(var(--page-height) - 44px - 50px);
+  --page-main-height: calc(var(--page-height) - 88rpx - 100rpx);
   // 页面内容无tabbar高度（页面视窗高度 - tabbar）
-  --page-notab-height: calc(var(--page-height) - 44px);
+  --page-notab-height: calc(var(--page-height) - 88rpx);
   // 页面内容无navbar高度（页面视窗高度 - navbar）
-  --page-nonav-height: calc(var(--page-height) - 50px);
+  --page-nonav-height: calc(var(--page-height) - 100rpx);
 
   min-height: 100vh;
   

@@ -35,7 +35,7 @@
             placeholder="请输入验证码"
           >
             <template #left>
-              <i class="sv-icons-verify padding-lr-xs" style="color: #c4c8d0"></i>
+              <text class="sv-icons-verify padding-lr-xs" style="color: #c4c8d0"></text>
             </template>
             <template #right>
               <view class="captcha-image" @click="getCaptchaImg">
@@ -50,11 +50,11 @@
     <!-- 按钮 -->
     <view class="flex justify-between padding-tb" style="margin-top: auto">
       <button class="cu-btn round bg-cyan" style="width: 200rpx" @click="skipLogin">
-        <i class="cuIcon-back margin-right-xs"></i>
+        <text class="cuIcon-back margin-right-xs"></text>
         返回
       </button>
       <button class="cu-btn round bg-purple" style="width: 200rpx" @click="toRegister">
-        <i class="cuIcon-people margin-right-xs"></i>
+        <text class="cuIcon-people margin-right-xs"></text>
         注册
       </button>
     </view>

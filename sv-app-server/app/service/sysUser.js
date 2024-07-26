@@ -175,12 +175,6 @@ class SysUserService extends Service {
     // 参数校验
     if (!isTruthy(data._id)) ctx.throw(400, { msg: '_id 必填' })
 
-    // 用户名合法性校验
-    if (isTruthy(data.username)) {
-      const usernameRegExp = /^(?![0-9]+$)[a-zA-Z0-9_\-*]{4,20}$/
-      if (!usernameRegExp.test(data.username)) ctx.throw(400, { msg: '用户名长度4-20，可包含字母、数字(不能纯数字)、特殊字符_ - *' })
-    }
-
     // 数据库连接
     const db = app.model.SysUser
 
@@ -189,6 +183,16 @@ class SysUserService extends Service {
 
     const one = await db.findOne(conditions)
     if (!one) ctx.throw(400, { msg: '更新项不存在' })
+
+    // 用户名合法性校验
+    if (isTruthy(data.username)) {
+      const usernameRegExp = /^(?![0-9]+$)[a-zA-Z0-9_\-*]{4,20}$/
+      if (!usernameRegExp.test(data.username)) ctx.throw(400, { msg: '用户名长度4-20，可包含字母、数字(不能纯数字)、特殊字符_ - *' })
+
+      // 是否重复
+      const userExist = await db.findOne({ username: data.username })
+      if (userExist) ctx.throw(400, { msg: '用户名已存在' })
+    }
 
     // 筛选字段：0 隐藏，1 显示
     const projection = {

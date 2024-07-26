@@ -4,113 +4,113 @@ import { refreshToken, verifyToken } from '@/api/user/login'
 import { assignOverride } from '@/utils/util'
 
 export const useUserStore = defineStore('sv-user', () => {
-  // token
-  const token = ref('')
+	// token
+	const token = ref('')
 
-  function getToken() {
-    return token.value
-  }
+	function getToken() {
+		return token.value
+	}
 
-  function setToken(e) {
-    token.value = e
-  }
+	function setToken(e) {
+		token.value = e
+	}
 
-  /**
-   * 解析token
-   * 获取token中携带的数据
-   */
-  async function veToken() {
-    const tokenRes = await verifyToken()
-    // 解析并获取用户权限
-    this.permission = tokenRes.data.permission
-    // 其他...
-  }
+	// 以是否有token判断用户是否已登录
+	const hasLogin = computed(() => !!token.value)
 
-  // 刷新token
-  async function reToken() {
-    // 只在token还有效时刷新，token无效时会直接拦截，前往登录
-    if (userInfo.value.username && token.value) {
-      const tokenRes = await refreshToken({
-        username: userInfo.value.username
-      })
-      token.value = tokenRes.token
-      await veToken()
-    }
-  }
+	// 用户信息
+	const userInfo = ref({})
 
-  // 以是否有token判断用户是否已登录
-  const hasLogin = computed(() => !!token.value)
+	function getUserInfo() {
+		return userInfo.value
+	}
 
-  // 用户信息
-  const userInfo = ref({})
+	function setUserInfo(e) {
+		userInfo.value = e
+	}
 
-  function getUserInfo() {
-    return userInfo.value
-  }
+	// 一键清空token用户信息等
+	function clearUserInfo() {
+		token.value = ''
+		userInfo.value = {}
+		permission.value = []
+	}
 
-  function setUserInfo(e) {
-    userInfo.value = e
-  }
+	// 用户权限
+	const permission = ref([])
 
-  // 一键清空token用户信息等
-  function clearUserInfo() {
-    token.value = ''
-    userInfo.value = {}
-    permission.value = []
-  }
+	function getPermission() {
+		return permission.value
+	}
 
-  // 用户权限
-  const permission = ref([])
+	function setPermission(e) {
+		permission.value = e
+	}
 
-  function getPermission() {
-    return permission.value
-  }
+	// 记住密码缓存
+	const rememberLoginForm = ref({
+		username: '',
+		password: '',
+		rememberme: false
+	})
 
-  function setPermission(e) {
-    permission.value = e
-  }
+	function getRememberLogin() {
+		return rememberLoginForm.value
+	}
 
-  // 记住密码缓存
-  const rememberLoginForm = ref({
-    username: '',
-    password: '',
-    rememberme: false
-  })
+	function setRememberLogin(e) {
+		rememberLoginForm.value = assignOverride({
+			username: '',
+			password: '',
+			rememberme: false
+		}, e)
+	}
 
-  function getRememberLogin() {
-    return rememberLoginForm.value
-  }
+	/**
+	 * 解析token
+	 * 获取token中携带的数据
+	 */
+	async function veToken() {
+		const tokenRes = await verifyToken()
+		// 解析并获取用户权限
+		permission.value = tokenRes.data.permission
+		// 其他...
+	}
 
-  function setRememberLogin(e) {
-    rememberLoginForm.value = assignOverride({
-      username: '',
-      password: '',
-      rememberme: false
-    }, e)
-  }
+	// 刷新token
+	async function reToken() {
+		// 只在token还有效时刷新，token无效时会直接拦截，前往登录
+		if (userInfo.value._id && token.value) {
+			const tokenRes = await refreshToken({ _id: userInfo.value._id })
+			// 更新token
+			token.value = tokenRes.token
+			// 解析并获取用户权限
+			permission.value = tokenRes.verify.permission
+		}
+	}
 
-  return {
-    token,
-    getToken,
-    setToken,
-    veToken,
-    reToken,
+	return {
+		token,
+		getToken,
+		setToken,
+		veToken,
+		reToken,
 
-    hasLogin,
+		hasLogin,
 
-    userInfo,
-    getUserInfo,
-    setUserInfo,
-    clearUserInfo,
+		userInfo,
+		getUserInfo,
+		setUserInfo,
+		clearUserInfo,
 
-    permission,
-    getPermission,
-    setPermission,
+		permission,
+		getPermission,
+		setPermission,
 
-    rememberLoginForm,
-    getRememberLogin,
-    setRememberLogin,
-  }
+		rememberLoginForm,
+		getRememberLogin,
+		setRememberLogin,
+	}
 }, {
-  unistorage: true // 开启后对 state 的数据读写都将持久化
+	unistorage: true // 开启后对 state 的数据读写都将持久化
 })

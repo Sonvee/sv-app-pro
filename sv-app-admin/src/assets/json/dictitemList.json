@@ -148,27 +148,27 @@
       "value": "0",
       "remark": "",
       "sort": 0,
-      "action_style": "",
+      "action_style": "info",
       "status": 1
     },
     {
       "dict_type": "dict_sys_user_gender",
       "dictitem_id": "dict_sys_user_gender_1",
-      "label": "男",
+      "label": "♂",
       "value": "1",
       "remark": "",
       "sort": 1,
-      "action_style": "",
+      "action_style": "primary",
       "status": 1
     },
     {
       "dict_type": "dict_sys_user_gender",
       "dictitem_id": "dict_sys_user_gender_2",
-      "label": "女",
+      "label": "♀",
       "value": "2",
       "remark": "",
       "sort": 2,
-      "action_style": "",
+      "action_style": "danger",
       "status": 1
     },
     {

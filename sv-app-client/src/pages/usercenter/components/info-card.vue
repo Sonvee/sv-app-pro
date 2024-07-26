@@ -11,9 +11,9 @@
       <view class="user-avatar">
         <image
           class="avatar-image"
-          :src="userInfo?.avatar?.url || picture"
+          :src="userInfo?.avatar?.url || picture" 
           mode="aspectFit"
-          @click="preview"
+          @click="onEditorInfo"
         ></image>
       </view>
       <view class="info-edit">
@@ -38,21 +38,21 @@
       </view>
       <view v-if="!isFold">
         <view class="margin-top-xs text-grey text-sm">
-          <i class="cuIcon-people margin-right-xs"></i>
+          <text class="cuIcon-people margin-right-xs"></text>
           <text>用户名：{{ userInfo?.username }}</text>
         </view>
         <view class="margin-top-xs text-grey text-sm">
-          <i class="uni-icons-map-pin-ellipse margin-right-xs"></i>
+          <text class="uni-icons-map-pin-ellipse margin-right-xs"></text>
           <text>IP 归属地：{{ userInfo?.login_ip }}</text>
         </view>
         <view class="margin-top-xs text-grey text-sm">
-          <i class="sv-icons-idcard margin-right-xs"></i>
+          <text class="sv-icons-idcard margin-right-xs"></text>
           <text>UID：{{ userInfo?._id }}</text>
-          <i
+          <text
             v-if="userInfo?._id"
             class="cuIcon-copy margin-left-xs"
             @click="onCopy(userInfo?._id)"
-          ></i>
+          ></text>
         </view>
       </view>
     </view>
@@ -91,12 +91,6 @@ function onCopy(text) {
 function onEditorInfo() {
   uni.navigateTo({
     url: '/pages/usercenter/userinfo'
-  })
-}
-
-function preview() {
-  uni.previewImage({
-    urls: [userInfo.value?.avatar?.url || picture]
   })
 }
 </script>

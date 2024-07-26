@@ -1,7 +1,7 @@
 <template>
   <view class="agreements-service-page">
     <h2 class="head-title-2">
-      <i class="uni-icons-back abs-left" @click="goBack"></i>
+      <text class="uni-icons-back abs-left" @click="goBack"></text>
       用户服务协议
     </h2>
     <article>

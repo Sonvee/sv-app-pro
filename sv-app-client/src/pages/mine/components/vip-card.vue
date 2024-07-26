@@ -3,11 +3,11 @@
 		<image src="@/assets/svgs/vip_bg.svg" class="bg-image" mode="aspectFill"></image>
 		<view class="flex-sub">
 			<view class="sv-text-streamer">
-				<i class="cuIcon-choiceness"></i>
+				<text class="cuIcon-choiceness"></text>
 				恭喜您已成为会员
 			</view>
 			<view class="text-green mt-2">
-				<i class="cuIcon-crownfill"></i>
+				<text class="cuIcon-crownfill"></text>
 				查看我的会员特权
 			</view>
 		</view>

@@ -1,7 +1,7 @@
 <template>
   <view class="wechat-login">
     <button class="cu-btn round bg-gradual-green block" @click="wxLogin">
-      <i class="uni-icons-weixin margin-right-xs"></i>
+      <text class="uni-icons-weixin margin-right-xs"></text>
       微信一键登录
     </button>
   </view>

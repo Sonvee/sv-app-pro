@@ -2,7 +2,7 @@
   <view class="sv-navbar" :style="dynamicStyle">
     <view class="navbar-left">
       <slot name="left">
-        <i v-if="!isTabbar" class="cuIcon-back text-xxl padding-lr-sm" @click="onBack"></i>
+        <text v-if="!isTabbar" class="cuIcon-back text-xxl padding-lr-sm" @click="onBack"></text>
       </slot>
     </view>
     <view class="navbar-center text-line-1">
@@ -81,7 +81,7 @@ function onBack() {
 </script>
 
 <style lang="scss">
-$sv-navbar-height: calc(44px + v-bind(statusBarHeight));
+$sv-navbar-height: calc(88rpx + v-bind(statusBarHeight));
 
 .sv-navbar-placeholder {
   width: 0;
@@ -106,11 +106,11 @@ $sv-navbar-height: calc(44px + v-bind(statusBarHeight));
 
   // 模糊特效
   --navbar-color: var(--bg-color);
-  --frosted-effect: radial-gradient(transparent 1px, var(--navbar-color) 4px);
+  --frosted-effect: radial-gradient(transparent 2rpx, var(--navbar-color) 8rpx);
   // background-image: var(--frosted-effect); // 以动态style方式设置
-  background-size: 4px 4px;
+  background-size: 8rpx 8rpx;
 
-  --glass-effect: saturate(50%) blur(4px);
+  --glass-effect: saturate(50%) blur(8rpx);
   // backdrop-filter: var(--glass-effect);
 
   .navbar-left,
@@ -123,7 +123,7 @@ $sv-navbar-height: calc(44px + v-bind(statusBarHeight));
 
   .navbar-center {
     flex: 1;
-    font-size: 14px;
+    font-size: 28rpx;
     text-align: center;
   }
 }

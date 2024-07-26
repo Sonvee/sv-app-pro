@@ -1,11 +1,13 @@
 <template>
 	<view class="user-card text-white">
+		<!-- 背景 -->
+		<image src="@/assets/svgs/mine_header_bg.svg" class="bg-image" mode="aspectFill"></image>
 		<!-- 用户卡片 -->
 		<view class="user-info flex-vc" @click="skipCenter">
 			<!-- 头像 -->
 			<view class="cu-avatar round lg">
 				<image class="w-h-full" v-if="userInfo?.avatar?.url" :src="userInfo.avatar.url"></image>
-				<i v-else class="cuIcon-my"></i>
+				<text v-else class="cuIcon-my"></text>
 			</view>
 			<!-- 昵称 -->
 			<view class="user-name margin-left flex-sub">
@@ -16,7 +18,7 @@
 					{{ userInfo?.comment || '写点什么吧 🖉' }}
 				</view>
 			</view>
-			<i class="cuIcon-right text-gray"></i>
+			<text class="cuIcon-right text-gray"></text>
 		</view>
 		<!-- 数据展示 -->
 		<view class="margin-top-lg flex">
@@ -57,9 +59,8 @@ $sv-navbar-height: calc(44px + v-bind(statusBarHeight));
 	height: 100%;
 	padding: #{$sv-navbar-height} 30rpx 80rpx;
 	border-radius: 0 0 20rpx 20rpx;
-
-	background-image: url('@/assets/svgs/mine_header_bg.svg');
-	background-repeat: no-repeat;
-	background-size: cover;
+	position: relative;
+	overflow: hidden;
+	z-index: 0;
 }
 </style>

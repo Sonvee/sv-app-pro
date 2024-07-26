@@ -106,7 +106,7 @@ function changeTab(index) {
 </script>
 
 <style lang="scss">
-$sv-tabbar-height: calc(50px + env(safe-area-inset-bottom));
+$sv-tabbar-height: calc(100rpx + env(safe-area-inset-bottom));
 
 .sv-tabbar-placeholder {
 	width: 0;
@@ -134,9 +134,9 @@ $sv-tabbar-height: calc(50px + env(safe-area-inset-bottom));
 		justify-content: center;
 
 		.tabbar-icon {
-			width: 24px;
-			height: 24px;
-			font-size: 24px;
+			width: 48rpx;
+			height: 48rpx;
+			font-size: 48rpx;
 			display: flex;
 			justify-content: center;
 			align-content: center;
@@ -144,17 +144,17 @@ $sv-tabbar-height: calc(50px + env(safe-area-inset-bottom));
 		}
 
 		.tabbar-icon-center {
-			height: 24px;
+			height: 48rpx;
 			position: relative;
-			bottom: 24px;
+			bottom: 48rpx;
 
 			.center-fab {
 				position: absolute;
 				top: 0;
-				left: -25px;
-				width: 50px;
-				height: 50px;
-				font-size: 40px;
+				left: -50rpx;
+				width: 100rpx;
+				height: 100rpx;
+				font-size: 80rpx;
 				border-radius: 50%;
 				box-sizing: border-box;
 				display: flex;
@@ -168,8 +168,8 @@ $sv-tabbar-height: calc(50px + env(safe-area-inset-bottom));
 		}
 
 		.tabbar-text {
-			font-size: 12px;
-			margin-top: 2px;
+			font-size: 24rpx;
+			margin-top: 4rpx;
 		}
 	}
 }

@@ -8,7 +8,7 @@
 			<view class="quick-menu menu glass">
 				<view class="sv-grid grid-col-5">
 					<view class="flex-col-vhc" v-for="item in quickMenus" :key="item.name" @click="skipMenu(item)">
-						<i :class="item.icon" class="fs-26"></i>
+						<text :class="item.icon" class="fs-26"></text>
 						<text class="text-sm margin-top-xs">{{ item.name }}</text>
 					</view>
 				</view>
@@ -32,7 +32,7 @@
 				</view>
 				<view class="margin-top-xs sv-grid grid-col-4">
 					<view class="flex-col-vhc" v-for="item in usedMenus" :key="item.name" @click="skipMenu(item)">
-						<i :class="item.icon" class="fs-30"></i>
+						<text :class="item.icon" class="fs-30"></text>
 						<text class="text-sm margin-top-xs">{{ item.name }}</text>
 					</view>
 				</view>
@@ -48,7 +48,7 @@
 				</view>
 				<view class="margin-top-xs sv-grid grid-col-4 grid-gap-row">
 					<view class="flex-sub flex-col-vhc" v-for="item in otherMenus" :key="item.name" @click="skipMenu(item)">
-						<i :class="item.icon" class="fs-30"></i>
+						<text :class="item.icon" class="fs-30"></text>
 						<text class="text-sm margin-top-xs">{{ item.name }}</text>
 					</view>
 				</view>
