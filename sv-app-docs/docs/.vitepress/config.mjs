@@ -9,7 +9,7 @@ const deployConfig = {
   },
   // GithubPages部署
   github: {
-    base: '/docs-github',
+    base: '/sv-app-pro/sv-app-docs/docs-github',
     outDir: '../docs-github'
   },
   // uni部署
