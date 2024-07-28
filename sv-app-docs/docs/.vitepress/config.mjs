@@ -20,7 +20,7 @@ const deployConfig = {
 }
 
 // 部署模式 - 打包时需要切换三种模式依次进行打包，再分别发布对应平台
-const platform = 'h5'
+const platform = 'github'
 
 export default defineConfig({
   base: deployConfig[platform].base,
