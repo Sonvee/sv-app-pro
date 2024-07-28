@@ -33,6 +33,13 @@
         "navigationBarTitleText": "登录",
         "enablePullDownRefresh": false
       }
+    },
+    {
+    	"path" : "pages/security/security",
+    	"style" : 
+    	{
+    		"navigationBarTitleText" : "安全中心"
+    	}
     }
   ],
   "subPackages": [{

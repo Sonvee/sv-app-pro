@@ -2,8 +2,8 @@
 	<sv-page>
 		<view class="setting-page">
 			<uv-cell-group>
-				<uv-cell title="账号资料" isLink @click="onEditorInfo"></uv-cell>
-				<uv-cell title="安全中心" isLink></uv-cell>
+				<uv-cell title="账号资料" isLink @click="skipPage('/pages/usercenter/userinfo')"></uv-cell>
+				<uv-cell title="安全中心" isLink @click="skipPage('/pages/security/security')"></uv-cell>
 			</uv-cell-group>
 			<view class="margin-top"></view>
 			<uv-cell-group>
@@ -15,8 +15,8 @@
 			</uv-cell-group>
 			<view class="margin-top"></view>
 			<uv-cell-group>
-				<uv-cell title="用户协议" isLink></uv-cell>
-				<uv-cell title="隐私政策" isLink></uv-cell>
+				<uv-cell title="用户协议" isLink @click="skipPage('/pages/agreements/privacy')"></uv-cell>
+				<uv-cell title="隐私政策" isLink @click="skipPage('/pages/agreements/service')"></uv-cell>
 			</uv-cell-group>
 			<view class="margin-top"></view>
 			<uv-cell-group>
@@ -35,9 +35,9 @@ import { logout } from '@/api/user/login'
 import { useUserStore } from '@/store/user'
 import { useLoginModal } from '@/hooks/useLoginModal'
 
-function onEditorInfo() {
-	if (!useLoginModal()) return
-	uni.navigateTo({ url: '/pages/usercenter/userinfo' })
+function skipPage(path, needLogin = false) {
+	if (needLogin && !useLoginModal()) return
+	uni.navigateTo({ url: path })
 }
 
 function onLogout() {

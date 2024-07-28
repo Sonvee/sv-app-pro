@@ -2,7 +2,7 @@
   <view class="agreements-privacy-page">
     <h2 class="head-title-2">
       <text class="uni-icons-back abs-left" @click="goBack"></text>
-      隐私政策条款
+      隐私政策
     </h2>
     <article>
       <h4 class="head-title-4">一、引言与目的</h4>
@@ -43,7 +43,7 @@
         &emsp;&emsp;您有权随时查询、更正、删除我们持有的您的个人信息。对于实名认证信息，您也有权撤销授权或申请注销账户。
         如有需求，请通过应用内设置或联系我们的客服人员行使您的权利。 具体隐私政策请参阅
         <text class="text-blue text-under-line" @click="toService">
-          《【{{ config.name }}】服务协议》
+          《【{{ config.name }}】用户协议》
         </text>
         。
       </p>

@@ -2,13 +2,13 @@
   <view class="agreements-service-page">
     <h2 class="head-title-2">
       <text class="uni-icons-back abs-left" @click="goBack"></text>
-      用户服务协议
+      用户协议
     </h2>
     <article>
       <h4 class="head-title-4">一、引言</h4>
       <p class="paragraph">
         &emsp;&emsp;欢迎您使用【{{ config.name }}】（以下简称“本应用”）提供的各项服务。
-        在开始使用本应用前，请您务必仔细阅读并接受本《用户服务协议》（以下简称“本协议”）。
+        在开始使用本应用前，请您务必仔细阅读并接受本《用户协议》（以下简称“本协议”）。
         通过注册、登录或以其他方式使用本应用，即视为您已同意并接受本协议的所有条款。
       </p>
       <h4 class="head-title-4">二、服务内容与变更</h4>

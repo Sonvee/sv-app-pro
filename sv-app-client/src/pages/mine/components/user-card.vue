@@ -5,10 +5,7 @@
 		<!-- 用户卡片 -->
 		<view class="user-info flex-vc" @click="skipCenter">
 			<!-- 头像 -->
-			<view class="cu-avatar round lg">
-				<image class="w-h-full" v-if="hasLogin && userInfo?.avatar?.url" :src="userInfo.avatar.url"></image>
-				<text v-else class="cuIcon-my"></text>
-			</view>
+			<uv-avatar size="100rpx" :src="userInfo.avatar.url"></uv-avatar>
 			<!-- 昵称 -->
 			<view class="user-name margin-left flex-sub">
 				<view class="text-bold text-lg text-line-1">
