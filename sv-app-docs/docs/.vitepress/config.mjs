@@ -9,7 +9,7 @@ const deployConfig = {
   },
   // GithubPages部署
   github: {
-    base: 'sv-app-pro/sv-app-docs/docs-github',
+    base: '/docs-github',
     outDir: '../docs-github'
   },
   // uni部署
@@ -20,7 +20,7 @@ const deployConfig = {
 }
 
 // 部署模式 - 打包时需要切换三种模式依次进行打包，再分别发布对应平台
-const platform = 'h5'
+const platform = 'github'
 
 export default defineConfig({
   base: deployConfig[platform].base,
