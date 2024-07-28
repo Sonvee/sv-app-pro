@@ -1,17 +1,19 @@
 <template>
-	<!-- #ifdef H5 -->
-	<keep-alive>
-		<component :is="curComp"></component>
-	</keep-alive>
-	<!-- #endif -->
+	<view class="use-component">
+		<!-- #ifdef H5 -->
+		<keep-alive>
+			<component :is="curComp"></component>
+		</keep-alive>
+		<!-- #endif -->
 
-	<!-- #ifndef H5 -->
-	<accountLogin v-show="was == 'accountLogin'"></accountLogin>
-	<accountRegister v-show="was == 'accountRegister'"></accountRegister>
-	<phoneLogin v-show="was == 'phoneLogin'"></phoneLogin>
-	<emailLogin v-show="was == 'emailLogin'"></emailLogin>
-	<wechatLogin v-show="was == 'wechatLogin'"></wechatLogin>
-	<!-- #endif -->
+		<!-- #ifndef H5 -->
+		<accountLogin v-show="was == 'accountLogin'"></accountLogin>
+		<accountRegister v-show="was == 'accountRegister'"></accountRegister>
+		<phoneLogin v-show="was == 'phoneLogin'"></phoneLogin>
+		<emailLogin v-show="was == 'emailLogin'"></emailLogin>
+		<wechatLogin v-show="was == 'wechatLogin'"></wechatLogin>
+		<!-- #endif -->
+	</view>
 </template>
 
 <script setup>
@@ -42,7 +44,9 @@ const curComp = computed(() => {
 })
 </script>
 
-<style>
+<style lang="scss">
 .use-component {
+	width: 100%;
+	height: 100%;
 }
 </style>

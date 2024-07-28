@@ -42,7 +42,7 @@
 				<uv-cell title="个性签名" isLink @click="onEdit('comment')">
 					<template #value>
 						<text class="value-text text-line-1">
-							{{ userInfo.comment || '写点什么吧 🖉' }}
+							{{ userInfo.comment || '写点什么吧 ~' }}
 						</text>
 					</template>
 				</uv-cell>

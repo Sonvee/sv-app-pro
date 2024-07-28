@@ -5,7 +5,7 @@
 		:show="showPageContainer"
 		:duration="false"
 		:overlay="false"
-		@beforeleave="beforeBack"
+		@beforeleave="beforeLeave"
 	></page-container>
 	<!-- #endif -->
 </template>
@@ -22,19 +22,35 @@ export default {
 		 * 拦截前操作
 		 * @description 需返回布尔类型决定是否正常返回，可接收异步函数
 		 * @returns {Boolean} true：正常返回，false：拦截返回
+		 * @example 示例
+		 * 		async function beforeIntercept() {
+		 * 			const isBack = await new Promise((callback) => {
+		 * 				uni.showModal({
+		 * 					title: '系统提示',
+		 * 					content: '是否退出当前页面',
+		 * 					success: ({ confirm }) => {
+		 * 						callback(confirm)
+		 * 					}
+		 * 				})
+		 * 			})
+		 * 			return isBack
+		 *		}
 		 */
 		beforeIntercept: {
 			type: Function,
 			required: true
 		},
-		// 自定义返回操作
+		/**
+		 * 自定义返回操作
+		 * @description 当启用自定义返回操作时，取消默认的返回行为
+		 */
 		customBack: {
 			type: Function
 		}
 	},
 	data() {
 		return {
-			showPageContainer: true
+			showPageContainer: true // 是否显示微信小程序拦截器
 		}
 	},
 	watch: {
@@ -42,7 +58,7 @@ export default {
 			handler(newVal) {
 				// #ifndef MP-WEIXIN
 				if (newVal) {
-					this.interceptBack()
+					this.createIntercept()
 				} else {
 					uni.removeInterceptor('navigateBack')
 				}
@@ -57,11 +73,13 @@ export default {
 	},
 	methods: {
 		// APP、H5拦截返回
-		interceptBack() {
+		createIntercept() {
 			uni.addInterceptor('navigateBack', {
-				invoke: async (res) => {
+				invoke: async () => {
 					const isBack = await this.beforeIntercept()
 					if (isBack) {
+						// 需要先卸载拦截器再安全返回
+						uni.removeInterceptor('navigateBack')
 						// 正常返回
 						this.$emit('backConfirm')
 						// 判断返回事件
@@ -72,21 +90,22 @@ export default {
 							// 默认正常返回
 							uni.navigateBack({ delta: 1 })
 						}
-						return false
+						throw 'back:confirm' // 利用抛出异常来终止后续操作，该行代码不可移除
 					} else {
 						// 拦截返回
 						this.$emit('backCancel')
+						throw 'back:cancel' // 利用抛出异常来终止后续操作，该行代码不可移除
 					}
-				},
-				complete: () => {}
+				}
 			})
 		},
 		// 微信小程序拦截返回
-		async beforeBack() {
+		async beforeLeave() {
 			if (!this.show) return
-			this.showPageContainer = false // 必须先隐藏page-container
+			this.showPageContainer = false // 必须先隐藏 page-container
 
 			const isBack = await this.beforeIntercept()
+
 			if (isBack) {
 				this.$emit('backConfirm')
 				// 判断返回事件
@@ -99,7 +118,7 @@ export default {
 				}
 			} else {
 				this.$emit('backCancel')
-				this.showPageContainer = true
+				this.showPageContainer = true // 取消返回则重新显示 page-container
 			}
 		}
 	}

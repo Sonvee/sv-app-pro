@@ -17,7 +17,7 @@
 				<view class="captcha-input">
 					<uni-easyinput v-model="loginForm.captcha" type="text" :maxlength="4" placeholder="请输入验证码">
 						<template #left>
-							<text class="sv-icons-verify text-xxl padding-lr-xs" style="color: #c4c8d0"></text>
+							<text class="sv-icons-verify" style="color: #c4c8d0; font-size: 22px; padding: 0 5px"></text>
 						</template>
 						<template #right>
 							<view class="captcha-image" @click="getCaptchaImg">
@@ -189,9 +189,9 @@ export default {
 			padding-left: 0 !important;
 		}
 		.captcha-image {
-			width: 160rpx;
-			height: 56rpx;
-			margin: 0 8rpx;
+			width: 80px;
+			height: 28px;
+			margin: 0 4px;
 			border: 1px solid #cccccc;
 			background-color: #f8f8f8;
 		}

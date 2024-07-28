@@ -6,16 +6,16 @@
 		<view class="user-info flex-vc" @click="skipCenter">
 			<!-- 头像 -->
 			<view class="cu-avatar round lg">
-				<image class="w-h-full" v-if="userInfo?.avatar?.url" :src="userInfo.avatar.url"></image>
+				<image class="w-h-full" v-if="hasLogin && userInfo?.avatar?.url" :src="userInfo.avatar.url"></image>
 				<text v-else class="cuIcon-my"></text>
 			</view>
 			<!-- 昵称 -->
 			<view class="user-name margin-left flex-sub">
 				<view class="text-bold text-lg text-line-1">
-					{{ userInfo?.nickname || '起个昵称' }}
+					{{ hasLogin ? userInfo?.nickname || '起个昵称' : '前往登录' }}
 				</view>
-				<view class="text-gray text-sm margin-top-xs text-line-1">
-					{{ userInfo?.comment || '写点什么吧 🖉' }}
+				<view v-if="hasLogin" class="text-gray text-sm margin-top-xs text-line-1">
+					{{ userInfo?.comment || '写点什么吧 ~' }}
 				</view>
 			</view>
 			<text class="cuIcon-right text-gray"></text>
@@ -37,6 +37,7 @@ import { useLoginModal } from '@/hooks/useLoginModal.js'
 
 const statusBarHeight = computed(() => uni.getSystemInfoSync().statusBarHeight + 'px')
 const userInfo = computed(() => useUserStore().getUserInfo())
+const hasLogin = computed(() => useUserStore().hasLogin)
 
 const dataStatistics = [
 	{ lable: '数据甲', value: '782' },

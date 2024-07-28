@@ -14,10 +14,10 @@
 				<view class="captcha-input">
 					<uni-easyinput v-model="emailForm.captcha" type="text" :maxlength="6" placeholder="请输入验证码">
 						<template #left>
-							<text class="sv-icons-verify text-xxl padding-lr-xs" style="color: #c4c8d0"></text>
+							<text class="sv-icons-verify" style="color: #c4c8d0; font-size: 22px; padding: 0 5px"></text>
 						</template>
 						<template #right>
-							<button class="cu-btn sm bg-cyan margin-lr-xs" :disabled="captchaDisabled" @click="getCaptchaImg">
+							<button class="cu-btn bg-cyan captcha-btn" :disabled="captchaDisabled" @click="getCaptchaImg">
 								获取验证码{{ captchaCountdown ? '(' + captchaCountdown + ')' : '' }}
 							</button>
 						</template>
@@ -165,6 +165,13 @@ export default {
 	.captcha-input {
 		:deep(.uni-easyinput__content-input) {
 			padding-left: 0 !important;
+		}
+
+		.captcha-btn {
+			margin: 0 5px;
+			padding: 0 10px;
+			font-size: 10px;
+			height: 24px;
 		}
 	}
 }
