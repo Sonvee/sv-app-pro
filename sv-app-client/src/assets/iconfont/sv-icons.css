@@ -20,6 +20,22 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.sv-icons-dev-setting:before {
+  content: "\e742";
+}
+
+.sv-icons-setting-update:before {
+  content: "\e735";
+}
+
+.sv-icons-history-setting:before {
+  content: "\e602";
+}
+
+.sv-icons-async-update:before {
+  content: "\e70e";
+}
+
 .sv-icons-idcard:before {
   content: "\e7de";
 }
@@ -42,10 +58,6 @@
 
 .sv-icons-storage:before {
   content: "\e613";
-}
-
-.sv-icons-cache:before {
-  content: "\ec64";
 }
 
 .sv-icons-redis:before {

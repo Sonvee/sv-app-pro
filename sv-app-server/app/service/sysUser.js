@@ -213,8 +213,8 @@ class SysUserService extends Service {
 
     // 用户名合法性校验
     if (isTruthy(data.username)) {
-      const usernameRegExp = /^(?![0-9]+$)[a-zA-Z0-9_\-*]{4,20}$/
-      if (!usernameRegExp.test(data.username)) ctx.throw(400, { msg: '用户名长度4-20，可包含字母、数字(不能纯数字)、特殊字符_ - *' })
+      const usernameRegExp = useRegExp('username')
+      if (!usernameRegExp.regexp.test(data.username)) ctx.throw(400, { msg: usernameRegExp.msg })
 
       // 是否重复
       const userExist = await db.findOne({ username: data.username })

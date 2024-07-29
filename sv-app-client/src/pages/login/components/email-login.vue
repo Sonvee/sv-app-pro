@@ -2,13 +2,7 @@
 	<view class="email-login flex-col justify-between">
 		<uni-forms ref="emailFormRef" :model="emailForm" :rules="emailRules">
 			<uni-forms-item name="email">
-				<uni-easyinput
-					v-model="emailForm.email"
-					type="text"
-					:maxlength="20"
-					placeholder="请输入邮箱"
-					prefixIcon="email"
-				/>
+				<uni-easyinput v-model="emailForm.email" type="text" placeholder="请输入邮箱" prefixIcon="email" />
 			</uni-forms-item>
 			<uni-forms-item name="captcha">
 				<view class="captcha-input">
@@ -17,8 +11,12 @@
 							<text class="sv-icons-verify" style="color: #c4c8d0; font-size: 22px; padding: 0 5px"></text>
 						</template>
 						<template #right>
-							<button class="cu-btn bg-cyan captcha-btn" :disabled="captchaDisabled" @click="getCaptchaImg">
-								获取验证码{{ captchaCountdown ? '(' + captchaCountdown + ')' : '' }}
+							<button
+								class="cu-btn bg-cyan captcha-btn"
+								:disabled="countdownIns.disabled.value"
+								@click="getCaptchaEmail"
+							>
+								获取验证码{{ countdownIns.cd.value ? '(' + countdownIns.cd.value + ')' : '' }}
 							</button>
 						</template>
 					</uni-easyinput>
@@ -43,10 +41,12 @@ import { loginByEmailer } from '@/api/user/login.js'
 import { useUserStore } from '@/store/user'
 import { useRegExp } from '@/utils/regexp'
 import { sleep } from '@/utils/util'
+import { useCountdown } from '@/hooks/useCountdown'
 
 const emits = defineEmits(['skip'])
 
 const userStore = useUserStore()
+const countdownIns = new useCountdown(60)
 
 const emailFormRef = ref()
 const emailForm = ref({
@@ -66,52 +66,29 @@ const emailRules = ref({
 	captcha: { rules: [{ required: true, errorMessage: '请输入验证码' }] }
 })
 
-const captchaDisabled = ref(false)
-const captchaCountdown = ref(0)
-let countdownTimer = null
-
-// 倒计时开始
-const startCountdown = () => {
-	// 不重复创建计时器
-	if (countdownTimer) {
-		clearCountdown()
-		return
-	}
-	captchaDisabled.value = true
-	captchaCountdown.value = 60
-	// 倒计时
-	countdownTimer = setInterval(() => {
-		captchaCountdown.value--
-		if (captchaCountdown.value == 0) {
-			// 倒计时完毕
-			clearCountdown()
-			captchaDisabled.value = false
-		}
-	}, 1000)
-}
-// 倒计时清除
-const clearCountdown = () => {
-	clearInterval(countdownTimer)
-	countdownTimer = null
-	captchaCountdown.value = 0
-}
-
-const captchaImg = ref('')
-function getCaptchaImg() {
-	if (!emailForm.value.email) {
+function getCaptchaEmail() {
+	// 邮箱合法性校验
+	const emailRegExp = useRegExp('email')
+	if (!emailRegExp.regexp.test(emailForm.value.email)) {
 		uni.showToast({
-			title: '请输入有效的邮箱地址',
+			title: emailRegExp.msg,
 			icon: 'none'
 		})
 		return
 	}
+
 	// 开始获取验证码
-	startCountdown()
+	countdownIns.setCD(60) // 设置倒计时时间
+	countdownIns.startCountdown()
+
 	emailCaptcha({
 		email: emailForm.value.email,
 		type: 'login'
 	}).then((res) => {
-		captchaImg.value = res.data
+		uni.showToast({
+			title: res.msg,
+			icon: 'none'
+		})
 	})
 }
 

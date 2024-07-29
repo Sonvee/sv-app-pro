@@ -564,8 +564,11 @@ export default [
   'sv-icons-cloud-server',
   'sv-icons-server',
   'sv-icons-storage',
-  'sv-icons-cache',
   'sv-icons-redis',
   'sv-icons-idcard',
-  'sv-icons-idcard-fill'
+  'sv-icons-idcard-fill',
+  'sv-icons-async-update',
+  'sv-icons-history-setting',
+  'sv-icons-setting-update',
+  'sv-icons-dev-setting'
 ]
