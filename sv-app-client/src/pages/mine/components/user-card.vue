@@ -5,11 +5,11 @@
 		<!-- 用户卡片 -->
 		<view class="user-info flex-vc" @click="skipCenter">
 			<!-- 头像 -->
-			<uv-avatar size="100rpx" :src="userInfo.avatar.url"></uv-avatar>
+			<uv-avatar size="100rpx" :src="userInfo?.avatar?.url"></uv-avatar>
 			<!-- 昵称 -->
 			<view class="user-name margin-left flex-sub">
 				<view class="text-bold text-lg text-line-1">
-					{{ hasLogin ? userInfo?.nickname || '起个昵称' : '前往登录' }}
+					{{ hasLogin ? userInfo?.nickname || '起个昵称吧' : '前往登录' }}
 				</view>
 				<view v-if="hasLogin" class="text-gray text-sm margin-top-xs text-line-1">
 					{{ userInfo?.comment || '写点什么吧 ~' }}

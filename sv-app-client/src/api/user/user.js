@@ -8,6 +8,13 @@ export function userList(data) {
   })
 }
 
+export function userSelf() {
+  return http.request({
+    url: '/user/userSelf',
+    method: 'get',
+  })
+}
+
 export function userUpdate(data) {
   return http.request({
     url: '/user/userUpdate',
@@ -19,6 +26,14 @@ export function userUpdate(data) {
 export function userUpdateSimple(data) {
   return http.request({
     url: '/user/userUpdateSimple',
+    method: 'post',
+    data
+  })
+}
+
+export function changePassword(data) {
+  return http.request({
+    url: '/user/changePassword',
     method: 'post',
     data
   })

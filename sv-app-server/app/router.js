@@ -42,8 +42,10 @@ module.exports = (app) => {
 
   // 账号
   router.post('/user/userList', controller.sysUser.userList)
+  router.get('/user/userSelf', controller.sysUser.userSelf)
   router.post('/user/userUpdate', controller.sysUser.userUpdate)
   router.post('/user/userUpdateSimple', controller.sysUser.userUpdateSimple)
+  router.post('/user/changePassword', controller.sysUser.changePassword)
   router.post('/user/changeStatus', controller.sysUser.changeStatus)
   router.post('/user/userDeactivate', controller.sysUser.userDeactivate)
   router.post('/user/userDelete', controller.sysUser.userDelete)

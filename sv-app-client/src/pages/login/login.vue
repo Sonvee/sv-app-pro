@@ -9,23 +9,23 @@
 					<image src="../../static/logo.png" class="w-h-full"></image>
 				</view>
 				<!-- 名称 -->
-				<view class="text-center text-xxl text-bold sv-text-streamer">{{ config.name }}</view>
+				<view class="text-center text-xxl text-bold sv-text-streamer line-height-3">{{ config.name }}</view>
 				<!-- 登录表单 -->
 				<view class="login-content flex-grow-1 flex-col">
 					<!-- 表单 -->
 					<use-component class="flex-grow-1" :was="loginType"></use-component>
 					<!-- 登录方式 -->
 					<view class="login-type-fab">
-						<view class="fab bg-gradual-blue" @click="switchLoginType('accountLogin')">
+						<view class="fab bg-gradual-blue" @click="switchLoginType('AccountLogin')">
 							<text class="cuIcon-peoplefill text-xxl"></text>
 						</view>
-						<view class="fab bg-gradual-pink" @click="switchLoginType('phoneLogin')">
+						<view class="fab bg-gradual-pink" @click="switchLoginType('PhoneLogin')">
 							<text class="uni-icons-phone-filled text-xxl"></text>
 						</view>
-						<view class="fab bg-gradual-red" @click="switchLoginType('emailLogin')">
+						<view class="fab bg-gradual-red" @click="switchLoginType('EmailLogin')">
 							<text class="uni-icons-email-filled text-xxl"></text>
 						</view>
-						<view class="fab bg-gradual-green" @click="switchLoginType('wechatLogin')">
+						<view class="fab bg-gradual-green" @click="switchLoginType('WechatLogin')">
 							<text class="uni-icons-weixin text-xxl"></text>
 						</view>
 					</view>
@@ -42,12 +42,12 @@ import { ref, provide } from 'vue'
 import config from '@/config/index.js'
 import UseComponent from './components/use-component.vue'
 
-const loginType = ref('accountLogin')
+const loginType = ref('AccountLogin')
 
 provide('curLoginType', loginType)
 
 function switchLoginType(type) {
-	if (type == 'phoneLogin') {
+	if (type == 'PhoneLogin') {
 		return uni.showToast({
 			title: '正在开发中，敬请期待',
 			icon: 'none'
@@ -59,7 +59,6 @@ function switchLoginType(type) {
 
 <style lang="scss">
 .login-page {
-	width: 100%;
 	height: 100vh;
 	padding: 80rpx;
 	padding-top: 200rpx;
@@ -83,12 +82,11 @@ function switchLoginType(type) {
 		.logo {
 			width: 160rpx;
 			height: 160rpx;
-			margin: 40rpx auto;
+			margin: 0 auto;
 		}
 
 		.login-content {
-			padding: 40rpx 0;
-			overflow: auto;
+      overflow: auto;
 
 			.login-type-fab {
 				height: 120rpx;

@@ -33,13 +33,6 @@
         "navigationBarTitleText": "登录",
         "enablePullDownRefresh": false
       }
-    },
-    {
-    	"path" : "pages/security/security",
-    	"style" : 
-    	{
-    		"navigationBarTitleText" : "安全中心"
-    	}
     }
   ],
   "subPackages": [{
@@ -79,6 +72,22 @@
           "path": "userinfo",
           "style": {
             "navigationBarTitleText": "个人资料"
+          }
+        }
+      ]
+    },
+    {
+      "root": "pages/security",
+      "pages": [{
+          "path": "security",
+          "style": {
+            "navigationBarTitleText": "安全中心"
+          }
+        },
+        {
+          "path": "bind-password",
+          "style": {
+            "navigationBarTitleText": "设置密码"
           }
         }
       ]

@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import { useLoginModal } from '@/hooks/useLoginModal';
 
 /**
  * 时间日期格式化
@@ -18,6 +19,15 @@ export function timeFormat(time, format = "YYYY-MM-DD HH:mm:ss") {
  */
 export function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/**
+ * 静态资源处理
+ * @param {String} path 资源路径
+ * @tutorial https://cn.vitejs.dev/guide/assets.html#new-url-url-import-meta-url
+ */
+export function handleImage(path) {
+  return new URL(path, import.meta.url).href
 }
 
 /**
@@ -177,4 +187,56 @@ export function multipleJudgment(origin, conditions = [], result = []) {
 
   // 如果没有找到，则返回本身
   return origin
+}
+
+/**
+ * 隐藏部分手机号和邮箱字符以*代替
+ * @param {String} input - 输入的手机号或邮箱
+ * @returns {String} - 处理后的手机号或邮箱
+ */
+export function maskPersonalInfo(input) {
+  // 检查是否为手机号
+  const isPhoneNumber = /^1[3-9]\d{9}$/.test(input);
+
+  // 检查是否为邮箱
+  const isEmail = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(input);
+
+  if (isPhoneNumber) {
+    // 处理手机号
+    return input.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2');
+  } else if (isEmail) {
+    // 处理邮箱
+    const atIndex = input.indexOf('@');
+    const localPart = input.substring(0, atIndex);
+
+    // 检查本地部分是否有至少四个字符
+    if (localPart.length >= 4) {
+      const maskedLocalPart = localPart.substring(0, 3) + '*'.repeat(localPart.length - 3);
+      return maskedLocalPart + input.substring(atIndex);
+    } else {
+      // 如果本地部分不足四个字符，则不进行替换
+      return input;
+    }
+  } else {
+    // 如果既不是手机号也不是邮箱，则返回原输入
+    return input;
+  }
+}
+
+/**
+ * 页面跳转
+ * @description 本方法在页面跳转时，可将要跳转的页面是否需要登录作为可控参数传入
+ * @param {String} path - 跳转路径
+ * @param {Boolean} needlogin - 是否需要登录 默认false
+ */
+export function skipPage(path, needlogin = false) {
+  if (needlogin && !useLoginModal()) return
+  if (path) {
+    uni.navigateTo({ url: path })
+  } else {
+    uni.showToast({
+      title: '敬请期待',
+      icon: 'none'
+    })
+  }
 }

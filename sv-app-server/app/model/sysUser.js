@@ -103,11 +103,11 @@ module.exports = (app) => {
       login_platform: {
         type: String
       },
-      // 微信openid
+      // 微信openid 腾讯公共平台
       wx_openid: {
         type: String
       },
-      // 微信unionid
+      // 微信unionid 腾讯开放平台
       wx_unionid: {
         type: String
       },

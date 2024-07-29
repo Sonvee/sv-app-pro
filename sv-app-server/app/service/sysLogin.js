@@ -293,32 +293,24 @@ class SysLoginService extends Service {
   }
 
   /**
-   * 退出登录 post - 权限 self
+   * 退出登录 post - 权限 self_id
    * @param {Object} data - 请求参数
    * @property {String} data.username - 用户名
    */
   async logout(data) {
     const { ctx, app } = this
 
-    // 参数处理
-    data = Object.assign(
-      {
-        username: ''
-      },
-      data
-    )
-
     // 参数校验
-    if (!isTruthy(data.username)) ctx.throw(400, { msg: 'username 必填' })
+    if (!isTruthy(data._id)) ctx.throw(400, { msg: '_id 必填' })
 
     // 权限校验
-    ctx.checkAuthority('self', data.username)
+    ctx.checkAuthority('self_id', data._id)
 
     // 数据库连接
     const db = app.model.SysUser
 
     // 查询条件处理
-    const conditions = { username: data.username }
+    const conditions = { _id: data._id }
 
     // 清空token
     const res = await db.findOneAndUpdate(conditions, { token: '' }, { new: true })

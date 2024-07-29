@@ -18,7 +18,7 @@ function wxLogin() {
   // #ifndef H5
   uni.login({
     provider: 'weixin',
-    onlyAuthorize: true, // 微信登录仅请求授权认证
+    onlyAuthorize: true, // 微信登录请求授权认证
     success: async (res) => {
       try {
         // 1.执行登录接口

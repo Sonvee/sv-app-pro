@@ -10,6 +10,12 @@ class SysUserController extends Controller {
     ctx.result(res)
   }
 
+  async userSelf() {
+    const { ctx, service } = this
+    const res = await service.sysUser.userSelf()
+    ctx.result(res)
+  }
+
   async userUpdate() {
     const { ctx, service } = this
     const data = ctx.request.body
@@ -21,6 +27,13 @@ class SysUserController extends Controller {
     const { ctx, service } = this
     const data = ctx.request.body
     const res = await service.sysUser.userUpdateSimple(data)
+    ctx.result(res)
+  }
+
+  async changePassword() {
+    const { ctx, service } = this
+    const data = ctx.request.body
+    const res = await service.sysUser.changePassword(data)
     ctx.result(res)
   }
 

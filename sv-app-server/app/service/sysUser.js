@@ -1,7 +1,9 @@
 'use strict'
 
 const Service = require('egg').Service
+const crypto = require('crypto')
 const { isTruthy } = require('../utils')
+const useRegExp = require('../utils/regexp')
 
 class SysUserService extends Service {
   /**
@@ -91,6 +93,31 @@ class SysUserService extends Service {
       pagenum,
       pagesize,
       pages
+    }
+  }
+
+  /**
+   * 获取用户自身信息 get - 权限 needlogin
+   * @description 直接从token中获取用户_id
+   */
+  async userSelf() {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('needlogin')
+
+    // 数据库连接
+    const db = app.model.SysUser
+
+    // 查询条件处理
+    const conditions = { _id: ctx.userInfo._id }
+
+    const self = await db.findOne(conditions)
+    if (!self) ctx.throw(400, { msg: '用户不存在' })
+
+    return {
+      data: self,
+      msg: '获取信息成功'
     }
   }
 
@@ -209,7 +236,7 @@ class SysUserService extends Service {
 
     // 更新项筛选
     let updatedata = {}
-
+    // 只做projection中数据项更新，其他属性更新无效
     Object.keys(projection).forEach((item) => {
       if (isTruthy(data[item], 'zero')) {
         updatedata[item] = data[item]
@@ -220,6 +247,62 @@ class SysUserService extends Service {
 
     return {
       data: res,
+      msg: '更新成功'
+    }
+  }
+
+  /**
+   * 修改密码 post - 权限 self_id
+   * @param {Object} data - 请求参数
+   * @property {String} data._id - 用户名
+   * @property {String} data.old_password - 旧密码
+   * @property {String} data.new_password - 新密码
+   */
+  async changePassword(data) {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('self_id', data._id)
+
+    // 参数校验
+    if (!isTruthy(data._id)) ctx.throw(400, { msg: '_id 必填' })
+
+    // 参数处理
+    data = Object.assign(
+      {
+        old_password: '',
+        new_password: ''
+      },
+      data
+    )
+
+    // 参数校验
+    if (!isTruthy(data.old_password)) ctx.throw(400, { msg: 'old_password 必填' })
+    if (!isTruthy(data.new_password)) ctx.throw(400, { msg: 'new_password 必填' })
+
+    // 密码合法性校验
+    const passwordRegExp = useRegExp('password')
+    if (!passwordRegExp.regexp.test(data.new_password)) ctx.throw(400, { msg: passwordRegExp.msg })
+
+    // 数据库连接
+    const db = app.model.SysUser
+
+    // 查询条件处理
+    const conditions = { _id: data._id }
+
+    const one = await db.findOne(conditions)
+    if (!one) ctx.throw(400, { msg: '用户不存在' })
+
+    // 旧密码正确性校验
+    data.old_password = crypto.createHash('sha256').update(data.old_password).digest('hex')
+    if (data.old_password !== one.password) ctx.throw(400, { msg: '旧密码错误' })
+
+    // 新密码加密
+    data.new_password = crypto.createHash('sha256').update(data.new_password).digest('hex')
+
+    const res = await db.findOneAndUpdate(conditions, { password: data.new_password }, { new: true })
+
+    return {
       msg: '更新成功'
     }
   }
@@ -261,7 +344,6 @@ class SysUserService extends Service {
     const res = await db.findOneAndUpdate(conditions, { status: data.status }, { new: true })
 
     return {
-      data: res,
       msg: '更新成功'
     }
   }

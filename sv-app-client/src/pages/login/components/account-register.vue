@@ -35,7 +35,7 @@
             placeholder="请输入验证码"
           >
             <template #left>
-              <text class="sv-icons-verify padding-lr-xs" style="color: #c4c8d0"></text>
+              <text class="sv-icons-verify" style="color: #c4c8d0; font-size: 22px; padding: 0 5px"></text>
             </template>
             <template #right>
               <view class="captcha-image" @click="getCaptchaImg">
@@ -225,16 +225,16 @@ export default {
   }
 
   .captcha-input {
-    :deep(.uni-easyinput__content-input) {
-      padding-left: 2rpx !important;
-    }
-    .captcha-image {
-      width: 160rpx;
-      height: 56rpx;
-      margin: 0 8rpx;
-      border: 1px solid #cccccc;
-      background-color: #f8f8f8;
-    }
+  	:deep(.uni-easyinput__content-input) {
+  		padding-left: 0 !important;
+  	}
+  	.captcha-image {
+  		width: 80px;
+  		height: 28px;
+  		margin: 0 4px;
+  		border: 1px solid #cccccc;
+  		background-color: #f8f8f8;
+  	}
   }
 }
 </style>

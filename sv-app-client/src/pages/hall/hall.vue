@@ -8,7 +8,6 @@
 
 <style lang="scss">
 .hall-page {
-  width: 100%;
   min-height: var(--page-main-height);
 }
 </style>

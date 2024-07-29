@@ -15,7 +15,6 @@ onLoad(() => {
 
 <style lang="scss">
 .index-page {
-  width: 100%;
   min-height: var(--page-main-height);
 }
 </style>
