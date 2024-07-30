@@ -476,7 +476,6 @@ class SysUserService extends Service {
      * @description 将 session_key 与 openid 关联，生成自定义登录态
      */
     const { session_key, openid, unionid } = wxRes.data
-    console.log('wxRes :>> ', { session_key, openid, unionid })
 
     // 查询条件处理
     const conditions = { wx_openid: openid }

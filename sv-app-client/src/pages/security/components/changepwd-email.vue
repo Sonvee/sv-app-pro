@@ -180,6 +180,16 @@ function toChangepwd() {
 }
 </script>
 
+<!-- #ifdef MP-WEIXIN -->
+<script>
+export default {
+  options: {
+    styleIsolation: 'shared' // 解除微信小程序样式隔离
+  }
+}
+</script>
+<!-- #endif -->
+
 <style lang="scss">
 .changepwd-email {
   width: 100%;
