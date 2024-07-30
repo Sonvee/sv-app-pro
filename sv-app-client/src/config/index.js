@@ -1,7 +1,7 @@
 import manifest from '../manifest.json'
 
-const base_url = 'http://192.168.1.209:7001' // 基础路径
-// const base_url = 'http://192.168.6.116:7001' // 基础路径
+// const base_url = 'http://192.168.1.209:7001' // 基础路径
+const base_url = 'http://192.168.6.115:7001' // 基础路径
 
 const config = {
 	name: manifest.name,
