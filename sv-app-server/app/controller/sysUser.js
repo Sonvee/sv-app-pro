@@ -37,6 +37,27 @@ class SysUserController extends Controller {
     ctx.result(res)
   }
 
+  async changePasswordByEmail() {
+    const { ctx, service } = this
+    const data = ctx.request.body
+    const res = await service.sysUser.changePasswordByEmail(data)
+    ctx.result(res)
+  }
+
+  async bindEmail() {
+    const { ctx, service } = this
+    const data = ctx.request.body
+    const res = await service.sysUser.bindEmail(data)
+    ctx.result(res)
+  }
+
+  async bindWechat() {
+    const { ctx, service } = this
+    const data = ctx.request.body
+    const res = await service.sysUser.bindWechat(data)
+    ctx.result(res)
+  }
+
   async changeStatus() {
     const { ctx, service } = this
     const data = ctx.request.body

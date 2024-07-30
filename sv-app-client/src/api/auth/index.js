@@ -12,10 +12,22 @@ export function getCaptcha(data) {
 	})
 }
 
-// 获取验证码
+// 获取邮箱验证码
 export function emailCaptcha(data) {
 	return http.request({
 		url: '/auth/emailCaptcha',
+		method: 'post',
+		data,
+		custom: {
+			loading: false,
+		}
+	})
+}
+
+// 获取短信验证码
+export function smsCaptcha(data) {
+	return http.request({
+		url: '/auth/smsCaptcha',
 		method: 'post',
 		data,
 		custom: {

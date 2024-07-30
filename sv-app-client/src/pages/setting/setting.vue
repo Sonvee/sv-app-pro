@@ -15,8 +15,8 @@
       </uv-cell-group>
       <view class="margin-top"></view>
       <uv-cell-group>
-        <uv-cell title="用户协议" isLink @click="skipPage('/pages/agreements/privacy')"></uv-cell>
-        <uv-cell title="隐私政策" isLink @click="skipPage('/pages/agreements/service')"></uv-cell>
+        <uv-cell title="用户协议" isLink @click="skipPage('/pages/agreements/service')"></uv-cell>
+        <uv-cell title="隐私政策" isLink @click="skipPage('/pages/agreements/privacy')"></uv-cell>
       </uv-cell-group>
       <view class="margin-top"></view>
       <uv-cell-group>

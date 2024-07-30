@@ -76,11 +76,11 @@
       <view class="margin sv-uv-textarea">
         <uv-textarea v-model="editValue" count :maxlength="maxlength" placeholder="请输入内容"></uv-textarea>
         <view class="flex justify-around margin-tb">
-          <button class="cu-btn round bg-red" style="width: 30%" @click="clearEdit">
+          <button class="cu-btn round bg-gradual-red flex-sub" @click="clearEdit">
             <text class="cuIcon-delete margin-right-xs"></text>
             清空
           </button>
-          <button class="cu-btn round bg-blue" style="width: 30%" @click="confirmEdit">
+          <button class="cu-btn round bg-gradual-blue flex-sub margin-left" @click="confirmEdit">
             <text class="cuIcon-check margin-right-xs"></text>
             确认
           </button>
@@ -126,7 +126,7 @@ import { ref, computed } from 'vue'
 import avatarUpload from '@/components/file-upload/avatar-upload.vue'
 import dictTag from '@/components/dict-type/dict-tag.vue'
 import { useUserStore } from '@/store/user.js'
-import { timeFormat, isTruthy } from '@/utils/util'
+import { timeFormat, isTruthy, isSubset } from '@/utils/util'
 import { userUpdateSimple } from '@/api/user/user'
 import { useDictStroe } from '@/store/dict'
 
@@ -171,6 +171,14 @@ function renderOver() {
  * @param {Object} data 更新参数
  */
 async function updateUserInfo(data) {
+  // 如果没有修改就不作请求更新
+  if (isSubset(userInfo.value, data)) {
+    return uni.showToast({
+      title: '未作任何修改',
+      icon: 'none'
+    })
+  }
+
   const params = Object.assign({ _id: userInfo.value._id }, data)
   // 更新用户信息
   const upRes = await userUpdateSimple(params)
@@ -185,7 +193,6 @@ async function updateUserInfo(data) {
     }
     // 当修改username时，无感刷新token
     if (data['username']) {
-      console.log('当修改username时，无感刷新token')
       userStore.reToken()
     }
 

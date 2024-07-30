@@ -28,7 +28,6 @@ export class useCountdown {
 			if (this.cd.value == 0) {
 				// 倒计时完毕
 				this.clearCountdown()
-				this.disabled.value = false
 			}
 		}, 1000)
 	}
@@ -37,6 +36,7 @@ export class useCountdown {
 		clearInterval(this.timer)
 		this.timer = null
 		this.cd.value = 0
+    this.disabled.value = false
 	}
 
 }

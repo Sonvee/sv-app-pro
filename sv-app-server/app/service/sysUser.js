@@ -254,7 +254,7 @@ class SysUserService extends Service {
   /**
    * 修改密码 post - 权限 self_id
    * @param {Object} data - 请求参数
-   * @property {String} data._id - 用户名
+   * @property {String} data._id - 用户uid
    * @property {String} data.old_password - 旧密码
    * @property {String} data.new_password - 新密码
    */
@@ -303,7 +303,201 @@ class SysUserService extends Service {
     const res = await db.findOneAndUpdate(conditions, { password: data.new_password }, { new: true })
 
     return {
-      msg: '更新成功'
+      msg: '密码更新成功'
+    }
+  }
+
+  /**
+   * 邮箱验证码修改密码 post - 权限 self_id
+   * @param {Object} data - 请求参数
+   * @property {String} data._id - 用户uid
+   * @property {String} data.email - 邮箱
+   * @property {String} data.captcha - 验证码
+   * @property {String} data.password - 密码
+   */
+  async changePasswordByEmail(data) {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('self_id', data._id)
+
+    // 参数校验
+    if (!isTruthy(data._id)) ctx.throw(400, { msg: '_id 必填' })
+
+    // 参数处理
+    data = Object.assign(
+      {
+        email: '',
+        captcha: '',
+        password: ''
+      },
+      data
+    )
+
+    // 参数校验
+    if (!isTruthy(data.email)) ctx.throw(400, { msg: 'email 必填' })
+    if (!isTruthy(data.captcha)) ctx.throw(400, { msg: 'captcha 必填' })
+    if (!isTruthy(data.password)) ctx.throw(400, { msg: 'password 必填' })
+
+    // 邮箱合法性校验
+    const emailRegExp = useRegExp('email')
+    if (!emailRegExp.regexp.test(data.email)) ctx.throw(400, { msg: emailRegExp.msg })
+
+    // 验证码正确性校验
+    const captcha_verify = await app.redis.get(`emailcaptcha:${data.email}:verify:code`)
+    if (!isTruthy(captcha_verify)) ctx.throw(400, { msg: '邮箱验证码已失效，请刷新' })
+    if (data.captcha.toLowerCase() != captcha_verify.toLowerCase()) ctx.throw(400, { msg: '邮箱验证码错误' })
+
+    // 密码合法性校验
+    const passwordRegExp = useRegExp('password')
+    if (!passwordRegExp.regexp.test(data.password)) ctx.throw(400, { msg: passwordRegExp.msg })
+
+    // 数据库连接
+    const db = app.model.SysUser
+
+    // 查询条件处理
+    const conditions = { _id: data._id, email: data.email }
+
+    const one = await db.findOne(conditions)
+    if (!one) ctx.throw(400, { msg: '用户或邮箱不存在' })
+
+    // 新密码加密
+    data.password = crypto.createHash('sha256').update(data.password).digest('hex')
+
+    const res = await db.findOneAndUpdate(conditions, { password: data.password }, { new: true })
+
+    return {
+      msg: '密码更新成功'
+    }
+  }
+
+  /**
+   * 绑定邮箱 post - 权限 self_id
+   * @description 如果未绑定过邮箱，则只需bind新邮箱；若绑定过邮箱，则需先verify原邮箱，再bind新邮箱
+   * @param {Object} data - 请求参数
+   * @property {String} data._id - 用户uid
+   * @property {String} data.email - 邮箱
+   * @property {String} data.captcha - 验证码
+   * @property {String} data.mode - 模式： verify验证原邮箱 | bind绑定新邮箱
+   */
+  async bindEmail(data) {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('self_id', data._id)
+
+    // 参数校验
+    if (!isTruthy(data._id)) ctx.throw(400, { msg: '_id 必填' })
+    if (data.mode !== 'verify' && data.mode !== 'bind') ctx.throw(400, { msg: 'mode 参数有误' })
+    if (!isTruthy(data.email)) ctx.throw(400, { msg: 'email 必填' })
+    if (!isTruthy(data.captcha)) ctx.throw(400, { msg: 'captcha 必填' })
+
+    // 邮箱合法性校验
+    const emailRegExp = useRegExp('email')
+    if (!emailRegExp.regexp.test(data.email)) ctx.throw(400, { msg: emailRegExp.msg })
+
+    // 验证码正确性校验
+    const captcha_bind = await app.redis.get(`emailcaptcha:${data.email}:${data.mode}:code`)
+    if (!isTruthy(captcha_bind)) ctx.throw(400, { msg: '邮箱验证码已失效，请刷新' })
+    if (data.captcha.toLowerCase() != captcha_bind.toLowerCase()) ctx.throw(400, { msg: '邮箱验证码错误' })
+
+    // 数据库连接
+    const db = app.model.SysUser
+
+    // 查询条件处理
+    const conditions = { _id: data._id }
+
+    // 旧邮箱验证模式
+    if (data.mode == 'verify') {
+      // 邮箱正确性校验
+      conditions.email = data.email
+
+      const one = await db.findOne(conditions)
+      if (!one) ctx.throw(400, { msg: '用户或邮箱不存在' })
+
+      return {
+        msg: '邮箱验证成功'
+      }
+    }
+
+    // 新邮箱绑定模式
+    const one = await db.findOne(conditions)
+    if (!one) ctx.throw(400, { msg: '用户不存在' })
+
+    const res = await db.findOneAndUpdate(conditions, { email: data.email }, { new: true })
+
+    return {
+      msg: '邮箱绑定成功'
+    }
+  }
+
+  /**
+   * 绑定微信 post - 权限 self_id
+   * @param {Object} data - 请求参数
+   * @property {String} data._id - 用户_id
+   * @property {String} data.code - 微信小程序临时登录凭证 code
+   */
+  async bindWechat(data) {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('self_id', data._id)
+
+    // 参数校验
+    if (!isTruthy(data._id)) ctx.throw(400, { msg: '_id 必填' })
+    if (!isTruthy(data.code)) ctx.throw(400, { msg: 'code 必填' })
+
+    const wxurl = 'https://api.weixin.qq.com/sns/jscode2session'
+    const wxRes = await ctx.curl(wxurl, {
+      method: 'GET',
+      dataType: 'json',
+      timeout: 60000,
+      data: {
+        appid: app.config.wechat.appid,
+        secret: app.config.wechat.appsecret,
+        js_code: data.code,
+        grant_type: 'authorization_code'
+      }
+    })
+
+    // 授权失败
+    if (wxRes.data.errmsg) {
+      return {
+        code: wxRes.data.errcode,
+        msg: wxRes.data.errmsg
+      }
+    }
+
+    /**
+     * 授权成功
+     * @param session_key 会话密钥
+     * @param openid 用户唯一标识
+     * @param unionid 用户在开放平台的唯一标识符，若当前小程序已绑定到微信开放平台账号下会返回
+     * @description 将 session_key 与 openid 关联，生成自定义登录态
+     */
+    const { session_key, openid, unionid } = wxRes.data
+    console.log('wxRes :>> ', { session_key, openid, unionid })
+
+    // 查询条件处理
+    const conditions = { wx_openid: openid }
+
+    // 数据库连接
+    const db = app.model.SysUser
+
+    // 查询
+    let one = await db.findOne(conditions)
+    if (one) ctx.throw(400, { msg: '该微信已绑定其他账号' })
+
+    // 正常绑定
+    const updateOpt = {
+      wx_openid: openid, // 绑定 wx_openid
+      wx_unionid: unionid, // 绑定 wx_unionid
+      wx_session_key: session_key // 绑定 wx_session_key
+    }
+    const res = await db.findOneAndUpdate({ _id: data._id }, updateOpt, { new: true })
+
+    return {
+      msg: '微信绑定成功'
     }
   }
 

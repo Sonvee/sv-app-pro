@@ -7,18 +7,16 @@
     <!-- #endif -->
 
     <!-- #ifndef H5 -->
-    <VerifyPassword v-show="was == 'VerifyPassword'"></VerifyPassword>
-    <VerifyPhone v-show="was == 'VerifyPhone'"></VerifyPhone>
-    <VerifyEmail v-show="was == 'VerifyEmail'"></VerifyEmail>
+    <BindemailEmail v-show="was == 'BindemailEmail'"></BindemailEmail>
+    <BindemailPhone v-show="was == 'BindemailPhone'"></BindemailPhone>
     <!-- #endif -->
   </view>
 </template>
 
 <script setup>
 import { computed } from 'vue'
-import VerifyPassword from './verify-password.vue'
-import VerifyPhone from './verify-phone.vue'
-import VerifyEmail from './verify-email.vue'
+import BindemailEmail from './bindemail-email.vue'
+import BindemailPhone from './bindemail-phone.vue'
 
 const props = defineProps({
   was: {
@@ -28,9 +26,8 @@ const props = defineProps({
 })
 
 const compMap = {
-  VerifyPassword,
-  VerifyPhone,
-  VerifyEmail
+  BindemailEmail,
+  BindemailPhone
 }
 
 const curComp = computed(() => {

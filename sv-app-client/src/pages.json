@@ -49,13 +49,13 @@
       "pages": [{
           "path": "privacy",
           "style": {
-            "navigationBarTitleText": "隐私政策条款"
+            "navigationBarTitleText": "隐私政策"
           }
         },
         {
           "path": "service",
           "style": {
-            "navigationBarTitleText": "用户服务协议"
+            "navigationBarTitleText": "用户协议"
           }
         }
       ]
@@ -85,9 +85,15 @@
           }
         },
         {
-          "path": "bind-password",
+          "path": "change-password",
           "style": {
             "navigationBarTitleText": "设置密码"
+          }
+        },
+        {
+          "path": "bind-email",
+          "style": {
+            "navigationBarTitleText": "绑定邮箱"
           }
         }
       ]

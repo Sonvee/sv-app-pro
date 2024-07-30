@@ -11,29 +11,14 @@
         />
       </uni-forms-item>
       <uni-forms-item name="password">
-        <uni-easyinput
-          type="password"
-          v-model="registerForm.password"
-          placeholder="请输入密码"
-          prefixIcon="locked"
-        />
+        <uni-easyinput type="password" v-model="registerForm.password" placeholder="请输入密码" prefixIcon="locked" />
       </uni-forms-item>
       <uni-forms-item name="password2">
-        <uni-easyinput
-          type="password"
-          v-model="registerForm.password2"
-          placeholder="请确认密码"
-          prefixIcon="locked"
-        />
+        <uni-easyinput type="password" v-model="registerForm.password2" placeholder="请确认密码" prefixIcon="locked" />
       </uni-forms-item>
       <uni-forms-item name="captcha">
         <view class="captcha-input">
-          <uni-easyinput
-            v-model="registerForm.captcha"
-            type="text"
-            :maxlength="4"
-            placeholder="请输入验证码"
-          >
+          <uni-easyinput v-model="registerForm.captcha" type="text" :maxlength="4" placeholder="请输入验证码">
             <template #left>
               <text class="sv-icons-verify" style="color: #c4c8d0; font-size: 22px; padding: 0 5px"></text>
             </template>
@@ -49,11 +34,11 @@
 
     <!-- 按钮 -->
     <view class="flex justify-between padding-tb" style="margin-top: auto">
-      <button class="cu-btn round bg-cyan" style="width: 200rpx" @click="skipLogin">
+      <button class="cu-btn round bg-grey flex-sub" @click="skipLogin">
         <text class="cuIcon-back margin-right-xs"></text>
         返回
       </button>
-      <button class="cu-btn round bg-purple" style="width: 200rpx" @click="toRegister">
+      <button class="cu-btn round bg-gradual-purple flex-sub margin-left" @click="toRegister">
         <text class="cuIcon-people margin-right-xs"></text>
         注册
       </button>
@@ -140,7 +125,7 @@ watch(
   curLoginType,
   (newType) => {
     // 仅首次渲染时获取验证码
-    if (newType === 'accountRegister' && firstRender.value) {
+    if (newType === 'AccountRegister' && firstRender.value) {
       getCaptchaImg()
       firstRender.value = false
     }
@@ -198,7 +183,7 @@ function toRegister() {
 }
 
 function skipLogin() {
-  curLoginType.value = 'accountLogin'
+  curLoginType.value = 'AccountLogin'
 }
 </script>
 
@@ -225,16 +210,16 @@ export default {
   }
 
   .captcha-input {
-  	:deep(.uni-easyinput__content-input) {
-  		padding-left: 0 !important;
-  	}
-  	.captcha-image {
-  		width: 80px;
-  		height: 28px;
-  		margin: 0 4px;
-  		border: 1px solid #cccccc;
-  		background-color: #f8f8f8;
-  	}
+    :deep(.uni-easyinput__content-input) {
+      padding-left: 0 !important;
+    }
+    .captcha-image {
+      width: 80px;
+      height: 28px;
+      margin: 0 4px;
+      border: 1px solid #cccccc;
+      background-color: #f8f8f8;
+    }
   }
 }
 </style>

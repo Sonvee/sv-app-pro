@@ -22,12 +22,21 @@ export function sleep(ms) {
 }
 
 /**
- * 静态资源处理
+ * 静态资源处理 - 只支持H5端
  * @param {String} path 资源路径
  * @tutorial https://cn.vitejs.dev/guide/assets.html#new-url-url-import-meta-url
  */
 export function handleImage(path) {
+  // #ifdef H5
+  // 如果 path 以 @ 开头，则将 @ 替换为 /src
+  if (path.startsWith('@')) {
+    path = path.replace(/^@/, '/src')
+  }
   return new URL(path, import.meta.url).href
+  // #endif
+  // #ifndef H5
+  return path
+  // #endif
 }
 
 /**
@@ -86,6 +95,23 @@ export function assignOverride(target, source) {
     }
   }
   return target;
+}
+
+/**
+ * 判断对象 target 是否包含为 source  
+ * @param {Object} target
+ * @param {Object} source
+ */
+export function isSubset(target, source) {
+  // 遍历 source 的所有属性
+  for (let key in source) {
+    // 如果 source 的某个属性不在 target 中，或者对应的值不同，则返回 false
+    if (!target.hasOwnProperty(key) || target[key] !== source[key]) {
+      return false;
+    }
+  }
+  // 如果所有属性都匹配，则 source 是 target 的子集
+  return true;
 }
 
 /**
@@ -228,11 +254,24 @@ export function maskPersonalInfo(input) {
  * @description 本方法在页面跳转时，可将要跳转的页面是否需要登录作为可控参数传入
  * @param {String} path - 跳转路径
  * @param {Boolean} needlogin - 是否需要登录 默认false
+ * @param {Object} params - 跳转参数携带
+ * @param {Function} callback - back后执行回调，页面需提供this.getOpenerEventChannel().emit('E_BACKPAGE', res)，其中res为可携带参数
  */
-export function skipPage(path, needlogin = false) {
+export function skipPage(path, needlogin = false, params, callback) {
   if (needlogin && !useLoginModal()) return
   if (path) {
-    uni.navigateTo({ url: path })
+    uni.navigateTo({
+      url: path,
+      events: {
+        // back后执行回调
+        E_BACKPAGE: (res) => {
+          if (callback) callback(res)
+        }
+      },
+      success: (res) => {
+        res.eventChannel.emit('E_SKIPPAGE', params)
+      }
+    })
   } else {
     uni.showToast({
       title: '敬请期待',

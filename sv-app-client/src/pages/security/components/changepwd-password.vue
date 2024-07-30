@@ -1,17 +1,17 @@
 <template>
-	<view class="verify-password">
-		<view class="verify-header">
-			<view class="verify-image">
+	<view class="changepwd-password">
+		<view class="changepwd-header">
+			<view class="changepwd-image">
 				<image class="w-h-full" src="@/assets/svgs/security_password.svg" mode="widthFix"></image>
 			</view>
-			<view class="text-center margin-top">为了您的账户安全，请输入登录密码</view>
+			<view class="text-center margin-top">为了您的账户安全，请验证登录密码</view>
 		</view>
-		<view class="verify-form">
-			<uni-forms ref="verifyFormRef" :model="verifyForm" :rules="verifyRules">
+		<view class="changepwd-form">
+			<uni-forms ref="changepwdFormRef" :model="changepwdForm" :rules="changepwdRules">
 				<uni-forms-item name="old_password">
 					<uni-easyinput
 						type="password"
-						v-model="verifyForm.old_password"
+						v-model="changepwdForm.old_password"
 						placeholder="请输入旧密码"
 						prefixIcon="locked"
 					/>
@@ -19,7 +19,7 @@
 				<uni-forms-item name="new_password">
 					<uni-easyinput
 						type="password"
-						v-model="verifyForm.new_password"
+						v-model="changepwdForm.new_password"
 						placeholder="请输入新密码"
 						prefixIcon="locked"
 					/>
@@ -27,7 +27,7 @@
 				<uni-forms-item name="new_password2">
 					<uni-easyinput
 						type="password"
-						v-model="verifyForm.new_password2"
+						v-model="changepwdForm.new_password2"
 						placeholder="请确认新密码"
 						prefixIcon="locked"
 					/>
@@ -36,11 +36,11 @@
 
 			<!-- 按钮 -->
 			<view class="flex justify-between padding-tb" style="margin-top: auto">
-				<button class="cu-btn round bg-red flex-sub" @click="reset">
+				<button class="cu-btn round bg-gradual-red flex-sub" @click="reset">
 					<text class="cuIcon-refresh margin-right-xs"></text>
 					重置
 				</button>
-				<button class="cu-btn round bg-blue flex-sub margin-left" @click="toVerify">
+				<button class="cu-btn round bg-gradual-blue flex-sub margin-left" @click="toChangepwd">
 					<text class="sv-icons-dev-setting margin-right-xs"></text>
 					设置
 				</button>
@@ -57,13 +57,13 @@ import { changePassword } from '@/api/user/user'
 
 const userStore = useUserStore()
 
-const verifyFormRef = ref()
-const verifyForm = ref({
+const changepwdFormRef = ref()
+const changepwdForm = ref({
 	old_password: '',
 	new_password: '',
 	new_password2: ''
 })
-const verifyRules = ref({
+const changepwdRules = ref({
 	old_password: {
 		rules: [{ required: true, errorMessage: '请输入旧密码' }]
 	},
@@ -86,7 +86,7 @@ const verifyRules = ref({
 			{ required: true, errorMessage: '请确认新密码' },
 			{
 				validateFunction: (rule, value, data, callback) => {
-					if (value !== verifyForm.value.new_password) {
+					if (value !== changepwdForm.value.new_password) {
 						callback('两次输入密码不一致')
 					} else {
 						callback()
@@ -98,24 +98,24 @@ const verifyRules = ref({
 })
 
 function reset() {
-	verifyForm.value = {
+	changepwdForm.value = {
 		old_password: '',
 		new_password: '',
 		new_password2: ''
 	}
-	verifyFormRef.value.clearValidate()
+	changepwdFormRef.value.clearValidate()
 }
 
-function toVerify() {
-	verifyFormRef.value
+function toChangepwd() {
+	changepwdFormRef.value
 		.validate()
 		.then(async () => {
 			try {
 				// 1. 修改密码接口
 				const pwdRes = await changePassword({
 					_id: userStore.userInfo._id,
-					old_password: verifyForm.value.old_password,
-					new_password: verifyForm.value.new_password
+					old_password: changepwdForm.value.old_password,
+					new_password: changepwdForm.value.new_password
 				})
 				if (pwdRes.success) {
 					uni.showToast({
@@ -123,13 +123,13 @@ function toVerify() {
 						icon: 'none'
 					})
 					// 2. 更新记住密码缓存
-					userStore.rememberLoginForm.password = verifyForm.value.new_password
+					userStore.rememberLoginForm.password = changepwdForm.value.new_password
 
 					// 3. 关闭子页面
 					uni.$emit('E_CLOSE_SUBPAGE')
 				}
 			} catch (e) {
-				console.log('==== verifyForm err :', e)
+				console.log('==== changepwdForm err :', e)
 			}
 		})
 		.catch((err) => {
@@ -139,24 +139,24 @@ function toVerify() {
 </script>
 
 <style lang="scss">
-.verify-password {
+.changepwd-password {
 	width: 100%;
 	height: 100%;
 
-	.verify-header {
+	.changepwd-header {
 		position: relative;
 		margin: 0 30rpx;
 		border-bottom: 1px solid var(--border-color);
 		padding: 50rpx 0;
 
-		.verify-image {
+		.changepwd-image {
 			width: 160rpx;
 			height: 160rpx;
 			margin: 0 auto;
 		}
 	}
 
-	.verify-form {
+	.changepwd-form {
 		margin: 50rpx 30rpx;
 	}
 }

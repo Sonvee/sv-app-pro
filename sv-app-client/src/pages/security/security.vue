@@ -4,12 +4,10 @@
       <view class="security-score">
         <view class="security-image" :style="{ 'animation-play-state': loading ? 'paused' : 'running' }">
           <image class="w-h-full" src="@/assets/svgs/loading1.svg" mode="widthFix"></image>
-          <image
-            class="security-logo"
-            :src="handleImage('/src/assets/svgs/security_' + score.color + '.svg')"
-            mode="widthFix"
-          ></image>
-          <view class="security-num" :style="{ color: score.color }">{{ score.num }}</view>
+          <image class="security-logo" :src="securityImageMap[score.color]" mode="widthFix"></image>
+          <view class="security-num" :style="{ color: score.color }">
+            <uv-count-to :startVal="0" :endVal="score.num"></uv-count-to>
+          </view>
         </view>
         <view class="security-description" :style="{ 'animation-play-state': loading ? 'paused' : 'running' }">
           <view class="text-lg">
@@ -31,7 +29,7 @@
       <!-- 选项 -->
       <view class="security-options">
         <uv-cell-group>
-          <uv-cell title="设置密码" isLink @click="skipPage('/pages/security/bind-password', true)">
+          <uv-cell title="设置密码" isLink @click="skipPage('/pages/security/change-password', true)">
             <template #icon>
               <text class="uni-icons-locked-filled margin-right-sm text-xxl text-blue"></text>
             </template>
@@ -47,31 +45,31 @@
             </template>
             <template #label>
               <text class="text-sm text-cyan margin-top-xs">
-                {{ self?.phone ? maskPersonalInfo(self?.phone) : '尚未绑定手机，点击绑定' }}
+                {{ scoreMap.phone.value ? maskPersonalInfo(self?.phone) : '尚未绑定手机，点击绑定' }}
               </text>
             </template>
           </uv-cell>
-          <uv-cell title="绑定邮箱" isLink>
+          <uv-cell title="绑定邮箱" isLink @click="skipPage('/pages/security/bind-email', true)">
             <template #icon>
               <text class="uni-icons-email-filled margin-right-sm text-xxl text-red"></text>
             </template>
             <template #label>
               <text class="text-sm text-cyan margin-top-xs">
-                {{ self?.email ? maskPersonalInfo(self?.email) : '尚未绑定邮箱，点击绑定' }}
+                {{ scoreMap.email.value ? maskPersonalInfo(self?.email) : '尚未绑定邮箱，点击绑定' }}
               </text>
             </template>
           </uv-cell>
-          <uv-cell title="绑定微信" isLink>
+          <uv-cell title="绑定微信" isLink @click="bindWX">
             <template #icon>
               <text class="uni-icons-weixin margin-right-sm text-xxl text-green"></text>
             </template>
             <template #label>
               <text class="text-sm text-cyan margin-top-xs">
                 <!-- #ifdef MP-WEIXIN -->
-                {{ self?.wx_openid ? '已绑定微信' : '尚未绑定微信，点击绑定' }}
+                {{ scoreMap.wx_openid.value ? '已绑定微信' : '尚未绑定微信，点击绑定' }}
                 <!-- #endif -->
                 <!-- #ifndef MP-WEIXIN -->
-                {{ self?.wx_unionid ? '已绑定微信' : '尚未绑定微信，点击绑定' }}
+                {{ scoreMap.wx_unionid.value ? '已绑定微信' : '尚未绑定微信，点击绑定' }}
                 <!-- #endif -->
               </text>
             </template>
@@ -84,8 +82,25 @@
 
 <script setup>
 import { ref } from 'vue'
-import { userSelf } from '@/api/user/user'
-import { handleImage, isTruthy, maskPersonalInfo, timeFormat, skipPage } from '@/utils/util'
+import { onShow } from '@dcloudio/uni-app'
+import { bindWechat, userSelf } from '@/api/user/user'
+import { isTruthy, maskPersonalInfo, timeFormat, skipPage } from '@/utils/util'
+import security_sky from '@/assets/svgs/security_sky.svg'
+import security_green from '@/assets/svgs/security_green.svg'
+import security_orange from '@/assets/svgs/security_orange.svg'
+import security_red from '@/assets/svgs/security_red.svg'
+import { useCommonStore } from '@/store/common'
+import { useUserStore } from '@/store/user'
+
+const userStore = useUserStore()
+const commonStore = useCommonStore()
+
+const securityImageMap = {
+  sky: security_sky,
+  green: security_green,
+  orange: security_orange,
+  red: security_red
+}
 
 /**
  * 安全标准：
@@ -93,30 +108,33 @@ import { handleImage, isTruthy, maskPersonalInfo, timeFormat, skipPage } from '@
  * 2. 是否绑定 phone
  * 3. 是否绑定 email
  * 4. 是否绑定 小程序端wx_openid丨H5或APP端wx_unionid
- * 5. 是否实名认证 realname_auth -- 暂时不用
+ * 5. 是否实名认证 realname_auth -- 暂时不做实名认证
  */
 const score = ref({
   num: 0,
   color: 'sky',
   desc: ''
 })
-const scoreMap = {
-  password: 30,
-  phone: 30,
-  email: 20,
+const scoreMap = ref({
+  password: { value: false, score: 30 },
+  phone: { value: false, score: 30 },
+  email: { value: false, score: 20 },
   // #ifdef MP-WEIXIN
-  wx_openid: 20,
+  wx_openid: { value: false, score: 20 },
   // #endif
   // #ifndef MP-WEIXIN
-  wx_unionid: 20,
+  wx_unionid: { value: false, score: 20 }
   // #endif
-  realname_auth: 0
-}
+  // realname_auth: { value: false, score: 0 } // 暂时不做实名认证
+})
+
 const loading = ref(true)
 
 const self = ref()
 
-getSelf()
+onShow(() => {
+  getSelf()
+})
 
 async function getSelf() {
   score.value.num = 0 // 分数归零
@@ -128,11 +146,17 @@ async function getSelf() {
   if (selfRes.success) {
     self.value = selfRes.data
     // 计算分数
-    for (let key in scoreMap) {
+    for (let key in scoreMap.value) {
       if (isTruthy(self.value[key], 'zeroarrobjbool')) {
-        score.value.num += scoreMap[key]
+        score.value.num += scoreMap.value[key].score
+        scoreMap.value[key].value = Boolean(self.value[key])
       }
     }
+
+    // 全局响应式变量
+    commonStore.userBindOptions = scoreMap.value
+
+    // 安全评分
     if (score.value.num >= 80) {
       score.value.color = 'green'
       score.value.desc = '极佳'
@@ -146,6 +170,62 @@ async function getSelf() {
 
     loading.value = false
   }
+}
+
+// 绑定微信
+async function bindWX() {
+  // #ifdef MP-WEIXIN
+  if (scoreMap.value.wx_openid.value) return uni.showToast({ title: '已绑定微信', icon: 'none' })
+  // #endif
+  // #ifndef MP-WEIXIN
+  if (scoreMap.value.wx_unionid.value) return uni.showToast({ title: '已绑定微信', icon: 'none' })
+  // #endif
+
+  const confirmBind = await new Promise((callback) => {
+    uni.showModal({
+      title: '系统提示',
+      content: '是否绑定当前微信',
+      success: ({ confirm }) => {
+        callback(confirm)
+      }
+    })
+  })
+  // 取消绑定则终止操作
+  if (!confirmBind) return
+
+  // #ifndef H5
+  uni.showLoading({ title: '微信绑定中' })
+  uni.login({
+    provider: 'weixin',
+    onlyAuthorize: true, // 微信登录请求授权认证
+    success: async (res) => {
+      // 执行绑定接口
+      const wxRes = await bindWechat({ _id: userStore.userInfo._id, code: res.code })
+      if (wxRes.success) {
+        uni.showToast({
+          title: wxRes.msg,
+          icon: 'none'
+        })
+        // 刷新页面
+        await getSelf()
+      }
+    },
+    fail: (err) => {
+      // 登录授权失败
+      uni.showToast({
+        title: err,
+        icon: 'none'
+      })
+    }
+  })
+  // #endif
+
+  // #ifdef H5
+  uni.showToast({
+    title: 'H5暂不支持绑定微信',
+    icon: 'none'
+  })
+  // #endif
 }
 </script>
 
@@ -182,10 +262,13 @@ async function getSelf() {
         left: 50%;
         top: 50%;
         transform: translate(-50%, -50%);
-        font-size: 60rpx;
-        font-weight: 700;
-        text-stroke: 1px var(--border-color);
-        -webkit-text-stroke: 1px var(--border-color);
+
+        :deep(.uv-count-num) {
+          font-size: 50rpx !important;
+          font-weight: 700 !important;
+          color: unset !important;
+          text-shadow: 2rpx 2rpx 4rpx #585858;
+        }
       }
     }
 

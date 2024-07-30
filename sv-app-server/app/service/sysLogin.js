@@ -145,6 +145,10 @@ class SysLoginService extends Service {
 
     // 参数校验
     if (!isTruthy(data.email)) ctx.throw(400, { msg: '请输入邮箱' })
+      
+    // 邮箱合法性校验
+    const emailRegExp = useRegExp('email')
+    if (!emailRegExp.regexp.test(data.email)) ctx.throw(400, { msg: emailRegExp.msg })
 
     // 验证码
     const captcha_login = await app.redis.get(`emailcaptcha:${data.email}:login:code`)
@@ -203,14 +207,6 @@ class SysLoginService extends Service {
    */
   async loginByWechat(data) {
     const { ctx, app } = this
-
-    // 参数处理
-    data = Object.assign(
-      {
-        code: ''
-      },
-      data
-    )
 
     // 参数校验
     if (!isTruthy(data.code)) ctx.throw(400, { msg: 'code 必填' })

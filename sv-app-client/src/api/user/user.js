@@ -39,6 +39,38 @@ export function changePassword(data) {
   })
 }
 
+export function changePasswordByEmail(data) {
+  return http.request({
+    url: '/user/changePasswordByEmail',
+    method: 'post',
+    data
+  })
+}
+
+export function changePasswordByPhone(data) {
+  return http.request({
+    url: '/user/changePasswordByPhone',
+    method: 'post',
+    data
+  })
+}
+
+export function bindEmail(data) {
+  return http.request({
+    url: '/user/bindEmail',
+    method: 'post',
+    data
+  })
+}
+
+export function bindWechat(data) {
+  return http.request({
+    url: '/user/bindWechat',
+    method: 'post',
+    data
+  })
+}
+
 export function changeStatus(data) {
   return http.request({
     url: '/user/changeStatus',

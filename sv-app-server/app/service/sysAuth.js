@@ -12,7 +12,7 @@ class SysAuthService extends Service {
   /**
    * 获取图形验证码 post - 权限 open
    * @param {Object} data - 请求参数
-   * @property {String} data.type - 类型：register注册，login登录，sms短信验证，email邮件验证
+   * @property {String} data.type - 类型：register注册，login登录，sms短信验证，email邮件验证，verify其他验证
    */
   async getCaptcha(data) {
     const { ctx, app } = this
@@ -29,7 +29,7 @@ class SysAuthService extends Service {
     )
 
     // type参数校验
-    const types = ['register', 'login', 'sms', 'email']
+    const types = ['register', 'login', 'sms', 'email', 'verify']
     if (!types.includes(data.type)) ctx.throw(400, { msg: 'type 类型无效' })
 
     // 缓存参数设置
@@ -70,7 +70,7 @@ class SysAuthService extends Service {
    * 邮箱验证码 post - 权限 open
    * @param {Object} data - 请求参数
    * @property {String} data.email - 用户名
-   * @property {String} data.type - 类型：login登录 | bind绑定；验证码没有注册，登录即注册
+   * @property {String} data.type - 类型：login登录 | bind绑定 | verify其他验证；（验证码没有注册，登录即注册）
    */
   async emailCaptcha(data) {
     const { ctx, app } = this
@@ -79,7 +79,7 @@ class SysAuthService extends Service {
     const emailRegExp = useRegExp('email')
     if (!emailRegExp.regexp.test(data.email)) ctx.throw(400, { msg: emailRegExp.msg })
     // type参数校验
-    const types = ['login', 'bind']
+    const types = ['login', 'bind', 'verify']
     if (!types.includes(data.type)) ctx.throw(400, { msg: 'type 类型无效' })
 
     // 节流阀
