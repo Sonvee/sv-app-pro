@@ -6,7 +6,7 @@
 
 <script setup name="DictSelect">
 import { ref, watchEffect } from 'vue'
-import { dictitemListByRedis } from '@/api/dict'
+import { dictitemList, dictitemListByRedis } from '@/api/dict'
 import { isTruthy } from '@/utils'
 import { useDictStore } from '@/store/dict'
 
@@ -71,17 +71,28 @@ async function handleDict() {
   if (isTruthy(dictType)) {
     // 先从缓存中获取
     let dictRes = useDictStore().getDict(dictType)
-    if (!isTruthy(dictRes, 'arrobj')) {
-      // 缓存中没有则请求接口
-      const { data } = await dictitemListByRedis({
-        dict_type: dictType,
-        pagesize: -1
-      })
-      dictRes = data
-      // 设置缓存
-      useDictStore().setDict(dictType, dictRes)
+    if (isTruthy(dictRes, 'arrobj')) {
+      // 缓存中有直接从缓存中取
+      dictData.value = dictRes
+    } else {
+      // 缓存中没有则请求Redis
+      const dictRedisRes = await dictitemListByRedis({ dict_type: dictType, pagesize: -1 })
+      if (dictRedisRes.success && isTruthy(dictRedisRes.data, 'arr')) {
+        dictRes = dictRedisRes.data
+        // 请求成功，设置缓存
+        useDictStore().setDict(dictType, dictRes)
+        dictData.value = dictRes
+      } else {
+        // Redis中没有则直接请求api
+        const dictApiRes = await dictitemList({ dict_type: dictType, pagesize: -1 })
+        if (dictApiRes.success) {
+          dictRes = dictApiRes.data
+          // 请求成功，设置缓存
+          useDictStore().setDict(dictType, dictRes)
+          dictData.value = dictRes
+        }
+      }
     }
-    dictData.value = dictRes
     return
   }
   if (isTruthy(dictList, 'arr')) {

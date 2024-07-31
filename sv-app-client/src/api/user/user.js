@@ -63,6 +63,14 @@ export function bindEmail(data) {
   })
 }
 
+export function bindEmailByPhone(data) {
+  return http.request({
+    url: '/user/bindEmailByPhone',
+    method: 'post',
+    data
+  })
+}
+
 export function bindWechat(data) {
   return http.request({
     url: '/user/bindWechat',

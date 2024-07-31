@@ -180,7 +180,7 @@ class SysPermissionService extends Service {
     const conditions = { permission_id: data.permission_id }
 
     const one = await db.findOne(conditions)
-    if (!one) ctx.throw(400, { msg: '删除项不存在' })
+    if (!one) ctx.throw(400, { msg: '删除项不存在或已被删除' })
 
     const res = await db.deleteOne(conditions)
 

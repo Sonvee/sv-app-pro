@@ -191,7 +191,7 @@ class SysLoginService extends Service {
     const loginSuccessRes = await this.loginSuccess(db, conditions, one)
 
     // 删除redis缓存
-    await app.redis.del(`emailcaptcha:${data.email}:login:code`)
+    app.redis.del(`emailcaptcha:${data.email}:login:code`)
 
     return {
       data: loginSuccessRes.res,

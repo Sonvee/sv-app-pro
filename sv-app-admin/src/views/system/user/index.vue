@@ -119,8 +119,7 @@ import { useDictStore } from '@/store/dict'
 const dictStore = useDictStore()
 // 初始化字典
 function dictInit() {
-  if (!isTruthy(dictStore.getDict('dict_sys_user_status'), 'arr')) dictStore.initDict(['dict_sys_user_status'])
-  if (!isTruthy(dictStore.getDict('dict_sys_user_gender'), 'arr')) dictStore.initDict(['dict_sys_user_gender'])
+  dictStore.initDict(['dict_sys_user_status', 'dict_sys_user_gender'])
 }
 
 const dataParams = ref({ pagenum: 1, pagesize: 20 })

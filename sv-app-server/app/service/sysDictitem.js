@@ -29,6 +29,10 @@ class SysDictitemService extends Service {
     // 参数校验
     if (!isTruthy(data.dict_type)) ctx.throw(400, { msg: 'dict_type 必填' })
 
+    // dict_type正确性校验
+    const hasDict = await app.model.SysDict.findOne({ dict_id: data.dict_type })
+    if (!hasDict) ctx.throw(400, { msg: `${data.dict_type} 不存在` })
+
     // 数据库连接
     const db = app.model.SysDictitem
 
@@ -60,6 +64,11 @@ class SysDictitemService extends Service {
     // 处理查询结果
     const res = await query.exec()
 
+    // redis缓存
+    if (data.pagesize == -1 && isTruthy(data.dict_type)) {
+      await app.redis.set(`dict:${data.dict_type}`, JSON.stringify(res))
+    }
+
     return {
       data: res,
       msg: '列表获取成功',
@@ -85,15 +94,14 @@ class SysDictitemService extends Service {
     if (dictRedis) {
       return {
         data: JSON.parse(dictRedis),
-        msg: '列表获取成功'
+        msg: 'Redis字典列表获取成功'
       }
     } else {
       data.pagesize = -1
       const { data: res } = await this.dictitemList(data)
-      await app.redis.set(`dict:${data.dict_type}`, JSON.stringify(res))
       return {
         data: res,
-        msg: '列表获取成功'
+        msg: '字典列表获取成功'
       }
     }
   }
@@ -133,7 +141,7 @@ class SysDictitemService extends Service {
 
     // 绑定校验
     const hasDict = await app.model.SysDict.findOne({ dict_id: data.dict_type })
-    if (!hasDict) ctx.throw(400, { msg: '字典不存在' })
+    if (!hasDict) ctx.throw(400, { msg: `${data.dict_type} 不存在` })
 
     // 数据库连接
     const db = app.model.SysDictitem
@@ -147,7 +155,7 @@ class SysDictitemService extends Service {
     const res = await db.create(data)
 
     // 删除redis缓存
-    await app.redis.del(`dict:${data.dict_type}`)
+    app.redis.del(`dict:${data.dict_type}`)
 
     return {
       data: res,
@@ -171,14 +179,6 @@ class SysDictitemService extends Service {
     // 权限校验
     ctx.checkAuthority('permission', ['dictitemUpdate'])
 
-    // 参数处理
-    data = Object.assign(
-      {
-        _id: ''
-      },
-      data
-    )
-
     // 参数校验
     if (!isTruthy(data._id)) ctx.throw(400, { msg: '_id 必填' })
 
@@ -194,7 +194,7 @@ class SysDictitemService extends Service {
     const res = await db.findOneAndUpdate(conditions, data, { new: true })
 
     // 删除redis缓存
-    await app.redis.del(`dict:${one.dict_type}`)
+    app.redis.del(`dict:${one.dict_type}`)
 
     return {
       data: res,
@@ -213,14 +213,6 @@ class SysDictitemService extends Service {
     // 权限校验
     ctx.checkAuthority('permission', ['dictitemDelete'])
 
-    // 参数处理
-    data = Object.assign(
-      {
-        dictitem_id: ''
-      },
-      data
-    )
-
     // 参数校验
     if (!isTruthy(data.dictitem_id)) ctx.throw(400, { msg: 'dictitem_id 必填' })
 
@@ -231,12 +223,12 @@ class SysDictitemService extends Service {
     const conditions = { dictitem_id: data.dictitem_id }
 
     const one = await db.findOne(conditions)
-    if (!one) ctx.throw(400, { msg: '删除项不存在' })
+    if (!one) ctx.throw(400, { msg: '删除项不存在或已被删除' })
 
     const res = await db.deleteOne(conditions)
 
     // 删除redis缓存
-    await app.redis.del(`dict:${one.dict_type}`)
+    app.redis.del(`dict:${one.dict_type}`)
 
     return {
       data: res,
@@ -278,12 +270,15 @@ class SysDictitemService extends Service {
     // 过滤掉主键缺失无效的项
     data.list = data.list.filter((item) => item[primaryKey])
 
+    let existingTypes = [] // 记录所有字典类型，用于更新Redis
+
     // 结果处理
     let res, tip
     if (data.cover) {
       // 覆盖模式：使用 upsert 更新或插入数据
       res = await Promise.all(
         data.list.map(async (item) => {
+          if (!existingTypes.includes(item.dict_type)) existingTypes.push(item.dict_type) // 记录所有字典类型
           try {
             return await db.findOneAndUpdate({ [primaryKey]: item[primaryKey] }, item, { upsert: true, new: true })
           } catch (error) {
@@ -294,7 +289,11 @@ class SysDictitemService extends Service {
       )
     } else {
       // 增量模式：使用 insertMany 插入数据
-      const existingIds = data.list.map((item) => item[primaryKey])
+      const existingIds = data.list.map((item) => {
+        if (!existingTypes.includes(item.dict_type)) existingTypes.push(item.dict_type) // 记录所有字典类型
+        return item[primaryKey]
+      })
+
       const batchSize = app.config.batchAddSize || 1000 // 分批数量 app.config.batchAddSize 在 config.default.js 中配置
       const existingKeys = []
 
@@ -319,6 +318,11 @@ class SysDictitemService extends Service {
         return ctx.throw(500, { msg: '服务器内部错误' })
       }
     }
+
+    // 清空这些字典类型缓存，以重新更新
+    existingTypes.forEach((item) => {
+      app.redis.del(`dict:${item}`)
+    })
 
     return {
       data: res,

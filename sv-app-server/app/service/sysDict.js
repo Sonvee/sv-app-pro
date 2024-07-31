@@ -76,14 +76,6 @@ class SysDictService extends Service {
     // 权限校验
     ctx.checkAuthority('permission', ['dictAdd'])
 
-    // 参数处理
-    data = Object.assign(
-      {
-        dict_id: ''
-      },
-      data
-    )
-
     // 参数校验
     if (!isTruthy(data.dict_id)) ctx.throw(400, { msg: 'dict_id 必填' })
 
@@ -116,14 +108,6 @@ class SysDictService extends Service {
     // 权限校验
     ctx.checkAuthority('permission', ['dictUpdate'])
 
-    // 参数处理
-    data = Object.assign(
-      {
-        dict_id: ''
-      },
-      data
-    )
-
     // 参数校验
     if (!isTruthy(data.dict_id)) ctx.throw(400, { msg: 'dict_id 必填' })
 
@@ -155,14 +139,6 @@ class SysDictService extends Service {
     // 权限校验
     ctx.checkAuthority('permission', ['dictDelete'])
 
-    // 参数处理
-    data = Object.assign(
-      {
-        dict_id: ''
-      },
-      data
-    )
-
     // 参数校验
     if (!isTruthy(data.dict_id)) ctx.throw(400, { msg: 'dict_id 必填' })
 
@@ -173,7 +149,7 @@ class SysDictService extends Service {
     const conditions = { dict_id: data.dict_id }
 
     const one = await db.findOne(conditions)
-    if (!one) ctx.throw(400, { msg: '删除项不存在' })
+    if (!one) ctx.throw(400, { msg: '删除项不存在或已被删除' })
 
     const res = await db.deleteOne(conditions)
 

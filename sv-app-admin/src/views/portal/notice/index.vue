@@ -93,8 +93,7 @@ import { useDictStore } from '@/store/dict'
 const dictStore = useDictStore()
 // 初始化字典
 function dictInit() {
-  if (!isTruthy(dictStore.getDict('dict_sys_notice_type'), 'arr')) dictStore.initDict(['dict_sys_notice_type'])
-  if (!isTruthy(dictStore.getDict('dict_sys_status'), 'arr')) dictStore.initDict(['dict_sys_status'])
+  dictStore.initDict(['dict_sys_notice_type', 'dict_sys_status'])
 }
 
 const dataParams = ref({ pagenum: 1, pagesize: 20 })

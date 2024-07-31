@@ -4,7 +4,9 @@
       <view class="bind-image">
         <image class="w-h-full" src="@/assets/svgs/security_email.svg" mode="widthFix"></image>
       </view>
-      <view class="text-center margin-top">为了您的账户安全，请验证邮箱</view>
+      <view class="text-center margin-top">
+        {{ mode == 'verify' ? '为了您的账户安全，请先验证邮箱' : '请绑定新邮箱' }}
+      </view>
     </view>
     <view class="bind-form">
       <uni-forms ref="bindFormRef" :model="bindForm" :rules="bindRules">

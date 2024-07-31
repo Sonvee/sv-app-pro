@@ -4,12 +4,23 @@
       <view class="bind-image">
         <image class="w-h-full" src="@/assets/svgs/security_email.svg" mode="widthFix"></image>
       </view>
-      <view class="text-center margin-top">为了您的账户安全，请验证手机号</view>
+      <view class="text-center margin-top">
+        {{ mode == 'verify' ? '为了您的账户安全，请先验证手机号' : '请绑定新邮箱' }}
+      </view>
     </view>
     <view class="bind-form">
       <uni-forms ref="bindFormRef" :model="bindForm" :rules="bindRules">
-        <uni-forms-item name="email">
-          <uni-easyinput v-model="bindForm.email" type="text" placeholder="请输入邮箱" prefixIcon="email" />
+        <uni-forms-item name="phone" v-if="mode == 'verify'">
+          <uni-easyinput
+            v-model="bindForm.phone"
+            type="text"
+            :maxlength="11"
+            placeholder="请输入手机号"
+            prefixIcon="phone"
+          />
+        </uni-forms-item>
+        <uni-forms-item name="email" v-else>
+          <uni-easyinput v-model="bindForm.email" type="text" placeholder="请绑定新邮箱" prefixIcon="email" />
         </uni-forms-item>
         <uni-forms-item name="captcha">
           <view class="captcha-input">
@@ -29,12 +40,6 @@
             </uni-easyinput>
           </view>
         </uni-forms-item>
-        <uni-forms-item name="password">
-          <uni-easyinput type="password" v-model="bindForm.password" placeholder="请输入密码" prefixIcon="locked" />
-        </uni-forms-item>
-        <uni-forms-item name="password2">
-          <uni-easyinput type="password" v-model="bindForm.password2" placeholder="请确认密码" prefixIcon="locked" />
-        </uni-forms-item>
       </uni-forms>
 
       <!-- 按钮 -->
@@ -43,9 +48,13 @@
           <text class="cuIcon-refresh margin-right-xs"></text>
           重置
         </button>
-        <button class="cu-btn round bg-gradual-blue flex-sub margin-left" @click="toBind">
+        <button v-if="mode == 'verify'" class="cu-btn round bg-gradual-green flex-sub margin-left" @click="toVerify">
           <text class="sv-icons-dev-setting margin-right-xs"></text>
-          设置
+          验证
+        </button>
+        <button v-else class="cu-btn round bg-gradual-blue flex-sub margin-left" @click="toBind">
+          <text class="sv-icons-dev-setting margin-right-xs"></text>
+          绑定
         </button>
       </view>
     </view>
@@ -53,24 +62,38 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRegExp } from '@/utils/regexp.js'
 import { useUserStore } from '@/store/user'
 import { useCountdown } from '@/hooks/useCountdown'
 import { emailCaptcha } from '@/api/auth'
-import { changePasswordByEmail } from '@/api/user/user'
+import { bindEmailByPhone } from '@/api/user/user'
+import { useCommonStore } from '@/store/common'
 
 const userStore = useUserStore()
+const commonStore = useCommonStore()
 const countdownIns = new useCountdown(60)
+
+const userBindOptions = computed(() => commonStore.userBindOptions)
+
+const mode = ref(userBindOptions.value?.email?.value ? 'verify' : 'bind') // 验证模式
 
 const bindFormRef = ref()
 const bindForm = ref({
+  phone: '',
   email: '',
-  captcha: '',
-  password: '',
-  password2: ''
+  captcha: ''
 })
 const bindRules = ref({
+  phone: {
+    rules: [
+      { required: true, errorMessage: '请输入手机号' },
+      {
+        pattern: useRegExp('phone').regexp,
+        errorMessage: useRegExp('phone').msg
+      }
+    ]
+  },
   email: {
     rules: [
       { required: true, errorMessage: '请输入邮箱' },
@@ -80,35 +103,7 @@ const bindRules = ref({
       }
     ]
   },
-  captcha: { rules: [{ required: true, errorMessage: '请输入验证码' }] },
-  password: {
-    rules: [
-      { required: true, errorMessage: '请输入新密码' },
-      {
-        minLength: 8,
-        maxLength: 16,
-        errorMessage: '密码长度8-16'
-      },
-      {
-        pattern: useRegExp('password').regexp,
-        errorMessage: useRegExp('password').msg
-      }
-    ]
-  },
-  password2: {
-    rules: [
-      { required: true, errorMessage: '请确认新密码' },
-      {
-        validateFunction: (rule, value, data, callback) => {
-          if (value !== bindForm.value.password) {
-            callback('两次输入密码不一致')
-          } else {
-            callback()
-          }
-        }
-      }
-    ]
-  }
+  captcha: { rules: [{ required: true, errorMessage: '请输入验证码' }] }
 })
 
 function getCaptchaEmail() {
@@ -128,7 +123,7 @@ function getCaptchaEmail() {
 
   emailCaptcha({
     email: bindForm.value.email,
-    type: 'bind'
+    type: mode.value
   }).then((res) => {
     uni.showToast({
       title: res.msg,
@@ -139,36 +134,32 @@ function getCaptchaEmail() {
 
 function reset() {
   bindForm.value = {
+    phone: '',
     email: '',
-    captcha: '',
-    password: '',
-    password2: ''
+    captcha: ''
   }
   bindFormRef.value.clearValidate()
 }
 
-function toBind() {
+function formValidate(callback) {
   bindFormRef.value
     .validate()
     .then(async () => {
       try {
-        // 1. 修改密码接口
-        const pwdRes = await changePasswordByEmail({
+        // 1. 绑定邮箱接口
+        const emailRes = await bindEmailByPhone({
           _id: userStore.userInfo._id,
-          email: bindForm.value.email,
-          captcha: bindForm.value.captcha,
-          password: bindForm.value.password
+          mode: mode.value,
+          ...bindForm.value
         })
-        if (pwdRes.success) {
+        if (emailRes.success) {
           uni.showToast({
-            title: pwdRes.msg,
+            title: emailRes.msg,
             icon: 'none'
           })
-          // 2. 更新记住密码缓存
-          userStore.rememberLoginForm.password = bindForm.value.password
 
-          // 3. 关闭子页面
-          uni.$emit('E_CLOSE_SUBPAGE')
+          // 请求成功后回调
+          if (callback) callback()
         }
       } catch (e) {
         bindForm.value.captcha = ''
@@ -177,6 +168,24 @@ function toBind() {
     .catch((err) => {
       console.log('==== err :', err)
     })
+}
+
+function toVerify() {
+  formValidate(() => {
+    // 验证成功后切换为绑定模式
+    mode.value = 'bind'
+    // 清空表单
+    reset()
+    // 重置计时
+    countdownIns.clearCountdown()
+  })
+}
+
+function toBind() {
+  formValidate(() => {
+    // 关闭子页面
+    uni.$emit('E_CLOSE_SUBPAGE')
+  })
 }
 </script>
 

@@ -64,6 +64,7 @@
 import { ref, onMounted } from 'vue'
 import TableFilter from './components/TableFilter.vue'
 import TablePagination from '@/components/TablePagination/index.vue'
+import DictTag from '@/components/DictType/DictTag.vue'
 import { logList, logDelete, logBatchDelete, logClear } from '@/api/log'
 import { RefreshRight, Plus, EditPen, Delete, View, Hide } from '@element-plus/icons-vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
@@ -73,7 +74,7 @@ import { useDictStore } from '@/store/dict'
 const dictStore = useDictStore()
 // 初始化字典
 function dictInit() {
-  if (!isTruthy(dictStore.getDict('dict_sys_login_type'), 'arr')) dictStore.initDict(['dict_sys_login_type'])
+  dictStore.initDict(['dict_sys_login_type'])
 }
 
 const dataParams = ref({ log_type: 'login', pagenum: 1, pagesize: 20 })

@@ -151,7 +151,7 @@ class SysMenuService extends Service {
     const res = await db.create(data)
 
     // 删除redis缓存
-    await app.redis.del('menu:admin:menulist')
+    app.redis.del('menu:admin:menulist')
 
     return {
       data: res,
@@ -206,7 +206,7 @@ class SysMenuService extends Service {
     }
 
     // 删除redis缓存
-    await app.redis.del('menu:admin:menulist')
+    app.redis.del('menu:admin:menulist')
 
     return {
       data: res,
@@ -243,7 +243,7 @@ class SysMenuService extends Service {
     const conditions = { name: data.name }
 
     const one = await db.findOne(conditions)
-    if (!one) ctx.throw(400, { msg: '删除项不存在' })
+    if (!one) ctx.throw(400, { msg: '删除项不存在或已被删除' })
 
     /* 
     // 需要先查询菜单全量
@@ -260,7 +260,7 @@ class SysMenuService extends Service {
     let res = await db.deleteOne({ name: one.name })
 
     // 删除redis缓存
-    await app.redis.del('menu:admin:menulist')
+    app.redis.del('menu:admin:menulist')
 
     return {
       data: res,
@@ -345,7 +345,7 @@ class SysMenuService extends Service {
     }
 
     // 删除redis缓存
-    await app.redis.del('menu:admin:menulist')
+    app.redis.del('menu:admin:menulist')
 
     return {
       data: res,
@@ -397,7 +397,7 @@ class SysMenuService extends Service {
     if (deletedCount == 0) ctx.throw(400, { msg: '无有效数据项删除' })
 
     // 删除redis缓存
-    await app.redis.del('menu:admin:menulist')
+    app.redis.del('menu:admin:menulist')
 
     return {
       msg: '批量删除成功',
