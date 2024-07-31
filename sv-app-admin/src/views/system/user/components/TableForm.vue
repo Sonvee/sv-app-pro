@@ -58,6 +58,7 @@ import { ref, watchEffect, nextTick } from 'vue'
 import AvatarUpload from '@/components/FileUpload/AvatarUpload.vue'
 import DictSelect from '@/components/DictType/DictSelect.vue'
 import { roleList } from '@/api/user/role'
+import { avatarUpload } from '@/api/file/upload'
 
 const props = defineProps({
   formInit: {
@@ -112,11 +113,20 @@ function closeDrawer() {}
 function cancel() {
   tableFormRef.value.handleClose()
 }
+
 // 确认提交表单
 function confirm() {
   formRef.value.validate(async (valid, fields) => {
     if (valid) {
-      // console.log('formData.value :>> ', formData.value)
+      console.log('formData.file :>> ', formData.value?.avatar?.file)
+      // 对比头像是否改变，若改变则需上传更新
+      if (props.formInit?.avatar?.url !== formData.value?.avatar?.url) {
+        let formData = new FormData()
+        formData.append('file', formData.value?.avatar?.file)
+        const uploadRes = await avatarUpload(formData)
+        if (!uploadRes.success) return
+        formData.value.avatar = uploadRes.data
+      }
       emits('submit', { data: formData.value, mode: props.formMode })
       tableFormRef.value.handleClose()
     } else {

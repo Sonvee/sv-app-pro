@@ -3,16 +3,15 @@
     class="avatar-uploader"
     ref="uploadRef"
     action="#"
-    :auto-upload="true"
+    v-model:file-list="avatar"
+    :auto-upload="false"
     :multiple="false"
-    :disabled="disabled"
     :show-file-list="false"
+    :limit="1"
+    :disabled="disabled"
     :accept="fileType.join(',')"
-    :http-request="handleHttpUpload"
-    :before-upload="beforeUpload"
-    :on-success="uploadSuccess"
-    :on-error="uploadError"
     :on-change="uploadChange"
+    :on-exceed="handleExceed"
   >
     <template v-if="file?.url">
       <el-image :src="file.url" class="avatar" />
@@ -45,51 +44,30 @@ const props = defineProps({
     default: false
   }
 })
-
 const emits = defineEmits(['update:file'])
 
 const uploadRef = ref()
-
-async function handleHttpUpload(options) {
-  // console.log('handleHttpUpload :>> ', options)
-  let formData = new FormData()
-  formData.append('file', options.file)
-  try {
-    const apiRes = await avatarUpload(formData)
-    return apiRes
-  } catch (err) {
-    options.onError(err)
-  }
-}
-
-function beforeUpload(rawFile) {
-  // console.log('beforeAvatarUpload :>> ', rawFile)
-  if (rawFile.size / 1024 / 1024 > 2) {
-    ElMessage.error('头像文件大小不能超过2MB!')
-    return false
-  }
-  return true
-}
-
-function uploadSuccess(response, uploadFile) {
-  // console.log('handleAvatarSuccess :>> ', response, uploadFile)
-  ElMessage({
-    type: 'success',
-    message: response?.msg
-  })
-  emits('update:file', response.data)
-}
-
-function uploadError(err) {
-  console.error('uploadError :>> ', err)
-}
+const avatar = ref([props.file])
 
 function uploadChange(uploadFile) {
-  // const tempurl = URL.createObjectURL(uploadFile.raw)
-  // console.log('uploadChange :>> ', tempurl)
+  const fileRaw = uploadFile.raw
+  emits('update:file', {
+    file: fileRaw,
+    url: URL.createObjectURL(fileRaw)
+  })
+}
+
+// limit="1" 限制单文件时，需要调用此钩子覆盖更新file
+function handleExceed(exceed) {
+  const fileRaw = exceed[0]
+  emits('update:file', {
+    file: fileRaw,
+    url: URL.createObjectURL(fileRaw)
+  })
 }
 
 async function deleteImg() {
+  avatar.value = []
   emits('update:file', {})
 }
 </script>
