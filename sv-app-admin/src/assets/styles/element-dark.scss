@@ -1,8 +1,0 @@
-/* 自定义 element 暗黑模式 */
-html.dark {
-  /* el-table 固定列边框阴影 */
-  .el-table {
-    --el-table-fixed-left-column: inset 10px 0 10px -10px rgba(255, 255, 255, 0.15);
-    --el-table-fixed-right-column: inset -10px 0 10px -10px rgba(255, 255, 255, 0.15);
-  }
-}

@@ -26,8 +26,6 @@
 
 <script setup>
 import { ref } from 'vue'
-import { avatarUpload } from '@/api/file/upload'
-import { ElMessage } from 'element-plus'
 
 const props = defineProps({
   // 文件对象 {url,key,hash}
@@ -47,7 +45,7 @@ const props = defineProps({
 const emits = defineEmits(['update:file'])
 
 const uploadRef = ref()
-const avatar = ref([props.file])
+const avatar = ref(props.file ? [props.file] : [])
 
 function uploadChange(uploadFile) {
   const fileRaw = uploadFile.raw

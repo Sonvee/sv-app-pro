@@ -6,7 +6,8 @@ class FileController extends Controller {
   async avatarUpload() {
     const { ctx, service } = this
     const files = ctx.request.files
-    const res = await service.file.avatarUpload(files)
+    const data = ctx.request.body
+    const res = await service.file.avatarUpload({ data, files })
     ctx.result(res)
   }
 

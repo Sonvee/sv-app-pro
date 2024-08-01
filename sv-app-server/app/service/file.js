@@ -9,8 +9,9 @@ class FileService extends Service {
    * 头像上传 post - 权限 needlogin
    * @description 前端需要使用FormData进行请求，请求头'Content-Type': 'multipart/form-data'
    * @param {Array<File>} files 用户上传的文件
+   * @param {String} platform 平台：client | admin
    */
-  async avatarUpload(files) {
+  async avatarUpload({ data, files }) {
     const { ctx, app } = this
 
     // 权限校验
@@ -19,7 +20,10 @@ class FileService extends Service {
     const userid = ctx.userInfo._id
     if (!userid) ctx.throw(400, { msg: '用户信息错误' })
 
-    const file = files[0]
+    // 指定文件读取
+    const file = files.find((item) => item.fieldname == 'avatar')
+    console.log('file :>> ', file);
+
     // 文件key = 要存储的文件夹路径 + 唯一的文件名
     const fileKey = `userfiles/${userid}/avatar/${Date.now()}-${file.filename}`
 
@@ -30,11 +34,13 @@ class FileService extends Service {
     // 删除不必要字段
     delete fileRes.ok
 
-    // 更新用户头像数据
-    await ctx.service.sysUser.userUpdateSimple({
-      _id: userid,
-      avatar: fileRes
-    })
+    // 客户端需立即更新用户头像数据
+    if (data?.platform == 'client') {
+      await ctx.service.sysUser.userUpdateSimple({
+        _id: userid,
+        avatar: fileRes
+      })
+    }
 
     return {
       data: fileRes,

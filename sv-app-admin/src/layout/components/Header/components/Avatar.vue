@@ -1,9 +1,9 @@
 <template>
   <el-dropdown trigger="click">
     <div class="flex-vc">
-      <span class="username">{{ username }}</span>
+      <span class="username-text">{{ userInfo.username }}</span>
       <div class="avatar">
-        <img src="@/assets/images/avatar.gif" alt="avatar" />
+        <el-avatar :src="userInfo.avatar.url" :icon="UserFilled" :size="40" shape="circle" fit="cover" />
       </div>
     </div>
     <template #dropdown>
@@ -32,13 +32,14 @@ import { LOGIN_URL } from '@/config'
 import { useRouter } from 'vue-router'
 import { logout } from '@/api/user/login'
 import { useUserStore } from '@/store/user'
+import { UserFilled } from '@element-plus/icons-vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import InfoDialog from './InfoDialog.vue'
 import PasswordDialog from './PasswordDialog.vue'
 
 const router = useRouter()
 const userStore = useUserStore()
-const username = computed(() => userStore.userInfo.username)
+const userInfo = computed(() => userStore.userInfo)
 
 // 退出登录
 function toLogout() {
@@ -48,7 +49,7 @@ function toLogout() {
     type: 'warning'
   }).then(async () => {
     // 1.执行退出登录接口
-    await logout({ username: username.value })
+    await logout({ _id: userInfo.value._id })
 
     // 2.清除 Token 和 用户信息 等
     userStore.clearUserInfo()
@@ -69,7 +70,7 @@ const openDialog = (refname) => {
 </script>
 
 <style scoped lang="scss">
-.username {
+.username-text {
   margin: 0 10px 0 20px;
   font-size: 15px;
   color: var(--el-header-text-color);

@@ -59,6 +59,7 @@ import AvatarUpload from '@/components/FileUpload/AvatarUpload.vue'
 import DictSelect from '@/components/DictType/DictSelect.vue'
 import { roleList } from '@/api/user/role'
 import { avatarUpload } from '@/api/file/upload'
+import { assignOverride, isTruthy } from '@/utils'
 
 const props = defineProps({
   formInit: {
@@ -77,10 +78,9 @@ const emits = defineEmits(['submit'])
 const formData = ref({})
 // 初始数据
 const formBase = {
-  _id: '', // 主键
   username: '',
   nickname: '',
-  avatar: null,
+  avatar: {},
   role: [],
   department_id: '',
   phone: '',
@@ -99,7 +99,7 @@ const rules = ref({
 
 watchEffect(() => {
   // 表单数据初始化更新
-  formData.value = Object.assign({ ...formBase }, props.formInit)
+  formData.value = assignOverride({ ...formBase }, props.formInit)
 })
 
 const tableFormRef = ref() // 抽屉
@@ -118,12 +118,11 @@ function cancel() {
 function confirm() {
   formRef.value.validate(async (valid, fields) => {
     if (valid) {
-      console.log('formData.file :>> ', formData.value?.avatar?.file)
       // 对比头像是否改变，若改变则需上传更新
-      if (props.formInit?.avatar?.url !== formData.value?.avatar?.url) {
-        let formData = new FormData()
-        formData.append('file', formData.value?.avatar?.file)
-        const uploadRes = await avatarUpload(formData)
+      if (isTruthy(formData.value?.avatar?.url) && formData.value?.avatar?.url !== props.formInit?.avatar?.url) {
+        let fd = new FormData()
+        fd.append('avatar', formData.value?.avatar?.file)
+        const uploadRes = await avatarUpload(fd)
         if (!uploadRes.success) return
         formData.value.avatar = uploadRes.data
       }

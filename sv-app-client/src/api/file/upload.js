@@ -2,7 +2,6 @@ import http from '@/config/request'
 
 export function avatarUpload(data) {
 	return http.upload('/file/avatarUpload', {
-		name: 'file',
 		fileType: 'image',
 		...data,
 	})
