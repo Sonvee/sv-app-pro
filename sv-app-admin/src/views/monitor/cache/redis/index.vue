@@ -1,11 +1,11 @@
 <template>
   <div class="page-container grid grid-col-3 grid-gap-sm">
+    <!-- 宫格布局 -->
     <el-card>
       <template #header>
         <i class="sv-icons-redis mr-5"></i>
         缓存列表
       </template>
-      
     </el-card>
     <el-card>
       <template #header>
@@ -22,10 +22,6 @@
   </div>
 </template>
 
-<script setup>
+<script setup></script>
 
-</script>
-
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

@@ -8,11 +8,8 @@
     </div>
     <template #dropdown>
       <el-dropdown-menu>
-        <el-dropdown-item @click="openDialog('infoRef')">
-          <el-icon><User /></el-icon>个人信息
-        </el-dropdown-item>
-        <el-dropdown-item @click="openDialog('passwordRef')">
-          <el-icon><Edit /></el-icon>修改密码
+        <el-dropdown-item @click="skipMine">
+          <el-icon><User /></el-icon>个人主页
         </el-dropdown-item>
         <el-dropdown-item divided @click="toLogout">
           <el-icon><SwitchButton /></el-icon>退出登录
@@ -20,10 +17,6 @@
       </el-dropdown-menu>
     </template>
   </el-dropdown>
-  <!-- infoDialog -->
-  <InfoDialog ref="infoRef"></InfoDialog>
-  <!-- passwordDialog -->
-  <PasswordDialog ref="passwordRef"></PasswordDialog>
 </template>
 
 <script setup>
@@ -34,8 +27,6 @@ import { logout } from '@/api/user/login'
 import { useUserStore } from '@/store/user'
 import { UserFilled } from '@element-plus/icons-vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
-import InfoDialog from './InfoDialog.vue'
-import PasswordDialog from './PasswordDialog.vue'
 
 const router = useRouter()
 const userStore = useUserStore()
@@ -60,12 +51,9 @@ function toLogout() {
   })
 }
 
-// 打开修改密码和个人信息弹窗
-const infoRef = ref(null)
-const passwordRef = ref(null)
-const openDialog = (refname) => {
-  if (refname == 'infoRef') infoRef.value?.openDialog()
-  if (refname == 'passwordRef') passwordRef.value?.openDialog()
+// 跳转至个人空间
+function skipMine() {
+  router.push('/mine')
 }
 </script>
 
