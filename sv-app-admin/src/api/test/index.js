@@ -1,4 +1,4 @@
-import request from '../config/request'
+import request from '@/config/request/request.js'
 
 // 测试 开放接口
 export function home() {

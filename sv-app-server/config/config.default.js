@@ -46,9 +46,12 @@ module.exports = (appInfo) => {
   config.authorization = {
     enable: true,
     match(ctx) {
+      // 取ctx.url中?之前的基础路径
+      const routeURL = ctx.url.split('?')[0]
+
       // 1. 过滤是否404
       const apiRoutes = ctx.router.stack?.map((item) => item.path)
-      if (!apiRoutes.includes(ctx.url)) {
+      if (!apiRoutes.includes(routeURL)) {
         return false
       }
 
@@ -63,19 +66,19 @@ module.exports = (appInfo) => {
         '/api/user/hasAdmin',
         '/api/user/findPermissionByRole'
       ]
-      if (white.includes(ctx.url)) {
+      if (white.includes(routeURL)) {
         return false
       }
 
       // 3. 黑名单强制token校验
       const black = ['/api/test']
-      if (black.includes(ctx.url)) {
+      if (black.includes(routeURL)) {
         return true
       }
 
       // 4. 通用正则校验
       const reg = /^\/api\/(user|sys|file)(\/.*)?/
-      return reg.test(ctx.url)
+      return reg.test(routeURL)
     }
   }
 
@@ -92,7 +95,7 @@ module.exports = (appInfo) => {
    */
   config.multipart = {
     mode: 'file',
-    fileSize: '10mb',
+    fileSize: '10mb'
     // fileExtensions: ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']
   }
 
@@ -154,8 +157,8 @@ module.exports = (appInfo) => {
   config.cluster = {
     listen: {
       port: 7001,
-      hostname: '192.168.1.209'
-      // hostname: '192.168.6.115'
+      // hostname: '192.168.1.209'
+      hostname: '192.168.6.115'
     }
   }
 

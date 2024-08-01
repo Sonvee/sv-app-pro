@@ -1,4 +1,4 @@
-import request from '../config/request'
+import request from '@/config/request/request.js'
 
 // 字典
 export function dictList(data) {

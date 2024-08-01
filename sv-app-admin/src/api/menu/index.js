@@ -1,4 +1,4 @@
-import request from '../config/request'
+import request from '@/config/request/request.js'
 
 export function menuList(data) {
   return request({

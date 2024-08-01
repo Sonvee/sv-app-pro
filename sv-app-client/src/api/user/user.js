@@ -8,10 +8,11 @@ export function userList(data) {
   })
 }
 
-export function userSelf() {
+export function userSelf(params) {
   return http.request({
     url: '/user/userSelf',
     method: 'get',
+		params
   })
 }
 

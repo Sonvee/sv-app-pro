@@ -24,14 +24,7 @@
           <el-input v-model="formData.remark" type="textarea" :autosize="{ minRows: 4 }" placeholder="请输入备注" />
         </el-form-item>
         <el-form-item prop="publish_timerange" label="公布时间范围">
-          <el-date-picker
-            v-model="formData.publish_timerange"
-            type="datetimerange"
-            start-placeholder="开始时间"
-            end-placeholder="结束时间"
-            range-separator="~"
-            value-format="x"
-          />
+          <el-date-picker v-model="formData.publish_timerange" type="datetimerange" start-placeholder="开始时间" end-placeholder="结束时间" range-separator="~" value-format="x" />
         </el-form-item>
         <el-form-item prop="top" label="是否置顶">
           <el-switch v-model="formData.top" inline-prompt :active-icon="Top" :inactive-icon="Minus" />
@@ -54,6 +47,8 @@ import DictSelect from '@/components/DictType/DictSelect.vue'
 import TinymceEditor from '@/components/TinymceEditor/TinymceEditor.vue'
 import { Check, Close, Top, Minus } from '@element-plus/icons-vue'
 import { assignOverride } from '@/utils'
+import { ElNotification } from 'element-plus'
+import { isEqual } from 'lodash-es'
 
 const props = defineProps({
   formInit: {
@@ -82,6 +77,8 @@ const formBase = {
   status: 1,
   top: false
 }
+// 初始数据克隆
+const formBaseClone = ref()
 // 校验规则
 const rules = ref({
   notice_id: [{ required: true, message: '请输入通知公告ID', trigger: 'blur' }],
@@ -92,6 +89,11 @@ const rules = ref({
 watchEffect(() => {
   // 表单数据初始化更新
   formData.value = assignOverride({ ...formBase }, props.formInit)
+  /**
+   * 克隆一个初始数据
+   * @description 此处不能直接使用cloneDeep进行深拷贝，会导致无限触发watchEffect
+   */
+  formBaseClone.value = assignOverride({ ...formBase }, props.formInit)
 })
 
 const tableFormRef = ref() // 抽屉
@@ -109,8 +111,20 @@ function cancel() {
 function confirm() {
   formRef.value.validate(async (valid, fields) => {
     if (valid) {
+      // 对比数据是否发生变化
+      if (isEqual(formBaseClone.value, formData.value)) {
+        // 未变化则提示并关闭抽屉
+        ElNotification({
+          title: 'Info',
+          message: '数据未变更',
+          type: 'info'
+        })
+        tableFormRef.value.handleClose()
+        return
+      }
+
       emits('submit', { data: formData.value, mode: props.formMode })
-      tableFormRef.value.handleClose()
+      // tableFormRef.value.handleClose()
     } else {
       console.log('==== 校验失败 :', fields)
     }

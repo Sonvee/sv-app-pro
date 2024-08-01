@@ -9,7 +9,6 @@
 [class*="admin-icons-"],
 [class^=admin-icons-] {
 	font-family: admin-icons !important;
-	speak: none;
 	font-style: normal;
 	font-weight: 400;
 	font-variant: normal;
@@ -18,7 +17,7 @@
 	vertical-align: baseline;
 	display: inline-block;
 	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale
+	-moz-osx-font-smoothing: grayscale;
 }
 
 .admin-icons-stat:before {

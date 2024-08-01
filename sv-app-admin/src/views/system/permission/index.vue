@@ -181,6 +181,7 @@ async function submitForm(e) {
       break
   }
   if (result.success) {
+    showForm.value = false
     ElNotification({
       title: 'Success',
       message: result?.msg,

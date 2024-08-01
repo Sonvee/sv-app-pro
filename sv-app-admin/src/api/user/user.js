@@ -1,10 +1,18 @@
-import request from '../config/request'
+import request from '@/config/request/request.js'
 
 export function userList(data) {
   return request({
     url: '/user/userList',
     method: 'post',
     data
+  })
+}
+
+export function userSelf(params) {
+  return request({
+    url: '/user/userSelf',
+    method: 'get',
+    params
   })
 }
 

@@ -92,7 +92,7 @@ $avatar-height: 80px;
 
     & .delete-icon {
       position: absolute;
-      bottom: -4px;
+      bottom: 2px;
       left: 3px;
       color: #ffffff;
 

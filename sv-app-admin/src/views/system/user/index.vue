@@ -198,6 +198,7 @@ async function submitForm(e) {
       break
   }
   if (result.success) {
+    showForm.value = false // 关闭弹窗
     ElNotification({
       title: 'Success',
       message: result?.msg,
@@ -218,4 +219,10 @@ function handleCurrentChange(e) {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.avatar-image {
+  width: 30px;
+  height: 30px;
+  margin: 0 auto;
+}
+</style>

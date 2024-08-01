@@ -65,7 +65,7 @@
         </uv-cell>
         <uv-cell title="二维码名片" clickable @click="onQRcode">
           <template #right-icon>
-            <text class="cuIcon-qrcode"></text>
+            <text class="cuIcon-qrcode text-df"></text>
           </template>
         </uv-cell>
       </uv-cell-group>

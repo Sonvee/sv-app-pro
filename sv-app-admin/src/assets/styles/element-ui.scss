@@ -9,6 +9,12 @@
   border: 1px solid;
 }
 
+/* 消除图片底部间隙 */
+.el-image,
+.el-avatar {
+  display: block !important;
+}
+
 /* 当前页面最大化 css */
 .main-maximize {
   .aside-split,

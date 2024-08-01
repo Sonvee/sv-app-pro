@@ -1,4 +1,4 @@
-import request from '../config/request'
+import request from '@/config/request/request.js'
 import menuData from '@/assets/json/menuList.json'
 
 // 获取菜单列表

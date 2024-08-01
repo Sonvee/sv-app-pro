@@ -29,6 +29,8 @@
 <script setup>
 import { ref, watchEffect } from 'vue'
 import { assignOverride } from '@/utils'
+import { ElNotification } from 'element-plus'
+import { isEqual } from 'lodash-es'
 
 const props = defineProps({
   formInit: {
@@ -52,6 +54,8 @@ const formBase = {
   sort: 0,
   remark: ''
 }
+// 初始数据克隆
+const formBaseClone = ref()
 // 校验规则
 const rules = ref({
   role_id: [{ required: true, message: '请输入角色ID', trigger: 'blur' }],
@@ -61,6 +65,11 @@ const rules = ref({
 watchEffect(() => {
   // 表单数据初始化更新
   formData.value = assignOverride({ ...formBase }, props.formInit)
+  /**
+   * 克隆一个初始数据
+   * @description 此处不能直接使用cloneDeep进行深拷贝，会导致无限触发watchEffect
+   */
+   formBaseClone.value = assignOverride({ ...formBase }, props.formInit)
 })
 
 const tableFormRef = ref() // 抽屉
@@ -78,8 +87,20 @@ function cancel() {
 function confirm() {
   formRef.value.validate(async (valid, fields) => {
     if (valid) {
+      // 对比数据是否发生变化
+      if (isEqual(formBaseClone.value, formData.value)) {
+        // 未变化则提示并关闭抽屉
+        ElNotification({
+          title: 'Info',
+          message: '数据未变更',
+          type: 'info'
+        })
+        tableFormRef.value.handleClose()
+        return
+      }
+      
       emits('submit', { data: formData.value, mode: props.formMode })
-      tableFormRef.value.handleClose()
+      // tableFormRef.value.handleClose()
     } else {
       console.log('==== 校验失败 :', fields)
     }

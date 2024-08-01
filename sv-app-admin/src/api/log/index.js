@@ -1,4 +1,4 @@
-import request from '../config/request'
+import request from '@/config/request/request.js'
 
 /**
  * 查询 post - 权限 permission

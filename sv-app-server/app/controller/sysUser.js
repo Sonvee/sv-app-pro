@@ -12,7 +12,8 @@ class SysUserController extends Controller {
 
   async userSelf() {
     const { ctx, service } = this
-    const res = await service.sysUser.userSelf()
+    const data = ctx.request.query
+    const res = await service.sysUser.userSelf(data)
     ctx.result(res)
   }
 

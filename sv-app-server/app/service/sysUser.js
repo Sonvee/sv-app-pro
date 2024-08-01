@@ -99,8 +99,10 @@ class SysUserService extends Service {
   /**
    * 获取用户自身信息 get - 权限 needlogin
    * @description 直接从token中获取用户_id
+   * @param {Object} data - 请求参数
+   * @property {Boolean} data.all - 是否为全数据，默认否
    */
-  async userSelf() {
+  async userSelf(data) {
     const { ctx, app } = this
 
     // 权限校验
@@ -112,7 +114,25 @@ class SysUserService extends Service {
     // 查询条件处理
     const conditions = { _id: ctx.userInfo._id }
 
-    const self = await db.findOne(conditions)
+    // 筛选字段：0 隐藏，1 显示
+    const projection = {
+      password: 0,
+      realname_auth: 0,
+      token: 0,
+      third_party: 0,
+      updated_date: 0,
+      wx_unionid: 0,
+      created_date: 0,
+      wx_openid: 0
+    }
+
+    let self
+    if (isTruthy(data.all)) {
+      self = await db.findOne(conditions)
+    } else {
+      self = await db.findOne(conditions, projection) // 关键字段隐藏
+    }
+
     if (!self) ctx.throw(400, { msg: '用户不存在' })
 
     return {
@@ -217,7 +237,7 @@ class SysUserService extends Service {
       if (!usernameRegExp.regexp.test(data.username)) ctx.throw(400, { msg: usernameRegExp.msg })
 
       // 是否重复
-      const userExist = await db.findOne({ username: data.username })
+      const userExist = await db.findOne({ _id: { $ne: data._id }, username: data.username })
       if (userExist) ctx.throw(400, { msg: '用户名已存在' })
     }
 
