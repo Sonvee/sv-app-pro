@@ -15,48 +15,23 @@
       <!-- 数据表格 -->
       <el-table v-loading="loading" :data="tableData" border @selection-change="handleSelectionChange">
         <el-table-column type="selection" align="center" width="50" fixed="left" />
-        <el-table-column prop="notice_id" label="通告ID" width="160" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="notice_type" label="通告类型" align="center" width="100" show-overflow-tooltip>
+        <el-table-column prop="version" label="版本号" width="160" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="download_url" label="下载地址" min-width="300" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="mandatory" label="是否强制更新" align="center" width="160" show-overflow-tooltip>
           <template #default="scope">
-            <DictTag :dictList="dictStore.getDict('dict_sys_notice_type')" :value="scope.row.notice_type"></DictTag>
+            <el-switch v-model="scope.row.mandatory" inline-prompt :active-icon="Check" :inactive-icon="Close" @change="handleTableSwitch(scope.row)" />
           </template>
         </el-table-column>
-        <el-table-column prop="notice_name" label="通告名称" min-width="200" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="notice_title" label="通告标题" min-width="200" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="notice_content" label="通告内容" min-width="300">
-          <template #default="scope">
-            <div class="text-line-1">{{ scope.row.notice_content }}</div>
-          </template>
-        </el-table-column>
+        <el-table-column prop="description" label="版本描述" min-width="300" show-overflow-tooltip></el-table-column>
         <el-table-column prop="remark" label="备注" min-width="300" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="top" align="center" width="100" show-overflow-tooltip>
-          <template #header>
-            <span>置顶&nbsp;<DoubtTip tip="置顶通知公告将优先展示" /></span>
-          </template>
-          <template #default="scope">
-            <el-switch v-model="scope.row.top" inline-prompt :active-icon="Top" :inactive-icon="Minus" @change="handleTableSwitch(scope.row)" />
-          </template>
-        </el-table-column>
-        <el-table-column prop="status" label="状态" align="center" width="100" show-overflow-tooltip>
-          <template #default="scope">
-            <DictTag :dictList="dictStore.getDict('dict_sys_status')" :value="scope.row.status"></DictTag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="publish_timerange" label="公布时间范围" align="center" width="320" show-overflow-tooltip>
-          <template #default="scope">
-            <span v-if="isTruthy(scope.row.publish_timerange, 'arr')">
-              {{ timeFormat(scope.row.publish_timerange[0]) + ' ~ ' + timeFormat(scope.row.publish_timerange[1]) }}
-            </span>
-          </template>
-        </el-table-column>
 
         <el-table-column
-          prop="created_date"
+          prop="release_date"
           label="发布日期"
           align="center"
           width="180"
           sortable
-          :formatter="(row) => timeFormat(row.created_date)"
+          :formatter="(row) => timeFormat(row.release_date, 'YYYY-MM-DD')"
           show-overflow-tooltip
         ></el-table-column>
 
@@ -77,24 +52,17 @@
   </div>
 </template>
 
-<script setup name="notice">
+<script setup name="release">
 import { ref, onMounted } from 'vue'
 import TableFilter from './components/TableFilter.vue'
 import TableForm from './components/TableForm.vue'
 import TablePagination from '@/components/TablePagination/index.vue'
 import DictTag from '@/components/DictType/DictTag.vue'
 import DoubtTip from '@/components/DoubtTip/index.vue'
-import { noticeList, noticeAdd, noticeUpdate, noticeDelete, noticeBatchDelete } from '@/api/notice'
+import { releaseList, releaseAdd, releaseUpdate, releaseDelete, releaseBatchDelete } from '@/api/release'
 import { RefreshRight, Plus, EditPen, Delete, View, Hide, Check, Close, Top, Minus } from '@element-plus/icons-vue'
 import { ElNotification, ElMessageBox, ElMessage } from 'element-plus'
 import { isTruthy, timeFormat } from '@/utils'
-import { useDictStore } from '@/store/dict'
-
-const dictStore = useDictStore()
-// 初始化字典
-function dictInit() {
-  dictStore.initDict(['dict_sys_notice_type', 'dict_sys_status'])
-}
 
 const dataParams = ref({ pagenum: 1, pagesize: 20 })
 const tableData = ref([])
@@ -106,13 +74,12 @@ const formInit = ref({}) // 表单初始值
 const formMode = ref('') // 表单模式 add / edit
 
 onMounted(() => {
-  dictInit()
   handleTable(dataParams.value)
 })
 
 // 数据
 async function handleTable(params) {
-  const res = await noticeList(params)
+  const res = await releaseList(params)
   loading.value = false
   tableData.value = res.data || []
   total.value = res.total
@@ -120,7 +87,7 @@ async function handleTable(params) {
 
 // 开关直接修改
 async function handleTableSwitch(row) {
-  const res = await noticeUpdate(row)
+  const res = await releaseUpdate(row)
   if (res.success) {
     ElMessage({
       type: 'success',
@@ -151,15 +118,15 @@ function edit(row) {
 
 // 删
 function del(row) {
-  const { notice_name, notice_id } = row
-  ElMessageBox.confirm(`确认删除『 ${notice_name} 』吗？`, '系统提示', {
+  const { version } = row
+  ElMessageBox.confirm(`确认删除『 ${version} 』吗？`, '系统提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
   })
     .then(async () => {
       // 确认删除操作
-      const deleteRes = await noticeDelete({ notice_id })
+      const deleteRes = await releaseDelete({ version })
       ElMessage({
         type: 'success',
         message: deleteRes?.msg
@@ -180,7 +147,7 @@ function refresh() {
 // 多选
 const batchSelection = ref([])
 function handleSelectionChange(e) {
-  batchSelection.value = e.map((item) => item.notice_id)
+  batchSelection.value = e.map((item) => item.version)
 }
 
 // 批量删除
@@ -193,7 +160,7 @@ function batchDelete() {
   })
     .then(async () => {
       // 确认批量删除操作
-      const deleteRes = await noticeBatchDelete({
+      const deleteRes = await releaseBatchDelete({
         list: batchSelection.value
       })
       ElMessage({
@@ -211,11 +178,11 @@ async function submitForm(e) {
   switch (e.mode) {
     case 'add':
       // 新增添加
-      result = await noticeAdd(e.data)
+      result = await releaseAdd(e.data)
       break
     case 'edit':
       // 编辑更新
-      result = await noticeUpdate(e.data)
+      result = await releaseUpdate(e.data)
       break
   }
   if (result.success) {

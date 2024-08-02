@@ -76,6 +76,9 @@ class SysDictService extends Service {
     // 权限校验
     ctx.checkAuthority('permission', ['dictAdd'])
 
+    // 参数处理
+    delete data._id // 去除部分参数
+
     // 参数校验
     if (!isTruthy(data.dict_id)) ctx.throw(400, { msg: 'dict_id 必填' })
 

@@ -112,12 +112,15 @@ export function getUrlWithParams() {
 }
 
 /**
- * @description 时间格式转换
- * @param {Date} time 要转换的时间
- * @param {String} format 转换格式 默认YYYY-MM-DD HH:mm:ss
- * @returns {String}
+ * 时间日期格式化
+ * @param {String} time 需要格式化的时间
+ * @param {String} format 格式化规则 为timestamp将time转化为时间戳（毫秒）
  */
 export function timeFormat(time, format = 'YYYY-MM-DD HH:mm:ss') {
+  if (!time) return
+  if (format === 'timestamp') {
+    return dayjs(time).valueOf()
+  }
   return dayjs(time).format(format)
 }
 

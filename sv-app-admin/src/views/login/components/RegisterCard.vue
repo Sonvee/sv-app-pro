@@ -34,7 +34,7 @@
           </el-input>
         </el-form-item>
         <el-form-item prop="captcha">
-          <el-input v-model="registerForm.captcha" placeholder="请输入验证码" clearable class="captcha-input">
+          <el-input v-model="registerForm.captcha" placeholder="请输入验证码" :maxlength="4" clearable class="captcha-input">
             <template #prefix>
               <el-icon class="el-input__icon">
                 <finished />

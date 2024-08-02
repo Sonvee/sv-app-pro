@@ -82,12 +82,7 @@ class SysPermissionService extends Service {
     ctx.checkAuthority('permission', ['permissionAdd'])
 
     // 参数处理
-    data = Object.assign(
-      {
-        permission_id: ''
-      },
-      data
-    )
+    delete data._id // 去除部分参数
 
     // 参数校验
     if (!isTruthy(data.permission_id)) ctx.throw(400, { msg: 'permission_id 必填' })

@@ -7,6 +7,7 @@ import { useLoginModal } from '@/hooks/useLoginModal';
  * @param {String} format 格式化规则 为timestamp将time转化为时间戳（毫秒）
  */
 export function timeFormat(time, format = "YYYY-MM-DD HH:mm:ss") {
+  if (!time) return 
   if (format === 'timestamp') {
     return dayjs(time).valueOf()
   }

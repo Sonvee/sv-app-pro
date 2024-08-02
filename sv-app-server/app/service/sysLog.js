@@ -94,12 +94,7 @@ class SysLogService extends Service {
     const { ctx, app } = this
 
     // 参数处理
-    data = Object.assign(
-      {
-        log_type: ''
-      },
-      data
-    )
+    delete data._id // 去除部分参数
 
     // 参数校验
     if (!isTruthy(data.log_type)) ctx.throw(400, { msg: 'log_type 必填' })

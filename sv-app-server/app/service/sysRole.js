@@ -133,12 +133,7 @@ class SysRoleService extends Service {
     ctx.checkAuthority('permission', ['roleAdd'])
 
     // 参数处理
-    data = Object.assign(
-      {
-        role_id: ''
-      },
-      data
-    )
+    delete data._id // 去除部分参数
 
     // 参数校验
     if (!isTruthy(data.role_id)) ctx.throw(400, { msg: 'role_id 必填' })

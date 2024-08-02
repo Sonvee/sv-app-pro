@@ -90,12 +90,7 @@ class SysNoticeService extends Service {
     ctx.checkAuthority('permission', ['noticeAdd'])
 
     // 参数处理
-    data = Object.assign(
-      {
-        notice_id: ''
-      },
-      data
-    )
+    delete data._id // 去除部分参数
 
     // 参数校验
     if (!isTruthy(data.notice_id)) ctx.throw(400, { msg: 'notice_id 必填' })

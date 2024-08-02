@@ -123,15 +123,7 @@ class SysDictitemService extends Service {
     ctx.checkAuthority('permission', ['dictitemAdd'])
 
     // 参数处理
-    data = Object.assign(
-      {
-        dictitem_id: '',
-        dict_type: '',
-        label: '',
-        value: ''
-      },
-      data
-    )
+    delete data._id // 去除部分参数
 
     // 参数校验
     if (!isTruthy(data.dictitem_id)) ctx.throw(400, { msg: 'dictitem_id 必填' })

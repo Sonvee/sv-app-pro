@@ -121,12 +121,7 @@ class TestDemoService extends Service {
     const { ctx, app } = this
 
     // 参数处理
-    data = Object.assign(
-      {
-        test_id: ''
-      },
-      data
-    )
+    delete data._id // 去除部分参数
 
     // 参数校验
     if (!isTruthy(data.test_id)) ctx.throw(400, { msg: 'test_id 必填' })

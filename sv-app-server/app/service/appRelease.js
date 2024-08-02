@@ -4,16 +4,16 @@ const { isTruthy } = require('../utils')
 
 const Service = require('egg').Service
 
-class TestForeignService extends Service {
+class AppReleaseService extends Service {
   /**
    * 查询 post - 权限 open
    * @param {Object} data - 请求参数
-   * @property {String} data.testforeign_id - id
-   * @property {String} data.testforeign_name - 名称
+   * @property {String} data.version - 版本
+   * @property {Array} data.release_range - 发布日期范围
    * @property {Number} data.pagesize - 每页条数
    * @property {Number} data.pagenum - 页码
    */
-  async testforeignList(data) {
+  async releaseList(data) {
     const { ctx, app } = this
 
     // 参数处理
@@ -25,20 +25,20 @@ class TestForeignService extends Service {
     if (pagenum < 1) ctx.throw(400, { msg: 'pagenum不能小于1' })
 
     // 数据库连接
-    const db = app.model.TestForeign
+    const db = app.model.AppRelease
 
     // 查询条件处理
     const conditions = {}
 
     // 查询条件
-    if (isTruthy(data.testforeign_id)) conditions.testforeign_id = data.testforeign_id
-    if (isTruthy(data.testforeign_name)) conditions.testforeign_name = { $regex: data.testforeign_name, $options: 'i' } // 模糊查询
+    if (isTruthy(data.version)) conditions.version = data.version
+    if (isTruthy(data.release_range, 'arr')) conditions.release_date = { $gte: data.release_range[0], $lte: data.release_range[1] } // 时间范围
 
     // 查询操作
     let query = db.find(conditions)
 
     // 排序：1升序，-1降序
-    query = query.sort({ created_date: -1 }) // 按照创建时间倒序
+    query = query.sort({ sort: 1 })
 
     // 分页
     if (pagesize > 0) {
@@ -56,7 +56,7 @@ class TestForeignService extends Service {
 
     return {
       data: res,
-      msg: '列表获取成功',
+      msg: '版本列表获取成功',
       total: count,
       pagenum,
       pagesize,
@@ -65,118 +65,118 @@ class TestForeignService extends Service {
   }
 
   /**
-   * 新增 post - 权限 open
+   * 新增 post - 权限 permission
    * @param {Object} data - 请求参数
-   * @property {String} data.testforeign_id - id
-   * @property {String} data.testforeign_name - 名称
+   * @property {String} data.version - 版本
+   * @property {String} data.download_url - 下载地址
    */
-  async testforeignAdd(data) {
+  async releaseAdd(data) {
     const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['releaseAdd'])
 
     // 参数处理
     delete data._id // 去除部分参数
 
     // 参数校验
-    if (!isTruthy(data.testforeign_id)) ctx.throw(400, { msg: 'testforeign_id 必填' })
+    if (!isTruthy(data.version)) ctx.throw(400, { msg: 'version 必填' })
+    if (!isTruthy(data.download_url)) ctx.throw(400, { msg: 'download_url 必填' })
 
     // 数据库连接
-    const db = app.model.TestForeign
+    const db = app.model.AppRelease
 
     // 查询条件处理
-    const conditions = { testforeign_id: data.testforeign_id }
+    const conditions = { version: data.version }
 
     const one = await db.findOne(conditions)
-    if (one) ctx.throw(400, { msg: '新增项已存在' })
+    if (one) ctx.throw(400, { msg: '版本已存在' })
 
     const res = await db.create(data)
 
     return {
       data: res,
-      msg: '新增成功'
+      msg: '版本发布成功'
     }
   }
 
   /**
-   * 更新 post - 权限 open
+   * 更新 post - 权限 permission
    * @param {Object} data - 请求参数
-   * @property {String} data.testforeign_id - id
-   * @property {String} data.testforeign_name - 名称
+   * @property {String} data.version - 版本
+   * @property {String} data.download_url - 下载地址
+   * @property {String} data.description - 版本描述
+   * @property {Boolean} data.is_mandatory - 是否强制更新
+   * @property {Date} data.release_date - 发布日期
    */
-  async testforeignUpdate(data) {
+  async releaseUpdate(data) {
     const { ctx, app } = this
 
-    // 参数处理
-    data = Object.assign(
-      {
-        testforeign_id: ''
-      },
-      data
-    )
+    // 权限校验
+    ctx.checkAuthority('permission', ['releaseUpdate'])
 
     // 参数校验
-    if (!isTruthy(data.testforeign_id)) ctx.throw(400, { msg: 'testforeign_id 必填' })
+    if (!isTruthy(data.version)) ctx.throw(400, { msg: 'version 必填' })
 
     // 数据库连接
-    const db = app.model.TestForeign
+    const db = app.model.AppRelease
 
     // 查询条件处理
-    const conditions = { testforeign_id: data.testforeign_id }
+    const conditions = { version: data.version }
 
     const one = await db.findOne(conditions)
-    if (!one) ctx.throw(400, { msg: '更新项不存在' })
+    if (!one) ctx.throw(400, { msg: '更新版本不存在' })
 
     const res = await db.findOneAndUpdate(conditions, data, { new: true })
 
     return {
       data: res,
-      msg: '更新成功'
+      msg: '版本更新成功'
     }
   }
 
   /**
-   * 删除 post - 权限 open
+   * 删除 post - 权限 permission
    * @param {Object} data - 请求参数
-   * @property {String} data.testforeign_id - id
+   * @property {String} data.version - 版本
    */
-  async testforeignDelete(data) {
+  async releaseDelete(data) {
     const { ctx, app } = this
 
-    // 参数处理
-    data = Object.assign(
-      {
-        testforeign_id: ''
-      },
-      data
-    )
+    // 权限校验
+    ctx.checkAuthority('permission', ['releaseDelete'])
 
     // 参数校验
-    if (!isTruthy(data.testforeign_id)) ctx.throw(400, { msg: 'testforeign_id 必填' })
+    if (!isTruthy(data.version)) ctx.throw(400, { msg: 'version 必填' })
 
     // 数据库连接
-    const db = app.model.TestForeign
+    const db = app.model.AppRelease
 
     // 查询条件处理
-    const conditions = { testforeign_id: data.testforeign_id }
+    const conditions = { version: data.version }
 
     const one = await db.findOne(conditions)
-    if (!one) ctx.throw(400, { msg: '删除项不存在或已被删除' })
+    if (!one) ctx.throw(400, { msg: '版本不存在或已被删除' })
 
     const res = await db.deleteOne(conditions)
 
     return {
       data: res,
-      msg: '删除成功'
+      msg: '版本删除成功'
     }
   }
 
   /**
-   * 批量新增 post - 权限 open
+   * 批量新增 post - 权限 permission
    * @param {Object} data - 请求参数
    * @property {Array} data.list - 批量新增项
    * @property {Boolean} data.cover - 是否覆盖 默认false
    */
-  async testforeignBatchAdd(data) {
+  async releaseBatchAdd(data) {
     const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['releaseBatchAdd'])
 
     // 参数处理
     data = Object.assign(
@@ -192,10 +192,10 @@ class TestForeignService extends Service {
     if (!isTruthy(data.list, 'arr')) ctx.throw(400, { msg: 'list 为空' })
 
     // 数据库连接
-    const db = app.model.TestForeign
+    const db = app.model.AppRelease
 
     // 主键
-    const primaryKey = 'testforeign_id'
+    const primaryKey = 'version'
 
     // 过滤掉主键缺失无效的项
     data.list = data.list.filter((item) => item[primaryKey])
@@ -250,12 +250,15 @@ class TestForeignService extends Service {
   }
 
   /**
-   * 批量删除 post - 权限 open
+   * 批量删除 post - 权限 permission
    * @param {Object} data - 请求参数
    * @property {Array} data.list - 批量删除项
    */
-  async testforeignBatchDelete(data) {
+  async releaseBatchDelete(data) {
     const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['releaseBatchDelete'])
 
     // 参数处理
     data = Object.assign(
@@ -270,9 +273,9 @@ class TestForeignService extends Service {
     if (!isTruthy(data.list)) ctx.throw(400, { msg: 'list 为空' })
 
     // 数据库连接
-    const db = app.model.TestForeign
+    const db = app.model.AppRelease
     // 主键
-    const primaryKey = 'testforeign_id'
+    const primaryKey = 'version'
 
     // 分批处理删除操作，避免单次操作处理过多数据
     const batchSize = app.config.batchDeleteSize || 1000 // 分批数量 app.config.batchDeleteSize 在 config.default.js 中配置
@@ -295,4 +298,4 @@ class TestForeignService extends Service {
   }
 }
 
-module.exports = TestForeignService
+module.exports = AppReleaseService

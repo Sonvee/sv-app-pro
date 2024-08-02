@@ -77,7 +77,7 @@ module.exports = (appInfo) => {
       }
 
       // 4. 通用正则校验
-      const reg = /^\/api\/(user|sys|file)(\/.*)?/
+      const reg = /^\/api\/(user|sys|file|app)(\/.*)?/
       return reg.test(routeURL)
     }
   }

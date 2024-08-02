@@ -38,7 +38,7 @@
             </div>
           </template>
           <div class="flex-vc">
-            <el-avatar :size="avatarSize" shape="square" :src="fingerprint" :icon="UserFilled" />
+            <el-avatar :size="avatarSize" shape="square" :src="fingerprint" :icon="Lock" />
             <div class="ml-20 flex-grow-1">
               <el-descriptions border :column="1">
                 <el-descriptions-item label="最近登录时间">{{ timeFormat(userInfo?.login_date) }}</el-descriptions-item>
@@ -66,7 +66,7 @@ import { ref, onMounted, computed } from 'vue'
 import TableForm from './components/TableForm.vue'
 import PasswordChangeDialog from './components/PasswordChangeDialog.vue'
 import { userSelf, userUpdateSimple } from '@/api/user/user'
-import { UserFilled, Edit, Tickets } from '@element-plus/icons-vue'
+import { UserFilled, Edit, Tickets, Lock } from '@element-plus/icons-vue'
 import { useUserStore } from '@/store/user'
 import { ElNotification } from 'element-plus'
 import { useGlobalStore } from '@/store/global'

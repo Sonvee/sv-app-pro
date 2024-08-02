@@ -127,13 +127,7 @@ class SysMenuService extends Service {
     ctx.checkAuthority('permission', ['menuAdd'])
 
     // 参数处理
-    data = Object.assign(
-      {
-        name: '',
-        path: ''
-      },
-      data
-    )
+    delete data._id // 去除部分参数
 
     // 参数校验
     if (!isTruthy(data.name)) ctx.throw(400, { msg: 'name 必填' })
