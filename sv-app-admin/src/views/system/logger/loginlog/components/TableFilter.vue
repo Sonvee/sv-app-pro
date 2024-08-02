@@ -37,8 +37,13 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import DictSelect from '@/components/DictType/DictSelect.vue'
+import { useRoute, useRouter } from 'vue-router'
+import { isTruthy } from '@/utils'
+
+const route = useRoute()
+const router = useRouter()
 
 const emits = defineEmits(['submit'])
 
@@ -55,6 +60,10 @@ const filterForm = ref({
   operator_username: ''
 })
 
+onMounted(() => {
+  Object.assign(filterForm.value, route.query)
+})
+
 // 提交
 function submit() {
   emits('submit', filterForm.value)
@@ -63,6 +72,10 @@ function submit() {
 // 重置
 function reset() {
   filterFormRef.value.resetFields()
+  // 若路由携带参数，则需去除
+  if (isTruthy(route.query, 'obj')) {
+    router.replace()
+  }
 }
 </script>
 

@@ -55,3 +55,11 @@ export function userDelete(data) {
     data
   })
 }
+
+export function changePassword(data) {
+  return request({
+    url: '/user/changePassword',
+    method: 'post',
+    data
+  })
+}

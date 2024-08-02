@@ -165,7 +165,7 @@ function toLogin() {
         btnLoading.value = false
       }
     } else {
-      console.log('error submit!')
+      // console.log('error submit!')
       btnLoading.value = false
     }
   })

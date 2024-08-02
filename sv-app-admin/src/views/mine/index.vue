@@ -2,7 +2,7 @@
   <div class="page-container">
     <!-- 栅格布局 -->
     <el-row :gutter="10">
-      <el-col :span="16">
+      <el-col :span="14">
         <el-card shadow="hover">
           <template #header>
             <div class="flx-justify-between">
@@ -12,7 +12,6 @@
           </template>
           <div class="flex-vc">
             <el-avatar :size="avatarSize" shape="square" :src="userInfo?.avatar?.url" :icon="UserFilled" />
-
             <div class="ml-20 flex-grow-1">
               <el-descriptions border :column="2">
                 <el-descriptions-item label="用户名">{{ userInfo.username }}</el-descriptions-item>
@@ -30,27 +29,52 @@
           </div>
         </el-card>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="10">
         <el-card shadow="hover">
-          <template #header> 消息通知 </template>
+          <template #header>
+            <div class="flx-justify-between">
+              <span>账号安全</span>
+              <el-button plain :icon="Tickets" circle @click="viewLogger" />
+            </div>
+          </template>
+          <div class="flex-vc">
+            <el-avatar :size="avatarSize" shape="square" :src="fingerprint" :icon="UserFilled" />
+            <div class="ml-20 flex-grow-1">
+              <el-descriptions border :column="1">
+                <el-descriptions-item label="最近登录时间">{{ timeFormat(userInfo?.login_date) }}</el-descriptions-item>
+                <el-descriptions-item label="最近登录IP">{{ userInfo?.login_ip }}</el-descriptions-item>
+                <el-descriptions-item label="修改密码">
+                  <el-tag class="change-pwd-tag" type="warning" @click="changePassword">
+                    <el-icon><Unlock /></el-icon>&nbsp;点击修改密码
+                  </el-tag>
+                </el-descriptions-item>
+              </el-descriptions>
+            </div>
+          </div>
         </el-card>
       </el-col>
     </el-row>
 
     <!-- 弹窗 -->
     <TableForm v-model="showForm" :form-init="formInit" @submit="submitForm"></TableForm>
+    <PasswordChangeDialog v-model="showPwdDialog"></PasswordChangeDialog>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import TableForm from './components/TableForm.vue'
-import { userSelf, userUpdate, userUpdateSimple } from '@/api/user/user'
-import { UserFilled, Edit } from '@element-plus/icons-vue'
+import PasswordChangeDialog from './components/PasswordChangeDialog.vue'
+import { userSelf, userUpdateSimple } from '@/api/user/user'
+import { UserFilled, Edit, Tickets } from '@element-plus/icons-vue'
 import { useUserStore } from '@/store/user'
 import { ElNotification } from 'element-plus'
 import { useGlobalStore } from '@/store/global'
-import { multipleJudgment } from '@/utils'
+import { multipleJudgment, timeFormat } from '@/utils'
+import { useRouter } from 'vue-router'
+import fingerprint from '@/assets/svgs/fingerprint.svg'
+
+const router = useRouter()
 
 const userStore = useUserStore()
 const userInfo = computed(() => userStore.userInfo)
@@ -71,6 +95,7 @@ async function getMySelf() {
 }
 
 const showForm = ref(false) // 表单弹窗
+const showPwdDialog = ref(false) // 修改密码弹窗
 const formInit = ref({}) // 表单初始值
 function editInfo() {
   formInit.value = userInfo.value // 携带参数
@@ -91,6 +116,32 @@ async function submitForm(e) {
     getMySelf()
   }
 }
+
+// 查看日志
+function viewLogger() {
+  router.push({
+    path: '/system/logger/loginlog',
+    query: {
+      operator_username: userInfo.value.username
+    }
+  })
+}
+
+// 修改密码弹窗
+function changePassword() {
+  showPwdDialog.value = true
+}
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.change-pwd-tag {
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+
+  &:active {
+    opacity: 0.8;
+  }
+}
+</style>

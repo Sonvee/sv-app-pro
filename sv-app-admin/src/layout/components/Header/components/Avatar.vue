@@ -3,7 +3,7 @@
     <div class="flex-vc">
       <span class="username-text">{{ userInfo.username }}</span>
       <div class="avatar">
-        <el-avatar :src="userInfo.avatar.url" :icon="UserFilled" :size="40" shape="circle" fit="cover" />
+        <el-avatar :src="userInfo?.avatar?.url" :icon="UserFilled" :size="40" shape="circle" fit="cover" />
       </div>
     </div>
     <template #dropdown>

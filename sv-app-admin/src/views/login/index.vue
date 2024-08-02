@@ -39,7 +39,8 @@ function changeMode(e) {
   height: 100%;
   padding: 40px;
   background-color: #eee;
-  background-image: url('@/assets/images/login_bg.svg');
+  background-image: url('@/assets/svgs/login_bg.svg');
+  // background-image: url('@/assets/svgs/colorful.svg');
   background-repeat: no-repeat;
   background-size: cover;
 
