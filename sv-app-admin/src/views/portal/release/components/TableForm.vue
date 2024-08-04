@@ -1,27 +1,27 @@
 <template>
-  <el-drawer class="sv-el-drawer" v-bind="$attrs" ref="tableFormRef" @open="openDrawer" @close="closeDrawer" :close-on-click-modal="false">
+  <el-drawer class="sv-el-drawer" v-bind="$attrs" ref="tableFormRef" @open="openDrawer" @close="closeDrawer" destroy-on-close :close-on-click-modal="false">
     <template #header>
       <h3>{{ formMode == 'add' ? '新增' : '编辑' }}</h3>
     </template>
     <template #default>
       <el-form ref="formRef" :model="formData" :rules="rules" label-width="120px" label-position="left">
+        <el-form-item prop="file" label="版本资源包" required>
+          <DragUpload v-model:file="formData.file"></DragUpload>
+        </el-form-item>
         <el-form-item prop="version" label="版本号" required>
           <el-input v-model="formData.version" :disabled="formMode !== 'add'" placeholder="请输入版本号" clearable />
         </el-form-item>
-        <el-form-item prop="download_url" label="下载地址">
-          <el-input v-model="formData.download_url" placeholder="请输入下载地址" clearable />
-        </el-form-item>
         <el-form-item prop="description" label="版本描述">
           <el-input v-model="formData.description" placeholder="请输入版本描述" clearable />
-        </el-form-item>
-        <el-form-item prop="mandatory" label="是否强制更新">
-          <el-switch v-model="formData.mandatory" inline-prompt :active-icon="Check" :inactive-icon="Close" />
         </el-form-item>
         <el-form-item prop="remark" label="备注">
           <el-input v-model="formData.remark" type="textarea" :autosize="{ minRows: 4 }" placeholder="请输入备注" />
         </el-form-item>
         <el-form-item prop="release_date" label="发布日期">
           <el-date-picker v-model="formData.release_date" type="date" placeholder="请选择发布日期" format="YYYY-MM-DD" value-format="x" />
+        </el-form-item>
+        <el-form-item prop="mandatory" label="是否强制更新">
+          <el-switch v-model="formData.mandatory" inline-prompt :active-icon="Check" :inactive-icon="Close" />
         </el-form-item>
       </el-form>
     </template>
@@ -34,10 +34,13 @@
 
 <script setup>
 import { ref, watchEffect } from 'vue'
+import DragUpload from '@/components/FileUpload/DragUpload.vue'
 import { Check, Close } from '@element-plus/icons-vue'
-import { assignOverride } from '@/utils'
+import { assignOverride, isTruthy } from '@/utils'
 import { ElNotification } from 'element-plus'
 import { isEqual } from 'lodash-es'
+import { releaseUpload } from '@/api/file/upload'
+import { useRegExp } from '@/utils/regexp'
 
 const props = defineProps({
   formInit: {
@@ -57,7 +60,7 @@ const formData = ref({})
 // 初始数据
 const formBase = {
   version: '', // 版本号
-  download_url: '',
+  file: null,
   description: '',
   mandatory: false,
   remark: '',
@@ -67,8 +70,15 @@ const formBase = {
 const formBaseClone = ref()
 // 校验规则
 const rules = ref({
-  version: [{ required: true, message: '请输入版本号', trigger: 'blur' }],
-  download_url: [{ required: true, message: '请输入下载地址', trigger: 'blur' }]
+  version: [
+    { required: true, message: '请输入版本号', trigger: 'blur' },
+    {
+      pattern: useRegExp('version').regexp,
+      message: useRegExp('version').msg,
+      trigger: 'blur'
+    }
+  ],
+  file: [{ required: true, message: '请上传版本资源包', trigger: 'blur' }]
 })
 
 watchEffect(() => {
@@ -106,6 +116,16 @@ function confirm() {
         })
         tableFormRef.value.handleClose()
         return
+      }
+
+      // 对比头像是否改变，若改变则需上传更新
+      if (isTruthy(formData.value?.file?.url) && formData.value?.file?.url !== props.formInit?.file?.url) {
+        let fd = new FormData()
+        fd.append('file', formData.value?.file?.file)
+        fd.append('version', formData.value?.version)
+        const uploadRes = await releaseUpload(fd)
+        if (!uploadRes.success) return
+        formData.value.file = uploadRes.data
       }
 
       emits('submit', { data: formData.value, mode: props.formMode })

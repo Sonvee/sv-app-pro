@@ -37,3 +37,14 @@ export function editorImgUpload(data) {
     }
   })
 }
+
+export function releaseUpload(data) {
+  return request({
+    url: '/file/releaseUpload',
+    method: 'post',
+    data,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}

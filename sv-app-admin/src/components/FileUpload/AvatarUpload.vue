@@ -58,6 +58,7 @@ function uploadChange(uploadFile) {
 // limit="1" 限制单文件时，需要调用此钩子覆盖更新file
 function handleExceed(exceed) {
   const fileRaw = exceed[0]
+  avatar.value = [fileRaw]
   emits('update:file', {
     file: fileRaw,
     url: URL.createObjectURL(fileRaw)

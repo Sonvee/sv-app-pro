@@ -15,15 +15,19 @@
       <!-- 数据表格 -->
       <el-table v-loading="loading" :data="tableData" border @selection-change="handleSelectionChange">
         <el-table-column type="selection" align="center" width="50" fixed="left" />
-        <el-table-column prop="version" label="版本号" width="160" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="download_url" label="下载地址" min-width="300" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="version" label="版本号" align="center" width="160" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="file.url" label="资源地址" min-width="300" show-overflow-tooltip>
+          <template #default="scope">
+            <a :href="scope.row?.file?.url" download>{{ scope.row?.file?.url }}</a>
+          </template>
+        </el-table-column>
+        <el-table-column prop="description" label="版本描述" min-width="300" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="remark" label="备注" min-width="300" show-overflow-tooltip></el-table-column>
         <el-table-column prop="mandatory" label="是否强制更新" align="center" width="160" show-overflow-tooltip>
           <template #default="scope">
             <el-switch v-model="scope.row.mandatory" inline-prompt :active-icon="Check" :inactive-icon="Close" @change="handleTableSwitch(scope.row)" />
           </template>
         </el-table-column>
-        <el-table-column prop="description" label="版本描述" min-width="300" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="remark" label="备注" min-width="300" show-overflow-tooltip></el-table-column>
 
         <el-table-column
           prop="release_date"
@@ -57,9 +61,7 @@ import { ref, onMounted } from 'vue'
 import TableFilter from './components/TableFilter.vue'
 import TableForm from './components/TableForm.vue'
 import TablePagination from '@/components/TablePagination/index.vue'
-import DictTag from '@/components/DictType/DictTag.vue'
-import DoubtTip from '@/components/DoubtTip/index.vue'
-import { releaseList, releaseAdd, releaseUpdate, releaseDelete, releaseBatchDelete } from '@/api/release'
+import { releaseList, releaseAdd, releaseUpdate, releaseDelete, releaseBatchDelete, releaseLatest } from '@/api/release'
 import { RefreshRight, Plus, EditPen, Delete, View, Hide, Check, Close, Top, Minus } from '@element-plus/icons-vue'
 import { ElNotification, ElMessageBox, ElMessage } from 'element-plus'
 import { isTruthy, timeFormat } from '@/utils'
@@ -75,6 +77,10 @@ const formMode = ref('') // 表单模式 add / edit
 
 onMounted(() => {
   handleTable(dataParams.value)
+
+  releaseLatest().then((res) => {
+    console.log('res :>> ', res.data)
+  })
 })
 
 // 数据

@@ -1,12 +1,18 @@
-'use strict';
+'use strict'
 
-const Controller = require('egg').Controller;
+const Controller = require('egg').Controller
 
 class AppReleaseController extends Controller {
   async releaseList() {
     const { ctx, service } = this
     const data = ctx.request.body
     const res = await service.appRelease.releaseList(data)
+    ctx.result(res)
+  }
+
+  async releaseLatest() {
+    const { ctx, service } = this
+    const res = await service.appRelease.releaseLatest()
     ctx.result(res)
   }
 
@@ -46,4 +52,4 @@ class AppReleaseController extends Controller {
   }
 }
 
-module.exports = AppReleaseController;
+module.exports = AppReleaseController

@@ -24,6 +24,14 @@ class FileController extends Controller {
     const res = await service.file.userfilesDelete(data)
     ctx.result(res)
   }
+
+  async releaseUpload() {
+    const { ctx, service } = this
+    const files = ctx.request.files
+    const data = ctx.request.body
+    const res = await service.file.releaseUpload({ data, files })
+    ctx.result(res)
+  }
 }
 
 module.exports = FileController

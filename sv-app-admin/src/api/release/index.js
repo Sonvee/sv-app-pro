@@ -9,6 +9,13 @@ export function releaseList(data) {
   })
 }
 
+export function releaseLatest() {
+  return request({
+    url: '/app/releaseLatest',
+    method: 'get'
+  })
+}
+
 export function releaseAdd(data) {
   return request({
     url: '/app/releaseAdd',

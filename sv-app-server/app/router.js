@@ -113,6 +113,7 @@ module.exports = (app) => {
   router.post('/file/avatarUpload', controller.file.avatarUpload)
   router.post('/file/avatarDelete', controller.file.avatarDelete)
   router.post('/file/userfilesDelete', controller.file.userfilesDelete)
+  router.post('/file/releaseUpload', controller.file.releaseUpload)
 
   // 缓存
   router.get('/cache/cacheList', controller.sysCache.cacheList)
@@ -121,6 +122,7 @@ module.exports = (app) => {
 
   // APP版本
   router.post('/app/releaseList', controller.appRelease.releaseList)
+  router.get('/app/releaseLatest', controller.appRelease.releaseLatest)
   router.post('/app/releaseAdd', controller.appRelease.releaseAdd)
   router.post('/app/releaseUpdate', controller.appRelease.releaseUpdate)
   router.post('/app/releaseDelete', controller.appRelease.releaseDelete)

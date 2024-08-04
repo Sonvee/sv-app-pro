@@ -11,9 +11,9 @@ module.exports = (app) => {
         unique: true,
         required: true
       },
-      // 下载地址
-      download_url: {
-        type: String,
+      // 版本文件
+      file: {
+        type: Object,
         required: true
       },
       // 版本描述

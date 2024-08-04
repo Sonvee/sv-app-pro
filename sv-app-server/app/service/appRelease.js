@@ -38,7 +38,7 @@ class AppReleaseService extends Service {
     let query = db.find(conditions)
 
     // 排序：1升序，-1降序
-    query = query.sort({ sort: 1 })
+    query = query.sort({ version: -1 })
 
     // 分页
     if (pagesize > 0) {
@@ -65,10 +65,36 @@ class AppReleaseService extends Service {
   }
 
   /**
+   * 查询 get - 权限 open
+   * @param {Object} data - 请求参数
+   * @property {String} data.version - 版本
+   */
+  async releaseLatest(data) {
+    const { ctx, app } = this
+
+    // 数据库连接
+    const db = app.model.AppRelease
+
+    // 查询操作
+    let query = db.findOne()
+
+    // 排序：1升序，-1降序
+    query = query.sort({ version: -1 })
+
+    // 处理查询结果
+    const res = await query.exec()
+
+    return {
+      data: res,
+      msg: '最新版本获取成功'
+    }
+  }
+
+  /**
    * 新增 post - 权限 permission
    * @param {Object} data - 请求参数
    * @property {String} data.version - 版本
-   * @property {String} data.download_url - 下载地址
+   * @property {String} data.file - 版本文件
    */
   async releaseAdd(data) {
     const { ctx, app } = this
@@ -81,7 +107,7 @@ class AppReleaseService extends Service {
 
     // 参数校验
     if (!isTruthy(data.version)) ctx.throw(400, { msg: 'version 必填' })
-    if (!isTruthy(data.download_url)) ctx.throw(400, { msg: 'download_url 必填' })
+    if (!isTruthy(data.file, 'obj')) ctx.throw(400, { msg: 'file 必填' })
 
     // 数据库连接
     const db = app.model.AppRelease
@@ -104,7 +130,7 @@ class AppReleaseService extends Service {
    * 更新 post - 权限 permission
    * @param {Object} data - 请求参数
    * @property {String} data.version - 版本
-   * @property {String} data.download_url - 下载地址
+   * @property {String} data.file - 版本文件
    * @property {String} data.description - 版本描述
    * @property {Boolean} data.is_mandatory - 是否强制更新
    * @property {Date} data.release_date - 发布日期

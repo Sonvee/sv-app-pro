@@ -9,7 +9,8 @@ class FileService extends Service {
    * 头像上传 post - 权限 needlogin
    * @description 前端需要使用FormData进行请求，请求头'Content-Type': 'multipart/form-data'
    * @param {Array<File>} files 用户上传的文件
-   * @param {String} platform 平台：client | admin
+   * @param {Object} data 请求参数
+   * @property {String} data.platform 平台：client | admin
    */
   async avatarUpload({ data, files }) {
     const { ctx, app } = this
@@ -22,7 +23,6 @@ class FileService extends Service {
 
     // 指定文件读取
     const file = files.find((item) => item.fieldname == 'avatar')
-    console.log('file :>> ', file);
 
     // 文件key = 要存储的文件夹路径 + 唯一的文件名
     const fileKey = `userfiles/${userid}/avatar/${Date.now()}-${file.filename}`
@@ -57,15 +57,6 @@ class FileService extends Service {
    */
   async avatarDelete(data) {
     const { ctx, app } = this
-
-    // 参数处理
-    data = Object.assign(
-      {
-        username: '',
-        key: ''
-      },
-      data
-    )
 
     // 参数校验
     if (!isTruthy(data.username)) ctx.throw(400, { msg: 'username 必填' })
@@ -109,6 +100,40 @@ class FileService extends Service {
         list: listRes.items,
         batchDelete: batchDeleteRes.list
       }
+    }
+  }
+
+  /**
+   * 版本资源包上传 post - 权限 permission
+   * @description 前端需要使用FormData进行请求，请求头'Content-Type': 'multipart/form-data'
+   * @param {Array<File>} files 用户上传的文件
+   * @param {Object} data 请求参数
+   * @property {String} data.version 版本号
+   */
+  async releaseUpload({ data, files }) {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['releaseUpload'])
+
+    if (!isTruthy(data.version)) ctx.throw(400, { msg: 'version 必填' })
+
+    // 指定文件读取
+    const file = files.find((item) => item.fieldname == 'file')
+
+    // 文件key = 要存储的文件夹路径 + 唯一的文件名
+    const fileKey = `release/${data.version}/${file.filename}`
+
+    let fileRes = await app.fullQiniu.uploadFile(fileKey, file.filepath)
+
+    if (!fileRes.ok) ctx.throw(400, { msg: '上传失败', errMsg: fileRes })
+
+    // 删除不必要字段
+    delete fileRes.ok
+
+    return {
+      data: fileRes,
+      msg: '上传成功'
     }
   }
 }
