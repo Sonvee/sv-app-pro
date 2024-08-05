@@ -76,8 +76,8 @@ module.exports = (appInfo) => {
         return true
       }
 
-      // 4. 通用正则校验
-      const reg = /^\/api\/(user|sys|file|app)(\/.*)?/
+      // 4. 通用正则校验，新路径前缀需在此出添加，否则会报404
+      const reg = /^\/api\/(user|sys|file|app|cache)(\/.*)?/
       return reg.test(routeURL)
     }
   }

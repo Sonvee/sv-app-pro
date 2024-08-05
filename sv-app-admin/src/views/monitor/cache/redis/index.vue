@@ -22,6 +22,12 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+import { cacheKeyList } from '@/api/cache'
+
+cacheKeyList().then((res) => {
+  console.log(' ===> ', res)
+})
+</script>
 
 <style lang="scss" scoped></style>

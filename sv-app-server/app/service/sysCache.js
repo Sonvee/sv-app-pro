@@ -6,16 +6,55 @@ const Service = require('egg').Service
 
 class SysCacheService extends Service {
   /**
-   * 查询redis缓存 get - 权限 permission
+   * 查询redis键 get - 权限 permission
    * @param {Object} data
    */
-  async cacheList(data) {
+  async cacheKeyList(data) {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['cacheList'])
+    ctx.checkAuthority('permission', ['cacheKeyList'])
 
-    return {}
+    // 参数处理
+    let { pagesize = 20, pagenum = 1 } = data
+    pagesize = Number(pagesize)
+    pagenum = Number(pagenum)
+
+    // 参数校验
+    if (pagenum < 1) ctx.throw(400, { msg: 'pagenum不能小于1' })
+
+    // 获取所有键
+    const keys = await app.redis.keys('*')
+
+    return {
+      data: keys
+    }
+  }
+
+  /**
+   * 查询redis值 post - 权限 permission
+   * @param {Object} data
+   */
+  async cacheValueByKey(data) {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['cacheValueByKey'])
+
+    // 参数处理
+    let { pagesize = 20, pagenum = 1 } = data
+    pagesize = Number(pagesize)
+    pagenum = Number(pagenum)
+
+    // 参数校验
+    if (pagenum < 1) ctx.throw(400, { msg: 'pagenum不能小于1' })
+
+    // 获取所有键
+    const keys = await app.redis.keys('*')
+
+    return {
+      data: values
+    }
   }
 
   /**
@@ -28,14 +67,6 @@ class SysCacheService extends Service {
 
     // 权限校验
     ctx.checkAuthority('permission', ['cacheDelete'])
-
-    // 参数处理
-    data = Object.assign(
-      {
-        key: ''
-      },
-      data
-    )
 
     // 参数校验
     if (!isTruthy(data.key)) ctx.throw(400, { msg: 'key 必填' })
