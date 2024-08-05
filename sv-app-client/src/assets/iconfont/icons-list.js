@@ -570,5 +570,8 @@ export default [
   'sv-icons-async-update',
   'sv-icons-history-setting',
   'sv-icons-setting-update',
-  'sv-icons-dev-setting'
+  'sv-icons-dev-setting',
+  'sv-icons-codelibrary',
+  'sv-icons-codelibrary-fill',
+  'sv-icons-code'
 ]

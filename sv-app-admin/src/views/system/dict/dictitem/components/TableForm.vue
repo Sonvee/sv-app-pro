@@ -38,7 +38,7 @@ import DictSelect from '@/components/DictType/DictSelect.vue'
 import { actionStyle } from '@/components/DictType/staticDict.js'
 import { assignOverride } from '@/utils'
 import { ElNotification } from 'element-plus'
-import { isEqual } from 'lodash-es'
+import { cloneDeep, isEqual } from 'lodash-es'
 
 const props = defineProps({
   formInit: {
@@ -53,8 +53,6 @@ const props = defineProps({
 
 const emits = defineEmits(['submit'])
 
-// 表单数据
-const formData = ref({})
 // 初始数据
 const formBase = {
   _id: '',
@@ -66,6 +64,8 @@ const formBase = {
   remark: '',
   action_style: ''
 }
+// 表单数据
+const formData = ref(formBase)
 // 初始数据克隆
 const formBaseClone = ref()
 // 校验规则
@@ -75,21 +75,20 @@ const rules = ref({
   value: [{ required: true, message: '请输入字典项值', trigger: 'blur' }]
 })
 
-watchEffect(() => {
+const tableFormRef = ref() // 抽屉
+const formRef = ref() // 表单
+
+// 抽屉打开回调
+function openDrawer() {
   // 表单数据初始化更新
   formData.value = assignOverride({ ...formBase }, props.formInit)
   /**
    * 克隆一个初始数据
-   * @description 此处不能直接使用cloneDeep进行深拷贝，会导致无限触发watchEffect
    */
-  formBaseClone.value = assignOverride({ ...formBase }, props.formInit)
-})
+  formBaseClone.value = cloneDeep(formData.value)
+}
 
-const tableFormRef = ref() // 抽屉
-const formRef = ref() // 表单
-
-function openDrawer() {}
-
+// 抽屉关闭回调
 function closeDrawer() {}
 
 // 关闭抽屉

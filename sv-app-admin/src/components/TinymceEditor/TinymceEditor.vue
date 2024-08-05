@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="loading" :style="{ 'min-height': height }" class="loading-placeholder">
+  <div v-loading="loading" class="tinymce-editor">
     <vue3-tinymce v-bind="$attrs" :setting="editorSetting" @init="initEditor" />
   </div>
 </template>
@@ -13,18 +13,13 @@ import { ref } from 'vue'
 import Vue3Tinymce from '@jsdawn/vue3-tinymce'
 import { useUserStore } from '@/store/user'
 
-const props = defineProps({
-  height: {
-    type: String,
-    default: '300px'
-  }
-})
+const emits = defineEmits(['init'])
 
 const loading = ref(true)
 
 const editorSetting = ref({
   width: '100%',
-  height: props.height, // editor 高度
+  height: '100%',
   language: 'zh-Hans',
   language_url: 'https://unpkg.com/@jsdawn/vue3-tinymce@2.0.2/dist/tinymce/langs/zh-Hans.js',
   toolbar:
@@ -54,13 +49,14 @@ const editorSetting = ref({
 // editor 初始化
 function initEditor(editor) {
   loading.value = false
-  // console.log('editor :>> ', editor)
+  emits('init', editor)
 }
 </script>
 
 <style lang="scss" scoped>
-.loading-placeholder {
+.tinymce-editor {
   width: 100%;
+  height: 100%;
   border-radius: 10px;
   background-color: rgba(122, 122, 122, 0.12);
 }

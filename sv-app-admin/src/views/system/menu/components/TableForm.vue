@@ -95,7 +95,7 @@ import DoubtTip from '@/components/DoubtTip/index.vue'
 import IconSelect from '@/components/IconSelect/IconSelect.vue'
 import { assignOverride } from '@/utils'
 import { ElNotification } from 'element-plus'
-import { isEqual } from 'lodash-es'
+import { cloneDeep, isEqual } from 'lodash-es'
 
 const props = defineProps({
   formInit: {
@@ -110,8 +110,6 @@ const props = defineProps({
 
 const emits = defineEmits(['submit'])
 
-// 表单数据
-const formData = ref({})
 // 初始数据
 const formBase = {
   _id: '',
@@ -134,18 +132,10 @@ const formBase = {
     isKeepAlive: true // 当前路由是否缓存
   }
 }
+// 表单数据
+const formData = ref(formBase)
 // 初始数据克隆
 const formBaseClone = ref()
-
-watchEffect(() => {
-  // 表单数据初始化更新
-  formData.value = assignOverride({ ...formBase }, props.formInit)
-  /**
-   * 克隆一个初始数据
-   * @description 此处不能直接使用cloneDeep进行深拷贝，会导致无限触发watchEffect
-   */
-  formBaseClone.value = assignOverride({ ...formBase }, props.formInit)
-})
 
 // 校验规则
 const rules = ref({
@@ -157,8 +147,17 @@ const rules = ref({
 const tableFormRef = ref() // 抽屉
 const formRef = ref() // 表单
 
-function openDrawer() {}
+// 抽屉打开回调
+function openDrawer() {
+  // 表单数据初始化更新
+  formData.value = assignOverride({ ...formBase }, props.formInit)
+  /**
+   * 克隆一个初始数据
+   */
+  formBaseClone.value = cloneDeep(formData.value)
+}
 
+// 抽屉关闭回调
 function closeDrawer() {}
 
 // 关闭抽屉

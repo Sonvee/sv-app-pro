@@ -20,6 +20,18 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.sv-icons-codelibrary:before {
+  content: "\e793";
+}
+
+.sv-icons-code:before {
+  content: "\e7fc";
+}
+
+.sv-icons-codelibrary-fill:before {
+  content: "\e84b";
+}
+
 .sv-icons-dev-setting:before {
   content: "\e742";
 }
