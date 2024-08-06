@@ -4,6 +4,9 @@
       <el-form-item prop="version" label="版本号">
         <el-input v-model.trim="filterForm.version" placeholder="请输入版本号" clearable style="width: 150px" />
       </el-form-item>
+      <el-form-item prop="type" label="应用类型">
+        <DictSelect v-model="filterForm.type" dictType="dict_app_type" placeholder="请选择应用类型" style="width: 150px"></DictSelect>
+      </el-form-item>
       <el-form-item prop="release_range" label="发布日期">
         <el-date-picker
           v-model="filterForm.release_range"

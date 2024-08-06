@@ -1,6 +1,6 @@
 <template>
   <div class="footer flx-center">
-    <a href="https://gitee.com/Sonve" target="_blank"> 2024 © SvAdmin By Sonve. </a>
+    <a href="https://gitee.com/Sonve" target="_blank"> 2024 © SV-Admin By Sonve. </a>
   </div>
 </template>
 

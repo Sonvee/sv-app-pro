@@ -9,10 +9,11 @@ export function releaseList(data) {
   })
 }
 
-export function releaseLatest() {
+export function releaseLatest(data) {
   return request({
     url: '/app/releaseLatest',
-    method: 'get'
+    method: 'post',
+    data
   })
 }
 
@@ -35,22 +36,6 @@ export function releaseUpdate(data) {
 export function releaseDelete(data) {
   return request({
     url: '/app/releaseDelete',
-    method: 'post',
-    data
-  })
-}
-
-export function releaseBatchAdd(data) {
-  return request({
-    url: '/app/releaseBatchAdd',
-    method: 'post',
-    data
-  })
-}
-
-export function releaseBatchDelete(data) {
-  return request({
-    url: '/app/releaseBatchDelete',
     method: 'post',
     data
   })

@@ -11,14 +11,34 @@ module.exports = (app) => {
         unique: true,
         required: true
       },
-      // 版本文件
+      // 应用类型 android ios mpweixin ...
+      type: {
+        type: String
+      },
+      // 资源文件
       file: {
         type: Object,
         required: true
       },
+      // 资源链接，部分平台可能需要使用外链而非资源文件
+      link: {
+        type: String
+      },
       // 版本描述
       description: {
         type: String
+      },
+      // 应用二维码
+      qrcode: {
+        type: Object
+      },
+      // 应用简介
+      intro: {
+        type: String
+      },
+      // 应用截图
+      screenshot: {
+        type: Array
       },
       // 是否强制更新
       mandatory: {

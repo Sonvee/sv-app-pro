@@ -7,14 +7,12 @@
       <!-- 工具栏 -->
       <div class="table-control">
         <el-button type="primary" plain :icon="Plus" @click="add">新增</el-button>
-        <el-button type="danger" plain :icon="Delete" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
         <div style="flex: 1"></div>
         <el-button circle :icon="RefreshRight" @click="refresh" title="刷新"></el-button>
         <el-button circle :icon="showFilter ? View : Hide" @click="showFilter = !showFilter" :title="showFilter ? '隐藏筛选' : '显示筛选'"></el-button>
       </div>
       <!-- 数据表格 -->
-      <el-table v-loading="loading" :data="tableData" border @selection-change="handleSelectionChange">
-        <el-table-column type="selection" align="center" width="50" fixed="left" />
+      <el-table v-loading="loading" :data="tableData" border>
         <el-table-column prop="version" label="版本号" align="center" width="160" show-overflow-tooltip></el-table-column>
         <el-table-column prop="file.url" label="资源地址" min-width="300" show-overflow-tooltip>
           <template #default="scope">
@@ -61,7 +59,7 @@ import { ref, onMounted } from 'vue'
 import TableFilter from './components/TableFilter.vue'
 import TableForm from './components/TableForm.vue'
 import TablePagination from '@/components/TablePagination/index.vue'
-import { releaseList, releaseAdd, releaseUpdate, releaseDelete, releaseBatchDelete, releaseLatest } from '@/api/release'
+import { releaseList, releaseAdd, releaseUpdate, releaseDelete, releaseLatest } from '@/api/release'
 import { RefreshRight, Plus, EditPen, Delete, View, Hide, Check, Close, Top, Minus } from '@element-plus/icons-vue'
 import { ElNotification, ElMessageBox, ElMessage } from 'element-plus'
 import { isTruthy, timeFormat } from '@/utils'
@@ -78,7 +76,7 @@ const formMode = ref('') // 表单模式 add / edit
 onMounted(() => {
   handleTable(dataParams.value)
 
-  releaseLatest().then((res) => {
+  releaseLatest({ type: 'android' }).then((res) => {
     console.log('res :>> ', res.data)
   })
 })
@@ -146,36 +144,7 @@ function del(row) {
 function refresh() {
   // 置空数据
   tableData.value = []
-  batchSelection.value = []
   handleTable(dataParams.value)
-}
-
-// 多选
-const batchSelection = ref([])
-function handleSelectionChange(e) {
-  batchSelection.value = e.map((item) => item.version)
-}
-
-// 批量删除
-function batchDelete() {
-  if (!isTruthy(batchSelection.value, 'arr')) return
-  ElMessageBox.confirm(`确认批量删除所选项吗？`, '系统提示', {
-    confirmButtonText: '确定',
-    cancelButtonText: '取消',
-    type: 'warning'
-  })
-    .then(async () => {
-      // 确认批量删除操作
-      const deleteRes = await releaseBatchDelete({
-        list: batchSelection.value
-      })
-      ElMessage({
-        type: 'success',
-        message: deleteRes?.msg
-      })
-      refresh()
-    })
-    .catch(() => {})
 }
 
 // 提交表单

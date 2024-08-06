@@ -12,7 +12,8 @@ class AppReleaseController extends Controller {
 
   async releaseLatest() {
     const { ctx, service } = this
-    const res = await service.appRelease.releaseLatest()
+    const data = ctx.request.body
+    const res = await service.appRelease.releaseLatest(data)
     ctx.result(res)
   }
 
@@ -34,20 +35,6 @@ class AppReleaseController extends Controller {
     const { ctx, service } = this
     const data = ctx.request.body
     const res = await service.appRelease.releaseDelete(data)
-    ctx.result(res)
-  }
-
-  async releaseBatchAdd() {
-    const { ctx, service } = this
-    const data = ctx.request.body
-    const res = await service.appRelease.releaseBatchAdd(data)
-    ctx.result(res)
-  }
-
-  async releaseBatchDelete() {
-    const { ctx, service } = this
-    const data = ctx.request.body
-    const res = await service.appRelease.releaseBatchDelete(data)
     ctx.result(res)
   }
 }
