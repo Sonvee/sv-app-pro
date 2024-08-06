@@ -119,7 +119,6 @@ module.exports = (app) => {
   router.post('/cache/cacheKeyList', controller.sysCache.cacheKeyList)
   router.post('/cache/cacheValueByKey', controller.sysCache.cacheValueByKey)
   router.post('/cache/cacheDelete', controller.sysCache.cacheDelete)
-  router.post('/cache/cacheBatchDelete', controller.sysCache.cacheBatchDelete)
 
   // APP版本
   router.post('/app/releaseList', controller.appRelease.releaseList)

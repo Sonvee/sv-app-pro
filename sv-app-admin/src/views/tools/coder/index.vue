@@ -5,7 +5,7 @@
       <el-button type="primary" plain @click="generateCode(table)">生成表格页</el-button>
       <el-button type="success" plain @click="generateCode(filter)">生成筛选栏</el-button>
       <el-button type="info" plain @click="generateCode(form)">生成表单</el-button>
-      <el-button type="info" plain @click="generateCode(api)">生成api</el-button>
+      <el-button type="warning" plain @click="generateCode(api)">生成api</el-button>
       <el-divider direction="vertical" />
       <el-button type="primary" plain @click="generateCode(model)">生成Model</el-button>
       <el-button type="success" plain @click="generateCode(controller)">生成Controller</el-button>

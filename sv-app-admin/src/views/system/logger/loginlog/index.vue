@@ -46,7 +46,7 @@
           show-overflow-tooltip
         ></el-table-column>
 
-        <el-table-column label="配置" align="center" width="120" fixed="right">
+        <el-table-column label="操作" align="center" width="120" fixed="right">
           <template #default="scope">
             <el-button-group>
               <el-button text :icon="Delete" @click="del(scope.row)">删除</el-button>

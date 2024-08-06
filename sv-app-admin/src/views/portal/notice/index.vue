@@ -60,7 +60,7 @@
           show-overflow-tooltip
         ></el-table-column>
 
-        <el-table-column label="配置" align="center" width="160" fixed="right">
+        <el-table-column label="操作" align="center" width="160" fixed="right">
           <template #default="scope">
             <el-button-group>
               <el-button text :icon="EditPen" @click="edit(scope.row)">编辑</el-button>

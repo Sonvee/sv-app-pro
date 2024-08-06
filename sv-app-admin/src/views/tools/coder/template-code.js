@@ -21,7 +21,7 @@ const table = `> 表格页面 index.vue
         <el-table-column prop="test_name" label="名称" min-width="300" show-overflow-tooltip></el-table-column>
         <el-table-column prop="created_date" label="创建时间" align="center" width="180" sortable :formatter="(row) => timeFormat(row.created_date)" show-overflow-tooltip></el-table-column>
         <el-table-column prop="updated_date" label="更新时间" align="center" width="180" sortable :formatter="(row) => timeFormat(row.updated_date)" show-overflow-tooltip></el-table-column>
-        <el-table-column label="配置" align="center" width="160" fixed="right">
+        <el-table-column label="操作" align="center" width="160" fixed="right">
           <template #default="scope">
             <el-button-group>
               <el-button text :icon="EditPen" @click="edit(scope.row)">编辑</el-button>

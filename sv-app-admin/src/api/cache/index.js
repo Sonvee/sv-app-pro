@@ -23,11 +23,3 @@ export function cacheDelete(data) {
     data
   })
 }
-
-export function cacheBatchDelete(data) {
-  return request({
-    url: '/cache/cacheBatchDelete',
-    method: 'post',
-    data
-  })
-}

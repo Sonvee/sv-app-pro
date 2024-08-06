@@ -23,13 +23,6 @@ class SysCacheController extends Controller {
     const res = await service.sysCache.cacheDelete(data)
     ctx.result(res)
   }
-
-  async cacheBatchDelete() {
-    const { ctx, service } = this
-    const data = ctx.request.body
-    const res = await service.sysCache.cacheBatchDelete(data)
-    ctx.result(res)
-  }
 }
 
 module.exports = SysCacheController
