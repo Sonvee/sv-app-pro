@@ -14,12 +14,39 @@
       <!-- 数据表格 -->
       <el-table v-loading="loading" :data="tableData" border>
         <el-table-column prop="version" label="版本号" align="center" width="160" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="type" label="应用类型" align="center" width="160" show-overflow-tooltip>
+          <template #default="scope">
+            <DictTag :dictList="dictStore.getDict('dict_app_type')" :value="scope.row.type"></DictTag>
+          </template>
+        </el-table-column>
         <el-table-column prop="file.url" label="资源地址" min-width="300" show-overflow-tooltip>
           <template #default="scope">
             <a :href="scope.row?.file?.url" download>{{ scope.row?.file?.url }}</a>
           </template>
         </el-table-column>
+        <el-table-column prop="link" label="资源链接" min-width="300" show-overflow-tooltip>
+          <template #default="scope">
+            <a :href="scope.row?.link" target="_blank">{{ scope.row?.link }}</a>
+          </template>
+        </el-table-column>
+        <el-table-column prop="qrcode" label="应用码源文本" min-width="300" show-overflow-tooltip></el-table-column>
         <el-table-column prop="description" label="版本描述" min-width="300" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="intro" label="应用简介" min-width="300" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="screenshot" label="应用截图" min-width="300">
+          <template #default="scope">
+            <div class="flex-vc text-line-1">
+              <el-image
+                class="screenshot-iamges"
+                v-for="(item, index) in scope.row?.screenshot"
+                :key="item.url"
+                :src="item.url"
+                :preview-src-list="scope.row?.screenshot?.map((i) => i.url)"
+                :initial-index="index"
+                preview-teleported
+              />
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column prop="remark" label="备注" min-width="300" show-overflow-tooltip></el-table-column>
         <el-table-column prop="mandatory" label="是否强制更新" align="center" width="160" show-overflow-tooltip>
           <template #default="scope">
@@ -59,10 +86,18 @@ import { ref, onMounted } from 'vue'
 import TableFilter from './components/TableFilter.vue'
 import TableForm from './components/TableForm.vue'
 import TablePagination from '@/components/TablePagination/index.vue'
+import DictTag from '@/components/DictType/DictTag.vue'
 import { releaseList, releaseAdd, releaseUpdate, releaseDelete, releaseLatest } from '@/api/release'
 import { RefreshRight, Plus, EditPen, Delete, View, Hide, Check, Close, Top, Minus } from '@element-plus/icons-vue'
 import { ElNotification, ElMessageBox, ElMessage } from 'element-plus'
 import { isTruthy, timeFormat } from '@/utils'
+import { useDictStore } from '@/store/dict'
+
+const dictStore = useDictStore()
+// 初始化字典
+function dictInit() {
+  dictStore.initDict(['dict_app_type'])
+}
 
 const dataParams = ref({ pagenum: 1, pagesize: 20 })
 const tableData = ref([])
@@ -74,11 +109,8 @@ const formInit = ref({}) // 表单初始值
 const formMode = ref('') // 表单模式 add / edit
 
 onMounted(() => {
+  dictInit()
   handleTable(dataParams.value)
-
-  releaseLatest({ type: 'android' }).then((res) => {
-    console.log('res :>> ', res.data)
-  })
 })
 
 // 数据
@@ -122,7 +154,7 @@ function edit(row) {
 
 // 删
 function del(row) {
-  const { version } = row
+  const { version, type } = row
   ElMessageBox.confirm(`确认删除『 ${version} 』吗？`, '系统提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
@@ -130,7 +162,7 @@ function del(row) {
   })
     .then(async () => {
       // 确认删除操作
-      const deleteRes = await releaseDelete({ version })
+      const deleteRes = await releaseDelete({ version, type })
       ElMessage({
         type: 'success',
         message: deleteRes?.msg
@@ -182,4 +214,11 @@ function handleCurrentChange(e) {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.screenshot-iamges {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  margin-right: 6px;
+}
+</style>

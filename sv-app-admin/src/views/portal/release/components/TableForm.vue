@@ -9,16 +9,16 @@
           <el-input v-model="formData.version" :disabled="formMode !== 'add'" placeholder="请输入版本号" clearable />
         </el-form-item>
         <el-form-item prop="type" label="应用类型" required>
-          <DictSelect v-model="formData.type" dictType="dict_app_type" placeholder="请选择应用类型" style="width: 100%"></DictSelect>
+          <DictSelect v-model="formData.type" dictType="dict_app_type" :disabled="formMode !== 'add'" placeholder="请选择应用类型" style="width: 100%"></DictSelect>
         </el-form-item>
         <el-form-item prop="file" label="版本资源包">
-          <DragUpload v-model:file="formData.file"></DragUpload>
+          <DragSingleUpload v-model:file="formData.file" height="140px"></DragSingleUpload>
         </el-form-item>
         <el-form-item prop="link" label="资源链接">
           <el-input v-model="formData.link" placeholder="请输入资源链接" clearable />
         </el-form-item>
-        <el-form-item prop="qrcode" label="应用二维码">
-          <el-input v-model="formData.qrcode" placeholder="请输入应用二维码" clearable />
+        <el-form-item prop="qrcode" label="应用码源文本">
+          <el-input v-model="formData.qrcode" placeholder="请输入应用码源文本（可用于生成二维码）" clearable />
         </el-form-item>
         <el-form-item prop="description" label="版本描述">
           <el-input v-model="formData.description" type="textarea" :autosize="{ minRows: 2 }" placeholder="请输入版本描述" />
@@ -27,7 +27,7 @@
           <el-input v-model="formData.intro" type="textarea" :autosize="{ minRows: 2 }" placeholder="请输入应用简介" />
         </el-form-item>
         <el-form-item prop="screenshot" label="应用截图">
-          <el-input v-model="formData.screenshot" placeholder="请输入应用截图" clearable />
+          <ImageUpload v-model:files="formData.screenshot" size="80px"></ImageUpload>
         </el-form-item>
         <el-form-item prop="remark" label="备注">
           <el-input v-model="formData.remark" type="textarea" :autosize="{ minRows: 2 }" placeholder="请输入备注" />
@@ -49,14 +49,15 @@
 
 <script setup>
 import { ref } from 'vue'
-import DragUpload from '@/components/FileUpload/DragUpload.vue'
+import DragSingleUpload from '@/components/FileUpload/DragSingleUpload.vue'
 import { Check, Close } from '@element-plus/icons-vue'
 import { assignOverride, isTruthy } from '@/utils'
 import { ElNotification } from 'element-plus'
 import { cloneDeep, isEqual } from 'lodash-es'
-import { releaseUpload } from '@/api/file/upload'
+import { releaseImageUpload, releaseUpload } from '@/api/file/upload'
 import { useRegExp } from '@/utils/regexp'
 import DictSelect from '@/components/DictType/DictSelect.vue'
+import ImageUpload from '@/components/FileUpload/ImageUpload.vue'
 
 const props = defineProps({
   formInit: {
@@ -138,7 +139,7 @@ function confirm() {
         return
       }
 
-      // 对比头像是否改变，若改变则需上传更新
+      // 对比资源文件是否改变，若改变则需上传更新
       if (isTruthy(formData.value?.file?.url) && formData.value?.file?.url !== props.formInit?.file?.url) {
         let fd = new FormData()
         fd.append('file', formData.value?.file?.file)
@@ -146,6 +147,41 @@ function confirm() {
         const uploadRes = await releaseUpload(fd)
         if (!uploadRes.success) return
         formData.value.file = uploadRes.data
+      }
+
+      // screenshot截图数组中若存在raw字段，则为新截图，需要上传
+      if (isTruthy(formData.value?.screenshot, 'arr')) {
+        const upList = formData.value?.screenshot.map((item, index) => {
+          if (item.raw) {
+            return { file: item.raw }
+          }
+        })
+        let fds = new FormData()
+        fds.append('version', formData.value?.version)
+        upList.forEach((item) => {
+          if (item?.file) {
+            fds.append('files', item.file)
+          }
+        })
+        // 上传文件数组
+        const upRes = await releaseImageUpload(fds)
+        if (!upRes.success) return
+        const upResList = upRes.data || []
+        // 将formData中本地file类型文件替换为上传后的url（根据name字段与上传后的key中取文件名作对比）
+        const handleScreenshot = formData.value?.screenshot.map((item) => {
+          if (item.raw) {
+            const findeOne = upResList.find((i) => {
+              const filename = i.key.split('/').pop()
+              return filename === item.name
+            })
+            return findeOne
+          } else {
+            // 非新上传文件则返回原数据
+            return item
+          }
+        })
+        // 更新截图数组
+        formData.value.screenshot = handleScreenshot
       }
 
       emits('submit', { data: formData.value, mode: props.formMode })

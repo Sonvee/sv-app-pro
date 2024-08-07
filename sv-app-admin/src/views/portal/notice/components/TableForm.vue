@@ -18,12 +18,10 @@
           <el-input v-model="formData.notice_title" placeholder="请输入通知公告标题" clearable />
         </el-form-item>
         <el-form-item prop="notice_content" label="通知公告内容">
-          <div style="height: 300px">
-            <TinymceEditor v-model="formData.notice_content"></TinymceEditor>
-          </div>
+          <TinymceEditor v-model="formData.notice_content" :custom-style="{ minHeight: '300px' }"></TinymceEditor>
         </el-form-item>
         <el-form-item prop="remark" label="备注">
-          <el-input v-model="formData.remark" type="textarea" :autosize="{ minRows: 4 }" placeholder="请输入备注" />
+          <el-input v-model="formData.remark" type="textarea" :autosize="{ minRows: 2 }" placeholder="请输入备注" />
         </el-form-item>
         <el-form-item prop="publish_timerange" label="公布时间范围">
           <el-date-picker v-model="formData.publish_timerange" type="datetimerange" start-placeholder="开始时间" end-placeholder="结束时间" range-separator="~" value-format="x" />

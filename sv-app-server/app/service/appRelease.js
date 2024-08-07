@@ -32,7 +32,7 @@ class AppReleaseService extends Service {
     const conditions = {}
 
     // 查询条件
-    if (isTruthy(data.version)) conditions.version = data.version
+    if (isTruthy(data.version)) conditions.version = { $regex: data.version, $options: 'i' } // 模糊查询
     if (isTruthy(data.type)) conditions.type = data.type
     if (isTruthy(data.release_range, 'arr')) conditions.release_date = { $gte: data.release_range[0], $lte: data.release_range[1] } // 时间范围
 
@@ -40,7 +40,7 @@ class AppReleaseService extends Service {
     let query = db.find(conditions)
 
     // 排序：1升序，-1降序
-    query = query.sort({ version: -1 })
+    query = query.sort({ version: -1, release_date: -1 })
 
     // 分页
     if (pagesize > 0) {
@@ -90,7 +90,7 @@ class AppReleaseService extends Service {
     let query = db.find(conditions)
 
     // 排序：1升序，-1降序
-    query = query.sort({ version: -1 })
+    query = query.sort({ version: -1, release_date: -1 })
 
     // 处理查询结果
     const res = await query.exec()

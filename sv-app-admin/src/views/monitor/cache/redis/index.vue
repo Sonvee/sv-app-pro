@@ -2,7 +2,7 @@
   <div class="page-container">
     <!-- 栅格布局 -->
     <el-row :gutter="10" class="h-full">
-      <el-col :span="6">
+      <el-col :span="8">
         <el-card shadow="hover" class="h-full">
           <template #header>
             <i class="sv-icons-redis mr-5"></i>
@@ -31,7 +31,7 @@
           </el-tree>
         </el-card>
       </el-col>
-      <el-col :span="18">
+      <el-col :span="16">
         <el-card shadow="hover" ref="cardRef" class="h-full">
           <template #header>
             <div class="flx-justify-between">

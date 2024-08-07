@@ -22,8 +22,8 @@ export function useRegExp(type) {
       msg: '请输入有效的手机号码'
     },
     version: {
-      regexp: /^\d+\.\d+\.\d+$/,
-      msg: '版本号格式应为 num.num.num'
+      regexp: /^\d+\.\d+\.\d+\.[a-z0-9]+$/,
+      msg: '版本号格式应为 num.num.num.letter'
     }
   }
 

@@ -5,7 +5,7 @@ module.exports = (app) => {
 
   const AppReleaseSchema = new mongoose.Schema(
     {
-      // 版本号
+      // 版本号 num.num.num.type
       version: {
         type: String,
         unique: true,
@@ -13,12 +13,12 @@ module.exports = (app) => {
       },
       // 应用类型 android ios mpweixin ...
       type: {
-        type: String
+        type: String,
+        required: true
       },
       // 资源文件
       file: {
         type: Object,
-        required: true
       },
       // 资源链接，部分平台可能需要使用外链而非资源文件
       link: {

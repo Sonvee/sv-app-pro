@@ -8,8 +8,8 @@ const table = `> 表格页面 index.vue
     <div class="card table-container">
       <!-- 工具栏 -->
       <div class="table-control">
-        <el-button type="primary" plain :icon="Plus" @click="add">新增</el-button>
-        <el-button type="danger" plain :icon="Delete" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
+        <el-button type="primary" plain :icon="Plus" v-permission="['testAdd']" @click="add">新增</el-button>
+        <el-button type="danger" plain :icon="Delete" v-permission="['testBatchDelete']" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
         <div style="flex: 1"></div>
         <el-button circle :icon="RefreshRight" @click="refresh" title="刷新"></el-button>
         <el-button circle :icon="showFilter ? View : Hide" @click="showFilter = !showFilter" :title="showFilter ? '隐藏筛选' : '显示筛选'"></el-button>
@@ -24,8 +24,8 @@ const table = `> 表格页面 index.vue
         <el-table-column label="操作" align="center" width="160" fixed="right">
           <template #default="scope">
             <el-button-group>
-              <el-button text :icon="EditPen" @click="edit(scope.row)">编辑</el-button>
-              <el-button text :icon="Delete" @click="del(scope.row)">删除</el-button>
+              <el-button text :icon="EditPen" v-permission="['testUpdate']" @click="edit(scope.row)">编辑</el-button>
+              <el-button text :icon="Delete" v-permission="['testDelete']" @click="del(scope.row)">删除</el-button>
             </el-button-group>
           </template>
         </el-table-column>
@@ -196,7 +196,7 @@ const filter = `> 筛选栏 TableFilter.vue
         <el-input v-model.trim="filterForm.test_name" placeholder="请输入名称" clearable style="width: 150px" />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submit">搜索</el-button>
+        <el-button type="primary" v-permission="['testList']" @click="submit">搜索</el-button>
         <el-button type="danger" @click="reset">重置</el-button>
       </el-form-item>
     </el-form>

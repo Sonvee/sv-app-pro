@@ -48,3 +48,14 @@ export function releaseUpload(data) {
     }
   })
 }
+
+export function releaseImageUpload(data) {
+  return request({
+    url: '/file/releaseImageUpload',
+    method: 'post',
+    data,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}

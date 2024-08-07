@@ -136,6 +136,49 @@ class FileService extends Service {
       msg: '上传成功'
     }
   }
+
+  /**
+   * 版本截图上传 post - 权限 permission
+   * @description 前端需要使用FormData进行请求，请求头'Content-Type': 'multipart/form-data'
+   * @param {Array<File>} files 用户上传的文件
+   * @param {Object} data 请求参数
+   * @property {String} data.version 版本号
+   */
+  async releaseImageUpload({ data, files }) {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['releaseImageUpload'])
+
+    if (!isTruthy(data.version)) ctx.throw(400, { msg: 'version 必填' })
+
+    // 指定文件读取
+    const fileList = files.filter((item) => item.fieldname == 'files')
+    const filePromises = fileList.map((file) => {
+      // 文件key = 要存储的文件夹路径 + 唯一的文件名
+      const fileKey = `release/${data.version}/images/${file.filename}`
+      return app.fullQiniu.uploadFile(fileKey, file.filepath).then((fileRes) => {
+        if (!fileRes.ok) {
+          throw new Error(`文件 ${file.filename} 上传失败: ${fileRes.err}`)
+        }
+        return fileRes // 成功时返回结果
+      })
+    })
+
+    try {
+      const results = await Promise.all(filePromises)
+      // 删除不必要字段
+      results.forEach((item) => {
+        delete item.ok
+      })
+      return {
+        data: results,
+        msg: '上传成功'
+      }
+    } catch (error) {
+      ctx.throw(400, { msg: error.message, errMsg: error.message })
+    }
+  }
 }
 
 module.exports = FileService

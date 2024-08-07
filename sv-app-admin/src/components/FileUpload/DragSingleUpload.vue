@@ -1,6 +1,6 @@
 <template>
   <el-upload
-    class="drag-upload"
+    class="drag-single-upload"
     drag
     ref="uploadRef"
     action="#"
@@ -21,7 +21,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { isTruthy } from '@/utils'
 import { ElMessage } from 'element-plus'
 
@@ -38,6 +38,10 @@ const props = defineProps({
   disabled: {
     type: Boolean,
     default: false
+  },
+  height: {
+    type: String,
+    default: '200px'
   }
 })
 const emits = defineEmits(['update:file'])
@@ -45,10 +49,18 @@ const emits = defineEmits(['update:file'])
 const uploadRef = ref()
 const fileList = ref(handleReadyFile(props.file))
 
+watch(
+  () => props.file,
+  (newVal) => {
+    fileList.value = handleReadyFile(newVal)
+  }
+)
+
 // 处理预显示文件数据项
-function handleReadyFile(file) {
-  if (!isTruthy(file, 'obj')) return []
-  return [{ ...file, name: file.key.split('/').pop() }]
+function handleReadyFile(raw) {
+  if (!isTruthy(raw, 'obj')) return []
+  if (raw.key) return [{ ...raw, name: raw.key.split('/').pop() }]
+  return [raw.file]
 }
 
 function uploadChange(uploadFile) {
@@ -91,7 +103,19 @@ async function deleteFile() {
 </script>
 
 <style lang="scss" scoped>
-.drag-upload {
+.drag-single-upload {
   width: 100%;
+  --drag-single-upload-height: v-bind(height);
+
+  :deep(.el-upload) {
+    .el-upload-dragger {
+      padding: 0;
+      height: var(--drag-single-upload-height);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+  }
 }
 </style>

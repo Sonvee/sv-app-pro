@@ -15,7 +15,7 @@
           end-placeholder="结束日期"
           range-separator="~"
           value-format="x"
-          style="width: 350px"
+          style="width: 250px"
         />
       </el-form-item>
       <el-form-item>

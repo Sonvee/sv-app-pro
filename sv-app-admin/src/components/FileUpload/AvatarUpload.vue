@@ -1,6 +1,6 @@
 <template>
   <el-upload
-    class="avatar-uploader"
+    class="avatar-upload"
     ref="uploadRef"
     action="#"
     v-model:file-list="avatar"
@@ -20,7 +20,7 @@
         <i class="cuIcon-close delete-icon" v-if="!disabled" @click="deleteImg"></i>
       </div>
     </template>
-    <el-icon v-else class="avatar-uploader-icon"><Plus /></el-icon>
+    <el-icon v-else class="avatar-upload-icon"><Plus /></el-icon>
   </el-upload>
 </template>
 
@@ -75,7 +75,7 @@ async function deleteImg() {
 $avatar-width: 80px;
 $avatar-height: 80px;
 
-.avatar-uploader {
+.avatar-upload {
   .avatar {
     width: $avatar-width;
     height: $avatar-height;
@@ -116,7 +116,7 @@ $avatar-height: 80px;
     border-color: var(--el-color-primary);
   }
 
-  .avatar-uploader-icon {
+  .avatar-upload-icon {
     width: $avatar-width;
     height: $avatar-height;
     font-size: 28px;
