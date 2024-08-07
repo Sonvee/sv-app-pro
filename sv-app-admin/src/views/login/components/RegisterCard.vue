@@ -34,11 +34,9 @@
           </el-input>
         </el-form-item>
         <el-form-item prop="captcha">
-          <el-input v-model="registerForm.captcha" placeholder="请输入验证码" :maxlength="4" clearable class="captcha-input">
+          <el-input v-model="registerForm.captcha" placeholder="请输入验证码" :maxlength="4" spellcheck="false" clearable class="captcha-input">
             <template #prefix>
-              <el-icon class="el-input__icon">
-                <finished />
-              </el-icon>
+              <i class="sv-icons-verify"></i>
             </template>
             <template #append>
               <el-image v-loading="captchaLoading" class="flex-vhc" :src="captchaImg" @click="getCaptchaImg"></el-image>
