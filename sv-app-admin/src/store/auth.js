@@ -1,14 +1,13 @@
 import { defineStore } from 'pinia'
-import { getAuthMenuList } from '@/api/auth'
+import { authMenuList } from '@/api/auth'
 import { getFlatMenuList, getTreeMenuList, getAllBreadcrumbList } from '@/utils'
+import { localFlatMenuList } from '@/router/modules/localRouter'
 
 export const useAuthStore = defineStore({
   id: 'sv-auth',
   state: () => ({
     // 菜单权限列表
-    authMenuList: [],
-    // 当前页面的 router name，用来做按钮权限筛选
-    routeName: ''
+    authMenuList: []
   }),
   getters: {
     // 菜单权限列表 ==> 这里的菜单没有经过任何处理
@@ -21,15 +20,11 @@ export const useAuthStore = defineStore({
     breadcrumbListGet: (state) => getAllBreadcrumbList(state.authMenuList)
   },
   actions: {
-    // Get AuthMenuList
+    // 获取动态菜单列表（api获取菜单和本地菜单）
     async getAuthMenuList() {
-      const { data } = await getAuthMenuList()
-      this.authMenuList = data
-    },
-
-    // Set RouteName
-    async setRouteName(name) {
-      this.routeName = name
+      const menuRes = await authMenuList()
+      const menuData = menuRes.data || []
+      this.authMenuList = [...menuData, ...localFlatMenuList]
     }
   }
 })

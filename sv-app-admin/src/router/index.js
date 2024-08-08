@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router'
 import { useUserStore } from '@/store/user'
 import { useAuthStore } from '@/store/auth'
-import { LOGIN_URL, ROUTER_WHITE_LIST } from '@/config'
+import { LOGIN_URL } from '@/config'
 import { initDynamicRouter } from './modules/dynamicRouter'
 import { staticRouter, errorRouter } from './modules/staticRouter'
 import NProgress from '@/config/nprogress'
@@ -23,11 +23,15 @@ import NProgress from '@/config/nprogress'
  * @property {Boolean} meta.isAffix ==> 菜单是否固定在标签页中 (首页通常是固定项)
  * @property {Boolean} meta.isKeepAlive ==> 当前路由是否缓存
  * @property {Boolean} meta.isSub ==> 是否是子菜单详情页面
- * */
+ * @property {Boolean} meta.isOpen ==> 是否需要登录（开放页面为true，无需token）
+ */
 const router = createRouter({
   history: createWebHashHistory(),
-  routes: [...staticRouter, ...errorRouter]
+  routes: [...staticRouter, ...errorRouter] // 此处直接装载静态路由，动态路由由initDynamicRouter中addRoute装载
 })
+
+// 静态路由白名单
+const WHITE_ROUTE_LIST = [...staticRouter, ...errorRouter].map((item) => item.path)
 
 /**
  * @description 路由拦截 beforeEach
@@ -50,22 +54,31 @@ router.beforeEach(async (to, from, next) => {
     return next()
   }
 
-  // 4.判断访问页面是否在路由白名单地址(静态路由)中，如果存在直接放行
-  if (ROUTER_WHITE_LIST.includes(to.path)) return next()
+  // 4.判断访问页面是否为静态路由，如果是则直接放行
+  if (WHITE_ROUTE_LIST.includes(to.path)) return next()
 
-  // 5.判断是否有 Token，没有重定向到 login 页面
-  if (!userStore.token) return next({ path: LOGIN_URL, replace: true })
-
-  // 6.如果没有菜单列表，就重新请求菜单列表并添加动态路由
-  if (!authStore.authMenuListGet.length) {
-    await initDynamicRouter()
-    return next({ ...to, replace: true })
+  if (authStore.authMenuList.length) {
+    // 5.判断当前页面是否需要登录
+    const findroute = authStore.authMenuList?.find((item) => item.path === to.path)
+    if (findroute?.meta?.isOpen) {
+      // 页面无需登录，直接放行
+      return next()
+    } else {
+      // 判断是否有token，没有则重定向到 login 页面
+      if (!userStore.token) return next({ path: LOGIN_URL, replace: true })
+    }
+  } else {
+    // 6.如果没有菜单列表，就重新请求菜单列表并添加动态路由
+    try {
+      await initDynamicRouter()
+      return next({ ...to, replace: true })
+    } catch (error) {
+      // 捕获异常并跳转403页面
+      return next({ path: '/403' })
+    }
   }
 
-  // 7.存储 routerName 做按钮权限筛选
-  authStore.setRouteName(to.name)
-
-  // 8.正常访问页面
+  // 7.正常访问页面
   next()
 })
 
@@ -74,7 +87,7 @@ router.beforeEach(async (to, from, next) => {
  * */
 export const resetRouter = () => {
   const authStore = useAuthStore()
-  authStore.flatMenuListGet.forEach((route) => {
+  authStore.authMenuList.forEach((route) => {
     const { name } = route
     if (name && router.hasRoute(name)) router.removeRoute(name)
   })

@@ -57,6 +57,11 @@
             <el-switch v-model="scope.row.meta.isAffix" inline-prompt :active-icon="Check" :inactive-icon="Close" @change="handleTableSwitch(scope.row)" />
           </template>
         </el-table-column>
+        <el-table-column prop="meta.isOpen" align="center" label="无需登录" width="120" show-overflow-tooltip>
+          <template #default="scope">
+            <el-switch v-model="scope.row.meta.isOpen" inline-prompt :active-icon="Check" :inactive-icon="Close" @change="handleTableSwitch(scope.row)" />
+          </template>
+        </el-table-column>
 
         <el-table-column label="操作" align="center" width="220" fixed="right">
           <template #default="scope">

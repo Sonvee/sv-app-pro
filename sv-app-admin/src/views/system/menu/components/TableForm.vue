@@ -79,6 +79,10 @@
           </template>
           <el-switch v-model="formData.meta.isAffix" inline-prompt :active-icon="Check" :inactive-icon="Close" />
         </el-form-item>
+
+        <el-form-item prop="meta.isOpen" label="是否无需登录">
+          <el-switch v-model="formData.meta.isOpen" inline-prompt :active-icon="Check" :inactive-icon="Close" />
+        </el-form-item>
       </el-form>
     </template>
     <template #footer>
@@ -128,6 +132,7 @@ const formBase = {
     activeMenu: '', // 是否在菜单中隐藏, 需要高亮的 path (通常用作详情页高亮父级菜单)
     isLink: '', // 路由外链时填写的访问地址
     isFull: false, // 菜单是否全屏
+    isOpen: false, // 是否无需登录
     isAffix: false, // 菜单是否固定在标签页中 (首页通常是固定项)
     isKeepAlive: true // 当前路由是否缓存
   }

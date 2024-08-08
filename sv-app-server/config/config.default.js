@@ -64,7 +64,9 @@ module.exports = (appInfo) => {
         '/api/user/loginByWechat',
         '/api/user/register',
         '/api/user/hasAdmin',
-        '/api/user/findPermissionByRole'
+        '/api/user/findPermissionByRole',
+        '/api/sys/menuList',
+        '/api/sys/authMenuList'
       ]
       if (white.includes(routeURL)) {
         return false
@@ -157,8 +159,8 @@ module.exports = (appInfo) => {
   config.cluster = {
     listen: {
       port: 7001,
-      // hostname: '192.168.1.209'
-      hostname: '192.168.6.112'
+      hostname: '192.168.1.209'
+      // hostname: '192.168.6.112'
     }
   }
 

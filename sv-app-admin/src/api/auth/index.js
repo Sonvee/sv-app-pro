@@ -2,7 +2,7 @@ import request from '@/config/request/request.js'
 import menuData from '@/assets/json/menuList.json'
 
 // 获取菜单列表
-export function getAuthMenuList() {
+export function authMenuList() {
   return request({
     url: '/sys/authMenuList',
     method: 'get',

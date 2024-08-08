@@ -4,7 +4,7 @@ import { checkStatus } from './checkStatus'
 import { AxiosCanceler } from './axiosCancel'
 import { showFullScreenLoading, tryHideFullScreenLoading } from '@/components/Loading/fullScreen'
 import { LOGIN_URL } from '@/config'
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import router from '@/router'
 
 // 创建 axios 实例
@@ -56,10 +56,17 @@ service.interceptors.response.use(
 
     // 登录失效
     if (data.code == 401) {
-      userStore.setToken('')
-      userStore.setUserInfo({})
-      router.replace(LOGIN_URL)
-      ElMessage.error(data.msg)
+      ElMessageBox.confirm(data.msg, '系统警告', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      })
+        .then(async () => {
+          userStore.setToken('')
+          userStore.setUserInfo({})
+          router.replace(LOGIN_URL)
+        })
+        .catch(() => {})
       return Promise.reject(data)
     }
     // 全局错误信息拦截（防止下载文件的时候返回数据流，没有 code 直接报错）

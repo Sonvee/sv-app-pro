@@ -14,8 +14,8 @@ class SysMenuService extends Service {
     const { ctx, app } = this
     let result = list
     // 菜单权限过滤
-    const roles = ctx.userInfo.role
-    const permissions = ctx.userInfo.permission
+    const roles = ctx.userInfo?.role || []
+    const permissions = ctx.userInfo?.permission || []
     if (!roles.includes('admin')) {
       let removeMenu = []
       removeMenu = list.filter((menu) => {
@@ -36,15 +36,12 @@ class SysMenuService extends Service {
   }
 
   /**
-   * 查询 post - 权限 needlogin
+   * 查询 post - 权限 open
    * @param {Object} data - 请求参数
    * @property {String} data.title - 路由标题
    */
   async menuList(data) {
     const { ctx, app } = this
-
-    // 权限校验
-    ctx.checkAuthority('needlogin')
 
     // 数据库连接
     const db = app.model.SysMenu
@@ -75,14 +72,11 @@ class SysMenuService extends Service {
   }
 
   /**
-   * 菜单列表（redis缓存） get - 权限 needlogin
+   * 菜单列表（redis缓存） get - 权限 open
    * @description redis缓存中是菜单全列表，再根据权限自动过滤，在源menuList更新时需要及时更新redis缓存
    */
   async authMenuList() {
     const { ctx, app } = this
-
-    // 权限校验
-    ctx.checkAuthority('needlogin')
 
     let menuRedis = await app.redis.get('menu:admin:menulist')
     let menuList = []

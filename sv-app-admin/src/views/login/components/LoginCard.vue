@@ -138,7 +138,7 @@ function toLogin() {
         // 2.缓存相关数据
         userStore.setToken(loginRes.token)
         userStore.setUserInfo(loginRes.data)
-        userStore.verifyToken()
+        userStore.veToken()
         userStore.setRememberLogin(loginForm.value.rememberme ? loginForm.value : null)
 
         // 3.添加动态路由

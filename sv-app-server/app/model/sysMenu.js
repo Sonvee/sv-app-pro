@@ -60,6 +60,11 @@ module.exports = (app) => {
           type: String,
           default: ''
         },
+        // 是否开放页面（无需token）
+        isOpen: {
+          type: Boolean,
+          default: false
+        },
         // 是否在菜单中隐藏 (通常列表详情页需要隐藏)
         isHide: {
           type: Boolean,

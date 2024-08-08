@@ -179,7 +179,7 @@ function toRegister() {
         // 3.缓存相关数据
         userStore.setToken(registerRes.token)
         userStore.setUserInfo(registerRes.data)
-        userStore.verifyToken()
+        userStore.veToken()
         userStore.setRememberLogin({
           username: registerForm.value.username,
           password: registerForm.value.password,

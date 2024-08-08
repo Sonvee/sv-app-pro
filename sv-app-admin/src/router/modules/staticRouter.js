@@ -33,30 +33,30 @@ export const errorRouter = [
   {
     path: '/403',
     name: '403',
-    component: () => import('@/components/ErrorMessage/403.vue'),
+    component: () => import('@/views/error/403.vue'),
     meta: {
-      title: '403页面'
+      title: '403 Forbidden'
     }
   },
   {
     path: '/404',
     name: '404',
-    component: () => import('@/components/ErrorMessage/404.vue'),
+    component: () => import('@/views/error/404.vue'),
     meta: {
-      title: '404页面'
+      title: '404 Not Found'
     }
   },
   {
     path: '/500',
     name: '500',
-    component: () => import('@/components/ErrorMessage/500.vue'),
+    component: () => import('@/views/error/500.vue'),
     meta: {
-      title: '500页面'
+      title: '500 Server Error'
     }
   },
   // Resolve refresh page, route warnings
   {
     path: '/:pathMatch(.*)*',
-    component: () => import('@/components/ErrorMessage/404.vue')
+    component: () => import('@/views/error/404.vue')
   }
 ]
