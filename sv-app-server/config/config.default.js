@@ -38,48 +38,13 @@ module.exports = (appInfo) => {
    * 中间件执行顺序：洋葱圈模型
    * @tutorial https://www.eggjs.org/zh-CN/intro/egg-and-koa#middleware
    */
-  config.middleware = ['security', 'logger', 'result', 'authorization']
+  config.middleware = ['defense', 'logger', 'result', 'authorization']
 
   /**
-   * token 校验规则
+   * 中间件配置
    */
-  config.authorization = {
-    enable: true,
-    match(ctx) {
-      // 取ctx.url中?之前的基础路径
-      const routeURL = ctx.url.split('?')[0]
-
-      // 1. 过滤是否404
-      const apiRoutes = ctx.router.stack?.map((item) => item.path)
-      if (!apiRoutes.includes(routeURL)) {
-        return false
-      }
-
-      // 2. 白名单免token校验
-      const white = [
-        '/api/auth/getCaptcha',
-        '/api/auth/emailCaptcha',
-        '/api/user/login',
-        '/api/user/loginByEmailer',
-        '/api/user/loginByWechat',
-        '/api/user/register',
-        '/api/user/hasAdmin',
-        '/api/user/findPermissionByRole'
-      ]
-      if (white.includes(routeURL)) {
-        return false
-      }
-
-      // 3. 黑名单强制token校验
-      const black = ['/api/test']
-      if (black.includes(routeURL)) {
-        return true
-      }
-
-      // 4. 通用正则校验，新路径前缀需在此出添加，否则会报404
-      const reg = /^\/api\/(user|sys|file|app|cache)(\/.*)?/
-      return reg.test(routeURL)
-    }
+  config.defense = {
+    enable: false
   }
 
   /**

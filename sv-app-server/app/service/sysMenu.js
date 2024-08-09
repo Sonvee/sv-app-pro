@@ -36,18 +36,16 @@ class SysMenuService extends Service {
   }
 
   /**
-   * 查询 post - 权限 needlogin
+   * 查询 post - 权限 open
    * @param {Object} data - 请求参数
+   * @property {String} data.name - 路由name
    * @property {String} data.title - 路由标题
    */
   async menuList(data) {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('needlogin')
-
-    // 数据库连接
-    const db = app.model.SysMenu
+    ctx.checkAuthority('open')
 
     // 查询条件处理
     const conditions = {}
@@ -56,7 +54,10 @@ class SysMenuService extends Service {
     if (isTruthy(data.name)) conditions.name = data.name
     if (isTruthy(data.title)) conditions['meta.title'] = { $regex: data.title, $options: 'i' } // 模糊查询
 
-    // 查询操作
+    // 数据库连接
+    const db = app.model.SysMenu
+
+    // 查询
     let query = db.find(conditions)
 
     // 排序：1升序，-1降序
@@ -64,7 +65,7 @@ class SysMenuService extends Service {
 
     // 处理查询结果
     let res = await query.exec()
-    
+
     // 菜单权限过滤
     res = this.menuPermissionHandler(res)
 
@@ -75,14 +76,14 @@ class SysMenuService extends Service {
   }
 
   /**
-   * 菜单列表（redis缓存） get - 权限 needlogin
+   * 菜单列表（redis缓存） post - 权限 open
    * @description redis缓存中是菜单全列表，再根据权限自动过滤，在源menuList更新时需要及时更新redis缓存
    */
   async authMenuList() {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('needlogin')
+    ctx.checkAuthority('open')
 
     let menuRedis = await app.redis.get('menu:admin:menulist')
     let menuList = []
@@ -130,12 +131,13 @@ class SysMenuService extends Service {
     if (!isTruthy(data.name)) ctx.throw(400, { msg: 'name 必填' })
     if (!isTruthy(data.path)) ctx.throw(400, { msg: 'path 必填' })
 
-    // 数据库连接
-    const db = app.model.SysMenu
-
     // 查询条件处理
     const conditions = { name: data.name }
 
+    // 数据库连接
+    const db = app.model.SysMenu
+
+    // 查询
     const one = await db.findOne(conditions)
     if (one) ctx.throw(400, { msg: '新增项已存在' })
 
@@ -169,23 +171,16 @@ class SysMenuService extends Service {
     // 权限校验
     ctx.checkAuthority('permission', ['menuUpdate'])
 
-    // 参数处理
-    data = Object.assign(
-      {
-        _id: '' // 需要使用_id作为主键
-      },
-      data
-    )
-
     // 参数校验
     if (!isTruthy(data._id)) ctx.throw(400, { msg: '_id 必填' })
-
-    // 数据库连接
-    const db = app.model.SysMenu
 
     // 查询条件处理
     const conditions = { _id: data._id }
 
+    // 数据库连接
+    const db = app.model.SysMenu
+
+    // 查询
     const one = await db.findOne(conditions)
     if (!one) ctx.throw(400, { msg: '更新项不存在' })
 
@@ -216,23 +211,16 @@ class SysMenuService extends Service {
     // 权限校验
     ctx.checkAuthority('permission', ['menuDelete'])
 
-    // 参数处理
-    data = Object.assign(
-      {
-        name: ''
-      },
-      data
-    )
-
     // 参数校验
     if (!isTruthy(data.name)) ctx.throw(400, { msg: 'name 必填' })
-
-    // 数据库连接
-    const db = app.model.SysMenu
 
     // 查询条件处理
     const conditions = { name: data.name }
 
+    // 数据库连接
+    const db = app.model.SysMenu
+
+    // 查询
     const one = await db.findOne(conditions)
     if (!one) ctx.throw(400, { msg: '删除项不存在或已被删除' })
 

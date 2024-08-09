@@ -9,10 +9,9 @@ module.exports = (options, app) => {
     // 洋葱圈模型 - 前执行操作
 
     // 限流阀
-    // await useLimit({ ctx, key: 'limit:ipforbidden', threshold: app.config.maxRequestThreshold })
+    await useLimit({ ctx, key: 'limit:ipforbidden', threshold: app.config.maxRequestThreshold })
 
     // 正常访问
-
     await next()
 
     // 洋葱圈模型 - 后执行操作

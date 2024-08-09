@@ -49,7 +49,6 @@ module.exports = (app) => {
   router.post('/user/changePasswordByEmail', controller.sysUser.changePasswordByEmail)
   router.post('/user/bindEmail', controller.sysUser.bindEmail)
   router.post('/user/bindWechat', controller.sysUser.bindWechat)
-  router.post('/user/changeStatus', controller.sysUser.changeStatus)
   router.post('/user/userDeactivate', controller.sysUser.userDeactivate)
   router.post('/user/userDelete', controller.sysUser.userDelete)
 

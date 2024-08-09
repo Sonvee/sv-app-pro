@@ -28,9 +28,6 @@ class SysRoleService extends Service {
     // 错误参数处理
     if (pagenum < 1) ctx.throw(400, { msg: 'pagenum不能小于1' })
 
-    // 数据库连接
-    const db = app.model.SysRole
-
     // 查询条件处理
     const conditions = {}
 
@@ -44,7 +41,10 @@ class SysRoleService extends Service {
     }
     if (isTruthy(data.role_name)) conditions.role_name = { $regex: data.role_name, $options: 'i' } // 模糊查询
 
-    // 聚合联表查询操作
+    // 数据库连接
+    const db = app.model.SysRole
+
+    // 聚合联表查询
     let query = db.aggregate([
       { $match: conditions },
       {
@@ -99,6 +99,9 @@ class SysRoleService extends Service {
   async findPermissionByRole(role) {
     const { ctx, app } = this
 
+    // 权限校验
+    ctx.checkAuthority('open')
+
     // 参数类型转换
     if (typeof role === 'string') role = [role]
 
@@ -139,12 +142,13 @@ class SysRoleService extends Service {
     if (!isTruthy(data.role_id)) ctx.throw(400, { msg: 'role_id 必填' })
     if (!isTruthy(data.role_name)) ctx.throw(400, { msg: 'role_name 必填' })
 
-    // 数据库连接
-    const db = app.model.SysRole
-
     // 查询条件处理
     const conditions = { role_id: data.role_id }
 
+    // 数据库连接
+    const db = app.model.SysRole
+
+    // 查询
     const one = await db.findOne(conditions)
     if (one) ctx.throw(400, { msg: '新增项已存在' })
 
@@ -171,23 +175,16 @@ class SysRoleService extends Service {
     // 权限校验
     ctx.checkAuthority('permission', ['roleUpdate'])
 
-    // 参数处理
-    data = Object.assign(
-      {
-        role_id: ''
-      },
-      data
-    )
-
     // 参数校验
     if (!isTruthy(data.role_id)) ctx.throw(400, { msg: 'role_id 必填' })
-
-    // 数据库连接
-    const db = app.model.SysRole
 
     // 查询条件处理
     const conditions = { role_id: data.role_id }
 
+    // 数据库连接
+    const db = app.model.SysRole
+
+    // 查询
     const one = await db.findOne(conditions)
     if (!one) ctx.throw(400, { msg: '更新项不存在' })
 
@@ -210,23 +207,16 @@ class SysRoleService extends Service {
     // 权限校验
     ctx.checkAuthority('permission', ['roleDelete'])
 
-    // 参数处理
-    data = Object.assign(
-      {
-        role_id: ''
-      },
-      data
-    )
-
     // 参数校验
     if (!isTruthy(data.role_id)) ctx.throw(400, { msg: 'role_id 必填' })
-
-    // 数据库连接
-    const db = app.model.SysRole
 
     // 查询条件处理
     const conditions = { role_id: data.role_id }
 
+    // 数据库连接
+    const db = app.model.SysRole
+
+    // 查询
     const one = await db.findOne(conditions)
     if (!one) ctx.throw(400, { msg: '删除项不存在或已被删除' })
 
@@ -346,6 +336,7 @@ class SysRoleService extends Service {
 
     // 数据库连接
     const db = app.model.SysRole
+    
     // 主键
     const primaryKey = 'role_id'
 

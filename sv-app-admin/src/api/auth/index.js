@@ -1,5 +1,6 @@
 import request from '@/config/request/request.js'
 import menuData from '@/assets/json/menuList.json'
+import { useUserStore } from '@/store/user'
 
 // 获取菜单列表
 export function authMenuList() {

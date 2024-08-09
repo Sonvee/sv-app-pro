@@ -1,4 +1,5 @@
 import request from '@/config/request/request.js'
+import { useUserStore } from '@/store/user'
 
 export function menuList(data) {
   return request({

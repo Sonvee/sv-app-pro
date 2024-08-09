@@ -20,22 +20,16 @@
       "sort": 3
     },
     {
-      "permission_id": "changeStatus",
-      "permission_name": "用户状态修改",
-      "remark": "",
-      "sort": 4
-    },
-    {
       "permission_id": "userDeactivate",
       "permission_name": "用户主动注销",
       "remark": "",
-      "sort": 5
+      "sort": 4
     },
     {
       "permission_id": "userDelete",
       "permission_name": "用户删除",
       "remark": "",
-      "sort": 6
+      "sort": 5
     },
 
     {

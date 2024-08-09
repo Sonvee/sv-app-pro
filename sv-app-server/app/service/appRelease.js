@@ -17,6 +17,9 @@ class AppReleaseService extends Service {
   async releaseList(data) {
     const { ctx, app } = this
 
+    // 权限校验
+    ctx.checkAuthority('open')
+
     // 参数处理
     let { pagesize = 20, pagenum = 1 } = data
     pagesize = Number(pagesize)
@@ -24,9 +27,6 @@ class AppReleaseService extends Service {
 
     // 错误参数处理
     if (pagenum < 1) ctx.throw(400, { msg: 'pagenum不能小于1' })
-
-    // 数据库连接
-    const db = app.model.AppRelease
 
     // 查询条件处理
     const conditions = {}
@@ -36,7 +36,10 @@ class AppReleaseService extends Service {
     if (isTruthy(data.type)) conditions.type = data.type
     if (isTruthy(data.release_range, 'arr')) conditions.release_date = { $gte: data.release_range[0], $lte: data.release_range[1] } // 时间范围
 
-    // 查询操作
+    // 数据库连接
+    const db = app.model.AppRelease
+
+    // 查询
     let query = db.find(conditions)
 
     // 排序：1升序，-1降序
@@ -74,11 +77,11 @@ class AppReleaseService extends Service {
   async releaseLatest(data) {
     const { ctx, app } = this
 
+    // 权限校验
+    ctx.checkAuthority('open')
+
     // 参数校验
     if (!isTruthy(data.type)) ctx.throw(400, { msg: 'type 必填' })
-
-    // 数据库连接
-    const db = app.model.AppRelease
 
     // 查询条件处理
     const conditions = {}
@@ -86,7 +89,10 @@ class AppReleaseService extends Service {
     // 查询条件
     if (isTruthy(data.type)) conditions.type = data.type
 
-    // 查询操作
+    // 数据库连接
+    const db = app.model.AppRelease
+
+    // 查询
     let query = db.find(conditions)
 
     // 排序：1升序，-1降序
@@ -121,12 +127,13 @@ class AppReleaseService extends Service {
     if (!isTruthy(data.version)) ctx.throw(400, { msg: 'version 必填' })
     if (!isTruthy(data.type)) ctx.throw(400, { msg: 'type 必填' })
 
-    // 数据库连接
-    const db = app.model.AppRelease
-
     // 查询条件处理
     const conditions = { version: data.version, type: data.type }
 
+    // 数据库连接
+    const db = app.model.AppRelease
+
+    // 查询
     const one = await db.findOne(conditions)
     if (one) ctx.throw(400, { msg: `${data.type} ${data.version} 版本已存在` })
 
@@ -155,12 +162,13 @@ class AppReleaseService extends Service {
     if (!isTruthy(data.version)) ctx.throw(400, { msg: 'version 必填' })
     if (!isTruthy(data.type)) ctx.throw(400, { msg: 'type 必填' })
 
-    // 数据库连接
-    const db = app.model.AppRelease
-
     // 查询条件处理
     const conditions = { version: data.version, type: data.type }
 
+    // 数据库连接
+    const db = app.model.AppRelease
+
+    // 查询
     const one = await db.findOne(conditions)
     if (!one) ctx.throw(400, { msg: `${data.type} ${data.version} 版本不存在` })
 
@@ -188,12 +196,13 @@ class AppReleaseService extends Service {
     if (!isTruthy(data.version)) ctx.throw(400, { msg: 'version 必填' })
     if (!isTruthy(data.type)) ctx.throw(400, { msg: 'type 必填' })
 
-    // 数据库连接
-    const db = app.model.AppRelease
-
     // 查询条件处理
     const conditions = { version: data.version, type: data.type }
 
+    // 数据库连接
+    const db = app.model.AppRelease
+
+    // 查询
     const one = await db.findOne(conditions)
     if (!one) ctx.throw(400, { msg: `${data.type} ${data.version} 版本不存在或已被删除` })
 

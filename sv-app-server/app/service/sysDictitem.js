@@ -18,6 +18,9 @@ class SysDictitemService extends Service {
   async dictitemList(data) {
     const { ctx, app } = this
 
+    // 权限校验
+    ctx.checkAuthority('open')
+
     // 参数处理
     let { pagesize = 20, pagenum = 1 } = data
     pagesize = Number(pagesize)
@@ -33,9 +36,6 @@ class SysDictitemService extends Service {
     const hasDict = await app.model.SysDict.findOne({ dict_id: data.dict_type })
     if (!hasDict) ctx.throw(400, { msg: `${data.dict_type} 不存在` })
 
-    // 数据库连接
-    const db = app.model.SysDictitem
-
     // 查询条件处理
     const conditions = { dict_type: data.dict_type }
 
@@ -44,7 +44,10 @@ class SysDictitemService extends Service {
     if (isTruthy(data.label)) conditions.label = { $regex: data.label, $options: 'i' } // 模糊查询
     if (isTruthy(data.value)) conditions.value = { $regex: data.value, $options: 'i' } // 模糊查询
 
-    // 查询操作
+    // 数据库连接
+    const db = app.model.SysDictitem
+
+    // 查询
     let query = db.find(conditions)
 
     // 排序：1升序，-1降序
@@ -135,12 +138,13 @@ class SysDictitemService extends Service {
     const hasDict = await app.model.SysDict.findOne({ dict_id: data.dict_type })
     if (!hasDict) ctx.throw(400, { msg: `${data.dict_type} 不存在` })
 
-    // 数据库连接
-    const db = app.model.SysDictitem
-
     // 查询条件处理
     const conditions = { dictitem_id: data.dictitem_id }
 
+    // 数据库连接
+    const db = app.model.SysDictitem
+
+    // 查询
     const one = await db.findOne(conditions)
     if (one) ctx.throw(400, { msg: '新增字典项ID已存在' })
 
@@ -174,12 +178,13 @@ class SysDictitemService extends Service {
     // 参数校验
     if (!isTruthy(data._id)) ctx.throw(400, { msg: '_id 必填' })
 
-    // 数据库连接
-    const db = app.model.SysDictitem
-
     // 查询条件处理
     const conditions = { _id: data._id }
 
+    // 数据库连接
+    const db = app.model.SysDictitem
+
+    // 查询
     const one = await db.findOne(conditions)
     if (!one) ctx.throw(400, { msg: '更新项不存在' })
 
@@ -208,12 +213,13 @@ class SysDictitemService extends Service {
     // 参数校验
     if (!isTruthy(data.dictitem_id)) ctx.throw(400, { msg: 'dictitem_id 必填' })
 
-    // 数据库连接
-    const db = app.model.SysDictitem
-
     // 查询条件处理
     const conditions = { dictitem_id: data.dictitem_id }
 
+    // 数据库连接
+    const db = app.model.SysDictitem
+
+    // 查询
     const one = await db.findOne(conditions)
     if (!one) ctx.throw(400, { msg: '删除项不存在或已被删除' })
 
@@ -348,6 +354,7 @@ class SysDictitemService extends Service {
 
     // 数据库连接
     const db = app.model.SysDictitem
+    
     // 主键
     const primaryKey = 'dictitem_id'
 

@@ -32,14 +32,6 @@ export function userUpdateSimple(data) {
   })
 }
 
-export function changeStatus(data) {
-  return request({
-    url: '/user/changeStatus',
-    method: 'post',
-    data
-  })
-}
-
 export function userDeactivate(data) {
   return request({
     url: '/user/userDeactivate',

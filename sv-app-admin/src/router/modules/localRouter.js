@@ -22,7 +22,7 @@
  * @property {Boolean} meta.isKeepAlive ==> 当前路由是否缓存
  * @property {Boolean} meta.isSub ==> 是否是子菜单详情页面
  * @property {Boolean} meta.isOpen ==> 是否需要登录（开放页面为true，无需token）
- * @property {Boolean} meta.isLocal ==> 本地路由标识
+ * @property {Boolean} meta.isLocal ==> 本地路由标识，本地路由必须配置为true
  */
 export const localFlatMenuList = [
   {

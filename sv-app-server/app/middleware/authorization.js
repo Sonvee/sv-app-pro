@@ -9,12 +9,14 @@ module.exports = (options, app) => {
     const { header } = ctx.request
     const token = header.authorization?.slice(7) || '' // Bearer的长度 + 1个空格 = 7
 
-    const userInfo = await app.jwt.verify(token, app.config.jwt.secret)
+    let userInfo
+    if (token) {
+      userInfo = await app.jwt.verify(token, app.config.jwt.secret)
+    }
     if (userInfo) {
       ctx.userInfo = userInfo
-
       // 用户状态判断
-      if (userInfo.status !== 1) {
+      if (userInfo?.status !== 1) {
         // 用户异常
         ctx.throw(403, '用户状态异常')
         return
@@ -36,7 +38,7 @@ module.exports = (options, app) => {
      */
     ctx.checkAuthority = (mode, flag) => {
       // 超级管理员拥有所有权限
-      if (userInfo.role.includes('admin')) {
+      if (userInfo?.role?.includes('admin')) {
         return true
       }
       // 校验结果
@@ -50,23 +52,23 @@ module.exports = (options, app) => {
           if (!result) ctx.throw(401, '请先登录!')
           break
         case 'self':
-          result = userInfo.username === flag
+          result = userInfo?.username === flag
           if (!result) ctx.throw(403, '非本人操作!')
           break
         case 'self_id':
-          result = userInfo._id === flag
+          result = userInfo?._id === flag
           if (!result) ctx.throw(403, '非本人操作!')
           break
         case 'role':
-          result = arrayIncludesSubarray(userInfo.role, flag)
+          result = arrayIncludesSubarray(userInfo?.role, flag)
           if (!result) ctx.throw(403, `非 ${flag.toString()} 角色，禁止访问`)
           break
         case 'permission':
-          result = arrayIncludesSubarray(userInfo.permission, flag)
+          result = arrayIncludesSubarray(userInfo?.permission, flag)
           if (!result) ctx.throw(403, `无 ${flag.toString()} 权限，禁止访问`)
           break
         case 'admin':
-          result = userInfo.role.includes('admin')
+          result = userInfo?.role.includes('admin')
           if (!result) ctx.throw(403, '权限不足，禁止访问')
           break
         default:

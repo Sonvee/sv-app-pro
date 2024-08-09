@@ -16,6 +16,9 @@ class TestDemoService extends Service {
   async testList(data) {
     const { ctx, app } = this
 
+    // 权限校验
+    ctx.checkAuthority('open')
+
     // 参数处理
     let { pagesize = 20, pagenum = 1 } = data
     pagesize = Number(pagesize)
@@ -24,15 +27,15 @@ class TestDemoService extends Service {
     // 参数校验
     if (pagenum < 1) ctx.throw(400, { msg: 'pagenum不能小于1' })
 
-    // 数据库连接
-    const db = app.model.TestDemo
-
     // 查询条件处理
     const conditions = {}
 
     // 查询条件
     if (isTruthy(data.test_id)) conditions.test_id = data.test_id
     if (isTruthy(data.test_name)) conditions.test_name = { $regex: data.test_name, $options: 'i' } // 模糊查询
+
+    // 数据库连接
+    const db = app.model.TestDemo
 
     // 聚合联表查询操作
     let query = db.aggregate([
@@ -120,18 +123,22 @@ class TestDemoService extends Service {
   async testAdd(data) {
     const { ctx, app } = this
 
+    // 权限校验
+    ctx.checkAuthority('open')
+
     // 参数处理
     delete data._id // 去除部分参数
 
     // 参数校验
     if (!isTruthy(data.test_id)) ctx.throw(400, { msg: 'test_id 必填' })
 
-    // 数据库连接
-    const db = app.model.TestDemo
-
     // 查询条件处理
     const conditions = { test_id: data.test_id }
 
+    // 数据库连接
+    const db = app.model.TestDemo
+
+    // 查询
     const one = await db.findOne(conditions)
     if (one) ctx.throw(400, { msg: '新增项已存在' })
 
@@ -153,23 +160,19 @@ class TestDemoService extends Service {
   async testUpdate(data) {
     const { ctx, app } = this
 
-    // 参数处理
-    data = Object.assign(
-      {
-        test_id: ''
-      },
-      data
-    )
+    // 权限校验
+    ctx.checkAuthority('open')
 
     // 参数校验
     if (!isTruthy(data.test_id)) ctx.throw(400, { msg: 'test_id 必填' })
 
-    // 数据库连接
-    const db = app.model.TestDemo
-
     // 查询条件处理
     const conditions = { test_id: data.test_id }
 
+    // 数据库连接
+    const db = app.model.TestDemo
+
+    // 查询
     const one = await db.findOne(conditions)
     if (!one) ctx.throw(400, { msg: '更新项不存在' })
 
@@ -189,23 +192,19 @@ class TestDemoService extends Service {
   async testDelete(data) {
     const { ctx, app } = this
 
-    // 参数处理
-    data = Object.assign(
-      {
-        test_id: ''
-      },
-      data
-    )
+    // 权限校验
+    ctx.checkAuthority('open')
 
     // 参数校验
     if (!isTruthy(data.test_id)) ctx.throw(400, { msg: 'test_id 必填' })
 
-    // 数据库连接
-    const db = app.model.TestDemo
-
     // 查询条件处理
     const conditions = { test_id: data.test_id }
 
+    // 数据库连接
+    const db = app.model.TestDemo
+
+    // 查询
     const one = await db.findOne(conditions)
     if (!one) ctx.throw(400, { msg: '删除项不存在或已被删除' })
 
@@ -319,6 +318,7 @@ class TestDemoService extends Service {
 
     // 数据库连接
     const db = app.model.TestDemo
+    
     // 主键
     const primaryKey = 'test_id'
 

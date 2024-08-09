@@ -508,6 +508,9 @@ class TestService extends Service {
   async testList(data) {
     const { ctx, app } = this
 
+    // 权限校验
+    ctx.checkAuthority('open')
+
     // 参数处理
     let { pagesize = 20, pagenum = 1 } = data
     pagesize = Number(pagesize)
@@ -516,9 +519,6 @@ class TestService extends Service {
     // 参数校验
     if (pagenum < 1) ctx.throw(400, { msg: 'pagenum不能小于1' })
 
-    // 数据库连接
-    const db = app.model.Test
-
     // 查询条件处理
     const conditions = {}
 
@@ -526,7 +526,10 @@ class TestService extends Service {
     if (isTruthy(data.test_id)) conditions.test_id = data.test_id
     if (isTruthy(data.test_name)) conditions.test_name = { $regex: data.test_name, $options: 'i' } // 模糊查询
 
-    // 查询操作
+    // 数据库连接
+    const db = app.model.Test
+
+    // 查询
     let query = db.find(conditions)
 
     // 排序：1升序，-1降序
@@ -574,12 +577,13 @@ class TestService extends Service {
     // 参数校验
     if (!isTruthy(data.test_id)) ctx.throw(400, { msg: 'test_id 必填' })
 
-    // 数据库连接
-    const db = app.model.Test
-
     // 查询条件处理
     const conditions = { test_id: data.test_id }
 
+    // 数据库连接
+    const db = app.model.Test
+
+    // 查询
     const one = await db.findOne(conditions)
     if (one) ctx.throw(400, { msg: '新增项已存在' })
 
@@ -606,12 +610,13 @@ class TestService extends Service {
     // 参数校验
     if (!isTruthy(data.test_id)) ctx.throw(400, { msg: 'test_id 必填' })
 
-    // 数据库连接
-    const db = app.model.Test
-
     // 查询条件处理
     const conditions = { test_id: data.test_id }
 
+    // 数据库连接
+    const db = app.model.Test
+
+    // 查询
     const one = await db.findOne(conditions)
     if (!one) ctx.throw(400, { msg: '更新项不存在' })
 
@@ -637,12 +642,13 @@ class TestService extends Service {
     // 参数校验
     if (!isTruthy(data.test_id)) ctx.throw(400, { msg: 'test_id 必填' })
 
-    // 数据库连接
-    const db = app.model.Test
-
     // 查询条件处理
     const conditions = { test_id: data.test_id }
 
+    // 数据库连接
+    const db = app.model.Test
+
+    // 查询
     const one = await db.findOne(conditions)
     if (!one) ctx.throw(400, { msg: '删除项不存在或已被删除' })
 
@@ -762,6 +768,7 @@ class TestService extends Service {
 
     // 数据库连接
     const db = app.model.Test
+    
     // 主键
     const primaryKey = 'test_id'
 

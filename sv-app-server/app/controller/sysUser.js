@@ -59,13 +59,6 @@ class SysUserController extends Controller {
     ctx.result(res)
   }
 
-  async changeStatus() {
-    const { ctx, service } = this
-    const data = ctx.request.body
-    const res = await service.sysUser.changeStatus(data)
-    ctx.result(res)
-  }
-
   async userDeactivate() {
     const { ctx, service } = this
     const data = ctx.request.body

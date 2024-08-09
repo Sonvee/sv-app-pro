@@ -37,9 +37,6 @@ class SysLogService extends Service {
     // 参数校验
     if (!isTruthy(data.log_type, 'zero')) ctx.throw(400, { msg: 'log_type 必填' })
 
-    // 数据库连接
-    const db = app.model.SysLog
-
     // 查询条件处理
     const conditions = {}
 
@@ -53,6 +50,9 @@ class SysLogService extends Service {
     if (isTruthy(data.request_url)) conditions.request_url = { $regex: data.request_url, $options: 'i' } // 请求地址 模糊查询
     if (isTruthy(data.request_status)) conditions.request_status = Number(data.request_status) // 请求状态（自动转换数字）
     if (isTruthy(data.operator_username)) conditions['operator_info.username'] = { $regex: data.operator_username, $options: 'i' } // 操作人员用户名 模糊查询
+
+    // 数据库连接
+    const db = app.model.SysLog
 
     // 查询操作
     let query = db.find(conditions)
@@ -93,6 +93,9 @@ class SysLogService extends Service {
   async logAdd(data) {
     const { ctx, app } = this
 
+    // 权限校验
+    ctx.checkAuthority('open')
+
     // 参数处理
     delete data._id // 去除部分参数
 
@@ -122,22 +125,14 @@ class SysLogService extends Service {
     // 权限校验
     ctx.checkAuthority('permission', ['logDelete'])
 
-    // 参数处理
-    data = Object.assign(
-      {
-        _id: ''
-      },
-      data
-    )
-
     // 参数校验
     if (!isTruthy(data._id)) ctx.throw(400, { msg: '_id 必填' })
 
-    // 数据库连接
-    const db = app.model.SysLog
-
     // 查询条件处理
     const conditions = { _id: data._id }
+
+    // 数据库连接
+    const db = app.model.SysLog
 
     // 直接删除
     const res = await db.deleteOne(conditions)
@@ -210,11 +205,11 @@ class SysLogService extends Service {
     // 参数校验
     if (!isTruthy(data.log_type, 'zero')) ctx.throw(400, { msg: 'log_type 必填' })
 
-    // 数据库连接
-    const db = app.model.SysLog
-
     // 查询条件处理
     const conditions = { log_type: data.log_type }
+
+    // 数据库连接
+    const db = app.model.SysLog
 
     // 清空指定类型日志
     const res = await db.deleteMany(conditions)

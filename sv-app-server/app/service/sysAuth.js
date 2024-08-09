@@ -17,16 +17,11 @@ class SysAuthService extends Service {
   async getCaptcha(data) {
     const { ctx, app } = this
 
+    // 权限校验
+    ctx.checkAuthority('open')
+
     // 限流阀
     await useLimit({ ctx, key: 'limit:captcha', threshold: 20, unlock: 10 })
-
-    // 参数处理
-    data = Object.assign(
-      {
-        type: ''
-      },
-      data
-    )
 
     // type参数校验
     const types = ['register', 'login', 'sms', 'email', 'verify']
@@ -74,6 +69,9 @@ class SysAuthService extends Service {
    */
   async emailCaptcha(data) {
     const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('open')
 
     // email格式校验
     const emailRegExp = useRegExp('email')

@@ -27,9 +27,6 @@ class SysPermissionService extends Service {
     // 错误参数处理
     if (pagenum < 1) ctx.throw(400, { msg: 'pagenum不能小于1' })
 
-    // 数据库连接
-    const db = app.model.SysPermission
-
     // 查询条件处理
     const conditions = {}
 
@@ -37,7 +34,10 @@ class SysPermissionService extends Service {
     if (isTruthy(data.permission_id)) conditions.permission_id = data.permission_id
     if (isTruthy(data.permission_name)) conditions.permission_name = { $regex: data.permission_name, $options: 'i' } // 模糊查询
 
-    // 查询操作
+    // 数据库连接
+    const db = app.model.SysPermission
+
+    // 查询
     let query = db.find(conditions)
 
     // 排序：1升序，-1降序
@@ -88,12 +88,13 @@ class SysPermissionService extends Service {
     if (!isTruthy(data.permission_id)) ctx.throw(400, { msg: 'permission_id 必填' })
     if (!isTruthy(data.permission_name)) ctx.throw(400, { msg: 'permission_name 必填' })
 
-    // 数据库连接
-    const db = app.model.SysPermission
-
     // 查询条件处理
     const conditions = { permission_id: data.permission_id }
 
+    // 数据库连接
+    const db = app.model.SysPermission
+
+    // 查询
     const one = await db.findOne(conditions)
     if (one) ctx.throw(400, { msg: '新增项已存在' })
 
@@ -118,23 +119,16 @@ class SysPermissionService extends Service {
     // 权限校验
     ctx.checkAuthority('permission', ['permissionUpdate'])
 
-    // 参数处理
-    data = Object.assign(
-      {
-        permission_id: ''
-      },
-      data
-    )
-
     // 参数校验
     if (!isTruthy(data.permission_id)) ctx.throw(400, { msg: 'permission_id 必填' })
-
-    // 数据库连接
-    const db = app.model.SysPermission
 
     // 查询条件处理
     const conditions = { permission_id: data.permission_id }
 
+    // 数据库连接
+    const db = app.model.SysPermission
+
+    // 查询
     const one = await db.findOne(conditions)
     if (!one) ctx.throw(400, { msg: '更新项不存在' })
 
@@ -157,23 +151,16 @@ class SysPermissionService extends Service {
     // 权限校验
     ctx.checkAuthority('permission', ['permissionDelete'])
 
-    // 参数处理
-    data = Object.assign(
-      {
-        permission_id: ''
-      },
-      data
-    )
-
     // 参数校验
     if (!isTruthy(data.permission_id)) ctx.throw(400, { msg: 'permission_id 必填' })
-
-    // 数据库连接
-    const db = app.model.SysPermission
 
     // 查询条件处理
     const conditions = { permission_id: data.permission_id }
 
+    // 数据库连接
+    const db = app.model.SysPermission
+
+    // 查询
     const one = await db.findOne(conditions)
     if (!one) ctx.throw(400, { msg: '删除项不存在或已被删除' })
 
@@ -293,6 +280,7 @@ class SysPermissionService extends Service {
 
     // 数据库连接
     const db = app.model.SysPermission
+    
     // 主键
     const primaryKey = 'permission_id'
 

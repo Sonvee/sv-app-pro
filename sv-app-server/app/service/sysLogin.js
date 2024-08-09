@@ -67,6 +67,9 @@ class SysLoginService extends Service {
   async login(data) {
     const { ctx, app } = this
 
+    // 权限校验
+    ctx.checkAuthority('open')
+
     // 参数处理
     data = Object.assign(
       {
@@ -77,21 +80,19 @@ class SysLoginService extends Service {
       data
     )
 
-    // 数据库连接
-    const db = app.model.SysUser
-
-    // 查询条件处理
-    const conditions = {}
-
     // 参数校验
     if (!isTruthy(data.username)) ctx.throw(400, { msg: '请输入账号' })
     if (!isTruthy(data.password)) ctx.throw(400, { msg: '请输入密码' })
+    if (!isTruthy(data.captcha)) ctx.throw(400, { msg: '请输入验证码' })
 
     // 验证码
     const ip = ctx.request.ip // IP地址
     const captcha_login = await app.redis.get(`captcha:${ip}:login:code`)
     if (!isTruthy(captcha_login)) ctx.throw(400, { msg: '验证码已失效，请刷新' })
     if (data.captcha.toLowerCase() != captcha_login.toLowerCase()) ctx.throw(400, { msg: '验证码错误' })
+
+    // 查询条件处理
+    const conditions = {}
 
     // 判断登录方式：用户名/手机号/邮箱
     if (useRegExp('phone').regexp.test(data.username)) {
@@ -101,6 +102,9 @@ class SysLoginService extends Service {
     } else {
       conditions.username = data.username
     }
+
+    // 数据库连接
+    const db = app.model.SysUser
 
     let one = await db.findOne(conditions)
     if (!one) ctx.throw(400, { msg: '用户不存在' })
@@ -131,21 +135,13 @@ class SysLoginService extends Service {
   async loginByEmailer(data) {
     const { ctx, app } = this
 
-    // 参数处理
-    data = Object.assign(
-      {
-        email: '',
-        captcha: ''
-      },
-      data
-    )
-
-    // 查询条件处理
-    const conditions = { email: data.email }
+    // 权限校验
+    ctx.checkAuthority('open')
 
     // 参数校验
     if (!isTruthy(data.email)) ctx.throw(400, { msg: '请输入邮箱' })
-      
+    if (!isTruthy(data.captcha)) ctx.throw(400, { msg: '请输入验证码' })
+
     // 邮箱合法性校验
     const emailRegExp = useRegExp('email')
     if (!emailRegExp.regexp.test(data.email)) ctx.throw(400, { msg: emailRegExp.msg })
@@ -154,6 +150,9 @@ class SysLoginService extends Service {
     const captcha_login = await app.redis.get(`emailcaptcha:${data.email}:login:code`)
     if (!isTruthy(captcha_login)) ctx.throw(400, { msg: '邮箱验证码已失效，请刷新' })
     if (data.captcha.toLowerCase() != captcha_login.toLowerCase()) ctx.throw(400, { msg: '邮箱验证码错误' })
+
+    // 查询条件处理
+    const conditions = { email: data.email }
 
     // 数据库连接
     const db = app.model.SysUser
@@ -207,6 +206,9 @@ class SysLoginService extends Service {
    */
   async loginByWechat(data) {
     const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('open')
 
     // 参数校验
     if (!isTruthy(data.code)) ctx.throw(400, { msg: 'code 必填' })
@@ -302,11 +304,11 @@ class SysLoginService extends Service {
     // 权限校验
     ctx.checkAuthority('self_id', data._id)
 
-    // 数据库连接
-    const db = app.model.SysUser
-
     // 查询条件处理
     const conditions = { _id: data._id }
+
+    // 数据库连接
+    const db = app.model.SysUser
 
     // 清空token
     const res = await db.findOneAndUpdate(conditions, { token: '' }, { new: true })
@@ -327,6 +329,9 @@ class SysLoginService extends Service {
   async register(data) {
     const { ctx, app } = this
 
+    // 权限校验
+    ctx.checkAuthority('open')
+
     // 参数处理
     data = Object.assign(
       {
@@ -338,11 +343,10 @@ class SysLoginService extends Service {
       data
     )
 
-    // 数据库连接
-    const db = app.model.SysUser
-
-    // 查询条件处理
-    const conditions = { username: data.username }
+    // 参数校验
+    if (!isTruthy(data.username)) ctx.throw(400, { msg: '请输入账号' })
+    if (!isTruthy(data.password)) ctx.throw(400, { msg: '请输入密码' })
+    if (!isTruthy(data.captcha)) ctx.throw(400, { msg: '请输入验证码' })
 
     // 参数校验
     // 用户名合法性校验
@@ -361,12 +365,19 @@ class SysLoginService extends Service {
     // 注册时角色只能是user/admin
     if (data.role[0] !== 'user' && data.role[0] !== 'admin') ctx.throw(400, { msg: 'role 传参错误' })
 
+    // 查询条件处理
+    const conditions = { username: data.username }
+
+    // 数据库连接
+    const db = app.model.SysUser
+
     // 注册管理员账号时需要校验，不允许重复注册admin
     if (data.role[0] == 'admin') {
       const administrator = await db.findOne({ role: { $in: ['admin'] } })
       if (administrator) ctx.throw(400, { msg: '管理员账号已存在' })
     }
 
+    // 查询
     const one = await db.findOne(conditions)
     if (one) ctx.throw(400, { msg: '用户名已存在' })
 
@@ -401,11 +412,16 @@ class SysLoginService extends Service {
   async hasAdmin() {
     const { ctx, app } = this
 
-    // 数据库连接
-    const db = app.model.SysUser
+    // 权限校验
+    ctx.checkAuthority('open')
 
     // 查询条件处理
     const conditions = { role: { $in: ['admin'] } }
+
+    // 数据库连接
+    const db = app.model.SysUser
+
+    // 查询
     const administrator = await db.findOne(conditions)
 
     return {
@@ -428,12 +444,13 @@ class SysLoginService extends Service {
     // 权限校验
     ctx.checkAuthority('self_id', data._id)
 
-    // 数据库连接
-    const db = app.model.SysUser
-
     // 查询条件处理
     const conditions = { _id: data._id }
 
+    // 数据库连接
+    const db = app.model.SysUser
+
+    // 查询
     const one = await db.findOne(conditions)
     if (!one) ctx.throw(401, { msg: '用户不存在' })
 
@@ -467,8 +484,11 @@ class SysLoginService extends Service {
    * 解析token get - 权限 open
    * @param {String} token - token
    */
-  async verifyToken(token) {
+  verifyToken(token) {
     const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('open')
 
     // 参数校验
     if (!token) ctx.throw(400, { msg: 'token 不能为空' })

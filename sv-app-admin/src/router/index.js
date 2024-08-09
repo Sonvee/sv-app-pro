@@ -39,10 +39,10 @@ const WHITE_ROUTE_LIST = [...staticRouter, ...errorRouter].map((item) => item.pa
 router.beforeEach(async (to, from, next) => {
   const userStore = useUserStore()
   const authStore = useAuthStore()
-
+  
   // 1.NProgress 开始
   NProgress.start()
-
+  
   // 2.动态设置标题
   const title = import.meta.env.VITE_GLOB_APP_TITLE
   document.title = to.meta.title ? `${to.meta.title} - ${title}` : title

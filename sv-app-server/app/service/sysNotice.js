@@ -20,6 +20,9 @@ class SysNoticeService extends Service {
   async noticeList(data) {
     const { ctx, app } = this
 
+    // 权限校验
+    ctx.checkAuthority('open')
+
     // 参数处理
     let { pagesize = 20, pagenum = 1 } = data
     pagesize = Number(pagesize)
@@ -27,9 +30,6 @@ class SysNoticeService extends Service {
 
     // 错误参数处理
     if (pagenum < 1) ctx.throw(400, { msg: 'pagenum不能小于1' })
-
-    // 数据库连接
-    const db = app.model.SysNotice
 
     // 查询条件处理
     const conditions = {}
@@ -42,7 +42,10 @@ class SysNoticeService extends Service {
     if (isTruthy(data.top, 'bool')) conditions.top = data.top
     if (isTruthy(data.created_range, 'arr')) conditions.created_date = { $gte: data.created_range[0], $lte: data.created_range[1] } // 时间范围
 
-    // 查询操作
+    // 数据库连接
+    const db = app.model.SysNotice
+
+    // 查询
     let query = db.find(conditions)
 
     // 排序：1升序，-1降序
@@ -97,12 +100,13 @@ class SysNoticeService extends Service {
     if (!isTruthy(data.notice_type, 'zero')) ctx.throw(400, { msg: 'notice_type 必填' })
     if (!isTruthy(data.notice_name)) ctx.throw(400, { msg: 'notice_name 必填' })
 
-    // 数据库连接
-    const db = app.model.SysNotice
-
     // 查询条件处理
     const conditions = { notice_id: data.notice_id }
 
+    // 数据库连接
+    const db = app.model.SysNotice
+
+    // 查询
     const one = await db.findOne(conditions)
     if (one) ctx.throw(400, { msg: '新增项已存在' })
 
@@ -131,25 +135,18 @@ class SysNoticeService extends Service {
     // 权限校验
     ctx.checkAuthority('permission', ['noticeUpdate'])
 
-    // 参数处理
-    data = Object.assign(
-      {
-        notice_id: ''
-      },
-      data
-    )
-
     // 参数校验
     if (!isTruthy(data.notice_id)) ctx.throw(400, { msg: 'notice_id 必填' })
     if (!isTruthy(data.notice_type, 'zero')) ctx.throw(400, { msg: 'notice_type 必填' })
     if (!isTruthy(data.notice_name)) ctx.throw(400, { msg: 'notice_name 必填' })
 
-    // 数据库连接
-    const db = app.model.SysNotice
-
     // 查询条件处理
     const conditions = { notice_id: data.notice_id }
 
+    // 数据库连接
+    const db = app.model.SysNotice
+
+    // 查询
     const one = await db.findOne(conditions)
     if (!one) ctx.throw(400, { msg: '更新项不存在' })
 
@@ -172,23 +169,16 @@ class SysNoticeService extends Service {
     // 权限校验
     ctx.checkAuthority('permission', ['noticeDelete'])
 
-    // 参数处理
-    data = Object.assign(
-      {
-        notice_id: ''
-      },
-      data
-    )
-
     // 参数校验
     if (!isTruthy(data.notice_id)) ctx.throw(400, { msg: 'notice_id 必填' })
-
-    // 数据库连接
-    const db = app.model.SysNotice
 
     // 查询条件处理
     const conditions = { notice_id: data.notice_id }
 
+    // 数据库连接
+    const db = app.model.SysNotice
+
+    // 查询
     const one = await db.findOne(conditions)
     if (!one) ctx.throw(400, { msg: '删除项不存在或已被删除' })
 
@@ -308,6 +298,7 @@ class SysNoticeService extends Service {
 
     // 数据库连接
     const db = app.model.SysNotice
+    
     // 主键
     const primaryKey = 'notice_id'
 

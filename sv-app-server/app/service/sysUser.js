@@ -36,9 +36,6 @@ class SysUserService extends Service {
     // 错误参数处理
     if (pagenum < 1) ctx.throw(400, { msg: 'pagenum不能小于1' })
 
-    // 数据库连接
-    const db = app.model.SysUser
-
     // 查询条件处理
     const conditions = {}
 
@@ -66,7 +63,10 @@ class SysUserService extends Service {
       wx_openid: 0
     }
 
-    // 查询操作
+    // 数据库连接
+    const db = app.model.SysUser
+
+    // 查询
     let query = db.find(conditions, projection)
 
     // 排序：1升序，-1降序
@@ -108,9 +108,6 @@ class SysUserService extends Service {
     // 权限校验
     ctx.checkAuthority('needlogin')
 
-    // 数据库连接
-    const db = app.model.SysUser
-
     // 查询条件处理
     const conditions = { _id: ctx.userInfo._id }
 
@@ -125,6 +122,9 @@ class SysUserService extends Service {
       created_date: 0,
       wx_openid: 0
     }
+
+    // 数据库连接
+    const db = app.model.SysUser
 
     let self
     if (isTruthy(data.all)) {
@@ -172,6 +172,9 @@ class SysUserService extends Service {
     // 参数校验
     if (!isTruthy(data.username)) ctx.throw(400, { msg: 'username 必填' })
 
+    // 查询条件处理
+    const conditions = { username: data.username }
+
     // 数据库连接
     const db = app.model.SysUser
 
@@ -184,9 +187,7 @@ class SysUserService extends Service {
       }
     }
 
-    // 查询条件处理
-    const conditions = { username: data.username }
-
+    // 查询
     const one = await db.findOne(conditions)
     if (!one) ctx.throw(400, { msg: '更新项不存在' })
 
@@ -216,18 +217,19 @@ class SysUserService extends Service {
   async userUpdateSimple(data) {
     const { ctx, app } = this
 
-    // 权限校验
-    ctx.checkAuthority('self_id', data._id)
-
     // 参数校验
     if (!isTruthy(data._id)) ctx.throw(400, { msg: '_id 必填' })
 
-    // 数据库连接
-    const db = app.model.SysUser
+    // 权限校验
+    ctx.checkAuthority('self_id', data._id)
 
     // 查询条件处理
     const conditions = { _id: data._id }
 
+    // 数据库连接
+    const db = app.model.SysUser
+
+    // 查询
     const one = await db.findOne(conditions)
     if (!one) ctx.throw(400, { msg: '更新项不存在' })
 
@@ -281,20 +283,11 @@ class SysUserService extends Service {
   async changePassword(data) {
     const { ctx, app } = this
 
-    // 权限校验
-    ctx.checkAuthority('self_id', data._id)
-
     // 参数校验
     if (!isTruthy(data._id)) ctx.throw(400, { msg: '_id 必填' })
 
-    // 参数处理
-    data = Object.assign(
-      {
-        old_password: '',
-        new_password: ''
-      },
-      data
-    )
+    // 权限校验
+    ctx.checkAuthority('self_id', data._id)
 
     // 参数校验
     if (!isTruthy(data.old_password)) ctx.throw(400, { msg: 'old_password 必填' })
@@ -304,12 +297,13 @@ class SysUserService extends Service {
     const passwordRegExp = useRegExp('password')
     if (!passwordRegExp.regexp.test(data.new_password)) ctx.throw(400, { msg: passwordRegExp.msg })
 
-    // 数据库连接
-    const db = app.model.SysUser
-
     // 查询条件处理
     const conditions = { _id: data._id }
 
+    // 数据库连接
+    const db = app.model.SysUser
+
+    // 查询
     const one = await db.findOne(conditions)
     if (!one) ctx.throw(400, { msg: '用户不存在' })
 
@@ -338,21 +332,11 @@ class SysUserService extends Service {
   async changePasswordByEmail(data) {
     const { ctx, app } = this
 
-    // 权限校验
-    ctx.checkAuthority('self_id', data._id)
-
     // 参数校验
     if (!isTruthy(data._id)) ctx.throw(400, { msg: '_id 必填' })
 
-    // 参数处理
-    data = Object.assign(
-      {
-        email: '',
-        captcha: '',
-        password: ''
-      },
-      data
-    )
+    // 权限校验
+    ctx.checkAuthority('self_id', data._id)
 
     // 参数校验
     if (!isTruthy(data.email)) ctx.throw(400, { msg: 'email 必填' })
@@ -372,12 +356,13 @@ class SysUserService extends Service {
     const passwordRegExp = useRegExp('password')
     if (!passwordRegExp.regexp.test(data.password)) ctx.throw(400, { msg: passwordRegExp.msg })
 
-    // 数据库连接
-    const db = app.model.SysUser
-
     // 查询条件处理
     const conditions = { _id: data._id, email: data.email }
 
+    // 数据库连接
+    const db = app.model.SysUser
+
+    // 查询
     const one = await db.findOne(conditions)
     if (!one) ctx.throw(400, { msg: '用户或邮箱不存在' })
 
@@ -403,11 +388,13 @@ class SysUserService extends Service {
   async bindEmail(data) {
     const { ctx, app } = this
 
+    // 参数校验
+    if (!isTruthy(data._id)) ctx.throw(400, { msg: '_id 必填' })
+
     // 权限校验
     ctx.checkAuthority('self_id', data._id)
 
     // 参数校验
-    if (!isTruthy(data._id)) ctx.throw(400, { msg: '_id 必填' })
     if (data.mode !== 'verify' && data.mode !== 'bind') ctx.throw(400, { msg: 'mode 参数有误' })
     if (!isTruthy(data.email)) ctx.throw(400, { msg: 'email 必填' })
     if (!isTruthy(data.captcha)) ctx.throw(400, { msg: 'captcha 必填' })
@@ -421,17 +408,18 @@ class SysUserService extends Service {
     if (!isTruthy(captcha_bind)) ctx.throw(400, { msg: '邮箱验证码已失效，请刷新' })
     if (data.captcha.toLowerCase() != captcha_bind.toLowerCase()) ctx.throw(400, { msg: '邮箱验证码错误' })
 
-    // 数据库连接
-    const db = app.model.SysUser
-
     // 查询条件处理
     const conditions = { _id: data._id }
+
+    // 数据库连接
+    const db = app.model.SysUser
 
     // 旧邮箱验证模式
     if (data.mode == 'verify') {
       // 邮箱正确性校验
       conditions.email = data.email
 
+      // 查询
       const one = await db.findOne(conditions)
       if (!one) ctx.throw(400, { msg: '用户或邮箱不存在' })
 
@@ -460,11 +448,13 @@ class SysUserService extends Service {
   async bindWechat(data) {
     const { ctx, app } = this
 
+    // 参数校验
+    if (!isTruthy(data._id)) ctx.throw(400, { msg: '_id 必填' })
+
     // 权限校验
     ctx.checkAuthority('self_id', data._id)
 
     // 参数校验
-    if (!isTruthy(data._id)) ctx.throw(400, { msg: '_id 必填' })
     if (!isTruthy(data.code)) ctx.throw(400, { msg: 'code 必填' })
 
     const wxurl = 'https://api.weixin.qq.com/sns/jscode2session'
@@ -521,47 +511,6 @@ class SysUserService extends Service {
   }
 
   /**
-   * 修改状态 post - 权限 permission
-   * @param {Object} data - 请求参数
-   * @property {String} data.username - 用户名
-   * @property {Number} data.status - 状态 0：注销，1：正常，2：封禁
-   */
-  async changeStatus(data) {
-    const { ctx, app } = this
-
-    // 权限校验
-    ctx.checkAuthority('permission', ['changeStatus'])
-
-    // 参数处理
-    data = Object.assign(
-      {
-        username: ''
-      },
-      data
-    )
-    data.status = Number(data.status)
-
-    // 参数校验
-    if (!isTruthy(data.username)) ctx.throw(400, { msg: 'username 必填' })
-    if (!isTruthy(data.status, 'zero')) ctx.throw(400, { msg: 'status 必填' })
-
-    // 数据库连接
-    const db = app.model.SysUser
-
-    // 查询条件处理
-    const conditions = { username: data.username }
-
-    const one = await db.findOne(conditions)
-    if (!one) ctx.throw(400, { msg: '用户不存在' })
-
-    const res = await db.findOneAndUpdate(conditions, { status: data.status }, { new: true })
-
-    return {
-      msg: '更新成功'
-    }
-  }
-
-  /**
    * 主动注销 post - 权限 self
    * @param {Object} data - 请求参数
    * @property {String} data.username - 用户名
@@ -569,26 +518,19 @@ class SysUserService extends Service {
   async userDeactivate(data) {
     const { ctx, app } = this
 
-    // 参数处理
-    data = Object.assign(
-      {
-        username: ''
-      },
-      data
-    )
-
     // 参数校验
     if (!isTruthy(data.username)) ctx.throw(400, { msg: 'username 必填' })
 
     // 权限校验
     ctx.checkAuthority('self', data.username)
 
-    // 数据库连接
-    const db = app.model.SysUser
-
     // 查询条件处理
     const conditions = { username: data.username }
 
+    // 数据库连接
+    const db = app.model.SysUser
+
+    // 查询
     const one = await db.findOne(conditions)
     if (!one) ctx.throw(400, { msg: '用户不存在' })
 
@@ -608,25 +550,18 @@ class SysUserService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('role', ['admin'])
-
-    // 参数处理
-    data = Object.assign(
-      {
-        username: ''
-      },
-      data
-    )
+    ctx.checkAuthority('admin')
 
     // 参数校验
     if (!isTruthy(data.username)) ctx.throw(400, { msg: 'username 必填' })
 
-    // 数据库连接
-    const db = app.model.SysUser
-
     // 查询条件处理
     const conditions = { username: data.username }
 
+    // 数据库连接
+    const db = app.model.SysUser
+
+    // 查询
     const one = await db.findOne(conditions)
     if (!one) ctx.throw(400, { msg: '删除项不存在或已被删除' })
 

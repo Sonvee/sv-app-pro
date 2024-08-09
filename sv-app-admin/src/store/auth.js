@@ -6,7 +6,7 @@ import { localFlatMenuList } from '@/router/modules/localRouter'
 export const useAuthStore = defineStore({
   id: 'sv-auth',
   state: () => ({
-    // 菜单权限列表
+    // 菜单列表
     authMenuList: []
   }),
   getters: {
@@ -22,9 +22,14 @@ export const useAuthStore = defineStore({
   actions: {
     // 获取动态菜单列表（api获取菜单和本地菜单）
     async getAuthMenuList() {
-      const menuRes = await authMenuList()
-      const menuData = menuRes.data || []
-      const allMenus = [...menuData, ...localFlatMenuList]
+      let allMenus = []
+      try {
+        const menuRes = await authMenuList()
+        const menuData = menuRes.data || []
+        allMenus = [...menuData, ...localFlatMenuList]
+      } catch (error) {
+        allMenus = localFlatMenuList
+      }
       // 还需根据sort排序
       this.authMenuList = allMenus.sort((a, b) => a.sort - b.sort)
     }

@@ -16,6 +16,9 @@ class TestForeignService extends Service {
   async testforeignList(data) {
     const { ctx, app } = this
 
+    // 权限校验
+    ctx.checkAuthority('open')
+
     // 参数处理
     let { pagesize = 20, pagenum = 1 } = data
     pagesize = Number(pagesize)
@@ -24,9 +27,6 @@ class TestForeignService extends Service {
     // 错误参数处理
     if (pagenum < 1) ctx.throw(400, { msg: 'pagenum不能小于1' })
 
-    // 数据库连接
-    const db = app.model.TestForeign
-
     // 查询条件处理
     const conditions = {}
 
@@ -34,7 +34,10 @@ class TestForeignService extends Service {
     if (isTruthy(data.testforeign_id)) conditions.testforeign_id = data.testforeign_id
     if (isTruthy(data.testforeign_name)) conditions.testforeign_name = { $regex: data.testforeign_name, $options: 'i' } // 模糊查询
 
-    // 查询操作
+    // 数据库连接
+    const db = app.model.TestForeign
+
+    // 查询
     let query = db.find(conditions)
 
     // 排序：1升序，-1降序
@@ -73,18 +76,22 @@ class TestForeignService extends Service {
   async testforeignAdd(data) {
     const { ctx, app } = this
 
+    // 权限校验
+    ctx.checkAuthority('open')
+
     // 参数处理
     delete data._id // 去除部分参数
 
     // 参数校验
     if (!isTruthy(data.testforeign_id)) ctx.throw(400, { msg: 'testforeign_id 必填' })
 
-    // 数据库连接
-    const db = app.model.TestForeign
-
     // 查询条件处理
     const conditions = { testforeign_id: data.testforeign_id }
 
+    // 数据库连接
+    const db = app.model.TestForeign
+
+    // 查询
     const one = await db.findOne(conditions)
     if (one) ctx.throw(400, { msg: '新增项已存在' })
 
@@ -105,23 +112,19 @@ class TestForeignService extends Service {
   async testforeignUpdate(data) {
     const { ctx, app } = this
 
-    // 参数处理
-    data = Object.assign(
-      {
-        testforeign_id: ''
-      },
-      data
-    )
+    // 权限校验
+    ctx.checkAuthority('open')
 
     // 参数校验
     if (!isTruthy(data.testforeign_id)) ctx.throw(400, { msg: 'testforeign_id 必填' })
 
-    // 数据库连接
-    const db = app.model.TestForeign
-
     // 查询条件处理
     const conditions = { testforeign_id: data.testforeign_id }
 
+    // 数据库连接
+    const db = app.model.TestForeign
+
+    // 查询
     const one = await db.findOne(conditions)
     if (!one) ctx.throw(400, { msg: '更新项不存在' })
 
@@ -141,23 +144,19 @@ class TestForeignService extends Service {
   async testforeignDelete(data) {
     const { ctx, app } = this
 
-    // 参数处理
-    data = Object.assign(
-      {
-        testforeign_id: ''
-      },
-      data
-    )
+    // 权限校验
+    ctx.checkAuthority('open')
 
     // 参数校验
     if (!isTruthy(data.testforeign_id)) ctx.throw(400, { msg: 'testforeign_id 必填' })
 
-    // 数据库连接
-    const db = app.model.TestForeign
-
     // 查询条件处理
     const conditions = { testforeign_id: data.testforeign_id }
 
+    // 数据库连接
+    const db = app.model.TestForeign
+
+    // 查询
     const one = await db.findOne(conditions)
     if (!one) ctx.throw(400, { msg: '删除项不存在或已被删除' })
 
@@ -271,6 +270,7 @@ class TestForeignService extends Service {
 
     // 数据库连接
     const db = app.model.TestForeign
+    
     // 主键
     const primaryKey = 'testforeign_id'
 
