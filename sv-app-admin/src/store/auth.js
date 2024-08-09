@@ -24,7 +24,9 @@ export const useAuthStore = defineStore({
     async getAuthMenuList() {
       const menuRes = await authMenuList()
       const menuData = menuRes.data || []
-      this.authMenuList = [...menuData, ...localFlatMenuList]
+      const allMenus = [...menuData, ...localFlatMenuList]
+      // 还需根据sort排序
+      this.authMenuList = allMenus.sort((a, b) => a.sort - b.sort)
     }
   }
 })

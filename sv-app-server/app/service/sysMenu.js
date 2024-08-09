@@ -36,12 +36,15 @@ class SysMenuService extends Service {
   }
 
   /**
-   * 查询 post - 权限 open
+   * 查询 post - 权限 needlogin
    * @param {Object} data - 请求参数
    * @property {String} data.title - 路由标题
    */
   async menuList(data) {
     const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('needlogin')
 
     // 数据库连接
     const db = app.model.SysMenu
@@ -61,7 +64,7 @@ class SysMenuService extends Service {
 
     // 处理查询结果
     let res = await query.exec()
-
+    
     // 菜单权限过滤
     res = this.menuPermissionHandler(res)
 
@@ -72,11 +75,14 @@ class SysMenuService extends Service {
   }
 
   /**
-   * 菜单列表（redis缓存） get - 权限 open
+   * 菜单列表（redis缓存） get - 权限 needlogin
    * @description redis缓存中是菜单全列表，再根据权限自动过滤，在源menuList更新时需要及时更新redis缓存
    */
   async authMenuList() {
     const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('needlogin')
 
     let menuRedis = await app.redis.get('menu:admin:menulist')
     let menuList = []
@@ -84,10 +90,6 @@ class SysMenuService extends Service {
     if (menuRedis) {
       // 权限过滤
       menuList = this.menuPermissionHandler(JSON.parse(menuRedis))
-      return {
-        data: menuList,
-        msg: '菜单获取成功'
-      }
     } else {
       // 获取全菜单列表
       const menuRes = await this.menuList({})
@@ -95,10 +97,11 @@ class SysMenuService extends Service {
       await app.redis.set('menu:admin:menulist', JSON.stringify(menuRes.data))
       // 权限过滤
       menuList = this.menuPermissionHandler(menuRes.data)
-      return {
-        data: menuList,
-        msg: '列表获取成功'
-      }
+    }
+
+    return {
+      data: menuList,
+      msg: '菜单获取成功'
     }
   }
 

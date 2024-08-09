@@ -13,7 +13,7 @@
         <el-button circle :icon="showFilter ? View : Hide" @click="showFilter = !showFilter" :title="showFilter ? '隐藏筛选' : '显示筛选'"></el-button>
       </div>
       <!-- 数据表格 -->
-      <el-table v-if="refreshTable" v-loading="loading" :data="tableData" border row-key="name" :default-expand-all="isExpandAll">
+      <el-table v-loading="loading" :data="tableData" border row-key="name" :default-expand-all="isExpandAll" :key="tableKey">
         <el-table-column prop="name" label="路由标识" fixed="left" width="180" show-overflow-tooltip></el-table-column>
         <el-table-column prop="sort" label="序号" align="center" width="80" show-overflow-tooltip></el-table-column>
         <el-table-column prop="meta.icon" label="图标" align="center" width="80" show-overflow-tooltip>
@@ -29,47 +29,90 @@
         <el-table-column prop="meta.isLink" label="外链地址" width="240" show-overflow-tooltip></el-table-column>
         <el-table-column label="权限分配" align="center" width="100">
           <template #default="scope">
-            <el-button type="primary" plain :icon="Setting" circle @click="editPermission(scope.row)"></el-button>
+            <el-button type="primary" plain :icon="Setting" circle :disabled="scope.row?.meta?.isLocal" @click="editPermission(scope.row)"></el-button>
           </template>
         </el-table-column>
         <el-table-column prop="meta.isKeepAlive" align="center" label="是否缓存" width="120" show-overflow-tooltip>
           <template #default="scope">
-            <el-switch v-model="scope.row.meta.isKeepAlive" inline-prompt :active-icon="Check" :inactive-icon="Close" @change="handleTableSwitch(scope.row)" />
+            <el-switch
+              v-model="scope.row.meta.isKeepAlive"
+              inline-prompt
+              :active-icon="Check"
+              :inactive-icon="Close"
+              :disabled="scope.row?.meta?.isLocal"
+              @change="handleTableSwitch(scope.row)"
+            />
           </template>
         </el-table-column>
         <el-table-column prop="meta.isHide" align="center" label="是否隐藏" width="120" show-overflow-tooltip>
           <template #default="scope">
-            <el-switch v-model="scope.row.meta.isHide" inline-prompt :active-icon="Check" :inactive-icon="Close" @change="handleTableSwitch(scope.row)" />
+            <el-switch
+              v-model="scope.row.meta.isHide"
+              inline-prompt
+              :active-icon="Check"
+              :inactive-icon="Close"
+              :disabled="scope.row?.meta?.isLocal"
+              @change="handleTableSwitch(scope.row)"
+            />
           </template>
         </el-table-column>
         <el-table-column prop="meta.isSub" align="center" label="是否子详情页面" width="120" show-overflow-tooltip>
           <template #default="scope">
-            <el-switch v-model="scope.row.meta.isSub" inline-prompt :active-icon="Check" :inactive-icon="Close" @change="handleTableSwitch(scope.row)" />
+            <el-switch
+              v-model="scope.row.meta.isSub"
+              inline-prompt
+              :active-icon="Check"
+              :inactive-icon="Close"
+              :disabled="scope.row?.meta?.isLocal"
+              @change="handleTableSwitch(scope.row)"
+            />
           </template>
         </el-table-column>
         <el-table-column prop="meta.isFull" align="center" label="是否全屏" width="120" show-overflow-tooltip>
           <template #default="scope">
-            <el-switch v-model="scope.row.meta.isFull" inline-prompt :active-icon="Check" :inactive-icon="Close" @change="handleTableSwitch(scope.row)" />
+            <el-switch
+              v-model="scope.row.meta.isFull"
+              inline-prompt
+              :active-icon="Check"
+              :inactive-icon="Close"
+              :disabled="scope.row?.meta?.isLocal"
+              @change="handleTableSwitch(scope.row)"
+            />
           </template>
         </el-table-column>
         <el-table-column prop="meta.isAffix" align="center" label="是否固定" width="120" show-overflow-tooltip>
           <template #default="scope">
-            <el-switch v-model="scope.row.meta.isAffix" inline-prompt :active-icon="Check" :inactive-icon="Close" @change="handleTableSwitch(scope.row)" />
+            <el-switch
+              v-model="scope.row.meta.isAffix"
+              inline-prompt
+              :active-icon="Check"
+              :inactive-icon="Close"
+              :disabled="scope.row?.meta?.isLocal"
+              @change="handleTableSwitch(scope.row)"
+            />
           </template>
         </el-table-column>
         <el-table-column prop="meta.isOpen" align="center" label="无需登录" width="120" show-overflow-tooltip>
           <template #default="scope">
-            <el-switch v-model="scope.row.meta.isOpen" inline-prompt :active-icon="Check" :inactive-icon="Close" @change="handleTableSwitch(scope.row)" />
+            <el-switch
+              v-model="scope.row.meta.isOpen"
+              inline-prompt
+              :active-icon="Check"
+              :inactive-icon="Close"
+              :disabled="scope.row?.meta?.isLocal"
+              @change="handleTableSwitch(scope.row)"
+            />
           </template>
         </el-table-column>
 
         <el-table-column label="操作" align="center" width="220" fixed="right">
           <template #default="scope">
-            <el-button-group>
+            <el-button-group v-if="!scope.row?.meta?.isLocal">
               <el-button text :icon="Plus" @click="add(scope.row)">新增</el-button>
               <el-button text :icon="EditPen" @click="edit(scope.row)">编辑</el-button>
               <el-button text :icon="Delete" @click="del(scope.row)">删除</el-button>
             </el-button-group>
+            <el-tag v-else type="warning">本地路由请配置localRouter</el-tag>
           </template>
         </el-table-column>
       </el-table>
@@ -90,6 +133,7 @@ import { menuList, menuAdd, menuUpdate, menuDelete } from '@/api/menu'
 import { RefreshRight, Plus, EditPen, Delete, View, Hide, Sort, Check, Close, Setting } from '@element-plus/icons-vue'
 import { ElNotification, ElMessageBox, ElMessage } from 'element-plus'
 import { getTreeMenuList } from '@/utils'
+import { localFlatMenuList } from '@/router/modules/localRouter'
 
 const dataParams = ref({ pagenum: 1, pagesize: 20 })
 const tableData = ref([])
@@ -99,7 +143,7 @@ const showForm = ref(false) // 表单弹窗
 const formInit = ref({}) // 表单初始值
 const formMode = ref('') // 表单模式 add / edit
 const isExpandAll = ref(true) // 展开/折叠 默认展开
-const refreshTable = ref(true) // 重新渲染表格状态
+const tableKey = ref(0) // 重新渲染表格状态
 const showTransfer = ref(false) // 权限穿梭框
 
 onMounted(() => {
@@ -108,19 +152,20 @@ onMounted(() => {
 
 // 展开/折叠 默认展开
 function toggleExpandAll() {
-  refreshTable.value = false
   isExpandAll.value = !isExpandAll.value
-  nextTick(() => {
-    refreshTable.value = true
-  })
+  tableKey.value++
 }
 
 // 数据
 async function handleTable(params) {
+  loading.value = true
   const res = await menuList(params)
-  loading.value = false
+  const resData = res.data || []
+  const mixMenus = [...resData, ...localFlatMenuList]
+  const allMenus = mixMenus.sort((a, b) => a.sort - b.sort)
   // 转换为树形数据，此处需要主动关闭过滤
-  tableData.value = getTreeMenuList(res.data, false)
+  tableData.value = getTreeMenuList(allMenus, false)
+  loading.value = false
 }
 
 // 菜单项开关直接修改

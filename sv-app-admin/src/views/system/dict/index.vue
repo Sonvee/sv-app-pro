@@ -90,10 +90,11 @@ onMounted(() => {
 
 // 数据
 async function handleTable(params) {
+  loading.value = true
   const res = await dictList(params)
-  loading.value = false
   tableData.value = res.data || []
   total.value = res.total
+  loading.value = false
 }
 
 // 头部筛选栏筛选条件

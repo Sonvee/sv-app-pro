@@ -22,42 +22,21 @@
  * @property {Boolean} meta.isKeepAlive ==> 当前路由是否缓存
  * @property {Boolean} meta.isSub ==> 是否是子菜单详情页面
  * @property {Boolean} meta.isOpen ==> 是否需要登录（开放页面为true，无需token）
+ * @property {Boolean} meta.isLocal ==> 本地路由标识
  */
 export const localFlatMenuList = [
   {
-    name: 'localmanager',
-    path: '/local',
-    component: '',
-    parent_name: '',
-    sort: 1200,
-    redirect: '/local/index',
-    permissions: [],
-    meta: {
-      isOpen: false,
-      icon: 'cuIcon-location',
-      title: '本地页面管理',
-      isLink: '',
-      activeMenu: '',
-      isHide: false,
-      isSub: false,
-      isFull: true,
-      isAffix: false,
-      isKeepAlive: true,
-      isLocal: true // 本地路由标识
-    }
-  },
-  {
-    name: 'localpage',
-    path: '/local/localpage',
-    parent_name: 'localmanager',
-    component: () => import('@/views/local/localpage.vue'),
-    sort: 1210,
+    name: 'publish',
+    path: '/portal/publish',
+    component: '/portal/publish/index',
+    parent_name: 'portal',
+    sort: 410,
     redirect: '',
     permissions: [],
     meta: {
-      isOpen: false,
-      icon: 'cuIcon-location',
-      title: '本地页面',
+      isOpen: true,
+      icon: 'admin-icons-error-app',
+      title: '统一发布页',
       isLink: '',
       activeMenu: '',
       isHide: false,

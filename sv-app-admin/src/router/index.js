@@ -57,6 +57,7 @@ router.beforeEach(async (to, from, next) => {
   // 4.判断访问页面是否为静态路由，如果是则直接放行
   if (WHITE_ROUTE_LIST.includes(to.path)) return next()
 
+  // 非静态路由，首次启动项目都需请求接口，获取菜单列表
   if (authStore.authMenuList.length) {
     // 5.判断当前页面是否需要登录
     const findroute = authStore.authMenuList?.find((item) => item.path === to.path)

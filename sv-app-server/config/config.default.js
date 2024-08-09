@@ -64,9 +64,7 @@ module.exports = (appInfo) => {
         '/api/user/loginByWechat',
         '/api/user/register',
         '/api/user/hasAdmin',
-        '/api/user/findPermissionByRole',
-        '/api/sys/menuList',
-        '/api/sys/authMenuList'
+        '/api/user/findPermissionByRole'
       ]
       if (white.includes(routeURL)) {
         return false

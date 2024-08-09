@@ -112,10 +112,11 @@ onMounted(() => {
 
 // 数据
 async function handleTable(params) {
+  loading.value = true
   const res = await noticeList(params)
-  loading.value = false
   tableData.value = res.data || []
   total.value = res.total
+  loading.value = false
 }
 
 // 开关直接修改
