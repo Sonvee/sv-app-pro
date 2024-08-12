@@ -12,25 +12,61 @@
         <el-tooltip effect="light" placement="bottom" :visible="showQRCode">
           <el-button @click="showQRCode = !showQRCode">获取本页二维码</el-button>
           <template #content>
-            <QRCode :value="fullpath" :width="160" :height="160"></QRCode>
+            <QRCode :value="fullpath" :width="200" :height="200"></QRCode>
           </template>
         </el-tooltip>
       </div>
     </header>
     <div class="publish-body">
-      <el-tabs type="border-card" class="p-tabs" @tab-change="tabChange">
-        <el-tab-pane label="Android" name="android">
+      <el-tabs v-model="curTab" type="border-card" class="p-tabs" @tab-change="getReleaseLatest">
+        <el-tab-pane name="android">
+          <template #label>
+            <i class="sv-icons-android-root mr-8"></i>
+            Android
+          </template>
           <div class="p-tab-pane">
-            <QRCode :value="fullpath" :width="200" :height="200"></QRCode>
-            <el-button class="mt-15">
+            <QRCode v-if="!loading" :value="latest?.file?.url" :width="300" :height="300"></QRCode>
+            <el-button class="mt-15" @click="onDownload(latest?.file?.url)">
               <i class="sv-icons-android-fill mr-8"></i>
               Android平台下载
             </el-button>
           </div>
         </el-tab-pane>
-        <el-tab-pane label="IOS" name="ios">IOS</el-tab-pane>
-        <el-tab-pane label="微信小程序" name="mpweixin">微信小程序</el-tab-pane>
-        <el-tab-pane label="H5" name="h5">H5</el-tab-pane>
+        <el-tab-pane name="ios">
+          <template #label>
+            <i class="sv-icons-apple-fill mr-8"></i>
+            IOS
+          </template>
+          <div class="p-tab-pane">
+            <QRCode v-if="!loading" :value="latest?.link" :width="300" :height="300"></QRCode>
+            <el-button class="mt-15" @click="onDownload(latest?.link)">
+              <i class="sv-icons-apple-fill mr-8"></i>
+              IOS平台下载
+            </el-button>
+          </div>
+        </el-tab-pane>
+        <el-tab-pane name="mpweixin">
+          <template #label>
+            <i class="sv-icons-mp-weixin-fill mr-8"></i>
+            微信小程序
+          </template>
+          <div class="p-tab-pane">
+            <img class="p-qrcode-mp" :src="latest?.qrcode" alt="微信小程序码" />
+          </div>
+        </el-tab-pane>
+        <el-tab-pane name="h5">
+          <template #label>
+            <i class="sv-icons-html5-fill mr-8"></i>
+            H5
+          </template>
+          <div class="p-tab-pane">
+            <QRCode v-if="!loading" :value="latest?.link" :width="300" :height="300"></QRCode>
+            <el-button class="mt-15" @click="onDownload(latest?.link)">
+              <i class="sv-icons-html5-fill mr-8"></i>
+              前往
+            </el-button>
+          </div>
+        </el-tab-pane>
       </el-tabs>
     </div>
 
@@ -48,16 +84,20 @@ import logo from '@/assets/images/avatar.gif'
 const fullpath = computed(() => window.location.href)
 const showQRCode = ref(false)
 const curTab = ref('android')
+const latest = ref()
+const loading = ref(true)
 
-getReleaseLatest()
-function getReleaseLatest() {
-  releaseLatest({ type: curTab.value }).then((res) => {
-    console.log('releaseLatest :>> ', res)
+getReleaseLatest(curTab.value)
+function getReleaseLatest(type) {
+  loading.value = true
+  releaseLatest({ type }).then((res) => {
+    latest.value = res.data
+    loading.value = false
   })
 }
 
-function tabChange(e) {
-  curTab.value = e
+function onDownload(url) {
+  window.open(url)
 }
 </script>
 
@@ -119,6 +159,11 @@ function tabChange(e) {
         display: flex;
         flex-direction: column;
         align-items: center;
+
+        .p-qrcode-mp {
+          width: 300px;
+          height: 300px;
+        }
       }
     }
   }

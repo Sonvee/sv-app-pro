@@ -28,9 +28,9 @@ module.exports = (app) => {
       description: {
         type: String
       },
-      // 应用二维码
+      // 应用码地址
       qrcode: {
-        type: Object
+        type: String
       },
       // 应用简介
       intro: {

@@ -14,11 +14,11 @@
         <el-form-item prop="file" label="版本资源包">
           <DragSingleUpload v-model:file="formData.file" height="140px"></DragSingleUpload>
         </el-form-item>
-        <el-form-item prop="link" label="资源链接">
-          <el-input v-model="formData.link" placeholder="请输入资源链接" clearable />
+        <el-form-item prop="link" label="链接">
+          <el-input v-model="formData.link" placeholder="请输入链接" clearable />
         </el-form-item>
-        <el-form-item prop="qrcode" label="应用码源文本">
-          <el-input v-model="formData.qrcode" placeholder="请输入应用码源文本（可用于生成二维码）" clearable />
+        <el-form-item prop="qrcode" label="应用码">
+          <el-input v-model="formData.qrcode" placeholder="请输入应用码" clearable />
         </el-form-item>
         <el-form-item prop="description" label="版本描述">
           <el-input v-model="formData.description" type="textarea" :autosize="{ minRows: 2 }" placeholder="请输入版本描述" />
@@ -100,7 +100,8 @@ const rules = ref({
       trigger: 'blur'
     }
   ],
-  type: [{ required: true, message: '请选择应用类型', trigger: 'blur' }]
+  type: [{ required: true, message: '请选择应用类型', trigger: 'blur' }],
+  release_date: [{ required: true, message: '请选择发布日期', trigger: 'blur' }]
 })
 
 const tableFormRef = ref() // 抽屉

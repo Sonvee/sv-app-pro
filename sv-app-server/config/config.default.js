@@ -61,8 +61,7 @@ module.exports = (appInfo) => {
   config.multipart = {
     mode: 'file',
     fileSize: '100mb',
-    // fileExtensions: ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp']
-    fileExtensions: ['.apk']
+    fileExtensions: ['.apk', '.zip', '.jpg', '.jpeg', '.png', '.gif']
   }
 
   /**
