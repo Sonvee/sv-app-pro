@@ -23,14 +23,14 @@
     "nprogress": "^0.2.0",
     "pinia": "^2.1.7",
     "pinia-plugin-persistedstate": "^3.2.1",
+    "qrcode-vue3": "^1.6.8",
     "qs": "^6.12.1",
     "screenfull": "^6.0.2",
     "sortablejs": "^1.15.2",
     "vite-plugin-html": "^3.2.2",
     "vue": "^3.4.27",
     "vue-router": "^4.3.2",
-    "vue3-json-viewer": "^2.2.2",
-    "vue3-next-qrcode": "^2.0.10"
+    "vue3-json-viewer": "^2.2.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.4",

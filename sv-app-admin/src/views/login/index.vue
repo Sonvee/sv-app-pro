@@ -15,7 +15,7 @@
 
 <script setup name="login">
 import { shallowRef } from 'vue'
-import SwitchDark from '@/components/SwitchDark/index.vue'
+import SwitchDark from '@/components/SwitchDark/SwitchDark.vue'
 import LoginCard from './components/LoginCard.vue'
 import RegisterCard from './components/RegisterCard.vue'
 

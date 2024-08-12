@@ -86,7 +86,7 @@ function handleExceed(exceed) {
 // 文件校验（格式/大小）
 function verifyFile(raw) {
   let result = true
-  if (!raw.type?.includes('apk') && !raw.type?.includes('zip')) {
+  if (!raw.type?.includes('android') && !raw.type?.includes('zip')) {
     ElMessage.error('格式不正确')
     result = false
   } else if (raw.size / 1024 / 1024 > 100) {

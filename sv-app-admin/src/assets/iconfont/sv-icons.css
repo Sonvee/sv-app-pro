@@ -20,6 +20,50 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.sv-icons-html5:before {
+  content: "\e87d";
+}
+
+.sv-icons-html5-fill:before {
+  content: "\e884";
+}
+
+.sv-icons-android-root:before {
+  content: "\e60a";
+}
+
+.sv-icons-android:before {
+  content: "\e87f";
+}
+
+.sv-icons-android-fill:before {
+  content: "\e881";
+}
+
+.sv-icons-apple:before {
+  content: "\e87e";
+}
+
+.sv-icons-apple-fill:before {
+  content: "\e883";
+}
+
+.sv-icons-windows:before {
+  content: "\e880";
+}
+
+.sv-icons-windows-fill:before {
+  content: "\e885";
+}
+
+.sv-icons-mp-weixin:before {
+  content: "\e6b4";
+}
+
+.sv-icons-mp-weixin-fill:before {
+  content: "\e640";
+}
+
 .sv-icons-codelibrary:before {
   content: "\e793";
 }

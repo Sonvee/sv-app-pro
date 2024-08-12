@@ -38,9 +38,9 @@
               <el-image
                 class="screenshot-iamges"
                 v-for="(item, index) in scope.row?.screenshot"
-                :key="item.url"
-                :src="item.url"
-                :preview-src-list="scope.row?.screenshot?.map((i) => i.url)"
+                :key="item?.url"
+                :src="item?.url"
+                :preview-src-list="scope.row?.screenshot?.map((i) => i?.url)"
                 :initial-index="index"
                 preview-teleported
               />
@@ -67,8 +67,8 @@
         <el-table-column label="操作" align="center" width="160" fixed="right">
           <template #default="scope">
             <el-button-group>
-              <el-button text :icon="EditPen" @click="edit(scope.row)">编辑</el-button>
-              <el-button text :icon="Delete" @click="del(scope.row)">删除</el-button>
+              <el-button text type="primary" :icon="EditPen" @click="edit(scope.row)">编辑</el-button>
+              <el-button text type="danger" :icon="Delete" @click="del(scope.row)">删除</el-button>
             </el-button-group>
           </template>
         </el-table-column>

@@ -71,7 +71,7 @@ async function handleDict() {
   if (isTruthy(dictType)) {
     // 先从缓存中获取
     let dictRes = useDictStore().getDict(dictType)
-    if (isTruthy(dictRes, 'arrobj')) {
+    if (dictRes) {
       // 缓存中有直接从缓存中取
       dictData.value = dictRes
     } else {

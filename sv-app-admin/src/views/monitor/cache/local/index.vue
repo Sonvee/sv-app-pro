@@ -18,7 +18,7 @@
         <el-table-column label="操作" align="center" width="160" fixed="right">
           <template #default="scope">
             <el-button-group>
-              <el-button text :icon="Delete" @click="del(scope.row)">删除</el-button>
+              <el-button text type="danger" :icon="Delete" @click="del(scope.row)">删除</el-button>
             </el-button-group>
           </template>
         </el-table-column>

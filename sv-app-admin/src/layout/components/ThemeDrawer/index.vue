@@ -134,16 +134,15 @@ import { useTheme } from '@/hooks/useTheme'
 import { useGlobalStore } from '@/store/global'
 import { DEFAULT_PRIMARY } from '@/config'
 import mittBus from '@/utils/mittBus'
-import SwitchDark from '@/components/SwitchDark/index.vue'
+import SwitchDark from '@/components/SwitchDark/SwitchDark.vue'
 
 const { changePrimary, changeGreyOrWeak, setAsideTheme, setHeaderTheme } = useTheme()
 
 const globalStore = useGlobalStore()
-const { layout, primary, isGrey, isWeak, asideInverted, headerInverted, isCollapse, accordion, breadcrumb, breadcrumbIcon, tabs, tabsIcon, footer } =
-  storeToRefs(globalStore)
+const { layout, primary, isGrey, isWeak, asideInverted, headerInverted, isCollapse, accordion, breadcrumb, breadcrumbIcon, tabs, tabsIcon, footer } = storeToRefs(globalStore)
 
 // 预定义主题颜色
-const colorList = [DEFAULT_PRIMARY, '#daa96e', '#0c819f', '#409eff', '#27ae60', '#ff5c93', '#e74c3c', '#fd726d', '#f39c12', '#9b59b6']
+const colorList = [DEFAULT_PRIMARY, '#daa96e', '#0c819f', '#27ae60', '#e74c3c', '#f39c12', '#9b59b6', '#66ccff', '#39c5bb', '#fb7299']
 
 // 设置布局方式
 const setLayout = (val) => {

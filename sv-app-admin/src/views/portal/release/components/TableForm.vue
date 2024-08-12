@@ -151,37 +151,33 @@ function confirm() {
 
       // screenshot截图数组中若存在raw字段，则为新截图，需要上传
       if (isTruthy(formData.value?.screenshot, 'arr')) {
-        const upList = formData.value?.screenshot.map((item, index) => {
-          if (item.raw) {
-            return { file: item.raw }
-          }
-        })
-        let fds = new FormData()
-        fds.append('version', formData.value?.version)
-        upList.forEach((item) => {
-          if (item?.file) {
-            fds.append('files', item.file)
-          }
-        })
-        // 上传文件数组
-        const upRes = await releaseImageUpload(fds)
-        if (!upRes.success) return
-        const upResList = upRes.data || []
-        // 将formData中本地file类型文件替换为上传后的url（根据name字段与上传后的key中取文件名作对比）
-        const handleScreenshot = formData.value?.screenshot.map((item) => {
-          if (item.raw) {
-            const findeOne = upResList.find((i) => {
-              const filename = i.key.split('/').pop()
-              return filename === item.name
-            })
-            return findeOne
-          } else {
-            // 非新上传文件则返回原数据
-            return item
-          }
-        })
-        // 更新截图数组
-        formData.value.screenshot = handleScreenshot
+        const upList = formData.value?.screenshot.filter((item, index) => item.raw)
+        if (isTruthy(upList, 'arr')) {
+          let fds = new FormData()
+          fds.append('version', formData.value?.version)
+          upList.forEach((item) => {
+            fds.append('files', item.raw)
+          })
+          // 上传文件数组
+          const upRes = await releaseImageUpload(fds)
+          if (!upRes.success) return
+          const upResList = upRes.data || []
+          // 将formData中本地file类型文件替换为上传后的url（根据name字段与上传后的key中取文件名作对比）
+          const handleScreenshot = formData.value?.screenshot.map((item) => {
+            if (item.raw) {
+              const findeOne = upResList.find((i) => {
+                const filename = i.key.split('/').pop()
+                return filename === item.name
+              })
+              return findeOne
+            } else {
+              // 非新上传文件则返回原数据
+              return item
+            }
+          })
+          // 更新截图数组
+          formData.value.screenshot = handleScreenshot
+        }
       }
 
       emits('submit', { data: formData.value, mode: props.formMode })

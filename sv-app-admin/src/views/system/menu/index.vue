@@ -108,9 +108,9 @@
         <el-table-column label="操作" align="center" width="220" fixed="right">
           <template #default="scope">
             <el-button-group v-if="!scope.row?.meta?.isLocal">
-              <el-button text :icon="Plus" @click="add(scope.row)">新增</el-button>
-              <el-button text :icon="EditPen" @click="edit(scope.row)">编辑</el-button>
-              <el-button text :icon="Delete" @click="del(scope.row)">删除</el-button>
+              <el-button text type="info" :icon="Plus" @click="add(scope.row)">新增</el-button>
+              <el-button text type="primary" :icon="EditPen" @click="edit(scope.row)">编辑</el-button>
+              <el-button text type="danger" :icon="Delete" v-if="!isTruthy(scope.row.children, 'arr')" @click="del(scope.row)">删除</el-button>
             </el-button-group>
             <el-tag v-else type="warning">本地路由请配置localRouter</el-tag>
           </template>
@@ -132,7 +132,7 @@ import TableTransfer from './components/TableTransfer.vue'
 import { menuList, menuAdd, menuUpdate, menuDelete } from '@/api/menu'
 import { RefreshRight, Plus, EditPen, Delete, View, Hide, Sort, Check, Close, Setting } from '@element-plus/icons-vue'
 import { ElNotification, ElMessageBox, ElMessage } from 'element-plus'
-import { getTreeMenuList } from '@/utils'
+import { getTreeMenuList, isTruthy } from '@/utils'
 import { localFlatMenuList } from '@/router/modules/localRouter'
 
 const dataParams = ref({ pagenum: 1, pagesize: 20 })
@@ -202,6 +202,7 @@ function add(row) {
 
 // 改
 function edit(row) {
+  console.log('row :>> ', row);
   formInit.value = row // 携带参数
   formMode.value = 'edit'
   showForm.value = true

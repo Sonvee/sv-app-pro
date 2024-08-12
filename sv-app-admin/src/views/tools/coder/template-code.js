@@ -24,8 +24,8 @@ const table = `> 表格页面 index.vue
         <el-table-column label="操作" align="center" width="160" fixed="right">
           <template #default="scope">
             <el-button-group>
-              <el-button text :icon="EditPen" v-permission="['testUpdate']" @click="edit(scope.row)">编辑</el-button>
-              <el-button text :icon="Delete" v-permission="['testDelete']" @click="del(scope.row)">删除</el-button>
+              <el-button text type="primary" :icon="EditPen" v-permission="['testUpdate']" @click="edit(scope.row)">编辑</el-button>
+              <el-button text type="danger" :icon="Delete" v-permission="['testDelete']" @click="del(scope.row)">删除</el-button>
             </el-button-group>
           </template>
         </el-table-column>

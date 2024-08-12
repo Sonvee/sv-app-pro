@@ -5,6 +5,9 @@
     </template>
     <template #default>
       <el-form ref="formRef" :model="formData" :rules="rules" label-width="120" label-position="left">
+        <el-form-item prop="dict_type" label="字典类型" required>
+          <el-input v-model="formData.dict_type" placeholder="请输入字典类型" clearable disabled />
+        </el-form-item>
         <el-form-item prop="dictitem_id" label="字典项ID" required>
           <el-input v-model="formData.dictitem_id" placeholder="请输入字典项ID" clearable />
         </el-form-item>
