@@ -80,14 +80,6 @@ export function bindWechat(data) {
   })
 }
 
-export function changeStatus(data) {
-  return http.request({
-    url: '/user/changeStatus',
-    method: 'post',
-    data
-  })
-}
-
 export function userDeactivate(data) {
   return http.request({
     url: '/user/userDeactivate',

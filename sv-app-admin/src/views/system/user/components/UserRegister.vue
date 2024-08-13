@@ -147,6 +147,8 @@ function confirmRegister() {
 
           // 关闭弹窗
           userRegisterRef.value.visible = false
+          showCaptcha.value = false
+          reset()
 
           emits('registerSuccess')
         }

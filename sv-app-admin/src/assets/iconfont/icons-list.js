@@ -584,5 +584,7 @@ export default [
   'sv-icons-windows',
   'sv-icons-windows-fill',
   'sv-icons-mp-weixin',
-  'sv-icons-mp-weixin-fill'
+  'sv-icons-mp-weixin-fill',
+  'sv-icons-deactivate',
+  'sv-icons-deactivate-fill'
 ]

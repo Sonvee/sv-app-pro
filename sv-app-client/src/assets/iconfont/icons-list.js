@@ -573,5 +573,18 @@ export default [
   'sv-icons-dev-setting',
   'sv-icons-codelibrary',
   'sv-icons-codelibrary-fill',
-  'sv-icons-code'
+  'sv-icons-code',
+  'sv-icons-html5',
+  'sv-icons-html5-fill',
+  'sv-icons-android-root',
+  'sv-icons-android',
+  'sv-icons-android-fill',
+  'sv-icons-apple',
+  'sv-icons-apple-fill',
+  'sv-icons-windows',
+  'sv-icons-windows-fill',
+  'sv-icons-mp-weixin',
+  'sv-icons-mp-weixin-fill',
+  'sv-icons-deactivate',
+  'sv-icons-deactivate-fill'
 ]

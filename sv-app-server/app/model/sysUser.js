@@ -59,7 +59,7 @@ module.exports = (app) => {
       score: {
         type: Number
       },
-      // 状态
+      // 状态 0:禁用 1:正常 2:注销
       status: {
         type: Number
       },

@@ -19,7 +19,8 @@ http.setConfig((conf) => {
    * conf 为默认全局配置
    * @tutorial https://www.quanzhan.co/luch-request/guide/3.x/#%E5%8F%AF%E9%85%8D%E7%BD%AE%E9%A1%B9
    */
-  conf.baseURL = config.api_url
+  // conf.baseURL = config.api_url
+  conf.baseURL = '/api' // 以便使用代理解决跨域问题
   conf.method = 'POST'
   conf.header = {
     "Content-Type": "application/json;charset=UTF-8",

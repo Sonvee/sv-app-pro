@@ -81,7 +81,7 @@ const formBase = {
   _id: '',
   username: '',
   nickname: '',
-  avatar: {},
+  avatar: null,
   role: [],
   department_id: '',
   phone: '',

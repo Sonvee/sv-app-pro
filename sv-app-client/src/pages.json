@@ -95,6 +95,13 @@
           "style": {
             "navigationBarTitleText": "绑定邮箱"
           }
+        },
+        {
+          "path" : "deactivate",
+          "style" : 
+          {
+            "navigationBarTitleText" : "账号注销"
+          }
         }
       ]
     },

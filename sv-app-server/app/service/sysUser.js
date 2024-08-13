@@ -511,21 +511,22 @@ class SysUserService extends Service {
   }
 
   /**
-   * 主动注销 post - 权限 self
+   * 主动注销 post - 权限 self_id
+   * @description 状态异常的账号不允许注销。状态 0:禁用 1:正常 2:注销
    * @param {Object} data - 请求参数
-   * @property {String} data.username - 用户名
+   * @property {String} data._id - 用户名
    */
   async userDeactivate(data) {
     const { ctx, app } = this
 
     // 参数校验
-    if (!isTruthy(data.username)) ctx.throw(400, { msg: 'username 必填' })
+    if (!isTruthy(data._id)) ctx.throw(400, { msg: '_id 必填' })
 
     // 权限校验
-    ctx.checkAuthority('self', data.username)
+    ctx.checkAuthority('self_id', data._id)
 
     // 查询条件处理
-    const conditions = { username: data.username }
+    const conditions = { _id: data._id }
 
     // 数据库连接
     const db = app.model.SysUser
@@ -534,16 +535,19 @@ class SysUserService extends Service {
     const one = await db.findOne(conditions)
     if (!one) ctx.throw(400, { msg: '用户不存在' })
 
-    const res = await db.findOneAndUpdate(conditions, { status: 0 }, { new: true })
+    if (one.status !== 1) ctx.throw(400, { msg: '用户状态异常，不允许注销！' })
+
+    const res = await db.findOneAndUpdate(conditions, { status: 2 }, { new: true })
 
     return {
-      msg: `${data.username} 注销成功`
+      msg: `${one.username || one._id} 注销成功`
     }
   }
 
   /**
    * 删除 post - 权限 admin
    * @param {Object} data - 请求参数
+   * @property {String} data._id - 用户uid
    * @property {String} data.username - 用户名
    */
   async userDelete(data) {
@@ -553,23 +557,27 @@ class SysUserService extends Service {
     ctx.checkAuthority('admin')
 
     // 参数校验
-    if (!isTruthy(data.username)) ctx.throw(400, { msg: 'username 必填' })
+    if (!isTruthy(data._id) && !isTruthy(data.username)) ctx.throw(400, { msg: '_id或username至少传入一个' })
+
+    // 查询条件
+    const conditions = {}
 
     // 查询条件处理
-    const conditions = { username: data.username }
+    if (isTruthy(data._id)) conditions._id = data._id
+    if (isTruthy(data.username)) conditions.username = data.username
 
     // 数据库连接
     const db = app.model.SysUser
 
     // 查询
     const one = await db.findOne(conditions)
-    if (!one) ctx.throw(400, { msg: '删除项不存在或已被删除' })
+    if (!one) ctx.throw(400, { msg: '用户不存在或已被删除' })
 
     const res = await db.deleteOne(conditions)
 
     return {
       data: res,
-      msg: '删除成功'
+      msg: `${one.username || one._id} 删除成功`
     }
   }
 }

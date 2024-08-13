@@ -10,9 +10,8 @@
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="closeDeleteDailog">取消</el-button>
-        <el-button type="primary" :disabled="confirmDeleteDisabled" @click="confirmDeleteDailog">
-          确认
-          <span v-if="deleteCountdown">({{ deleteCountdown }})</span>
+        <el-button type="primary" :disabled="countdownIns.disabled.value" @click="confirmDeleteDailog">
+          确认 {{ countdownIns.cd.value ? '(' + countdownIns.cd.value + ')' : '' }}
         </el-button>
       </div>
     </template>
@@ -21,6 +20,7 @@
 
 <script setup>
 import { ref, watch } from 'vue'
+import { useCountdown } from '@/hooks/useCountdown'
 
 const props = defineProps({
   username: {
@@ -34,32 +34,8 @@ const emits = defineEmits(['close', 'confirm'])
 const userDeleteRef = ref()
 
 // 高危操作 - 删除
-const confirmDeleteDisabled = ref(true)
-const deleteCountdown = ref(9)
-let countdownTimer = null
-// 倒计时开始
-const startCountdown = () => {
-  // 不重复创建计时器
-  if (countdownTimer) {
-    clearCountdown()
-    return
-  }
-  confirmDeleteDisabled.value = true
-  // 倒计时
-  countdownTimer = setInterval(() => {
-    deleteCountdown.value--
-    if (deleteCountdown.value == 0) {
-      // 倒计时完毕
-      clearCountdown()
-      confirmDeleteDisabled.value = false
-    }
-  }, 1000)
-}
-// 倒计时清除
-const clearCountdown = () => {
-  clearInterval(countdownTimer)
-  countdownTimer = null
-}
+const cd = 10 // cd时间
+const countdownIns = new useCountdown(cd)
 
 // 关闭删除弹窗
 function closeDeleteDailog() {
@@ -79,12 +55,13 @@ watch(
   (newVal) => {
     if (newVal) {
       // 弹窗开启时
-      startCountdown()
+      countdownIns.setCD(cd) // 设置倒计时时间
+      countdownIns.startCountdown()
     } else {
-      // 弹窗关闭时
-      clearCountdown()
-      confirmDeleteDisabled.value = true
-      deleteCountdown.value = 9
+      // 弹窗完全关闭时（建议加延时等待弹窗关闭动画结束）
+      setTimeout(() => {
+        countdownIns.clearCountdown()
+      }, 600)
     }
   }
 )

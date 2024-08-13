@@ -40,3 +40,15 @@
     }
   }
 }
+
+.uv-popup {
+  :deep(.uv-popup__content) {
+    background-color: var(--card-color) !important;
+
+    .uv-modal {
+      .uv-modal__title {
+        color: var(--text-color);
+      }
+    }
+  }
+}

@@ -5,6 +5,10 @@
   }
 }
 
+uni-toast {
+  z-index: 99999999;
+}
+
 // swiper 高度自适应（微信小程序无效）
 // .sv-swiper {
 //   height: auto !important;
