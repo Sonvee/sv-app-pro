@@ -24,7 +24,7 @@
           <el-input v-model="formData.description" type="textarea" :autosize="{ minRows: 2 }" placeholder="请输入版本描述" />
         </el-form-item>
         <el-form-item prop="intro" label="应用简介">
-          <el-input v-model="formData.intro" type="textarea" :autosize="{ minRows: 2 }" placeholder="请输入应用简介" />
+          <TinymceEditor v-model="formData.intro" :custom-style="{ minHeight: '300px' }"></TinymceEditor>
         </el-form-item>
         <el-form-item prop="screenshot" label="应用截图">
           <ImageUpload v-model:files="formData.screenshot" size="80px"></ImageUpload>
@@ -58,6 +58,7 @@ import { releaseImageUpload, releaseUpload } from '@/api/file/upload'
 import { useRegExp } from '@/utils/regexp'
 import DictSelect from '@/components/DictType/DictSelect.vue'
 import ImageUpload from '@/components/FileUpload/ImageUpload.vue'
+import TinymceEditor from '@/components/TinymceEditor/TinymceEditor.vue'
 
 const props = defineProps({
   formInit: {
