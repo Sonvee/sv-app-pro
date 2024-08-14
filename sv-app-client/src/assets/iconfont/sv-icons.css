@@ -20,6 +20,14 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.sv-icons-upgrade-fill:before {
+  content: "\e635";
+}
+
+.sv-icons-upgrade:before {
+  content: "\e60f";
+}
+
 .sv-icons-deactivate:before {
   content: "\e66c";
 }

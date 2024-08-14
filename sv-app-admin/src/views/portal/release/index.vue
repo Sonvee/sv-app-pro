@@ -32,6 +32,7 @@
         <el-table-column prop="qrcode" label="应用码源文本" min-width="300" show-overflow-tooltip></el-table-column>
         <el-table-column prop="description" label="版本描述" min-width="300" show-overflow-tooltip></el-table-column>
         <el-table-column prop="intro" label="应用简介" min-width="300" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="upgrade" label="更新内容" min-width="300" show-overflow-tooltip></el-table-column>
         <el-table-column prop="screenshot" label="应用截图" min-width="300">
           <template #default="scope">
             <div class="flex-vc text-line-1">

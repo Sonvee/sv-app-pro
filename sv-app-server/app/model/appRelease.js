@@ -18,7 +18,7 @@ module.exports = (app) => {
       },
       // 资源文件
       file: {
-        type: Object,
+        type: Object
       },
       // 资源链接，部分平台可能需要使用外链而非资源文件
       link: {
@@ -44,6 +44,10 @@ module.exports = (app) => {
       mandatory: {
         type: Boolean,
         default: false
+      },
+      // 更新内容
+      upgrade: {
+        type: String
       },
       // 备注
       remark: {

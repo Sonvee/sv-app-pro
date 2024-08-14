@@ -26,6 +26,9 @@
         <el-form-item prop="intro" label="应用简介">
           <TinymceEditor v-model="formData.intro" :custom-style="{ minHeight: '300px' }"></TinymceEditor>
         </el-form-item>
+        <el-form-item prop="intro" label="更新内容">
+          <TinymceEditor v-model="formData.upgrade" :custom-style="{ minHeight: '300px' }"></TinymceEditor>
+        </el-form-item>
         <el-form-item prop="screenshot" label="应用截图">
           <ImageUpload v-model:files="formData.screenshot" size="80px"></ImageUpload>
         </el-form-item>
@@ -84,6 +87,7 @@ const formBase = {
   intro: '', // 应用简介
   screenshot: [], // 应用截图
   mandatory: false, // 是否强制更新
+  upgrade: '', // 更新内容
   remark: '', // 备注
   release_date: '' // 发布日期
 }

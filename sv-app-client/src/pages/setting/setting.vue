@@ -20,6 +20,10 @@
       </uv-cell-group>
       <view class="margin-top"></view>
       <uv-cell-group>
+        <uv-cell title="关于" isLink @click="skipPage('/pages/about/about')"></uv-cell>
+      </uv-cell-group>
+      <view class="margin-top"></view>
+      <uv-cell-group>
         <uv-cell clickable @click="onLogout">
           <template #title>
             <text class="text-center">退出登录</text>

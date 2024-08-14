@@ -33,6 +33,13 @@
         "navigationBarTitleText": "登录",
         "enablePullDownRefresh": false
       }
+    },
+    {
+      "path" : "pages/about/about",
+      "style" : 
+      {
+        "navigationBarTitleText" : "关于"
+      }
     }
   ],
   "subPackages": [{
