@@ -1,30 +1,32 @@
 <template>
-  <view class="upgrade-center" v-if="showUpgrade">
-    <view class="uc-card">
-      <image class="uc-top" src="@/assets/images/upgrade.png" mode="widthFix"></image>
-      <view class="uc-title">{{ title }}</view>
-      <view class="uc-content" v-if="hasUpgrade">
-        <view class="uc-sub-title text-blue">更新内容</view>
-        <view class="uc-detail">
-          <rich-text :nodes="latest?.upgrade"></rich-text>
+  <uv-transition mode="fade" :show="showUpgrade">
+    <view class="upgrade-center">
+      <view class="uc-card">
+        <image class="uc-top" src="@/assets/images/upgrade.png" mode="widthFix"></image>
+        <view class="uc-title">{{ title }}</view>
+        <view class="uc-content" v-if="hasUpgrade">
+          <view class="uc-sub-title text-blue">更新内容</view>
+          <view class="uc-detail">
+            <mp-html :content="latest?.upgrade" />
+          </view>
         </view>
-      </view>
-      <view class="uc-content" v-else>
-        <view class="uc-detail flex-vhc">该版本已是最新版本</view>
-      </view>
-      <view class="uc-btn-group">
-        <template v-if="!downloading">
-          <button v-if="!mandatory" class="cu-btn round bg-gray flex-sub margin-right" @click="close">取消</button>
-          <button v-if="hasUpgrade" class="cu-btn round bg-gradual-blue flex-sub" @click="confirm">升级</button>
-        </template>
-        <view v-else class="cu-progress round striped active">
-          <view class="bg-blue" :style="{ width: downloadPercent + '%' }">
-            {{ downloadPercent ? downloadPercent + '%' : '' }}
+        <view class="uc-content" v-else>
+          <view class="uc-detail flex-vhc">该版本已是最新版本</view>
+        </view>
+        <view class="uc-btn-group">
+          <template v-if="!downloading">
+            <button v-if="!mandatory" class="cu-btn round bg-gray flex-sub margin-right" @click="close">取消</button>
+            <button v-if="hasUpgrade" class="cu-btn round bg-gradual-blue flex-sub" @click="confirm">升级</button>
+          </template>
+          <view v-else class="cu-progress round striped active">
+            <view class="bg-blue" :style="{ width: downloadPercent + '%' }">
+              {{ downloadPercent ? downloadPercent + '%' : '' }}
+            </view>
           </view>
         </view>
       </view>
     </view>
-  </view>
+  </uv-transition>
 </template>
 
 <script setup>
@@ -33,12 +35,8 @@ import { releaseLatest } from '@/api/release/index.js'
 import throttle from '@climblee/uv-ui/libs/function/throttle'
 
 const props = defineProps({
-  show: {
-    type: Boolean,
-    default: false
-  },
-  // 是否静默提示，为false时需手动控制show进行显示
-  silent: {
+  // 是否自动检测
+  auto: {
     type: Boolean,
     default: false
   }
@@ -47,19 +45,7 @@ const props = defineProps({
 const emits = defineEmits(['update:show'])
 
 // 是否显示升级中心弹窗
-const showUpgrade = computed({
-  set(val) {
-    emits('update:show', val)
-  },
-  get() {
-    return props.show
-  }
-})
-
-watch(showUpgrade, (newVal) => {
-  console.log('showUpgrade ==> ', newVal)
-  if (newVal) getReleaseLatest()
-})
+const showUpgrade = ref(false)
 
 const latest = ref()
 const mandatory = ref(false) // 是否强制更新
@@ -68,6 +54,12 @@ const downloadPercent = ref(0) // 下载进度
 const hasUpgrade = ref(false) // 是否有更新
 const title = computed(() => {
   return hasUpgrade.value ? '发现新版本' : '已是最新版'
+})
+
+onMounted(() => {
+  if (props.auto) {
+    checkUpgrade()
+  }
 })
 
 function open() {
@@ -148,8 +140,8 @@ function downloadResource() {
 }
 
 // 请求线上最新版本信息
-async function getReleaseLatest() {
-  uni.showLoading({ title: '检查更新中...' })
+async function checkUpgrade() {
+  if (!props.auto) uni.showLoading({ title: '检查更新中...' })
   const sysInfo = uni.getSystemInfoSync()
   const curVersion = sysInfo.appWgtVersion || sysInfo.appVersion
   let releaseRes = await releaseLatest({ type: 'android' })
@@ -163,10 +155,14 @@ async function getReleaseLatest() {
       open()
     } else {
       hasUpgrade.value = false
-      if (props.silent) close()
+      if (props.auto) {
+        close()
+      } else {
+        open()
+      }
     }
   }
-  uni.hideLoading()
+  if (!props.auto) uni.hideLoading()
 }
 
 /**
@@ -199,6 +195,10 @@ function compareVersion(target, source) {
   // 如果所有位都相等，则版本号相等
   return 0
 }
+
+defineExpose({
+  checkUpgrade
+})
 </script>
 
 <style lang="scss">

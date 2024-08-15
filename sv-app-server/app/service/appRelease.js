@@ -9,6 +9,7 @@ class AppReleaseService extends Service {
    * 查询 post - 权限 open
    * @param {Object} data - 请求参数
    * @property {String} data.version - 版本
+   * @property {String} data.name - 名称
    * @property {String} data.type - 应用类型 android ios mpweixin ...
    * @property {Array} data.release_range - 发布日期范围
    * @property {Number} data.pagesize - 每页条数
@@ -33,6 +34,7 @@ class AppReleaseService extends Service {
 
     // 查询条件
     if (isTruthy(data.version)) conditions.version = { $regex: data.version, $options: 'i' } // 模糊查询
+    if (isTruthy(data.name)) conditions.name = { $regex: data.name, $options: 'i' } // 模糊查询
     if (isTruthy(data.type)) conditions.type = data.type
     if (isTruthy(data.release_range, 'arr')) conditions.release_date = { $gte: data.release_range[0], $lte: data.release_range[1] } // 时间范围
 

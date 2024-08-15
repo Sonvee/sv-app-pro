@@ -4,12 +4,12 @@ const { isTruthy } = require('../utils')
 
 const Service = require('egg').Service
 
-class SysNoticeService extends Service {
+class AppNoticeService extends Service {
   /**
    * 查询 post - 权限 open
    * @param {Object} data - 请求参数
    * @property {String} data.notice_id - id
-   * @property {Number} data.notice_type - 类型
+   * @property {Number} data.notice_type - 类型 0通知 1公告
    * @property {String} data.notice_name - 名称
    * @property {String} data.notice_title - 标题
    * @property {Boolean} data.top - 置顶
@@ -43,13 +43,13 @@ class SysNoticeService extends Service {
     if (isTruthy(data.created_range, 'arr')) conditions.created_date = { $gte: data.created_range[0], $lte: data.created_range[1] } // 时间范围
 
     // 数据库连接
-    const db = app.model.SysNotice
+    const db = app.model.AppNotice
 
     // 查询
     let query = db.find(conditions)
 
     // 排序：1升序，-1降序
-    query = query.sort({ created_date: -1 })
+    query = query.sort({ top: -1, created_date: -1 })
 
     // 分页
     if (pagesize > 0) {
@@ -72,6 +72,42 @@ class SysNoticeService extends Service {
       pagenum,
       pagesize,
       pages
+    }
+  }
+
+  /**
+   * 查询有效期内的公告 - 权限 open
+   * @param {Object} data - 请求参数
+   * @property {Number} data.notice_type - 类型 0通知 1公告
+   */
+  async noticeInTime(data) {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('open')
+
+    // 查询条件处理 当前时间戳在publish_timerange[开始，结束]范围内
+    const now = Date.now()
+    const conditions = { $and: [{ 'publish_timerange.0': { $lte: now } }, { 'publish_timerange.1': { $gte: now } }], status: 1 }
+
+    // 查询条件
+    if (isTruthy(data.notice_type, 'zero')) conditions.notice_type = data.notice_type
+
+    // 数据库连接
+    const db = app.model.AppNotice
+
+    // 查询
+    let query = db.find(conditions)
+
+    // 排序：1升序，-1降序
+    query = query.sort({ top: -1, created_date: -1 })
+
+    // 处理查询结果
+    const res = await query.exec()
+
+    return {
+      data: res,
+      msg: '列表获取成功'
     }
   }
 
@@ -104,7 +140,7 @@ class SysNoticeService extends Service {
     const conditions = { notice_id: data.notice_id }
 
     // 数据库连接
-    const db = app.model.SysNotice
+    const db = app.model.AppNotice
 
     // 查询
     const one = await db.findOne(conditions)
@@ -144,7 +180,7 @@ class SysNoticeService extends Service {
     const conditions = { notice_id: data.notice_id }
 
     // 数据库连接
-    const db = app.model.SysNotice
+    const db = app.model.AppNotice
 
     // 查询
     const one = await db.findOne(conditions)
@@ -176,7 +212,7 @@ class SysNoticeService extends Service {
     const conditions = { notice_id: data.notice_id }
 
     // 数据库连接
-    const db = app.model.SysNotice
+    const db = app.model.AppNotice
 
     // 查询
     const one = await db.findOne(conditions)
@@ -216,7 +252,7 @@ class SysNoticeService extends Service {
     if (!isTruthy(data.list, 'arr')) ctx.throw(400, { msg: 'list 为空' })
 
     // 数据库连接
-    const db = app.model.SysNotice
+    const db = app.model.AppNotice
 
     // 主键
     const primaryKey = 'notice_id'
@@ -297,8 +333,8 @@ class SysNoticeService extends Service {
     if (!isTruthy(data.list)) ctx.throw(400, { msg: 'list 为空' })
 
     // 数据库连接
-    const db = app.model.SysNotice
-    
+    const db = app.model.AppNotice
+
     // 主键
     const primaryKey = 'notice_id'
 
@@ -323,4 +359,4 @@ class SysNoticeService extends Service {
   }
 }
 
-module.exports = SysNoticeService
+module.exports = AppNoticeService

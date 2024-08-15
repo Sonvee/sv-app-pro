@@ -5,20 +5,21 @@
     </template>
     <template #default>
       <el-form ref="formRef" :model="formData" :rules="rules" label-width="120px" label-position="left">
-        <el-form-item prop="notice_id" label="通知公告ID" required>
-          <el-input v-model="formData.notice_id" :disabled="formMode !== 'add'" placeholder="请输入通知公告ID" clearable />
+        <el-form-item prop="notice_id" label="通告ID" required>
+          <el-input v-model="formData.notice_id" :disabled="formMode !== 'add'" placeholder="请输入通告ID" clearable />
         </el-form-item>
-        <el-form-item prop="notice_type" label="通知公告类型" required>
-          <DictSelect v-model="formData.notice_type" dictType="dict_sys_notice_type" formatNumber placeholder="请选择通知公告类型"></DictSelect>
+        <el-form-item prop="notice_type" label="通告类型" required>
+          <DictSelect v-model="formData.notice_type" :disabled="formMode !== 'add'" dictType="dict_sys_notice_type" formatNumber placeholder="请选择通告类型"></DictSelect>
         </el-form-item>
-        <el-form-item prop="notice_name" label="通知公告名称" required>
-          <el-input v-model="formData.notice_name" placeholder="请输入通知公告名称" clearable />
+        <el-form-item prop="notice_name" label="通告名称" required>
+          <el-input v-model="formData.notice_name" placeholder="请输入通告名称" clearable />
         </el-form-item>
-        <el-form-item prop="notice_title" label="通知公告标题">
-          <el-input v-model="formData.notice_title" placeholder="请输入通知公告标题" clearable />
+        <el-form-item prop="notice_title" label="通告标题">
+          <el-input v-model="formData.notice_title" placeholder="请输入通告标题" clearable />
         </el-form-item>
-        <el-form-item prop="notice_content" label="通知公告内容">
-          <TinymceEditor v-model="formData.notice_content" :custom-style="{ minHeight: '300px' }"></TinymceEditor>
+        <el-form-item prop="notice_content" label="通告内容">
+          <TinymceEditor v-if="formType == 1" v-model="formData.notice_content" :custom-style="{ minHeight: '300px' }"></TinymceEditor>
+          <el-input v-else v-model="formData.notice_content" type="textarea" :autosize="{ minRows: 2 }" placeholder="请输入通告内容" />
         </el-form-item>
         <el-form-item prop="remark" label="备注">
           <el-input v-model="formData.remark" type="textarea" :autosize="{ minRows: 2 }" placeholder="请输入备注" />
@@ -58,6 +59,11 @@ const props = defineProps({
   formMode: {
     type: String,
     default: 'add'
+  },
+  // 0通知 1公告
+  formType: {
+    type: [String, Number],
+    default: ''
   }
 })
 
@@ -81,9 +87,9 @@ const formData = ref(formBase)
 const formBaseClone = ref()
 // 校验规则
 const rules = ref({
-  notice_id: [{ required: true, message: '请输入通知公告ID', trigger: 'blur' }],
-  notice_name: [{ required: true, message: '请输入通知公告名称', trigger: 'blur' }],
-  notice_type: [{ required: true, message: '请输入通知公告类型', trigger: 'blur' }]
+  notice_id: [{ required: true, message: '请输入通告ID', trigger: 'blur' }],
+  notice_name: [{ required: true, message: '请输入通告名称', trigger: 'blur' }],
+  notice_type: [{ required: true, message: '请输入通告类型', trigger: 'blur' }]
 })
 
 const tableFormRef = ref() // 抽屉

@@ -4,6 +4,9 @@
       <el-form-item prop="version" label="版本号">
         <el-input v-model.trim="filterForm.version" placeholder="请输入版本号" clearable style="width: 150px" />
       </el-form-item>
+      <el-form-item prop="name" label="应用名称">
+        <el-input v-model.trim="filterForm.name" placeholder="请输入应用名称" clearable style="width: 150px" />
+      </el-form-item>
       <el-form-item prop="type" label="应用类型">
         <DictSelect v-model="filterForm.type" dictType="dict_app_type" placeholder="请选择应用类型" style="width: 150px"></DictSelect>
       </el-form-item>
@@ -36,6 +39,8 @@ const filterFormRef = ref()
 // 过滤条件表单
 const filterForm = ref({
   version: '',
+  name: '',
+  type: null,
   release_range: []
 })
 

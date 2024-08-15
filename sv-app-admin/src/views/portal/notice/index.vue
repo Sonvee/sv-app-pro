@@ -6,7 +6,8 @@
     <div class="card table-container">
       <!-- 工具栏 -->
       <div class="table-control">
-        <el-button type="primary" plain :icon="Plus" @click="add">新增</el-button>
+        <el-button type="primary" plain :icon="Plus" @click="add(1)">新增公告</el-button>
+        <el-button type="info" plain :icon="Plus" @click="add(0)">新增通知</el-button>
         <el-button type="danger" plain :icon="Delete" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
         <div style="flex: 1"></div>
         <el-button circle :icon="RefreshRight" @click="refresh" title="刷新"></el-button>
@@ -15,7 +16,7 @@
       <!-- 数据表格 -->
       <el-table v-loading="loading" :data="tableData" border @selection-change="handleSelectionChange">
         <el-table-column type="selection" align="center" width="50" fixed="left" />
-        <el-table-column prop="notice_id" label="通告ID" width="160" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="notice_id" label="通告ID" width="120" show-overflow-tooltip fixed="left"></el-table-column>
         <el-table-column prop="notice_type" label="通告类型" align="center" width="100" show-overflow-tooltip>
           <template #default="scope">
             <DictTag :dictList="dictStore.getDict('dict_sys_notice_type')" :value="scope.row.notice_type"></DictTag>
@@ -73,7 +74,7 @@
       <TablePagination :pagingParams="dataParams" :total="total" @update:page-size="handleSizeChange" @update:current-page="handleCurrentChange"></TablePagination>
     </div>
     <!-- 弹窗 -->
-    <TableForm v-model="showForm" :form-init="formInit" :form-mode="formMode" @submit="submitForm"></TableForm>
+    <TableForm v-model="showForm" :form-init="formInit" :form-mode="formMode" :form-type="formType" @submit="submitForm"></TableForm>
   </div>
 </template>
 
@@ -104,6 +105,7 @@ const showFilter = ref(true) // 头部筛选栏显示
 const showForm = ref(false) // 表单弹窗
 const formInit = ref({}) // 表单初始值
 const formMode = ref('') // 表单模式 add / edit
+const formType = ref('') // 0通知 1公告
 
 onMounted(() => {
   dictInit()
@@ -137,9 +139,10 @@ async function submitFilter(e) {
 }
 
 // 增
-function add() {
+function add(type) {
   formInit.value = {} // 置空参数
   formMode.value = 'add'
+  formType.value = type
   showForm.value = true
 }
 
@@ -147,6 +150,7 @@ function add() {
 function edit(row) {
   formInit.value = row // 携带参数
   formMode.value = 'edit'
+  formType.value = row?.notice_type
   showForm.value = true
 }
 

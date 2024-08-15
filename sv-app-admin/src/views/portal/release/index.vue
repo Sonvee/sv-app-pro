@@ -19,6 +19,7 @@
             <DictTag :dictList="dictStore.getDict('dict_app_type')" :value="scope.row.type"></DictTag>
           </template>
         </el-table-column>
+        <el-table-column prop="name" label="应用名称" width="240" show-overflow-tooltip></el-table-column>
         <el-table-column prop="file.url" label="资源地址" min-width="300" show-overflow-tooltip>
           <template #default="scope">
             <a :href="scope.row?.file?.url" download>{{ scope.row?.file?.url }}</a>
@@ -29,7 +30,7 @@
             <a :href="scope.row?.link" target="_blank">{{ scope.row?.link }}</a>
           </template>
         </el-table-column>
-        <el-table-column prop="qrcode" label="应用码源文本" min-width="300" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="qrcode" label="应用码" min-width="300" show-overflow-tooltip></el-table-column>
         <el-table-column prop="description" label="版本描述" min-width="300" show-overflow-tooltip></el-table-column>
         <el-table-column prop="intro" label="应用简介" min-width="300" show-overflow-tooltip></el-table-column>
         <el-table-column prop="upgrade" label="更新内容" min-width="300" show-overflow-tooltip></el-table-column>

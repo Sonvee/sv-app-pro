@@ -100,14 +100,6 @@ module.exports = (app) => {
   router.post('/sys/logBatchDelete', controller.sysLog.logBatchDelete)
   router.post('/sys/logClear', controller.sysLog.logClear)
 
-  // 通知公告
-  router.post('/sys/noticeList', controller.sysNotice.noticeList)
-  router.post('/sys/noticeAdd', controller.sysNotice.noticeAdd)
-  router.post('/sys/noticeUpdate', controller.sysNotice.noticeUpdate)
-  router.post('/sys/noticeDelete', controller.sysNotice.noticeDelete)
-  router.post('/sys/noticeBatchAdd', controller.sysNotice.noticeBatchAdd)
-  router.post('/sys/noticeBatchDelete', controller.sysNotice.noticeBatchDelete)
-
   // 文件
   router.post('/file/avatarUpload', controller.file.avatarUpload)
   router.post('/file/avatarDelete', controller.file.avatarDelete)
@@ -126,4 +118,13 @@ module.exports = (app) => {
   router.post('/app/releaseAdd', controller.appRelease.releaseAdd)
   router.post('/app/releaseUpdate', controller.appRelease.releaseUpdate)
   router.post('/app/releaseDelete', controller.appRelease.releaseDelete)
+
+  // 通知公告
+  router.post('/app/noticeList', controller.appNotice.noticeList)
+  router.post('/app/noticeInTime', controller.appNotice.noticeInTime)
+  router.post('/app/noticeAdd', controller.appNotice.noticeAdd)
+  router.post('/app/noticeUpdate', controller.appNotice.noticeUpdate)
+  router.post('/app/noticeDelete', controller.appNotice.noticeDelete)
+  router.post('/app/noticeBatchAdd', controller.appNotice.noticeBatchAdd)
+  router.post('/app/noticeBatchDelete', controller.appNotice.noticeBatchDelete)
 }

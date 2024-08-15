@@ -24,9 +24,14 @@
       </uv-cell-group>
       <view class="margin-top"></view>
       <uv-cell-group>
-        <uv-cell clickable @click="onLogout">
+        <uv-cell v-if="hasLogin" clickable @click="onLogout">
           <template #title>
             <text class="text-center">退出登录</text>
+          </template>
+        </uv-cell>
+        <uv-cell v-else clickable @click="onLogin">
+          <template #title>
+            <text class="text-center">前往登录</text>
           </template>
         </uv-cell>
       </uv-cell-group>
@@ -35,9 +40,18 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
 import { logout } from '@/api/user/login'
 import { useUserStore } from '@/store/user'
 import { skipPage } from '@/utils/util'
+
+const userStore = useUserStore()
+const hasLogin = computed(() => userStore.hasLogin)
+
+function onLogin() {
+  userStore.clearUserInfo()
+  uni.navigateTo({ url: '/pages/login/login' })
+}
 
 function onLogout() {
   uni.showModal({
@@ -45,10 +59,8 @@ function onLogout() {
     content: '确定要退出登录吗？',
     success: async ({ confirm }) => {
       if (confirm) {
-        const userStore = useUserStore()
         await logout({ _id: userStore.userInfo._id })
-        userStore.clearUserInfo()
-        uni.navigateTo({ url: '/pages/login/login' })
+        onLogin()
       }
     }
   })

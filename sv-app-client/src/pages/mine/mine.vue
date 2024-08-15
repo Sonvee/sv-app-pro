@@ -90,7 +90,7 @@ const otherMenus = [
   { name: '菜单庚', icon: 'cuIcon-apps', path: '' },
   { name: '菜单辛', icon: 'cuIcon-apps', path: '' },
   { name: '菜单壬', icon: 'cuIcon-apps', path: '' },
-  { name: '菜单癸', icon: 'cuIcon-apps', path: '' }
+  { name: '关于', icon: 'cuIcon-info', path: '/pages/about/about' }
 ]
 
 const banners = [

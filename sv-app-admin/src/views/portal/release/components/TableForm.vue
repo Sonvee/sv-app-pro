@@ -11,11 +11,14 @@
         <el-form-item prop="type" label="应用类型" required>
           <DictSelect v-model="formData.type" dictType="dict_app_type" :disabled="formMode !== 'add'" placeholder="请选择应用类型" style="width: 100%"></DictSelect>
         </el-form-item>
-        <el-form-item prop="file" label="版本资源包">
+        <el-form-item prop="name" label="应用名称">
+          <el-input v-model="formData.name" placeholder="请输入应用名称" clearable />
+        </el-form-item>
+        <el-form-item prop="file" label="应用资源包">
           <DragSingleUpload v-model:file="formData.file" height="140px"></DragSingleUpload>
         </el-form-item>
-        <el-form-item prop="link" label="链接">
-          <el-input v-model="formData.link" placeholder="请输入链接" clearable />
+        <el-form-item prop="link" label="资源链接">
+          <el-input v-model="formData.link" placeholder="请输入资源链接" clearable />
         </el-form-item>
         <el-form-item prop="qrcode" label="应用码">
           <el-input v-model="formData.qrcode" placeholder="请输入应用码" clearable />
@@ -80,6 +83,7 @@ const emits = defineEmits(['submit'])
 const formBase = {
   version: '', // 版本号
   type: null, // 应用类型
+  name: '', // 应用名称
   file: null, // 资源文件
   link: '', // 资源链接
   description: '', // 版本描述

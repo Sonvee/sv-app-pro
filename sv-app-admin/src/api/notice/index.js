@@ -3,7 +3,7 @@ import request from '@/config/request/request.js'
 // 字典
 export function noticeList(data) {
   return request({
-    url: '/sys/noticeList',
+    url: '/app/noticeList',
     method: 'post',
     data
   })
@@ -11,7 +11,7 @@ export function noticeList(data) {
 
 export function noticeAdd(data) {
   return request({
-    url: '/sys/noticeAdd',
+    url: '/app/noticeAdd',
     method: 'post',
     data
   })
@@ -19,7 +19,7 @@ export function noticeAdd(data) {
 
 export function noticeUpdate(data) {
   return request({
-    url: '/sys/noticeUpdate',
+    url: '/app/noticeUpdate',
     method: 'post',
     data
   })
@@ -27,7 +27,7 @@ export function noticeUpdate(data) {
 
 export function noticeDelete(data) {
   return request({
-    url: '/sys/noticeDelete',
+    url: '/app/noticeDelete',
     method: 'post',
     data
   })
@@ -35,7 +35,7 @@ export function noticeDelete(data) {
 
 export function noticeBatchAdd(data) {
   return request({
-    url: '/sys/noticeBatchAdd',
+    url: '/app/noticeBatchAdd',
     method: 'post',
     data
   })
@@ -43,7 +43,7 @@ export function noticeBatchAdd(data) {
 
 export function noticeBatchDelete(data) {
   return request({
-    url: '/sys/noticeBatchDelete',
+    url: '/app/noticeBatchDelete',
     method: 'post',
     data
   })

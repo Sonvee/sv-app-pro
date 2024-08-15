@@ -35,10 +35,9 @@
       }
     },
     {
-      "path" : "pages/about/about",
-      "style" : 
-      {
-        "navigationBarTitleText" : "关于"
+      "path": "pages/notice/notice",
+      "style": {
+        "navigationBarTitleText": "通知公告"
       }
     }
   ],
@@ -104,10 +103,25 @@
           }
         },
         {
-          "path" : "deactivate",
-          "style" : 
-          {
-            "navigationBarTitleText" : "账号注销"
+          "path": "deactivate",
+          "style": {
+            "navigationBarTitleText": "账号注销"
+          }
+        }
+      ]
+    },
+    {
+      "root": "pages/about",
+      "pages": [{
+          "path": "about",
+          "style": {
+            "navigationBarTitleText": "关于"
+          }
+        },
+        {
+          "path": "introduction",
+          "style": {
+            "navigationBarTitleText": "功能介绍"
           }
         }
       ]

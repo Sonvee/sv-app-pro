@@ -52,3 +52,27 @@
     }
   }
 }
+
+.sv-uv-list {
+  .uv-list {
+    background-color: var(--card-color) !important;
+
+    .uv-list--border-top,
+    .uv-list--border-bottom {
+      background-color: var(--border-color) !important;
+    }
+
+    .uv-list-item {
+      background-color: unset !important;
+      font-size: unset !important;
+
+      .uv-list--border:after {
+        background-color: var(--border-color) !important;
+      }
+    }
+
+    .uv-list-item--hover {
+      background-color: var(--click-color) !important;
+    }
+  }
+}

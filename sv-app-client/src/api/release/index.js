@@ -8,3 +8,12 @@ export function releaseLatest(data) {
     data
   })
 }
+
+// 版本列表
+export function releaseList(data) {
+  return http.request({
+    url: '/app/releaseList',
+    method: 'post',
+    data
+  })
+}

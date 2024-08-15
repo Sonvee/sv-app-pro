@@ -3,7 +3,7 @@
 module.exports = (app) => {
   const mongoose = app.mongoose
 
-  const SysNoticeSchema = new mongoose.Schema(
+  const AppNoticeSchema = new mongoose.Schema(
     {
       notice_id: {
         type: String,
@@ -53,5 +53,5 @@ module.exports = (app) => {
     }
   )
 
-  return mongoose.model('sys_notice', SysNoticeSchema)
+  return mongoose.model('app_notice', AppNoticeSchema)
 }

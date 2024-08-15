@@ -11,6 +11,10 @@ module.exports = (app) => {
         unique: true,
         required: true
       },
+      // 应用名称
+      name: {
+        type: String
+      },
       // 应用类型 android ios mpweixin ...
       type: {
         type: String,
