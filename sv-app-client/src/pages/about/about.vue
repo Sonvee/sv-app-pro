@@ -9,18 +9,20 @@
       </view>
       <view class="text-xl margin-top">{{ config.version }}</view>
       <view class="w-full margin-top">
-        <uv-cell-group>
-          <uv-cell title="功能介绍" isLink @click="skipPage('/pages/about/introduction')">
-            <template #icon>
+        <view class="cu-list menu card-menu sm-border clickable">
+          <view class="cu-item arrow" @click="skipPage('/pages/about/introduction')">
+            <view class="flex-vc">
               <text class="cuIcon-apps margin-right-sm text-xxl text-blue text-bold"></text>
-            </template>
-          </uv-cell>
-          <uv-cell title="检查新版本" isLink @click="checkVersion">
-            <template #icon>
+              功能介绍
+            </view>
+          </view>
+          <view class="cu-item arrow" @click="checkVersion">
+            <view class="flex-vc">
               <text class="sv-icons-async-update margin-right-sm text-xxl text-green"></text>
-            </template>
-          </uv-cell>
-        </uv-cell-group>
+              检查新版本
+            </view>
+          </view>
+        </view>
       </view>
       <view class="footer text-sm">
         <view class="text-blue text-center cursor-pointer">

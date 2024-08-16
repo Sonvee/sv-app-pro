@@ -202,7 +202,7 @@ function add(row) {
 
 // 改
 function edit(row) {
-  console.log('row :>> ', row);
+  console.log('row :>> ', row)
   formInit.value = row // 携带参数
   formMode.value = 'edit'
   showForm.value = true
@@ -243,25 +243,29 @@ function editPermission(row) {
 
 // 提交表单
 async function submitForm(e) {
-  let result = {}
-  switch (e.mode) {
-    case 'add':
-      // 新增添加
-      result = await menuAdd(e.data)
-      break
-    case 'edit':
-      // 编辑更新
-      result = await menuUpdate(e.data)
-      break
-  }
-  if (result.success) {
-    showForm.value = false
-    ElNotification({
-      title: 'Success',
-      message: result?.msg,
-      type: 'success'
-    })
-    refresh()
+  try {
+    let result = {}
+    switch (e.mode) {
+      case 'add':
+        // 新增添加
+        result = await menuAdd(e.data)
+        break
+      case 'edit':
+        // 编辑更新
+        result = await menuUpdate(e.data)
+        break
+    }
+    if (result.success) {
+      showForm.value = false
+      ElNotification({
+        title: 'Success',
+        message: result?.msg,
+        type: 'success'
+      })
+      refresh()
+    }
+  } catch (error) {
+    console.warn(error.msg)
   }
 }
 </script>

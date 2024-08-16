@@ -41,7 +41,6 @@ const editorSetting = ref({
   nonbreaking_force_tab: true,
   paste_data_images: true, // 图片是否可粘贴
   resize: true, // 编辑器宽高是否可变，false-否，true-高可变，'both'-宽高均可，注意引号
-  auto_focus: false, // 自动聚焦
   menubar: true, // 菜单栏
   statusbar: true, // 是否显示底部状态栏
   branding: false, // 默认会在右下角显示Tiny图标

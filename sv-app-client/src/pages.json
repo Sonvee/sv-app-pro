@@ -127,6 +127,22 @@
       ]
     },
     {
+      "root": "pages/help",
+      "pages": [{
+          "path": "help",
+          "style": {
+            "navigationBarTitleText": "帮助"
+          }
+        },
+        {
+          "path": "feedback",
+          "style": {
+            "navigationBarTitleText": "反馈"
+          }
+        }
+      ]
+    },
+    {
       "root": "pages/auxiliary",
       "pages": [{
         "path": "crop-image/crop-image",

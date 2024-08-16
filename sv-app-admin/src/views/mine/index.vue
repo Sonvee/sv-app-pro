@@ -104,16 +104,20 @@ function editInfo() {
 
 // 提交表单
 async function submitForm(e) {
-  // 编辑更新
-  const result = await userUpdateSimple(e.data)
-  if (result.success) {
-    showForm.value = false // 关闭弹窗
-    ElNotification({
-      title: 'Success',
-      message: result?.msg,
-      type: 'success'
-    })
-    getMySelf()
+  try {
+    // 编辑更新
+    const result = await userUpdateSimple(e.data)
+    if (result.success) {
+      showForm.value = false // 关闭弹窗
+      ElNotification({
+        title: 'Success',
+        message: result?.msg,
+        type: 'success'
+      })
+      getMySelf()
+    }
+  } catch (error) {
+    console.warn(error.msg)
   }
 }
 

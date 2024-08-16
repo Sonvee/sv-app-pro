@@ -271,6 +271,9 @@ export function skipPage(path, needlogin = false, params, callback) {
       },
       success: (res) => {
         res.eventChannel.emit('E_SKIPPAGE', params)
+      },
+      fail: (err) => {
+        console.warn(err.errMsg);
       }
     })
   } else {

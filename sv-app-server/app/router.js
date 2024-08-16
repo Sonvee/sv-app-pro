@@ -127,4 +127,12 @@ module.exports = (app) => {
   router.post('/app/noticeDelete', controller.appNotice.noticeDelete)
   router.post('/app/noticeBatchAdd', controller.appNotice.noticeBatchAdd)
   router.post('/app/noticeBatchDelete', controller.appNotice.noticeBatchDelete)
+
+  // 帮助
+  router.post('/app/helpList', controller.appHelp.helpList)
+  router.post('/app/helpAdd', controller.appHelp.helpAdd)
+  router.post('/app/helpUpdate', controller.appHelp.helpUpdate)
+  router.post('/app/helpDelete', controller.appHelp.helpDelete)
+  router.post('/app/helpBatchAdd', controller.appHelp.helpBatchAdd)
+  router.post('/app/helpBatchDelete', controller.appHelp.helpBatchDelete)
 }

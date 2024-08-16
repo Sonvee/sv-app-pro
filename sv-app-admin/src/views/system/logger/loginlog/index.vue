@@ -72,10 +72,6 @@ import { isTruthy, timeFormat } from '@/utils'
 import { useDictStore } from '@/store/dict'
 
 const dictStore = useDictStore()
-// 初始化字典
-function dictInit() {
-  dictStore.initDict(['dict_sys_login_type'])
-}
 
 const dataParams = ref({ log_type: 'login', pagenum: 1, pagesize: 20 })
 const tableData = ref([])
@@ -83,8 +79,8 @@ const total = ref(0)
 const loading = ref(true)
 const showFilter = ref(true) // 头部筛选栏显示
 
-onMounted(() => {
-  dictInit()
+onMounted(async () => {
+  await dictStore.initDict(['dict_sys_login_type']) // 初始化字典
   handleTable(dataParams.value)
 })
 

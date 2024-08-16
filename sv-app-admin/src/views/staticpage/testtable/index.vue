@@ -28,12 +28,7 @@
         </el-table-column>
       </el-table>
       <!-- 分页 -->
-      <TablePagination
-        :pagingParams="dataParams"
-        :total="total"
-        @update:page-size="handleSizeChange"
-        @update:current-page="handleCurrentChange"
-      ></TablePagination>
+      <TablePagination :pagingParams="dataParams" :total="total" @update:page-size="handleSizeChange" @update:current-page="handleCurrentChange"></TablePagination>
     </div>
     <!-- 弹窗 -->
     <TableForm v-model="showForm" :form-init="formInit" :form-mode="formMode" @submit="submitForm"></TableForm>
@@ -150,24 +145,28 @@ function batchDelete() {
 
 // 提交表单
 async function submitForm(e) {
-  let result = {}
-  switch (e.mode) {
-    case 'add':
-      // 新增添加
-      result = await testAdd(e.data)
-      break
-    case 'edit':
-      // 编辑更新
-      result = await testUpdate(e.data)
-      break
-  }
-  if (result.success) {
-    ElNotification({
-      title: 'Success',
-      message: result?.msg,
-      type: 'success'
-    })
-    refresh()
+  try {
+    let result = {}
+    switch (e.mode) {
+      case 'add':
+        // 新增添加
+        result = await testAdd(e.data)
+        break
+      case 'edit':
+        // 编辑更新
+        result = await testUpdate(e.data)
+        break
+    }
+    if (result.success) {
+      ElNotification({
+        title: 'Success',
+        message: result?.msg,
+        type: 'success'
+      })
+      refresh()
+    }
+  } catch (error) {
+    console.warn(error.msg)
   }
 }
 

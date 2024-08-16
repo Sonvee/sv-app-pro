@@ -89,7 +89,7 @@ const otherMenus = [
   { name: '菜单己', icon: 'cuIcon-apps', path: '' },
   { name: '菜单庚', icon: 'cuIcon-apps', path: '' },
   { name: '菜单辛', icon: 'cuIcon-apps', path: '' },
-  { name: '菜单壬', icon: 'cuIcon-apps', path: '' },
+  { name: '帮助与反馈', icon: 'cuIcon-service', path: '/pages/help/help' },
   { name: '关于', icon: 'cuIcon-info', path: '/pages/about/about' }
 ]
 

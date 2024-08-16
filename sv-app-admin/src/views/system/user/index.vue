@@ -117,10 +117,6 @@ import { isTruthy, timeFormat } from '@/utils'
 import { useDictStore } from '@/store/dict'
 
 const dictStore = useDictStore()
-// 初始化字典
-function dictInit() {
-  dictStore.initDict(['dict_sys_user_status', 'dict_sys_user_gender'])
-}
 
 const dataParams = ref({ pagenum: 1, pagesize: 20 })
 const tableData = ref([])
@@ -132,8 +128,8 @@ const showDeleteWarning = ref(false) // 表单弹窗
 const formInit = ref({}) // 表单初始值
 const formMode = ref('') // 表单模式
 
-onMounted(() => {
-  dictInit()
+onMounted(async () => {
+  await dictStore.initDict(['dict_sys_user_status', 'dict_sys_user_gender']) // 初始化字典
   handleTable(dataParams.value)
 })
 
@@ -191,21 +187,25 @@ function refresh() {
 
 // 提交表单
 async function submitForm(e) {
-  let result = {}
-  switch (e.mode) {
-    case 'edit':
-      // 编辑更新
-      result = await userUpdate(e.data)
-      break
-  }
-  if (result.success) {
-    showForm.value = false // 关闭弹窗
-    ElNotification({
-      title: 'Success',
-      message: result?.msg,
-      type: 'success'
-    })
-    refresh()
+  try {
+    let result = {}
+    switch (e.mode) {
+      case 'edit':
+        // 编辑更新
+        result = await userUpdate(e.data)
+        break
+    }
+    if (result.success) {
+      showForm.value = false // 关闭弹窗
+      ElNotification({
+        title: 'Success',
+        message: result?.msg,
+        type: 'success'
+      })
+      refresh()
+    }
+  } catch (error) {
+    console.warn(error.msg)
   }
 }
 

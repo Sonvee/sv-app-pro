@@ -148,25 +148,29 @@ function batchDelete() {
 
 // 提交表单
 async function submitForm(e) {
-  let result = {}
-  switch (e.mode) {
-    case 'add':
-      // 新增添加
-      result = await testAdd(e.data)
-      break
-    case 'edit':
-      // 编辑更新
-      result = await testUpdate(e.data)
-      break
-  }
-  if (result.success) {
-    showForm.value = false
-    ElNotification({
-      title: 'Success',
-      message: result?.msg,
-      type: 'success'
-    })
-    refresh()
+  try {
+    let result = {}
+    switch (e.mode) {
+      case 'add':
+        // 新增添加
+        result = await testAdd(e.data)
+        break
+      case 'edit':
+        // 编辑更新
+        result = await testUpdate(e.data)
+        break
+    }
+    if (result.success) {
+      showForm.value = false
+      ElNotification({
+        title: 'Success',
+        message: result?.msg,
+        type: 'success'
+      })
+      refresh()
+    }
+  } catch (error) {
+    console.warn(error.msg)
   }
 }
 
@@ -343,7 +347,7 @@ import request from '@/config/request/request.js'
 
 export function testList(data) {
   return request({
-    url: '/sys/testList',
+    url: '/test/testList',
     method: 'post',
     data
   })
@@ -351,7 +355,7 @@ export function testList(data) {
 
 export function testAdd(data) {
   return request({
-    url: '/sys/testAdd',
+    url: '/test/testAdd',
     method: 'post',
     data
   })
@@ -359,7 +363,7 @@ export function testAdd(data) {
 
 export function testUpdate(data) {
   return request({
-    url: '/sys/testUpdate',
+    url: '/test/testUpdate',
     method: 'post',
     data
   })
@@ -367,7 +371,7 @@ export function testUpdate(data) {
 
 export function testDelete(data) {
   return request({
-    url: '/sys/testDelete',
+    url: '/test/testDelete',
     method: 'post',
     data
   })
@@ -375,7 +379,7 @@ export function testDelete(data) {
 
 export function testBatchAdd(data) {
   return request({
-    url: '/sys/testBatchAdd',
+    url: '/test/testBatchAdd',
     method: 'post',
     data
   })
@@ -383,7 +387,7 @@ export function testBatchAdd(data) {
 
 export function testBatchDelete(data) {
   return request({
-    url: '/sys/testBatchDelete',
+    url: '/test/testBatchDelete',
     method: 'post',
     data
   })

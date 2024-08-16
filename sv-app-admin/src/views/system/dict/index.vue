@@ -175,25 +175,29 @@ function batchDelete() {
 
 // 提交表单
 async function submitForm(e) {
-  let result = {}
-  switch (e.mode) {
-    case 'add':
-      // 新增添加
-      result = await dictAdd(e.data)
-      break
-    case 'edit':
-      // 编辑更新
-      result = await dictUpdate(e.data)
-      break
-  }
-  if (result.success) {
-    showForm.value = false
-    ElNotification({
-      title: 'Success',
-      message: result?.msg,
-      type: 'success'
-    })
-    refresh()
+  try {
+    let result = {}
+    switch (e.mode) {
+      case 'add':
+        // 新增添加
+        result = await dictAdd(e.data)
+        break
+      case 'edit':
+        // 编辑更新
+        result = await dictUpdate(e.data)
+        break
+    }
+    if (result.success) {
+      showForm.value = false
+      ElNotification({
+        title: 'Success',
+        message: result?.msg,
+        type: 'success'
+      })
+      refresh()
+    }
+  } catch (error) {
+    console.warn(error.msg)
   }
 }
 
