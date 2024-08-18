@@ -6,7 +6,7 @@
     <template #default>
       <el-form ref="formRef" :model="formData" :rules="rules" label-width="120" label-position="left">
         <el-form-item prop="sort" label="序号" required>
-          <el-input-number v-model="formData.sort" :min="0" :step="1" step-strictly placeholder="请输入序号" clearable style="width: 140px" />
+          <el-input-number v-model="formData.sort" :min="1" :step="1" step-strictly placeholder="请输入序号" clearable style="width: 140px" />
         </el-form-item>
         <el-form-item prop="name" label="名称" required>
           <el-input v-model="formData.name" placeholder="请输入名称" clearable />
