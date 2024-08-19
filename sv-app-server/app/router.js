@@ -135,4 +135,12 @@ module.exports = (app) => {
   router.post('/app/helpDelete', controller.appHelp.helpDelete)
   router.post('/app/helpBatchAdd', controller.appHelp.helpBatchAdd)
   router.post('/app/helpBatchDelete', controller.appHelp.helpBatchDelete)
+
+  // 反馈
+  router.post('/app/feedbackList', controller.appFeedback.feedbackList)
+  router.post('/app/feedbackAdd', controller.appFeedback.feedbackAdd)
+  router.post('/app/feedbackUpdate', controller.appFeedback.feedbackUpdate)
+  router.post('/app/feedbackDelete', controller.appFeedback.feedbackDelete)
+  router.post('/app/feedbackBatchAdd', controller.appFeedback.feedbackBatchAdd)
+  router.post('/app/feedbackBatchDelete', controller.appFeedback.feedbackBatchDelete)
 }

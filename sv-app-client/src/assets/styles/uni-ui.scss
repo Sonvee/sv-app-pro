@@ -33,3 +33,52 @@ uni-toast {
 //     transform: none !important;
 //   }
 // }
+
+.uni-easyinput {
+  color: var(--text-color) !important;
+
+  .uni-easyinput__content {
+    background-color: var(--card-color) !important;
+    border-color: var(--border-color) !important;
+
+    &.is-disabled {
+      color: var(--text-sub-color);
+      background-color: var(--shadow-color) !important;
+      cursor: not-allowed;
+
+      .uni-input-input:disabled {
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+.uni-select {
+  border-color: var(--border-color) !important;
+  background-color: var(--card-color);
+
+  .uni-select__input-text {
+    color: var(--text-color) !important;
+  }
+
+  .uni-select__input-placeholder {
+    color: #999999 !important;
+  }
+  .uni-select__selector {
+    background-color: var(--card-color) !important;
+    border-color: var(--border-color) !important;
+
+    .uni-popper__arrow_bottom {
+      border-bottom-color: var(--border-color);
+      &::after {
+        border-bottom-color: var(--border-color);
+      }
+    }
+
+    .uni-select__selector-item {
+      &:hover {
+        background-color: var(--hover-color) !important;
+      }
+    }
+  }
+}

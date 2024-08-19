@@ -215,41 +215,16 @@ function onDownload(url) {
     font-size: 0.8em;
     opacity: 0.6;
   }
-}
 
-@media screen and (min-width: 1000px) {
-  .page-publish {
-    --base-size: 16px !important;
+  @for $i from 8 through 16 {
+    $max: #{72.5 * $i - 160}px; // y = 72.5x - 160 => (8, 420) (16, 1000)
+    @media screen and (min-width: $max) {
+      --base-size: #{$i}px;
+    }
   }
-}
 
-@media screen and (max-width: 1000px) {
-  .page-publish {
-    --base-size: 14px !important;
-  }
-}
-
-@media screen and (max-width: 800px) {
-  .page-publish {
-    --base-size: 12px !important;
-  }
-}
-
-@media screen and (max-width: 600px) {
-  .page-publish {
-    --base-size: 10px !important;
-  }
-}
-
-@media screen and (max-width: 460px) {
-  .page-publish {
-    --base-size: 9px !important;
-  }
-}
-
-@media screen and (max-width: 420px) {
-  .page-publish {
-    --base-size: 8px !important;
+  @media screen and (max-width: 420px) {
+    --base-size: 8px;
   }
 }
 </style>

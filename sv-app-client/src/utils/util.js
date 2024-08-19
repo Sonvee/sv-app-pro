@@ -261,6 +261,25 @@ export function maskPersonalInfo(input) {
 export function skipPage(path, needlogin = false, params, callback) {
   if (needlogin && !useLoginModal()) return
   if (path) {
+    // 判断是否是外部链接（以http开头）
+    if (path.startsWith('http')) {
+      // #ifdef H5
+      window.open(path)
+      // #endif
+      // #ifdef APP-PLUS
+      // plus.runtime.openURL(path);
+      plus.runtime.openWeb(path);
+      // #endif
+      // #ifdef MP-WEIXIN
+      uni.navigateTo({
+        url: `/pages/auxiliary/link/link?url=${path}`
+      })
+      // #endif
+
+      return
+    }
+
+    // 正常路由跳转
     uni.navigateTo({
       url: path,
       events: {

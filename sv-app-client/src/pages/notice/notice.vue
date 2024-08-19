@@ -19,32 +19,30 @@
         >
           <swiper-item>
             <view class="swiper-item-page sv-uv-list">
-              <uv-list border v-if="gNotice.length">
-                <uv-list-item border link v-for="(item, index) in gNotice" :key="index" @click="onNoticeDetail(item)">
-                  <view class="list-item">
-                    <view class="text-df text-line-1">{{ item.notice_name }}</view>
-                    <view class="text-sm margin-top-xs text-cyan text-line-1">{{ item.notice_title }}</view>
-                  </view>
-                </uv-list-item>
-              </uv-list>
-              <view v-else>
-                <uv-empty mode="list"></uv-empty>
-              </view>
+              <sv-loading v-model:value="loading" :has="!!gNotice.length">
+                <uv-list border>
+                  <uv-list-item border link v-for="(item, index) in gNotice" :key="index" @click="onNoticeDetail(item)">
+                    <view class="list-item">
+                      <view class="text-df text-line-1">{{ item?.notice_name }}</view>
+                      <view class="text-sm margin-top-xs text-cyan text-line-1">{{ item?.notice_title }}</view>
+                    </view>
+                  </uv-list-item>
+                </uv-list>
+              </sv-loading>
             </view>
           </swiper-item>
           <swiper-item>
             <view class="swiper-item-page sv-uv-list">
-              <uv-list border v-if="tNotice.length">
-                <uv-list-item border link v-for="(item, index) in tNotice" :key="index" @click="onNoticeDetail(item)">
-                  <view class="list-item">
-                    <view class="text-df text-line-1">{{ item.notice_name }}</view>
-                    <view class="text-sm margin-top-xs text-cyan text-line-1">{{ item.notice_title }}</view>
-                  </view>
-                </uv-list-item>
-              </uv-list>
-              <view v-else>
-                <uv-empty mode="list"></uv-empty>
-              </view>
+              <sv-loading v-model:value="loading" :has="!!tNotice.length">
+                <uv-list border>
+                  <uv-list-item border link v-for="(item, index) in tNotice" :key="index" @click="onNoticeDetail(item)">
+                    <view class="list-item">
+                      <view class="text-df text-line-1">{{ item?.notice_name }}</view>
+                      <view class="text-sm margin-top-xs text-cyan text-line-1">{{ item?.notice_title }}</view>
+                    </view>
+                  </uv-list-item>
+                </uv-list>
+              </sv-loading>
             </view>
           </swiper-item>
         </swiper>
@@ -52,8 +50,16 @@
     </view>
     <!-- 子页面 -->
     <sv-sub-page ref="subPageRef">
-      <view class="padding">
-        <mp-html :content="curNotice?.notice_content" />
+      <view class="padding flex-col sub-page-main-height">
+        <view class="text-center margin-bottom-xs text-bold text-lg">{{ curNotice?.notice_name }}</view>
+        <view class="text-center margin-bottom-xs text-cyan text-df">{{ curNotice?.notice_title }}</view>
+        <view class="flex-sub overflow-y">
+          <mp-html :content="curNotice?.notice_content" />
+        </view>
+        <view class="text-right margin-top-xs text-gray text-sm">
+          {{ timeFormat(curNotice?.publish_timerange[0]) }} ~
+          {{ timeFormat(curNotice?.publish_timerange[1]) }}
+        </view>
       </view>
     </sv-sub-page>
   </sv-page>
@@ -63,11 +69,12 @@
 import { onLoad } from '@dcloudio/uni-app'
 import { ref } from 'vue'
 import { noticeList } from '@/api/notice'
+import { timeFormat } from '@/utils/util'
 
 const tabsRef = ref()
 const curTab = ref(0)
 const tabList = [{ name: '公告' }, { name: '通知' }]
-
+const loading = ref(true)
 const gNotice = ref([]) // 公告
 const tNotice = ref([]) // 通知
 
@@ -76,12 +83,12 @@ onLoad(() => {
 })
 
 async function getNotice() {
+  loading.value = true
   const noticeRes = await noticeList()
   const noticeData = noticeRes.data || []
   gNotice.value = noticeData.filter((item) => item.notice_type == 1)
   tNotice.value = noticeData.filter((item) => item.notice_type == 0)
-  console.log(gNotice.value)
-  console.log(tNotice.value)
+  loading.value = false
 }
 
 function tabChange(e) {

@@ -137,7 +137,19 @@
         {
           "path": "feedback",
           "style": {
-            "navigationBarTitleText": "反馈"
+            "navigationBarTitleText": "问题反馈"
+          }
+        },
+        {
+          "path": "myreply",
+          "style": {
+            "navigationBarTitleText": "我的反馈"
+          }
+        },
+        {
+          "path": "service",
+          "style": {
+            "navigationBarTitleText": "在线客服"
           }
         }
       ]
@@ -145,16 +157,23 @@
     {
       "root": "pages/auxiliary",
       "pages": [{
-        "path": "crop-image/crop-image",
-        "style": {
-          "navigationBarTitleText": "图片裁剪"
+          "path": "crop-image/crop-image",
+          "style": {
+            "navigationBarTitleText": "图片裁剪"
+          }
+        },
+        {
+          "path": "link/link",
+          "style": {
+            "navigationBarTitleText": "外部链接"
+          }
         }
-      }]
+      ]
     }
   ],
   "globalStyle": {
     "navigationBarTitleText": "sv-app-pro",
-    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarBackgroundColor": "#000000",
     "navigationBarTextStyle": "white",
     "navigationStyle": "custom",
     "backgroundColor": "#f8f8f8",

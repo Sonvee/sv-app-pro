@@ -1510,8 +1510,6 @@ button.cuIcon.lg {
   background-color: var(--card-color);
 }
 .cu-list.card-menu.clickable {
-  cursor: pointer;
-
   & .cu-item:active {
     background-color: var(--click-color);
   }
@@ -4269,4 +4267,16 @@ scroll-view.cu-steps .cu-item {
  */
 .inline-block {
   display: inline-block;
+}
+
+.overflow-auto {
+  overflow: auto;
+}
+
+.overflow-y {
+  overflow-y: scroll;
+}
+
+.overflow-x {
+  overflow-x: scroll;
 }

@@ -35,7 +35,7 @@ class AppReleaseService extends Service {
     // 查询条件
     if (isTruthy(data.version)) conditions.version = { $regex: data.version, $options: 'i' } // 模糊查询
     if (isTruthy(data.name)) conditions.name = { $regex: data.name, $options: 'i' } // 模糊查询
-    if (isTruthy(data.type)) conditions.type = data.type
+    if (isTruthy(data.type, 'zero')) conditions.type = data.type
     if (isTruthy(data.release_range, 'arr')) conditions.release_date = { $gte: data.release_range[0], $lte: data.release_range[1] } // 时间范围
 
     // 数据库连接
@@ -83,13 +83,13 @@ class AppReleaseService extends Service {
     ctx.checkAuthority('open')
 
     // 参数校验
-    if (!isTruthy(data.type)) ctx.throw(400, { msg: 'type 必填' })
+    if (!isTruthy(data.type, 'zero')) ctx.throw(400, { msg: 'type 必填' })
 
     // 查询条件处理
     const conditions = {}
 
     // 查询条件
-    if (isTruthy(data.type)) conditions.type = data.type
+    if (isTruthy(data.type, 'zero')) conditions.type = data.type
 
     // 数据库连接
     const db = app.model.AppRelease
@@ -127,7 +127,7 @@ class AppReleaseService extends Service {
 
     // 参数校验
     if (!isTruthy(data.version)) ctx.throw(400, { msg: 'version 必填' })
-    if (!isTruthy(data.type)) ctx.throw(400, { msg: 'type 必填' })
+    if (!isTruthy(data.type, 'zero')) ctx.throw(400, { msg: 'type 必填' })
 
     // 查询条件处理
     const conditions = { version: data.version, type: data.type }
@@ -162,7 +162,7 @@ class AppReleaseService extends Service {
 
     // 参数校验
     if (!isTruthy(data.version)) ctx.throw(400, { msg: 'version 必填' })
-    if (!isTruthy(data.type)) ctx.throw(400, { msg: 'type 必填' })
+    if (!isTruthy(data.type, 'zero')) ctx.throw(400, { msg: 'type 必填' })
 
     // 查询条件处理
     const conditions = { version: data.version, type: data.type }
@@ -196,7 +196,7 @@ class AppReleaseService extends Service {
 
     // 参数校验
     if (!isTruthy(data.version)) ctx.throw(400, { msg: 'version 必填' })
-    if (!isTruthy(data.type)) ctx.throw(400, { msg: 'type 必填' })
+    if (!isTruthy(data.type, 'zero')) ctx.throw(400, { msg: 'type 必填' })
 
     // 查询条件处理
     const conditions = { version: data.version, type: data.type }

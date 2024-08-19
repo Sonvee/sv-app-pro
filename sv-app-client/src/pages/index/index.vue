@@ -1,11 +1,10 @@
 <template>
   <sv-page showTabbar>
-    <uv-sticky>
+    <uv-sticky v-if="notice">
       <uv-notice-bar
         :text="notice"
-        step
         mode="closable"
-        duration="4000"
+        duration="6000"
         bgColor="var(--card-color)"
         @click="skipPage('/pages/notice/notice')"
       ></uv-notice-bar>
@@ -30,11 +29,12 @@ onLoad(() => {
   getNoticeInTime()
 })
 
-const notice = ref()
+const notice = ref('')
 async function getNoticeInTime() {
   const res = await noticeInTime({ notice_type: 0 }) // 0通知 1公告
   const resData = res.data || []
-  notice.value = resData.map((item) => item.notice_content)
+  const noticeList = resData.map((item) => item.notice_content)
+  notice.value = noticeList[0] || '' // 取第一条置顶通知
 }
 </script>
 

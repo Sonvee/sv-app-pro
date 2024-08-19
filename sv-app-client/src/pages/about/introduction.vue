@@ -1,22 +1,28 @@
 <template>
   <sv-page>
     <view class="introduction-page sv-uv-list">
-      <uv-list border v-if="releases.length">
-        <uv-list-item border link v-for="(item, index) in releases" :key="index" @click="onRelease(item)">
-          <view class="list-item">
-            <view class="text-df">{{ item?.name }} - {{ item?.version }}</view>
-            <view class="text-sm margin-top-xs text-cyan">{{ timeFormat(item?.release_date, 'YYYY-MM-DD') }}</view>
-          </view>
-        </uv-list-item>
-      </uv-list>
-      <view v-else>
-        <uv-empty mode="list"></uv-empty>
-      </view>
+      <sv-loading v-model:value="loading" :has="!!releases.length">
+        <uv-list border>
+          <uv-list-item border link v-for="(item, index) in releases" :key="index" @click="onRelease(item)">
+            <view class="list-item">
+              <view class="text-df">{{ item?.name }} - {{ item?.version }}</view>
+              <view class="text-sm margin-top-xs text-cyan">{{ timeFormat(item?.release_date, 'YYYY-MM-DD') }}</view>
+            </view>
+          </uv-list-item>
+        </uv-list>
+      </sv-loading>
     </view>
     <!-- 子页面 -->
     <sv-sub-page ref="subPageRef">
-      <view class="padding">
-        <mp-html :content="curRelease?.upgrade" />
+      <view class="padding flex-col sub-page-main-height">
+        <view class="text-center margin-bottom-xs text-bold text-lg">{{ curRelease?.name }}</view>
+        <view class="text-center margin-bottom-xs text-cyan text-df">{{ curRelease?.version }}</view>
+        <view class="flex-sub overflow-y">
+          <mp-html :content="curRelease?.upgrade" />
+        </view>
+        <view class="text-right margin-top-xs text-gray text-sm">
+          {{ timeFormat(curRelease?.release_date, 'YYYY-MM-DD') }}
+        </view>
       </view>
     </sv-sub-page>
   </sv-page>
@@ -25,13 +31,15 @@
 <script setup>
 import { ref } from 'vue'
 import { releaseList } from '@/api/release'
-import { timeFormat } from '@/utils/util.js'
+import { sleep, timeFormat } from '@/utils/util.js'
 
 const releases = ref([])
+const loading = ref(true)
 
 getReleaseList()
 
 async function getReleaseList() {
+  loading.value = true
   const sysInfo = uni.getSystemInfoSync()
   let type = ''
   if (sysInfo.uniPlatform == 'web') {
@@ -42,10 +50,8 @@ async function getReleaseList() {
     type = 'mpweixin'
   }
   const res = await releaseList({ type })
-  if (res.success) {
-    releases.value = res.data || []
-    console.log(releases.value)
-  }
+  releases.value = res.data || []
+  loading.value = false
 }
 
 // 子页面
@@ -60,7 +66,7 @@ function onRelease(item) {
 
 <style lang="scss">
 .introduction-page {
-  min-height: var(--page-notab-height);
+  height: var(--page-notab-height);
   padding: 30rpx 0;
 
   .list-item {

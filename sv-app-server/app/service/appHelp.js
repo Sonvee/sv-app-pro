@@ -32,7 +32,7 @@ class AppHelpService extends Service {
 
     // 查询条件
     if (isTruthy(data.name)) conditions.name = { $regex: data.name, $options: 'i' } // 模糊查询
-    if (isTruthy(data.type)) conditions.type = data.type
+    if (isTruthy(data.type, 'zero')) conditions.type = data.type
 
     // 数据库连接
     const db = app.model.AppHelp
