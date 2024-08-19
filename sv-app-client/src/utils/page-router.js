@@ -31,11 +31,13 @@ export const pageRouteTable = generateRouteTable(pagesJson)
  * @param {string} type 路由类型，'/'表示带/前缀，否则不带
  */
 export function getTabBarList(type) {
+	let list = []
 	if (type === '/') {
-		return pagesJson?.tabBar?.list?.map(item => '/' + item.pagePath)
+		list = pagesJson?.tabBar?.list?.map(item => '/' + item.pagePath)
 	} else {
-		return pagesJson?.tabBar?.list?.map(item => item.pagePath)
+		list = pagesJson?.tabBar?.list?.map(item => item.pagePath)
 	}
+	return list
 }
 
 /**

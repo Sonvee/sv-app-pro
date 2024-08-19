@@ -1,5 +1,3 @@
-import { useSysStore } from '@/store/sys.js';
-
 /**
  * 关于隐藏原生tabbar的问题
  * 官方bug：当tab页还未渲染完成时隐藏tabbar会报错：hideTabBar:fail not TabBar page
@@ -15,6 +13,8 @@ export async function preProcess() {
 
 	// 初始系统配置参数
 	initSysConfig()
+
 }
 
-function initSysConfig() {}
+function initSysConfig() {
+}

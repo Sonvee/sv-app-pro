@@ -12,7 +12,10 @@
 					<text :class="[tabIndex == index ? item.selectedIconfont : item.iconfont]"></text>
 				</view>
 				<view v-else>
-					<image :src="tabIndex == index ? item.selectedIconPath : item.iconPath" style="width: 100%; height: 100%; padding: 2px"></image>
+					<image
+						:src="tabIndex == index ? item.selectedIconPath : item.iconPath"
+						style="width: 100%; height: 100%; padding: 2px"
+					></image>
 				</view>
 			</view>
 			<view v-else class="tabbar-icon-center">
@@ -33,7 +36,7 @@
 
 <script setup>
 import { computed } from 'vue'
-import { getPageRoute } from '@/utils/page-router'
+import { getPageRoute } from '@/utils/page-router';
 
 const props = defineProps({
 	bgColor: {
@@ -93,11 +96,12 @@ const tabBarList = [
 	}
 ]
 
+const pageRoute = computed(() => getPageRoute('/'))
+
 // 当前tab页索引
 const tabIndex = computed(() => {
 	// 用当前页面路径和 tabBarList 对比
-	const index = tabBarList.findIndex((item) => item.pagePath === getPageRoute('/'))
-	return index
+	return tabBarList.findIndex((item) => item.pagePath === pageRoute.value)
 })
 
 function changeTab(index) {

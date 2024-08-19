@@ -1,82 +1,82 @@
 <template>
-  <view class="sv-navbar" :style="dynamicStyle">
-    <view class="navbar-left">
-      <slot name="left">
-        <text v-if="!isTabbar" class="cuIcon-back text-xxl padding-lr-sm" @click="onBack"></text>
-      </slot>
-    </view>
-    <view class="navbar-center text-line-1">
-      <slot>{{ pageTitle ?? routeTitle }}</slot>
-    </view>
-    <view class="navbar-right">
-      <slot name="right"></slot>
-    </view>
-  </view>
-  <view class="sv-navbar-placeholder" v-if="placeholder"></view>
+	<view class="sv-navbar" :style="dynamicStyle">
+		<view class="navbar-left">
+			<slot name="left">
+				<text v-if="!isTabbar" class="cuIcon-back text-xxl padding-lr-sm" @click="onBack"></text>
+			</slot>
+		</view>
+		<view class="navbar-center text-line-1">
+			<slot>{{ pageTitle ?? routeTitle }}</slot>
+		</view>
+		<view class="navbar-right">
+			<slot name="right"></slot>
+		</view>
+	</view>
+	<view class="sv-navbar-placeholder" v-if="placeholder"></view>
 </template>
 
 <script setup>
 import { computed } from 'vue'
-import { getPageRoute, getTabBarList, pageRouteTable } from '@/utils/page-router'
+import { useSysStore } from '@/store/sys'
+import { getPageRoute } from '@/utils/page-router';
 
 const props = defineProps({
-  // 自定义页面标题 - 不设默认值将会自动根据页面路由查找标题
-  pageTitle: {
-    type: String
-  },
-  placeholder: {
-    type: Boolean,
-    default: true
-  },
-  bgColor: {
-    type: String,
-    default: ''
-  },
-  border: {
-    type: Boolean,
-    default: true
-  },
-  effect: {
-    type: [Object, Boolean],
-    default: () => {
-      return {
-        frosted: true, // 磨砂特效
-        glass: true // 毛玻璃特效
-      }
-    }
-  }
+	// 自定义页面标题 - 不设默认值将会自动根据页面路由查找标题
+	pageTitle: {
+		type: String
+	},
+	placeholder: {
+		type: Boolean,
+		default: true
+	},
+	bgColor: {
+		type: String,
+		default: ''
+	},
+	border: {
+		type: Boolean,
+		default: true
+	},
+	effect: {
+		type: [Object, Boolean],
+		default: () => {
+			return {
+				frosted: true, // 磨砂特效
+				glass: true // 毛玻璃特效
+			}
+		}
+	}
 })
+
+const sysStore = useSysStore()
 
 const dynamicStyle = computed(() => {
-  let { effect } = props
-  if (effect === true) effect = { frosted: true, glass: true } // 如果 effect 为 true，则默认开启全特效
-  return {
-    '--navbar-color': props.bgColor, // 背景颜色
-    'boxShadow': props.border ? 'var(--navbar-border)' : '', // 边框
-    'backgroundImage': effect?.frosted ? 'var(--frosted-effect)' : '', // 磨砂特效
-    'backdropFilter': effect?.glass ? 'var(--glass-effect)' : '' // 毛玻璃特效
-  }
+	let { effect } = props
+	if (effect === true) effect = { frosted: true, glass: true } // 如果 effect 为 true，则默认开启全特效
+	return {
+		'--navbar-color': props.bgColor, // 背景颜色
+		'boxShadow': props.border ? 'var(--navbar-border)' : '', // 边框
+		'backgroundImage': effect?.frosted ? 'var(--frosted-effect)' : '', // 磨砂特效
+		'backdropFilter': effect?.glass ? 'var(--glass-effect)' : '' // 毛玻璃特效
+	}
 })
 
-const isTabbar = computed(() => {
-  const tabRouteList = getTabBarList()
-  return tabRouteList.includes(getPageRoute())
-})
+const pageRoute = computed(() => getPageRoute())
+const isTabbar = computed(() => sysStore.tabBarList?.includes(pageRoute.value))
 
 const routeTitle = computed(() => {
-  // 根据当前页面路由表查页面标题
-  const findPage = pageRouteTable.find((item) => item.url == getPageRoute())
-  return findPage.name
+	const findPage = sysStore.routeTable?.find((item) => item.url == pageRoute.value)
+	return findPage?.name
 })
 
 const statusBarHeight = computed(() => {
-  return uni.getSystemInfoSync().statusBarHeight + 'px'
+	return uni.getSystemInfoSync().statusBarHeight + 'px'
 })
 
 function onBack() {
-  if (!isTabbar.value) {
-    uni.navigateBack()
-  }
+	if (!isTabbar.value) {
+		uni.navigateBack()
+	}
 }
 </script>
 
@@ -84,47 +84,47 @@ function onBack() {
 $sv-navbar-height: calc(88rpx + v-bind(statusBarHeight));
 
 .sv-navbar-placeholder {
-  width: 0;
-  height: $sv-navbar-height;
-  background: transparent;
+	width: 0;
+	height: $sv-navbar-height;
+	background: transparent;
 }
 
 .sv-navbar {
-  width: 100%;
-  height: $sv-navbar-height;
-  position: fixed;
-  top: 0;
-  padding-top: v-bind(statusBarHeight);
-  z-index: 988;
-  display: flex;
-  align-items: center;
-  box-sizing: border-box;
+	width: 100%;
+	height: $sv-navbar-height;
+	position: fixed;
+	top: 0;
+	padding-top: v-bind(statusBarHeight);
+	z-index: 988;
+	display: flex;
+	align-items: center;
+	box-sizing: border-box;
 
-  // 下边框
-  --navbar-border: 0 1px var(--shadow-color);
-  // box-shadow: var(--navbar-border); // 以动态style方式设置
+	// 下边框
+	--navbar-border: 0 1px var(--shadow-color);
+	// box-shadow: var(--navbar-border); // 以动态style方式设置
 
-  // 模糊特效
-  --navbar-color: var(--bg-color);
-  --frosted-effect: radial-gradient(transparent 2rpx, var(--navbar-color) 8rpx);
-  // background-image: var(--frosted-effect); // 以动态style方式设置
-  background-size: 8rpx 8rpx;
+	// 模糊特效
+	--navbar-color: var(--bg-color);
+	--frosted-effect: radial-gradient(transparent 2rpx, var(--navbar-color) 8rpx);
+	// background-image: var(--frosted-effect); // 以动态style方式设置
+	background-size: 8rpx 8rpx;
 
-  --glass-effect: saturate(50%) blur(8rpx);
-  // backdrop-filter: var(--glass-effect);
+	--glass-effect: saturate(50%) blur(8rpx);
+	// backdrop-filter: var(--glass-effect);
 
-  .navbar-left,
-  .navbar-right {
-    min-width: 25%;
-  }
-  .navbar-right {
-    text-align: right;
-  }
+	.navbar-left,
+	.navbar-right {
+		min-width: 25%;
+	}
+	.navbar-right {
+		text-align: right;
+	}
 
-  .navbar-center {
-    flex: 1;
-    font-size: 28rpx;
-    text-align: center;
-  }
+	.navbar-center {
+		flex: 1;
+		font-size: 28rpx;
+		text-align: center;
+	}
 }
 </style>
