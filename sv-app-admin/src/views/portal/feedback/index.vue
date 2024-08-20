@@ -21,17 +21,33 @@
             <DictTag :dictList="dictStore.getDict('dict_app_feedback_type')" :value="scope.row.type"></DictTag>
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="名称" width="300" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="title" label="标题" width="300" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="content" label="内容" min-width="300" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="reply" label="回复" min-width="300" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="remark" label="备注" min-width="300" show-overflow-tooltip></el-table-column>
         <el-table-column prop="status" label="状态" align="center" width="120" show-overflow-tooltip>
           <template #default="scope">
             <DictTag :dictList="dictStore.getDict('dict_app_feedback_status')" :value="scope.row.status"></DictTag>
           </template>
         </el-table-column>
-        <el-table-column prop="created_by" label="创建者" align="center" width="200" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="name" label="名称" width="300" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="title" label="标题" width="300" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="content" label="内容" min-width="300" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="screenshot" label="应用截图" min-width="300">
+          <template #default="scope">
+            <div class="flex-vc text-line-1">
+              <el-image
+                class="screenshot-iamges"
+                v-for="(item, index) in scope.row?.screenshot"
+                :key="item?.url"
+                :src="item?.url"
+                :preview-src-list="scope.row?.screenshot?.map((i) => i?.url)"
+                :initial-index="index"
+                preview-teleported
+              />
+            </div>
+          </template>
+        </el-table-column>
+        <el-table-column prop="reply" label="回复" min-width="300" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="remark" label="备注" min-width="300" show-overflow-tooltip></el-table-column>
+
+        <el-table-column prop="created_by" label="创建者" align="center" width="240" show-overflow-tooltip></el-table-column>
         <el-table-column
           prop="created_date"
           label="创建时间"
@@ -50,7 +66,7 @@
           :formatter="(row) => timeFormat(row.updated_date)"
           show-overflow-tooltip
         ></el-table-column>
-        <el-table-column label="操作" align="center" width="120" fixed="right">
+        <el-table-column label="操作" align="center" width="160" fixed="right">
           <template #default="scope">
             <el-button-group>
               <el-button text type="primary" :icon="EditPen" v-permission="['feedbackUpdate']" @click="edit(scope.row)">编辑</el-button>
@@ -218,4 +234,11 @@ function handleCurrentChange(e) {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.screenshot-iamges {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  margin-right: 6px;
+}
+</style>

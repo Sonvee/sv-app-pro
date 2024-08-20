@@ -59,3 +59,14 @@ export function releaseImageUpload(data) {
     }
   })
 }
+
+export function feedbackImageUpload(data) {
+  return request({
+    url: '/file/feedbackImageUpload',
+    method: 'post',
+    data,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}

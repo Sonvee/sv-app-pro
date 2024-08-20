@@ -69,6 +69,26 @@ async function deleteImg() {
   avatar.value = []
   emits('update:file', {})
 }
+
+/**
+ * 手动上传文件
+ * @param apiFunc api接口函数
+ * @param params 上传参数
+ */
+ async function upload(apiFunc, params) {
+  let fd = new FormData()
+  const fileds = Object.keys(params)
+  fileds.forEach((item) => {
+    fd.append(item, params[item])
+  })
+  const uploadRes = await apiFunc(fd)
+  if (!uploadRes.success) throw new Error('上传失败')
+  return uploadRes
+}
+
+defineExpose({
+  upload
+})
 </script>
 
 <style lang="scss" scoped>

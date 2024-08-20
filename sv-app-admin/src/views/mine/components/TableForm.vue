@@ -6,7 +6,7 @@
     <template #default>
       <el-form ref="formRef" :model="formData" :rules="rules" label-width="120" label-position="left">
         <el-form-item prop="avatar" label="头像">
-          <AvatarUpload v-model:file="formData.avatar"></AvatarUpload>
+          <AvatarUpload v-model:file="formData.avatar" ref="avatarUploadRef"></AvatarUpload>
         </el-form-item>
         <el-form-item prop="username" label="用户名" required>
           <el-input v-model="formData.username" placeholder="请输入用户名" clearable />
@@ -83,6 +83,7 @@ const rules = ref({
 
 const tableFormRef = ref() // 抽屉
 const formRef = ref() // 表单
+const avatarUploadRef = ref()
 
 // 抽屉打开回调
 function openDrawer() {
@@ -120,12 +121,16 @@ function confirm() {
 
       // 对比头像是否改变，若改变则需上传更新
       if (isTruthy(formData.value?.avatar?.url) && formData.value?.avatar?.url !== props.formInit?.avatar?.url) {
-        let fd = new FormData()
-        fd.append('avatar', formData.value?.avatar?.file)
-        const uploadRes = await avatarUpload(fd)
-        if (!uploadRes.success) return
-        formData.value.avatar = uploadRes.data
+        try {
+          const upRes = await avatarUploadRef.value.upload(avatarUpload, {
+            avatar: formData.value?.avatar?.file
+          })
+          formData.value.avatar = upRes.data
+        } catch (error) {
+          return error
+        }
       }
+      
       emits('submit', { data: formData.value })
       // tableFormRef.value.handleClose()
     } else {

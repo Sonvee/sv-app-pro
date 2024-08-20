@@ -81,8 +81,8 @@ module.exports = (appInfo) => {
     // 通过 app.fullQiniu 直接使用实例
     client: {
       zone: 'Zone_z2', // Zone_z0 华东, Zone_z1 华北, Zone_z2 华南, Zone_na0 北美
-      bucket: 'sv-app-oss', // 空间名称
-      baseUrl: 'http://sgyrcxiab.hn-bkt.clouddn.com/' // 用于拼接已上传文件的完整地址，后缀'/'不能丢
+      bucket: 'sv-oss', // 空间名称
+      baseUrl: 'http://sihqh7cpr.hn-bkt.clouddn.com/' // 用于拼接已上传文件的完整地址，后缀'/'不能丢
     }
   }
 
@@ -122,8 +122,8 @@ module.exports = (appInfo) => {
   config.cluster = {
     listen: {
       port: 7001,
-      // hostname: '192.168.1.209'
-      hostname: '192.168.6.118'
+      hostname: '192.168.1.209'
+      // hostname: '192.168.6.118'
     }
   }
 

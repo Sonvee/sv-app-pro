@@ -4,7 +4,7 @@
     class="sv-avatar-upload"
     :fileList="avatar"
     :maxCount="1"
-    name="avatar_pload"
+    name="avatar_upload"
     accept="image"
     @afterRead="afterRead"
     @delete="deleteFile"
@@ -83,6 +83,7 @@ function deleteFile(e) {
     .uv-upload__button,
     .uv-upload__wrap__preview {
       margin: 0;
+      border: 1px solid var(--border-color);
     }
 
     .uv-upload__deletable {

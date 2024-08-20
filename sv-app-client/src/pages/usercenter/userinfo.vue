@@ -123,8 +123,8 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import avatarUpload from '@/components/file-upload/avatar-upload.vue'
-import dictTag from '@/components/dict-type/dict-tag.vue'
+import AvatarUpload from '@/components/file-upload/avatar-upload.vue'
+import DictTag from '@/components/dict-type/dict-tag.vue'
 import { useUserStore } from '@/store/user.js'
 import { timeFormat, isTruthy, isSubset } from '@/utils/util'
 import { userUpdateSimple } from '@/api/user/user'

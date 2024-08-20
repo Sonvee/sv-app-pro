@@ -176,10 +176,10 @@
 		"navigationBarBackgroundColor": "#000000",
 		"navigationBarTextStyle": "white",
 		"navigationStyle": "custom",
-		"backgroundColor": "#f8f8f8",
+		"backgroundColor": "#222222",
 		"app-plus": {
 			"titleNView": false,
-			"background": "#22273D",
+			"background": "#222222",
 			"bounce": "none"
 		}
 	},

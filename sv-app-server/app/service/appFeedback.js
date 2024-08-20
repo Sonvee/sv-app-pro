@@ -12,6 +12,7 @@ class AppFeedbackService extends Service {
    * @property {String} data.name - 名称
    * @property {Number} data.type - 类型
    * @property {Number} data.status - 状态
+   * @property {String} data.created_by - 创建者
    * @property {Number} data.pagesize - 每页条数
    * @property {Number} data.pagenum - 页码
    */
@@ -36,6 +37,7 @@ class AppFeedbackService extends Service {
     if (isTruthy(data.feedback_id)) conditions.feedback_id = data.feedback_id
     if (isTruthy(data.type, 'zero')) conditions.type = data.type
     if (isTruthy(data.status, 'zero')) conditions.status = data.status
+    if (isTruthy(data.created_by)) conditions.created_by = data.created_by
     if (isTruthy(data.name)) conditions.name = { $regex: data.name, $options: 'i' } // 模糊查询
 
     // 数据库连接

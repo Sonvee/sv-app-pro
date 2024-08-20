@@ -40,6 +40,14 @@ class FileController extends Controller {
     const res = await service.file.releaseImageUpload({ data, files })
     ctx.result(res)
   }
+  
+  async feedbackImageUpload() {
+    const { ctx, service } = this
+    const files = ctx.request.files
+    const data = ctx.request.body
+    const res = await service.file.feedbackImageUpload({ data, files })
+    ctx.result(res)
+  }
 }
 
 module.exports = FileController

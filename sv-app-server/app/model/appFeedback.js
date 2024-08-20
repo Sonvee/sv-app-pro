@@ -28,6 +28,10 @@ module.exports = (app) => {
       content: {
         type: String
       },
+      // 应用截图
+      screenshot: {
+        type: Array
+      },
       // 回复
       reply: {
         type: String
@@ -43,7 +47,7 @@ module.exports = (app) => {
       },
       // 创建者
       created_by: {
-        type: Object
+        type: String
       },
       // 自动生成字段
       created_date: {

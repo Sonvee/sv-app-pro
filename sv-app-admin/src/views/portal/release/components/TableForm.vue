@@ -15,7 +15,7 @@
           <el-input v-model="formData.name" placeholder="请输入应用名称" clearable />
         </el-form-item>
         <el-form-item prop="file" label="应用资源包">
-          <DragSingleUpload v-model:file="formData.file" height="140px"></DragSingleUpload>
+          <DragSingleUpload v-model:file="formData.file" height="140px" ref="dragSingleUploadRef"></DragSingleUpload>
         </el-form-item>
         <el-form-item prop="link" label="资源链接">
           <el-input v-model="formData.link" placeholder="请输入资源链接" clearable />
@@ -33,7 +33,7 @@
           <TinymceEditor v-model="formData.upgrade" :custom-style="{ minHeight: '300px' }"></TinymceEditor>
         </el-form-item>
         <el-form-item prop="screenshot" label="应用截图">
-          <ImageUpload v-model:files="formData.screenshot" size="80px"></ImageUpload>
+          <ImageUpload v-model:files="formData.screenshot" size="80px" ref="imageUploadRef"></ImageUpload>
         </el-form-item>
         <el-form-item prop="remark" label="备注">
           <el-input v-model="formData.remark" type="textarea" :autosize="{ minRows: 2 }" placeholder="请输入备注" />
@@ -115,6 +115,8 @@ const rules = ref({
 
 const tableFormRef = ref() // 抽屉
 const formRef = ref() // 表单
+const dragSingleUploadRef = ref() // 单文件上传
+const imageUploadRef = ref() // 图片上传
 
 // 抽屉打开回调
 function openDrawer() {
@@ -133,6 +135,7 @@ function closeDrawer() {}
 function cancel() {
   tableFormRef.value.handleClose()
 }
+
 // 确认提交表单
 function confirm() {
   formRef.value.validate(async (valid, fields) => {
@@ -151,42 +154,37 @@ function confirm() {
 
       // 对比资源文件是否改变，若改变则需上传更新
       if (isTruthy(formData.value?.file?.url) && formData.value?.file?.url !== props.formInit?.file?.url) {
-        let fd = new FormData()
-        fd.append('file', formData.value?.file?.file)
-        fd.append('version', formData.value?.version)
-        const uploadRes = await releaseUpload(fd)
-        if (!uploadRes.success) return
-        formData.value.file = uploadRes.data
+        try {
+          const upRes = await dragSingleUploadRef.value.upload(releaseUpload, {
+            file: formData.value?.file?.file,
+            version: formData.value?.version
+          })
+          formData.value.file = upRes.data
+        } catch (error) {
+          return error
+        }
       }
 
       // screenshot截图数组中若存在raw字段，则为新截图，需要上传
       if (isTruthy(formData.value?.screenshot, 'arr')) {
         const upList = formData.value?.screenshot.filter((item, index) => item.raw)
         if (isTruthy(upList, 'arr')) {
-          let fds = new FormData()
-          fds.append('version', formData.value?.version)
-          upList.forEach((item) => {
-            fds.append('files', item.raw)
-          })
-          // 上传文件数组
-          const upRes = await releaseImageUpload(fds)
-          if (!upRes.success) return
-          const upResList = upRes.data || []
-          // 将formData中本地file类型文件替换为上传后的url（根据name字段与上传后的key中取文件名作对比）
-          const handleScreenshot = formData.value?.screenshot.map((item) => {
-            if (item.raw) {
-              const findeOne = upResList.find((i) => {
-                const filename = i.key.split('/').pop()
-                return filename === item.name
-              })
-              return findeOne
-            } else {
-              // 非新上传文件则返回原数据
-              return item
-            }
-          })
-          // 更新截图数组
-          formData.value.screenshot = handleScreenshot
+          try {
+            const imgRes = await imageUploadRef.value.upload(releaseImageUpload, 'files', {
+              files: upList,
+              version: formData.value?.version
+            })
+            const upResList = imgRes.data || []
+            // 将formData中本地file类型文件替换为上传后的url（根据name字段与上传后的key中取文件名作对比）
+            const handleScreenshot = formData.value?.screenshot.map((item) => {
+              // 新上传的文件返回真实数据，非新上传文件则返回原数据
+              return isTruthy(item.raw) ? upResList.find((i) => i.key.split('/').pop() === item.name) : item
+            })
+            // 更新截图数组
+            formData.value.screenshot = handleScreenshot
+          } catch (error) {
+            return error
+          }
         }
       }
 

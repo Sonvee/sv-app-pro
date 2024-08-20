@@ -2,20 +2,20 @@
   <sv-page>
     <view class="feedback-page">
       <uni-forms ref="fbFormRef" :model="fbForm" :rules="fbRules">
-        <uni-forms-item label="标题" name="name">
-          <uni-easyinput v-model="fbForm.name" type="text" placeholder="请输入标题（可选）" />
+        <uni-forms-item label="标题" name="name" required>
+          <uni-easyinput v-model="fbForm.name" type="text" placeholder="请输入标题" />
         </uni-forms-item>
         <uni-forms-item label="副标题" name="title">
           <uni-easyinput v-model="fbForm.title" type="text" placeholder="请输入副标题（可选）" />
         </uni-forms-item>
-        <uni-forms-item label="类型" name="type">
+        <uni-forms-item label="类型" name="type" required>
           <uni-data-select v-model="fbForm.type" :localdata="types" clear></uni-data-select>
         </uni-forms-item>
-        <uni-forms-item label="内容" name="content">
-          <button class="cu-btn round block bg-gradual-green" @click="onEdit">
-            <text class="cuIcon-writefill margin-right-xs"></text>
-            编辑
-          </button>
+        <uni-forms-item label="内容" name="content" required>
+          <uni-easyinput v-model="fbForm.content" type="textarea" autoHeight :maxlength="-1" placeholder="请输入内容" />
+        </uni-forms-item>
+        <uni-forms-item label="截图" name="screenshot">
+          <image-upload :files="fbForm.screenshot" ref="imageUploadRef" width="160rpx" height="160rpx"></image-upload>
         </uni-forms-item>
       </uni-forms>
       <!-- 按钮 -->
@@ -24,35 +24,49 @@
           <text class="uni-icons-undo-filled margin-right-xs"></text>
           返回
         </button>
-        <button class="cu-btn round bg-gradual-blue flex-sub margin-left" @click="submit">
+        <button class="cu-btn round bg-gradual-blue flex-sub margin-left" :disabled="loading" @click="submit">
           <text class="uni-icons-checkmarkempty margin-right-xs"></text>
           提交
         </button>
       </view>
     </view>
-    <!-- 子页面 -->
-    <sv-sub-page ref="subPageRef">
-      <sp-editor
-        editorId="editor"
-        :toolbar-config="toolbarConfig"
-        @input="inputOver"
-        @upinImage="upinImage"
-        @init="initEditor"
-      ></sp-editor>
-    </sv-sub-page>
   </sv-page>
+  <sv-intercept-back :show="showIntercept" :beforeIntercept="beforeIntercept"></sv-intercept-back>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
+import { onLoad } from '@dcloudio/uni-app'
+import ImageUpload from '@/components/file-upload/image-upload.vue'
+import { useDictStroe } from '@/store/dict'
+import { useUserStore } from '@/store/user'
+import { feedbackImageUpload } from '@/api/file/upload'
+import { feedbackAdd } from '@/api/feedback'
+import { sleep } from '@/utils/util'
+
+const userStore = useUserStore()
+const userId = computed(() => userStore.userInfo._id)
+const dictStore = useDictStroe()
+const feedbackTypeList = computed(() => dictStore.getDict('dict_app_feedback_type'))
+const types = computed(() => {
+  return feedbackTypeList.value.map((item) => {
+    return {
+      text: item.label,
+      value: item.value
+    }
+  })
+})
+const showIntercept = ref(true) // 返回拦截器
+const loading = ref(false)
 
 const fbFormRef = ref()
 const fbForm = ref({
   feedback_id: '', // id主键
   name: '', // 名称
   title: '', // 标题
-  type: 0, // 类型
+  type: '', // 类型
   content: '', // 反馈内容
+  screenshot: [], // 截图
   reply: '', // 回复
   status: 0, // 状态
   remark: '', // 备注
@@ -60,92 +74,75 @@ const fbForm = ref({
 })
 
 const fbRules = ref({
+  name: { rules: [{ required: true, errorMessage: '请输入标题' }] },
   type: { rules: [{ required: true, errorMessage: '请选择类型' }] },
   content: { rules: [{ required: true, errorMessage: '请输入内容' }] }
 })
 
-const types = [
-  { value: 0, text: '篮球' },
-  { value: 1, text: '足球' },
-  { value: 2, text: '游泳' }
-]
+const imageUploadRef = ref()
 
-// 子页面
-const subPageRef = ref()
-const editorIns = ref()
-const toolbarConfig = {
-  excludeKeys: ['direction', 'date', 'lineHeight', 'letterSpacing', 'listCheck'],
-  iconSize: '20px',
-  iconColumns: 10
-}
-
-function onEdit() {
-  subPageRef.value.open()
-}
-
-/**
- * 编辑器就绪
- * @param {Object} editor 编辑器实例，你可以自定义调用editor实例的方法
- * @tutorial editor组件 https://uniapp.dcloud.net.cn/component/editor.html#editor-%E7%BB%84%E4%BB%B6
- * @tutorial 相关api https://uniapp.dcloud.net.cn/api/media/editor-context.html
- */
-function initEditor(editor) {
-  editorIns.value = editor // 保存编辑器实例
-}
-
-/**
- * 获取输入内容
- * @param {Object} e {html,text} 内容的html文本，和text文本
- */
-function inputOver(e) {
-  console.log('==== inputOver :', e)
-}
-
-/**
- * 直接运行示例工程插入图片无法正常显示的看这里
- * 因为插件默认采用云端存储图片的方式
- * 以$emit('upinImage', tempFiles, this.editorCtx)的方式回调
- * @param {Object} tempFiles
- * @param {Object} editorCtx
- */
-function upinImage(tempFiles, editorCtx) {
-  /**
-   * 本地临时插入图片预览
-   * 注意：这里仅是示例本地图片预览，因为需要将图片先上传到云端，再将图片插入到编辑器中
-   * 正式开发时，还请将此处注释，并解开下面 使用 uniCloud.uploadFile 上传图片的示例方法 的注释
-   * @tutorial https://uniapp.dcloud.net.cn/api/media/editor-context.html#editorcontext-insertimage
-   */
-  // #ifdef MP-WEIXIN
-  // 注意微信小程序的图片路径是在tempFilePath字段中
-  editorCtx.insertImage({
-    src: tempFiles[0].tempFilePath,
-    width: '80%', // 默认不建议铺满宽度100%，预留一点空隙以便用户编辑
-    success: function () {}
-  })
-  // #endif
-
-  // #ifndef MP-WEIXIN
-  editorCtx.insertImage({
-    src: tempFiles[0].path,
-    width: '80%', // 默认不建议铺满宽度100%，预留一点空隙以便用户编辑
-    success: function () {}
-  })
-  // #endif
-}
+onLoad(() => {
+  dictStore.initDict(['dict_app_feedback_type'])
+})
 
 function cancel() {
-  uni.navigateBack({ delta: 1 })
+  uni.navigateBack()
 }
 
 function submit() {
+  loading.value = true
   fbFormRef.value
     .validate()
-    .then(() => {
-      console.log(fbForm.value)
+    .then(async () => {
+      const upRes = await imageUploadRef.value.upload(feedbackImageUpload, {
+        name: 'files',
+        params: {
+          user_id: userId.value,
+          type: fbForm.value?.type
+        }
+      })
+      fbForm.value.screenshot = upRes
+      // 自动生成id：前缀+类型+用户+时间戳组合
+      fbForm.value.feedback_id = `fb_${fbForm.value.type}_${userId.value}_${Date.now()}`
+      fbForm.value.created_by = userId.value
+
+      const fbRes = await feedbackAdd(fbForm.value)
+
+      uni.showToast({
+        title: fbRes.msg,
+        icon: 'success',
+        duration: 1500,
+        mask: true
+      })
+
+      showIntercept.value = false // 关闭拦截器
+      await sleep(1500)
+
+      // 返回
+      cancel()
+      loading.value = false
     })
     .catch((err) => {
       console.log('表单校验失败', err)
+      loading.value = false
     })
+}
+
+/**
+ * 返回事件拦截
+ * @returns {Promise<boolean>} 是否返回
+ */
+async function beforeIntercept() {
+  const isBack = await new Promise((callback) => {
+    uni.showModal({
+      title: '系统提示',
+      content: '反馈还未提交，是否确定退出',
+      success: ({ confirm }) => {
+        callback(confirm)
+      }
+    })
+  })
+  return isBack
 }
 </script>
 

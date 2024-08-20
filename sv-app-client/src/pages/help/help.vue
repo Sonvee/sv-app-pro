@@ -138,6 +138,7 @@ function onAnswer(e) {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+    color: var(--primary-color);
 
     .footer-btn {
       display: flex;
@@ -145,7 +146,7 @@ function onAnswer(e) {
       align-items: center;
 
       &:active {
-        color: var(--primary-color);
+        color: var(--success-color);
       }
     }
   }

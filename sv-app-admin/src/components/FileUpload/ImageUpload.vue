@@ -73,6 +73,34 @@ function handlePreview(uploadFile) {
 function closeViewer() {
   showViewer.value = false
 }
+
+/**
+ * 手动上传文件
+ * @param apiFunc api接口函数
+ * @param filed 上传文件字段名
+ * @param params 上传参数
+ */
+async function upload(apiFunc, filed, params) {
+  let fd = new FormData()
+
+  const fileds = Object.keys(params).filter((item) => item !== filed) // 其他参数
+  fileds.forEach((item) => {
+    fd.append(item, params[item])
+  })
+  // 文件资源列表
+  const resource = params[filed]
+  resource.forEach((item) => {
+    fd.append(filed, item.raw)
+  })
+  const uploadRes = await apiFunc(fd)
+  if (!uploadRes.success) throw new Error('上传失败')
+
+  return uploadRes
+}
+
+defineExpose({
+  upload
+})
 </script>
 
 <style lang="scss" scoped>

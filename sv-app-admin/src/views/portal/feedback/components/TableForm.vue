@@ -18,10 +18,13 @@
           <DictSelect v-model="formData.type" disabled dictType="dict_app_feedback_type" formatNumber placeholder="请选择类型"></DictSelect>
         </el-form-item>
         <el-form-item prop="content" label="反馈内容">
-          <TinymceEditor v-model="formData.content" disabled :custom-style="{ minHeight: '400px' }"></TinymceEditor>
+          <el-input v-model="formData.content" type="textarea" :autosize="{ minRows: 4 }" placeholder="请输入反馈内容" />
         </el-form-item>
         <el-form-item prop="reply" label="回复">
-          <TinymceEditor v-model="formData.reply" :custom-style="{ minHeight: '400px' }"></TinymceEditor>
+          <el-input v-model="formData.reply" type="textarea" :autosize="{ minRows: 4 }" placeholder="请输入回复" />
+        </el-form-item>
+        <el-form-item prop="screenshot" label="应用截图">
+          <ImageUpload v-model:files="formData.screenshot" size="80px" ref="imageUploadRef"></ImageUpload>
         </el-form-item>
         <el-form-item prop="status" label="状态" required>
           <DictSelect v-model="formData.status" dictType="dict_app_feedback_status" formatNumber placeholder="请选择状态"></DictSelect>
@@ -43,11 +46,12 @@
 
 <script setup>
 import { ref, watchEffect } from 'vue'
-import { assignOverride } from '@/utils'
+import { assignOverride, isTruthy } from '@/utils'
 import { ElNotification } from 'element-plus'
 import { cloneDeep, isEqual } from 'lodash-es'
+import { feedbackImageUpload } from '@/api/file/upload'
 import DictSelect from '@/components/DictType/DictSelect.vue'
-import TinymceEditor from '@/components/TinymceEditor/TinymceEditor.vue'
+import ImageUpload from '@/components/FileUpload/ImageUpload.vue'
 
 const props = defineProps({
   formInit: {
@@ -70,9 +74,11 @@ const formBase = {
   type: null, // 类型
   content: '', // 反馈内容
   reply: '', // 回复
+  screenshot: [], // 截图
   status: null, // 状态
   remark: '', // 备注
-  created_by: '' // 创建者
+  created_by: '', // 创建者
+  user_id: 'admin'
 }
 // 表单数据
 const formData = ref(formBase)
@@ -87,6 +93,7 @@ const rules = ref({
 
 const tableFormRef = ref() // 抽屉
 const formRef = ref() // 表单
+const imageUploadRef = ref()
 
 // 抽屉打开回调
 function openDrawer() {
@@ -117,6 +124,30 @@ function confirm() {
         })
         tableFormRef.value.handleClose()
         return
+      }
+
+      // screenshot截图数组中若存在raw字段，则为新截图，需要上传
+      if (isTruthy(formData.value?.screenshot, 'arr')) {
+        const upList = formData.value?.screenshot.filter((item, index) => item.raw)
+        if (isTruthy(upList, 'arr')) {
+          try {
+            const imgRes = await imageUploadRef.value.upload(feedbackImageUpload, 'files', {
+              files: upList,
+              user_id: 'admin',
+              type: formData.value?.type
+            })
+            const upResList = imgRes.data || []
+            // 将formData中本地file类型文件替换为上传后的url（根据name字段与上传后的key中取文件名作对比）
+            const handleScreenshot = formData.value?.screenshot.map((item) => {
+              // 新上传的文件返回真实数据，非新上传文件则返回原数据
+              return isTruthy(item.raw) ? upResList.find((i) => i.key.split('/').pop() === item.name) : item
+            })
+            // 更新截图数组
+            formData.value.screenshot = handleScreenshot
+          } catch (error) {
+            return error
+          }
+        }
       }
 
       emits('submit', { data: formData.value, mode: props.formMode })

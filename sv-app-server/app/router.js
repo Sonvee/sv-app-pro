@@ -106,6 +106,7 @@ module.exports = (app) => {
   router.post('/file/userfilesDelete', controller.file.userfilesDelete)
   router.post('/file/releaseUpload', controller.file.releaseUpload)
   router.post('/file/releaseImageUpload', controller.file.releaseImageUpload)
+  router.post('/file/feedbackImageUpload', controller.file.feedbackImageUpload)
 
   // 缓存
   router.post('/cache/cacheKeyList', controller.sysCache.cacheKeyList)
