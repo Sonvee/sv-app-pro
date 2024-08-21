@@ -56,13 +56,13 @@
             </text>
           </template>
         </uv-cell>
-        <uv-cell title="邀请码" clickable @click="onCopy(userInfo.my_invite_code)">
+        <!-- <uv-cell title="邀请码" clickable @click="onCopy(userInfo.my_invite_code)">
           <template #value>
             <text class="value-text text-line-1 text-tyblue">
               {{ userInfo.my_invite_code }}
             </text>
           </template>
-        </uv-cell>
+        </uv-cell> -->
         <uv-cell title="二维码名片" clickable @click="onQRcode">
           <template #right-icon>
             <text class="cuIcon-qrcode text-df"></text>

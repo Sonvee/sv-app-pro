@@ -144,4 +144,20 @@ module.exports = (app) => {
   router.post('/app/feedbackDelete', controller.appFeedback.feedbackDelete)
   router.post('/app/feedbackBatchAdd', controller.appFeedback.feedbackBatchAdd)
   router.post('/app/feedbackBatchDelete', controller.appFeedback.feedbackBatchDelete)
+
+  // 会员套餐
+  router.post('/vip/planList', controller.vipPlan.planList)
+  router.post('/vip/planAdd', controller.vipPlan.planAdd)
+  router.post('/vip/planUpdate', controller.vipPlan.planUpdate)
+  router.post('/vip/planDelete', controller.vipPlan.planDelete)
+  router.post('/vip/planBatchAdd', controller.vipPlan.planBatchAdd)
+  router.post('/vip/planBatchDelete', controller.vipPlan.planBatchDelete)
+
+  // 会员特权
+  router.post('/vip/benefitList', controller.vipBenefit.benefitList)
+  router.post('/vip/benefitAdd', controller.vipBenefit.benefitAdd)
+  router.post('/vip/benefitUpdate', controller.vipBenefit.benefitUpdate)
+  router.post('/vip/benefitDelete', controller.vipBenefit.benefitDelete)
+  router.post('/vip/benefitBatchAdd', controller.vipBenefit.benefitBatchAdd)
+  router.post('/vip/benefitBatchDelete', controller.vipBenefit.benefitBatchDelete)
 }

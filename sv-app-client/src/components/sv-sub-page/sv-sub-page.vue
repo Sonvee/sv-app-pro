@@ -7,9 +7,8 @@
             <text class="cuIcon-back text-xxl padding-lr-sm" @click="close"></text>
           </template>
         </sv-navbar>
-        <view class="sv-sub-page-main">
-          <slot></slot>
-        </view>
+        <!-- 默认插槽 -->
+        <slot></slot>
       </view>
     </uv-popup>
     <sv-intercept-back :show="showIntercept" :beforeIntercept="beforeIntercept" :customBack="close"></sv-intercept-back>
@@ -74,7 +73,10 @@ export default {
 
 <style lang="scss">
 .sv-sub-page {
-  .sub-page-main-height {
+  :deep(.sub-page-main) {
+    min-height: var(--page-notab-height);
+  }
+  :deep(.sub-page-height) {
     height: var(--page-notab-height);
   }
 

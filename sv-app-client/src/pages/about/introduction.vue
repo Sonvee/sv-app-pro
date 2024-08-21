@@ -14,7 +14,7 @@
     </view>
     <!-- 子页面 -->
     <sv-sub-page ref="subPageRef">
-      <view class="padding flex-col sub-page-main-height">
+      <view class="padding flex-col sub-page-main">
         <view class="text-center margin-bottom-xs text-bold text-lg">{{ curRelease?.name }}</view>
         <view class="text-center margin-bottom-xs text-cyan text-df">{{ curRelease?.version }}</view>
         <view class="flex-sub overflow-y">

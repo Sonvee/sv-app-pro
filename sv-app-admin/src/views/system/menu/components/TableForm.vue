@@ -17,7 +17,7 @@
         </el-form-item>
 
         <el-form-item prop="sort" label="序号">
-          <el-input-number v-model="formData.sort" :min="0" />
+          <el-input-number v-model="formData.sort" :min="0" :step="1" step-strictly />
         </el-form-item>
 
         <el-form-item prop="meta.icon" label="图标">

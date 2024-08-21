@@ -6,48 +6,24 @@
     <div class="card table-container">
       <!-- 工具栏 -->
       <div class="table-control">
-        <!-- <el-button type="primary" plain :icon="Plus" v-permission="['feedbackAdd']" @click="add">新增</el-button>
-        <el-button type="danger" plain :icon="Delete" v-permission="['feedbackBatchDelete']" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button> -->
+        <el-button type="primary" plain :icon="Plus" v-permission="['benefitAdd']" @click="add">新增</el-button>
+        <el-button type="danger" plain :icon="Delete" v-permission="['benefitBatchDelete']" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
         <div style="flex: 1"></div>
         <el-button circle :icon="RefreshRight" @click="refresh" title="刷新"></el-button>
         <el-button circle :icon="showFilter ? View : Hide" @click="showFilter = !showFilter" :title="showFilter ? '隐藏筛选' : '显示筛选'"></el-button>
       </div>
       <!-- 数据表格 -->
       <el-table v-loading="loading" :data="tableData" border @selection-change="handleSelectionChange">
-        <!-- <el-table-column type="selection" align="center" width="50" fixed="left" /> -->
-        <el-table-column prop="feedback_id" label="ID" width="200" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="type" label="类型" align="center" width="120" show-overflow-tooltip>
+        <el-table-column type="selection" align="center" width="50" fixed="left" />
+        <el-table-column prop="benefit_id" label="权益ID" width="200" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="sort" label="序号" align="center" width="80" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="icon" label="图标" align="center" width="80" show-overflow-tooltip>
           <template #default="scope">
-            <DictTag :dictList="dictStore.getDict('dict_app_feedback_type')" :value="scope.row.type"></DictTag>
+            <i :class="scope.row.icon" class="text-xl"></i>
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="状态" align="center" width="120" show-overflow-tooltip>
-          <template #default="scope">
-            <DictTag :dictList="dictStore.getDict('dict_app_feedback_status')" :value="scope.row.status"></DictTag>
-          </template>
-        </el-table-column>
-        <el-table-column prop="name" label="名称" width="300" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="title" label="标题" width="300" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="content" label="内容" min-width="300" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="screenshot" label="应用截图" min-width="300">
-          <template #default="scope">
-            <div class="flex-vc text-line-1">
-              <el-image
-                class="screenshot-iamges"
-                v-for="(item, index) in scope.row?.screenshot"
-                :key="item?.url"
-                :src="item?.url"
-                :preview-src-list="scope.row?.screenshot?.map((i) => i?.url)"
-                :initial-index="index"
-                preview-teleported
-              />
-            </div>
-          </template>
-        </el-table-column>
-        <el-table-column prop="reply" label="回复" min-width="300" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="remark" label="备注" min-width="300" show-overflow-tooltip></el-table-column>
-
-        <el-table-column prop="created_by" label="创建者" align="center" width="240" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="benefit_name" label="权益名称" min-width="300" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="description" label="权益描述" min-width="300" show-overflow-tooltip></el-table-column>
         <el-table-column
           prop="created_date"
           label="创建时间"
@@ -69,8 +45,8 @@
         <el-table-column label="操作" align="center" width="160" fixed="right">
           <template #default="scope">
             <el-button-group>
-              <el-button text type="primary" :icon="EditPen" v-permission="['feedbackUpdate']" @click="edit(scope.row)">编辑</el-button>
-              <!-- <el-button text type="danger" :icon="Delete" v-permission="['feedbackDelete']" @click="del(scope.row)">删除</el-button> -->
+              <el-button text type="primary" :icon="EditPen" v-permission="['benefitUpdate']" @click="edit(scope.row)">编辑</el-button>
+              <el-button text type="danger" :icon="Delete" v-permission="['benefitDelete']" @click="del(scope.row)">删除</el-button>
             </el-button-group>
           </template>
         </el-table-column>
@@ -83,18 +59,15 @@
   </div>
 </template>
 
-<script setup name="feedback">
+<script setup name="benefit">
 import { ref, onMounted } from 'vue'
 import TableFilter from './components/TableFilter.vue'
 import TableForm from './components/TableForm.vue'
 import TablePagination from '@/components/TablePagination/index.vue'
-import { feedbackList, feedbackAdd, feedbackUpdate, feedbackDelete, feedbackBatchDelete } from '@/api/feedback'
+import { benefitList, benefitAdd, benefitUpdate, benefitDelete, benefitBatchDelete } from '@/api/vip/benefit'
 import { RefreshRight, Plus, EditPen, Delete, View, Hide } from '@element-plus/icons-vue'
 import { ElNotification, ElMessageBox, ElMessage } from 'element-plus'
 import { isTruthy, timeFormat } from '@/utils'
-import { useDictStore } from '@/store/dict'
-
-const dictStore = useDictStore()
 
 const dataParams = ref({ pagenum: 1, pagesize: 20 })
 const tableData = ref([])
@@ -105,15 +78,14 @@ const showForm = ref(false) // 表单弹窗
 const formInit = ref({}) // 表单初始值
 const formMode = ref('') // 表单模式 add / edit
 
-onMounted(async () => {
-  await dictStore.initDict(['dict_app_feedback_type', 'dict_app_feedback_status']) // 初始化字典
+onMounted(() => {
   handleTable(dataParams.value)
 })
 
 // 数据
 async function handleTable(params) {
   loading.value = true
-  const res = await feedbackList(params)
+  const res = await benefitList(params)
   tableData.value = res.data || []
   total.value = res.total
   loading.value = false
@@ -141,15 +113,15 @@ function edit(row) {
 
 // 删
 function del(row) {
-  const { name, feedback_id } = row
-  ElMessageBox.confirm(`确认删除『 ${name} 』吗？`, '系统提示', {
+  const { benefit_name, benefit_id } = row
+  ElMessageBox.confirm(`确认删除『 ${benefit_name} 』吗？`, '系统提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
   })
     .then(async () => {
       // 确认删除操作
-      const deleteRes = await feedbackDelete({ feedback_id })
+      const deleteRes = await benefitDelete({ benefit_id })
       ElMessage({
         type: 'success',
         message: deleteRes?.msg
@@ -170,7 +142,7 @@ function refresh() {
 // 多选
 const batchSelection = ref([])
 function handleSelectionChange(e) {
-  batchSelection.value = e.map((item) => item.feedback_id)
+  batchSelection.value = e.map((item) => item.benefit_id)
 }
 
 // 批量删除
@@ -183,7 +155,7 @@ function batchDelete() {
   })
     .then(async () => {
       // 确认批量删除操作
-      const deleteRes = await feedbackBatchDelete({
+      const deleteRes = await benefitBatchDelete({
         list: batchSelection.value
       })
       ElMessage({
@@ -202,11 +174,11 @@ async function submitForm(e) {
     switch (e.mode) {
       case 'add':
         // 新增添加
-        result = await feedbackAdd(e.data)
+        result = await benefitAdd(e.data)
         break
       case 'edit':
         // 编辑更新
-        result = await feedbackUpdate(e.data)
+        result = await benefitUpdate(e.data)
         break
     }
     if (result.success) {
@@ -234,11 +206,4 @@ function handleCurrentChange(e) {
 }
 </script>
 
-<style lang="scss" scoped>
-.screenshot-iamges {
-  width: 30px;
-  height: 30px;
-  flex-shrink: 0;
-  margin-right: 6px;
-}
-</style>
+<style lang="scss" scoped></style>

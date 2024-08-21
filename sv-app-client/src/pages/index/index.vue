@@ -1,15 +1,17 @@
 <template>
   <sv-page showTabbar>
-    <uv-sticky v-if="notice">
-      <uv-notice-bar
-        :text="notice"
-        mode="closable"
-        duration="6000"
-        bgColor="var(--card-color)"
-        @click="skipPage('/pages/notice/notice')"
-      ></uv-notice-bar>
-    </uv-sticky>
-    <view class="index-page">首页</view>
+    <view class="index-page">
+      <view v-if="notice" class="notice-bar">
+        <uv-notice-bar
+          :text="notice"
+          mode="closable"
+          duration="6000"
+          bgColor="var(--card-color)"
+          @click="skipPage('/pages/notice/notice')"
+        ></uv-notice-bar>
+      </view>
+      <view style="height: 1000px; border: 10px solid #66ccff">首页</view>
+    </view>
   </sv-page>
   <!-- #ifdef APP -->
   <upgrade-center auto></upgrade-center>
@@ -17,7 +19,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { onLoad } from '@dcloudio/uni-app'
 import { noticeInTime } from '@/api/notice'
 import { skipPage } from '@/utils/util'
@@ -41,5 +43,12 @@ async function getNoticeInTime() {
 <style lang="scss">
 .index-page {
   // min-height: var(--page-main-height);
+
+  .notice-bar {
+    position: sticky;
+    top: var(--navbar-height);
+    left: 0;
+    right: 0;
+  }
 }
 </style>

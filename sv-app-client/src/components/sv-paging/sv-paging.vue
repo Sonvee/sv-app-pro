@@ -40,6 +40,7 @@
 
 <script>
 import { testList } from '@/api/test'
+import topImg from '@/assets/images/top_rocket.png'
 export default {
   name: 'sv-paging',
   props: {
@@ -69,7 +70,7 @@ export default {
         cellHeightMode: 'fixed', // 高度模式 fixed / dynamic
         autoShowBackToTop: true,
         backToTopThreshold: '400rpx', // 滚动显示阈值
-        backToTopImg: '/static/icons/top-fill.png',
+        backToTopImg: topImg,
         backToTopBottom: '80rpx' // 返回顶部按钮与底部的距离
       },
       dataList: []

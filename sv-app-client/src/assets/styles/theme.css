@@ -1,5 +1,6 @@
 /* 通用 */
-:root {
+:root,
+page {
   --primary-color: #409eff;
   --success-color: #67C23A;
   --warning-color: #E6A23C;

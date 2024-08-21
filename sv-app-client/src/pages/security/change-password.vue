@@ -46,7 +46,4 @@ function openSubPage(type) {
   min-height: var(--page-notab-height);
   padding: 30rpx 0;
 }
-.sub-page-main {
-  min-height: var(--page-notab-height);
-}
 </style>

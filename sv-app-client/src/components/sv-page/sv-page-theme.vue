@@ -66,5 +66,9 @@ module.exports = {
   background-color: var(--bg-color);
   color: var(--text-color);
   /* #endif */
+  
+  // 其他全局变量
+  --navbar-height: calc(88rpx + v-bind(statusBarHeight));
+  --tabbar-height: calc(100rpx + env(safe-area-inset-bottom));
 }
 </style>

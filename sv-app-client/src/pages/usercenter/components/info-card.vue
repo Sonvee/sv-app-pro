@@ -88,7 +88,7 @@ function onCopy(text) {
     height: 300rpx;
 
     .blur {
-      filter: blur(10px);
+      filter: blur(20rpx);
     }
   }
   .user-info {

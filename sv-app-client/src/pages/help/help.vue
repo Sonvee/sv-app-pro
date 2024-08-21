@@ -35,9 +35,21 @@
         </template>
       </view>
       <view class="help-footer glass">
-        <view class="footer-btn" v-for="item in more" :key="item.name" @click="skipPage(item.path)">
-          <text class="text-xl" :class="item.icon"></text>
-          <view class="text-sm margin-top-xs">{{ item.name }}</view>
+        <view class="footer-btn" @click="skipPage('/pages/help/feedback')">
+          <text class="cuIcon-writefill text-xl"></text>
+          <view class="text-sm margin-top-xs">问题反馈</view>
+        </view>
+        <view class="footer-btn" @click="skipPage('/pages/help/myreply')">
+          <text class="cuIcon-messagefill text-xl"></text>
+          <view class="text-sm margin-top-xs">我的反馈</view>
+        </view>
+        <view class="footer-btn" @click="onPhone('19966595186')">
+          <text class="cuIcon-servicefill text-xl"></text>
+          <view class="text-sm margin-top-xs">客服热线</view>
+        </view>
+        <view class="footer-btn" @click="skipPage('https://ext.dcloud.net.cn/publisher?id=1173575')">
+          <text class="cuIcon-appreciatefill text-xl"></text>
+          <view class="text-sm margin-top-xs">点赞支持</view>
         </view>
       </view>
     </view>
@@ -64,13 +76,6 @@ const helpMap = ref({})
 
 const searchValue = ref('')
 
-const more = [
-  { name: '问题反馈', icon: 'cuIcon-writefill', path: '/pages/help/feedback' },
-  { name: '我的反馈', icon: 'cuIcon-messagefill', path: '/pages/help/myreply' },
-  { name: '在线客服', icon: 'cuIcon-servicefill', path: '/pages/help/service' },
-  { name: '点个赞吧', icon: 'cuIcon-appreciatefill', path: 'https://ext.dcloud.net.cn/publisher?id=1173575' }
-]
-
 onLoad(async () => {
   await dictStore.initDict(['dict_app_help_type'])
   getHelp({ pagesize: -1 })
@@ -94,6 +99,26 @@ function onSearchClear() {
   getHelp({ pagesize: -1 })
 }
 
+function onPhone(text) {
+  // #ifdef H5
+  uni.setClipboardData({
+    data: text,
+    success: () => {
+      uni.showToast({
+        title: '号码复制成功',
+        icon: 'success',
+        duration: 2000
+      })
+    }
+  })
+  // #endif
+  // #ifndef H5
+  uni.makePhoneCall({
+    phoneNumber: text
+  })
+  // #endif
+}
+
 // 子页面
 const subPageRef = ref()
 const curQuestion = ref()
@@ -106,13 +131,17 @@ function onAnswer(e) {
 
 <style lang="scss">
 .help-page {
-  padding: 30rpx 0 190rpx 0;
+  padding-bottom: 190rpx;
 
   .search-bar {
-    padding: 0 30rpx;
-    margin-bottom: 20rpx;
+    padding: 30rpx;
     display: flex;
     align-items: center;
+    position: sticky;
+    top: var(--navbar-height);
+    left: 0;
+    right: 0;
+    z-index: 9;
 
     .search-btn {
       margin: 0 5px;

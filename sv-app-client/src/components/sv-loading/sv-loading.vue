@@ -5,9 +5,9 @@
       <view class="text-sm text-cyan margin-top-sm sv-text-streamer">加载中</view>
     </view>
     <template v-else>
-      <view v-if="has">
+      <template v-if="has">
         <slot></slot>
-      </view>
+      </template>
       <view v-else class="flex-col-vhc h-full">
         <uv-empty mode="list"></uv-empty>
       </view>

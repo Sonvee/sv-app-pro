@@ -50,7 +50,7 @@
     </view>
     <!-- 子页面 -->
     <sv-sub-page ref="subPageRef">
-      <view class="padding flex-col sub-page-main-height">
+      <view class="padding flex-col sub-page-height">
         <view class="text-center margin-bottom-xs text-bold text-lg">{{ curNotice?.notice_name }}</view>
         <view class="text-center margin-bottom-xs text-cyan text-df">{{ curNotice?.notice_title }}</view>
         <view class="flex-sub overflow-y">

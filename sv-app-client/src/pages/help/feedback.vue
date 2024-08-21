@@ -5,9 +5,6 @@
         <uni-forms-item label="标题" name="name" required>
           <uni-easyinput v-model="fbForm.name" type="text" placeholder="请输入标题" />
         </uni-forms-item>
-        <uni-forms-item label="副标题" name="title">
-          <uni-easyinput v-model="fbForm.title" type="text" placeholder="请输入副标题（可选）" />
-        </uni-forms-item>
         <uni-forms-item label="类型" name="type" required>
           <uni-data-select v-model="fbForm.type" :localdata="types" clear></uni-data-select>
         </uni-forms-item>
@@ -49,7 +46,7 @@ const userId = computed(() => userStore.userInfo._id)
 const dictStore = useDictStroe()
 const feedbackTypeList = computed(() => dictStore.getDict('dict_app_feedback_type'))
 const types = computed(() => {
-  return feedbackTypeList.value.map((item) => {
+  return feedbackTypeList.value?.map((item) => {
     return {
       text: item.label,
       value: item.value
@@ -63,7 +60,6 @@ const fbFormRef = ref()
 const fbForm = ref({
   feedback_id: '', // id主键
   name: '', // 名称
-  title: '', // 标题
   type: '', // 类型
   content: '', // 反馈内容
   screenshot: [], // 截图

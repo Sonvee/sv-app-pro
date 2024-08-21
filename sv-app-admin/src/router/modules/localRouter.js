@@ -30,7 +30,7 @@ export const localFlatMenuList = [
     path: '/portal/publish',
     component: '/portal/publish/index',
     parent_name: 'portal',
-    sort: 410,
+    sort: 210,
     redirect: '',
     permissions: [],
     meta: {
