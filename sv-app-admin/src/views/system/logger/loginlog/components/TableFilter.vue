@@ -29,7 +29,7 @@
         <DictSelect v-model="filterForm.login_type" dictType="dict_sys_login_type" placeholder="请选择登录方式" style="width: 150px"></DictSelect>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submit">搜索</el-button>
+        <el-button type="primary" v-permission="['logList']" @click="submit">搜索</el-button>
         <el-button type="danger" @click="reset">重置</el-button>
       </el-form-item>
     </el-form>

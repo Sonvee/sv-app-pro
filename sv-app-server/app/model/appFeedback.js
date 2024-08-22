@@ -5,9 +5,10 @@ module.exports = (app) => {
 
   const AppFeedbackSchema = new mongoose.Schema(
     {
-      // 建议自动生成唯一id，可由前缀+类型+用户+时间戳组合
+      // id 主键
       feedback_id: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        auto: true,
         unique: true,
         required: true
       },

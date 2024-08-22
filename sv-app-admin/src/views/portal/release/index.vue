@@ -16,7 +16,7 @@
         <el-table-column prop="version" label="版本号" align="center" width="160" show-overflow-tooltip></el-table-column>
         <el-table-column prop="type" label="应用类型" align="center" width="160" show-overflow-tooltip>
           <template #default="scope">
-            <DictTag :dictList="dictStore.getDict('dict_app_type')" :value="scope.row.type"></DictTag>
+            <DictTag :dictList="dictAppType" :value="scope.row.type"></DictTag>
           </template>
         </el-table-column>
         <el-table-column prop="name" label="应用名称" width="240" show-overflow-tooltip></el-table-column>
@@ -84,7 +84,7 @@
 </template>
 
 <script setup name="release">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import TableFilter from './components/TableFilter.vue'
 import TableForm from './components/TableForm.vue'
 import TablePagination from '@/components/TablePagination/index.vue'
@@ -96,6 +96,8 @@ import { isTruthy, timeFormat } from '@/utils'
 import { useDictStore } from '@/store/dict'
 
 const dictStore = useDictStore()
+dictStore.initDict(['dict_app_type']) // 初始化字典
+const dictAppType = computed(() => dictStore.getDict('dict_app_type'))
 
 const dataParams = ref({ pagenum: 1, pagesize: 20 })
 const tableData = ref([])
@@ -106,8 +108,7 @@ const showForm = ref(false) // 表单弹窗
 const formInit = ref({}) // 表单初始值
 const formMode = ref('') // 表单模式 add / edit
 
-onMounted(async () => {
-  await dictStore.initDict(['dict_app_type']) // 初始化字典
+onMounted(() => {
   handleTable(dataParams.value)
 })
 

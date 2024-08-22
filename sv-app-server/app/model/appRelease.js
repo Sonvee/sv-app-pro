@@ -5,6 +5,13 @@ module.exports = (app) => {
 
   const AppReleaseSchema = new mongoose.Schema(
     {
+      // id 主键
+      release_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        auto: true,
+        unique: true,
+        required: true
+      },
       // 版本号 num.num.num.type
       version: {
         type: String,

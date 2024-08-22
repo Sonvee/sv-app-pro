@@ -19,7 +19,7 @@
         <el-table-column prop="notice_id" label="通告ID" width="120" show-overflow-tooltip fixed="left"></el-table-column>
         <el-table-column prop="notice_type" label="通告类型" align="center" width="100" show-overflow-tooltip>
           <template #default="scope">
-            <DictTag :dictList="dictStore.getDict('dict_sys_notice_type')" :value="scope.row.notice_type"></DictTag>
+            <DictTag :dictList="dictNoticeType" :value="scope.row.notice_type"></DictTag>
           </template>
         </el-table-column>
         <el-table-column prop="notice_name" label="通告名称" min-width="200" show-overflow-tooltip></el-table-column>
@@ -40,7 +40,7 @@
         </el-table-column>
         <el-table-column prop="status" label="状态" align="center" width="100" show-overflow-tooltip>
           <template #default="scope">
-            <DictTag :dictList="dictStore.getDict('dict_sys_status')" :value="scope.row.status"></DictTag>
+            <DictTag :dictList="dictNoticeStatus" :value="scope.row.status"></DictTag>
           </template>
         </el-table-column>
         <el-table-column prop="publish_timerange" label="公布时间范围" align="center" width="320" show-overflow-tooltip>
@@ -79,7 +79,7 @@
 </template>
 
 <script setup name="notice">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import TableFilter from './components/TableFilter.vue'
 import TableForm from './components/TableForm.vue'
 import TablePagination from '@/components/TablePagination/index.vue'
@@ -92,6 +92,9 @@ import { isTruthy, timeFormat } from '@/utils'
 import { useDictStore } from '@/store/dict'
 
 const dictStore = useDictStore()
+dictStore.initDict(['dict_sys_notice_type', 'dict_sys_status']) // 初始化字典
+const dictNoticeType = computed(() => dictStore.getDict('dict_sys_notice_type'))
+const dictNoticeStatus = computed(() => dictStore.getDict('dict_sys_status'))
 
 const dataParams = ref({ pagenum: 1, pagesize: 20 })
 const tableData = ref([])
@@ -103,8 +106,7 @@ const formInit = ref({}) // 表单初始值
 const formMode = ref('') // 表单模式 add / edit
 const formType = ref('') // 0通知 1公告
 
-onMounted(async () => {
-  await dictStore.initDict(['dict_sys_notice_type', 'dict_sys_status']) // 初始化字典
+onMounted(() => {
   handleTable(dataParams.value)
 })
 

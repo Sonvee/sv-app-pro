@@ -3,33 +3,30 @@
 module.exports = (app) => {
   const mongoose = app.mongoose
 
-  const AppHelpSchema = new mongoose.Schema(
+  const VipCdkeySchema = new mongoose.Schema(
     {
-      // id 主键
-      help_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        auto: true,
-        unique: true,
-        required: true
-      },
-      // 帮助的名称/标题
-      name: {
+      // 激活码
+      cdkey: {
         type: String,
         unique: true,
         required: true
       },
-      // 序号
-      sort: {
+      // 激活码对应的会员套餐id
+      cdkey_plan: {
+        type: String
+      },
+      // 激活码描述
+      description: {
+        type: String
+      },
+      // 激活码有效期至
+      valid_date: {
         type: Number
       },
-      // 类型 例如：0热门问题 1账号相关 ...（由字典决定）
-      type: {
+      // 状态：0-待使用，1-已使用，2-已失效(激活码已过期或绑定的套餐不存在)
+      status: {
         type: Number,
-        required: true
-      },
-      // 内容
-      content: {
-        type: String
+        default: 0
       },
       // 自动生成字段
       created_date: {
@@ -49,5 +46,5 @@ module.exports = (app) => {
    * 创建数据模型
    * 参数1：连接表名称（自动添加复数形式，自动转为小写），参数2：Schema，参数3：连接表自定义名称（可选，优先级大于参数1）
    */
-  return mongoose.model('app_help', AppHelpSchema)
+  return mongoose.model('vip_cdkey', VipCdkeySchema)
 }

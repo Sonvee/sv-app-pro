@@ -269,30 +269,6 @@ export function multipleJudgment(origin, conditions = [], result = []) {
 }
 
 /**
- * 创建cdkey
- * @return {String} cdkey
- */
-export function createCDKey(segments = 5, segmentLength = 5) {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-
-  const cdKey = Array(segments)
-    .fill(null)
-    .flatMap(() => [[...Array(segmentLength)].map(() => chars[Math.floor(Math.random() * chars.length)]).join(''), '-'])
-    .slice(0, -1) // 去掉最后一个破折号
-  return cdKey.join('')
-}
-
-/**
- * cdkey校验
- * @param {string} cdKey 要校验的cdkey
- * @return {boolean} 是否校验成功
- */
-export function validCDKey(segments = 5, segmentLength = 5) {
-  const regexPattern = new RegExp(`^(?:[A-Za-z0-9]{${segmentLength}}-){${segments - 1}}[A-Za-z0-9]{${segmentLength}}$`)
-  return regexPattern.test(cdKey)
-}
-
-/**
  * 精确将分转为元
  * @param {Object} fen 金额(分) 100分=1元
  */

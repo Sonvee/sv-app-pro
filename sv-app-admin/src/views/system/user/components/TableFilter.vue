@@ -7,8 +7,8 @@
       <el-form-item prop="username" label="用户名">
         <el-input v-model.trim="filterForm.username" placeholder="请输入用户名" clearable style="width: 150px" />
       </el-form-item>
-      <el-form-item prop="nickname" label="用户名">
-        <el-input v-model.trim="filterForm.nickname" placeholder="请输入用户名" clearable style="width: 150px" />
+      <el-form-item prop="nickname" label="昵称">
+        <el-input v-model.trim="filterForm.nickname" placeholder="请输入昵称" clearable style="width: 150px" />
       </el-form-item>
       <el-form-item prop="phone" label="手机">
         <el-input v-model.trim="filterForm.phone" placeholder="请输入手机" clearable style="width: 150px" />

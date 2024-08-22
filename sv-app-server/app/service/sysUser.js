@@ -9,7 +9,7 @@ class SysUserService extends Service {
   /**
    * 查询 post - 权限 permission
    * @param {Object} data - 请求参数
-   * @property {String} data._id - id
+   * @property {String} data.user_id - 用户id
    * @property {String} data.username - 用户名
    * @property {String} data.nickname - 昵称
    * @property {String} data.phone - 手机号
@@ -40,7 +40,7 @@ class SysUserService extends Service {
     const conditions = {}
 
     // 查询条件
-    if (isTruthy(data._id)) conditions._id = data._id
+    if (isTruthy(data.user_id)) conditions.user_id = data.user_id
     if (isTruthy(data.username)) conditions.username = data.username
     if (isTruthy(data.nickname)) conditions.nickname = { $regex: data.nickname, $options: 'i' } // 模糊查询
     if (isTruthy(data.phone)) conditions.phone = data.phone
@@ -98,7 +98,7 @@ class SysUserService extends Service {
 
   /**
    * 获取用户自身信息 get - 权限 needlogin
-   * @description 直接从token中获取用户_id
+   * @description 直接从token中获取用户user_id
    * @param {Object} data - 请求参数
    * @property {Boolean} data.all - 是否为全数据，默认否
    */
@@ -109,7 +109,7 @@ class SysUserService extends Service {
     ctx.checkAuthority('needlogin')
 
     // 查询条件处理
-    const conditions = { _id: ctx.userInfo._id }
+    const conditions = { user_id: ctx.userInfo.user_id }
 
     // 筛选字段：0 隐藏，1 显示
     const projection = {
@@ -203,7 +203,7 @@ class SysUserService extends Service {
    * 用户简单信息更新 post - 权限 self_id
    * @description 修改信息之后必须再请求刷新token
    * @param {Object} data - 请求参数
-   * @property {String} data._id - id主键
+   * @property {String} data.user_id - id主键
    * @property {String} data.username - 用户名
    * @property {String} data.nickname - 昵称
    * @property {Object} data.avatar - 头像
@@ -212,19 +212,19 @@ class SysUserService extends Service {
    * @property {Number} data.gender - 性别
    * @property {Date} data.birthday - 生日
    * @property {String} data.comment - 备注
-   * @property {Array} data.tags - 备注
+   * @property {Array} data.tags - 标签
    */
   async userUpdateSimple(data) {
     const { ctx, app } = this
 
     // 参数校验
-    if (!isTruthy(data._id)) ctx.throw(400, { msg: '_id 必填' })
+    if (!isTruthy(data.user_id)) ctx.throw(400, { msg: 'user_id 必填' })
 
     // 权限校验
-    ctx.checkAuthority('self_id', data._id)
+    ctx.checkAuthority('self_id', data.user_id)
 
     // 查询条件处理
-    const conditions = { _id: data._id }
+    const conditions = { user_id: data.user_id }
 
     // 数据库连接
     const db = app.model.SysUser
@@ -239,7 +239,7 @@ class SysUserService extends Service {
       if (!usernameRegExp.regexp.test(data.username)) ctx.throw(400, { msg: usernameRegExp.msg })
 
       // 是否重复
-      const userExist = await db.findOne({ _id: { $ne: data._id }, username: data.username })
+      const userExist = await db.findOne({ user_id: { $ne: data.user_id }, username: data.username })
       if (userExist) ctx.throw(400, { msg: '用户名已存在' })
     }
 
@@ -276,7 +276,7 @@ class SysUserService extends Service {
   /**
    * 修改密码 post - 权限 self_id
    * @param {Object} data - 请求参数
-   * @property {String} data._id - 用户uid
+   * @property {String} data.user_id - 用户uid
    * @property {String} data.old_password - 旧密码
    * @property {String} data.new_password - 新密码
    */
@@ -284,10 +284,10 @@ class SysUserService extends Service {
     const { ctx, app } = this
 
     // 参数校验
-    if (!isTruthy(data._id)) ctx.throw(400, { msg: '_id 必填' })
+    if (!isTruthy(data.user_id)) ctx.throw(400, { msg: 'user_id 必填' })
 
     // 权限校验
-    ctx.checkAuthority('self_id', data._id)
+    ctx.checkAuthority('self_id', data.user_id)
 
     // 参数校验
     if (!isTruthy(data.old_password)) ctx.throw(400, { msg: 'old_password 必填' })
@@ -298,7 +298,7 @@ class SysUserService extends Service {
     if (!passwordRegExp.regexp.test(data.new_password)) ctx.throw(400, { msg: passwordRegExp.msg })
 
     // 查询条件处理
-    const conditions = { _id: data._id }
+    const conditions = { user_id: data.user_id }
 
     // 数据库连接
     const db = app.model.SysUser
@@ -324,7 +324,7 @@ class SysUserService extends Service {
   /**
    * 邮箱验证码修改密码 post - 权限 self_id
    * @param {Object} data - 请求参数
-   * @property {String} data._id - 用户uid
+   * @property {String} data.user_id - 用户uid
    * @property {String} data.email - 邮箱
    * @property {String} data.captcha - 验证码
    * @property {String} data.password - 密码
@@ -333,10 +333,10 @@ class SysUserService extends Service {
     const { ctx, app } = this
 
     // 参数校验
-    if (!isTruthy(data._id)) ctx.throw(400, { msg: '_id 必填' })
+    if (!isTruthy(data.user_id)) ctx.throw(400, { msg: 'user_id 必填' })
 
     // 权限校验
-    ctx.checkAuthority('self_id', data._id)
+    ctx.checkAuthority('self_id', data.user_id)
 
     // 参数校验
     if (!isTruthy(data.email)) ctx.throw(400, { msg: 'email 必填' })
@@ -357,7 +357,7 @@ class SysUserService extends Service {
     if (!passwordRegExp.regexp.test(data.password)) ctx.throw(400, { msg: passwordRegExp.msg })
 
     // 查询条件处理
-    const conditions = { _id: data._id, email: data.email }
+    const conditions = { user_id: data.user_id, email: data.email }
 
     // 数据库连接
     const db = app.model.SysUser
@@ -380,7 +380,7 @@ class SysUserService extends Service {
    * 绑定邮箱 post - 权限 self_id
    * @description 如果未绑定过邮箱，则只需bind新邮箱；若绑定过邮箱，则需先verify原邮箱，再bind新邮箱
    * @param {Object} data - 请求参数
-   * @property {String} data._id - 用户uid
+   * @property {String} data.user_id - 用户uid
    * @property {String} data.email - 邮箱
    * @property {String} data.captcha - 验证码
    * @property {String} data.mode - 模式： verify验证原邮箱 | bind绑定新邮箱
@@ -389,10 +389,10 @@ class SysUserService extends Service {
     const { ctx, app } = this
 
     // 参数校验
-    if (!isTruthy(data._id)) ctx.throw(400, { msg: '_id 必填' })
+    if (!isTruthy(data.user_id)) ctx.throw(400, { msg: 'user_id 必填' })
 
     // 权限校验
-    ctx.checkAuthority('self_id', data._id)
+    ctx.checkAuthority('self_id', data.user_id)
 
     // 参数校验
     if (data.mode !== 'verify' && data.mode !== 'bind') ctx.throw(400, { msg: 'mode 参数有误' })
@@ -409,7 +409,7 @@ class SysUserService extends Service {
     if (data.captcha.toLowerCase() != captcha_bind.toLowerCase()) ctx.throw(400, { msg: '邮箱验证码错误' })
 
     // 查询条件处理
-    const conditions = { _id: data._id }
+    const conditions = { user_id: data.user_id }
 
     // 数据库连接
     const db = app.model.SysUser
@@ -442,17 +442,17 @@ class SysUserService extends Service {
   /**
    * 绑定微信 post - 权限 self_id
    * @param {Object} data - 请求参数
-   * @property {String} data._id - 用户_id
+   * @property {String} data.user_id - 用户_id
    * @property {String} data.code - 微信小程序临时登录凭证 code
    */
   async bindWechat(data) {
     const { ctx, app } = this
 
     // 参数校验
-    if (!isTruthy(data._id)) ctx.throw(400, { msg: '_id 必填' })
+    if (!isTruthy(data.user_id)) ctx.throw(400, { msg: 'user_id 必填' })
 
     // 权限校验
-    ctx.checkAuthority('self_id', data._id)
+    ctx.checkAuthority('self_id', data.user_id)
 
     // 参数校验
     if (!isTruthy(data.code)) ctx.throw(400, { msg: 'code 必填' })
@@ -503,7 +503,7 @@ class SysUserService extends Service {
       wx_unionid: unionid, // 绑定 wx_unionid
       wx_session_key: session_key // 绑定 wx_session_key
     }
-    const res = await db.findOneAndUpdate({ _id: data._id }, updateOpt, { new: true })
+    const res = await db.findOneAndUpdate({ user_id: data.user_id }, updateOpt, { new: true })
 
     return {
       msg: '微信绑定成功'
@@ -514,19 +514,19 @@ class SysUserService extends Service {
    * 主动注销 post - 权限 self_id
    * @description 状态异常的账号不允许注销。状态 0:禁用 1:正常 2:注销
    * @param {Object} data - 请求参数
-   * @property {String} data._id - 用户名
+   * @property {String} data.user_id - 用户名
    */
   async userDeactivate(data) {
     const { ctx, app } = this
 
     // 参数校验
-    if (!isTruthy(data._id)) ctx.throw(400, { msg: '_id 必填' })
+    if (!isTruthy(data.user_id)) ctx.throw(400, { msg: 'user_id 必填' })
 
     // 权限校验
-    ctx.checkAuthority('self_id', data._id)
+    ctx.checkAuthority('self_id', data.user_id)
 
     // 查询条件处理
-    const conditions = { _id: data._id }
+    const conditions = { user_id: data.user_id }
 
     // 数据库连接
     const db = app.model.SysUser
@@ -540,14 +540,14 @@ class SysUserService extends Service {
     const res = await db.findOneAndUpdate(conditions, { status: 2 }, { new: true })
 
     return {
-      msg: `${one.username || one._id} 注销成功`
+      msg: `${one.username || one.user_id} 注销成功`
     }
   }
 
   /**
    * 删除 post - 权限 admin
    * @param {Object} data - 请求参数
-   * @property {String} data._id - 用户uid
+   * @property {String} data.user_id - 用户uid
    * @property {String} data.username - 用户名
    */
   async userDelete(data) {
@@ -557,13 +557,13 @@ class SysUserService extends Service {
     ctx.checkAuthority('admin')
 
     // 参数校验
-    if (!isTruthy(data._id) && !isTruthy(data.username)) ctx.throw(400, { msg: '_id或username至少传入一个' })
+    if (!isTruthy(data.user_id) && !isTruthy(data.username)) ctx.throw(400, { msg: '_id或username至少传入一个' })
 
     // 查询条件
     const conditions = {}
 
     // 查询条件处理
-    if (isTruthy(data._id)) conditions._id = data._id
+    if (isTruthy(data.user_id)) conditions.user_id = data.user_id
     if (isTruthy(data.username)) conditions.username = data.username
 
     // 数据库连接
@@ -577,7 +577,47 @@ class SysUserService extends Service {
 
     return {
       data: res,
-      msg: `${one.username || one._id} 删除成功`
+      msg: `${one.username || one.user_id} 删除成功`
+    }
+  }
+
+  /**
+   * 用户VIP身份校验 post - 权限 self_id
+   * @param {Object} data - 请求参数
+   * @property {String} data.user_id - 用户uid
+   */
+  async verifyVip(data) {
+    const { ctx, app } = this
+
+    // 参数校验
+    if (!isTruthy(data.user_id)) ctx.throw(400, { msg: 'user_id 必填' })
+
+    // 权限校验
+    ctx.checkAuthority('self_id', data.user_id)
+
+    // 查询条件处理
+    const conditions = { user_id: data.user_id }
+
+    // 数据库连接
+    const db = app.model.SysUser
+
+    // 查询
+    const one = await db.findOne(conditions)
+    if (!one) ctx.throw(400, { msg: '用户不存在' })
+
+    const now = Date.now()
+    const vip_valid_date = one.vip_valid_date || 0
+
+    // VIP过期
+    if (vip_valid_date < now) {
+      let role = one.role?.filter((item) => item !== 'vip')
+      await db.findOneAndUpdate({ user_id: data.user_id }, { role }, { new: true })
+      return { data: { expired: true }, msg: 'VIP已过期' }
+    }
+
+    return {
+      data: { expired: false },
+      msg: 'VIP身份校验通过'
     }
   }
 }

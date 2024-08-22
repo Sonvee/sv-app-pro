@@ -6,7 +6,8 @@ module.exports = (app) => {
   const AppNoticeSchema = new mongoose.Schema(
     {
       notice_id: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        auto: true,
         unique: true,
         required: true
       },

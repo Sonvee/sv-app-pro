@@ -3,33 +3,42 @@
 module.exports = (app) => {
   const mongoose = app.mongoose
 
-  const AppHelpSchema = new mongoose.Schema(
+  const VipSubscriptionSchema = new mongoose.Schema(
     {
-      // id 主键
-      help_id: {
+      // 订阅单号
+      subscription_id: {
         type: mongoose.Schema.Types.ObjectId,
-        auto: true,
+        auto: true, // 自动生成
         unique: true,
         required: true
       },
-      // 帮助的名称/标题
-      name: {
+      // 用户id
+      user_id: {
         type: String,
-        unique: true,
         required: true
       },
-      // 序号
-      sort: {
+      // 生效开始日期
+      start_date: {
         type: Number
       },
-      // 类型 例如：0热门问题 1账号相关 ...（由字典决定）
-      type: {
-        type: Number,
+      // 订阅绑定的套餐
+      subscription_plan: {
+        type: String,
         required: true
       },
-      // 内容
-      content: {
-        type: String
+      // 订阅持续时长(毫秒)
+      duration_time: {
+        type: Number
+      },
+      // 订阅状态 0-待生效 1-生效中 2-已失效 3-待付款 4-付款中
+      status: {
+        type: Number,
+        default: 0
+      },
+      // 订阅类型 0-普通支付，1-激活码
+      type: {
+        type: Number,
+        default: 0
       },
       // 自动生成字段
       created_date: {
@@ -49,5 +58,5 @@ module.exports = (app) => {
    * 创建数据模型
    * 参数1：连接表名称（自动添加复数形式，自动转为小写），参数2：Schema，参数3：连接表自定义名称（可选，优先级大于参数1）
    */
-  return mongoose.model('app_help', AppHelpSchema)
+  return mongoose.model('vip_subscription', VipSubscriptionSchema)
 }

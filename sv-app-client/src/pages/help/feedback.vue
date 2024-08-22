@@ -144,7 +144,7 @@ async function beforeIntercept() {
 
 <style lang="scss">
 .feedback-page {
-  height: var(--page-notab-height);
+  min-height: var(--page-notab-height);
   padding: 30rpx;
   display: flex;
   flex-direction: column;

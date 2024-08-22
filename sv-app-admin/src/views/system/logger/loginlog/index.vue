@@ -6,10 +6,10 @@
     <div class="card table-container">
       <!-- 工具栏 -->
       <div class="table-control">
-        <el-button type="danger" plain :icon="Delete" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
-        <el-button type="danger" plain @click="clear"><i class="sv-icons-clear text-xs mr-4"></i>清空</el-button>
+        <el-button type="danger" plain :icon="Delete" v-permission="['logBatchDelete']" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
+        <el-button type="danger" plain v-permission="['logClear']" @click="clear"><i class="sv-icons-clear text-xs mr-4"></i>清空</el-button>
         <div style="flex: 1"></div>
-        <el-button circle :icon="RefreshRight" @click="refresh" title="刷新"></el-button>
+        <el-button circle :icon="RefreshRight" v-permission="['logList']" @click="refresh" title="刷新"></el-button>
         <el-button circle :icon="showFilter ? View : Hide" @click="showFilter = !showFilter" :title="showFilter ? '隐藏筛选' : '显示筛选'"></el-button>
       </div>
       <!-- 数据表格 -->
@@ -18,7 +18,7 @@
         <el-table-column prop="_id" label="日志ID" width="240" show-overflow-tooltip></el-table-column>
         <el-table-column prop="login_type" label="登录方式" align="center" width="160" show-overflow-tooltip>
           <template #default="scope">
-            <DictTag :dictList="dictStore.getDict('dict_sys_login_type')" :value="scope.row.login_type"></DictTag>
+            <DictTag :dictList="dictLoginType" :value="scope.row.login_type"></DictTag>
           </template>
         </el-table-column>
         <el-table-column prop="operator_info.username" label="操作人员" width="240" show-overflow-tooltip>
@@ -49,7 +49,7 @@
         <el-table-column label="操作" align="center" width="120" fixed="right">
           <template #default="scope">
             <el-button-group>
-              <el-button text type="danger" :icon="Delete" @click="del(scope.row)">删除</el-button>
+              <el-button text type="danger" :icon="Delete" v-permission="['logDelete']" @click="del(scope.row)">删除</el-button>
             </el-button-group>
           </template>
         </el-table-column>
@@ -61,7 +61,7 @@
 </template>
 
 <script setup name="loginlog">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import TableFilter from './components/TableFilter.vue'
 import TablePagination from '@/components/TablePagination/index.vue'
 import DictTag from '@/components/DictType/DictTag.vue'
@@ -72,6 +72,8 @@ import { isTruthy, timeFormat } from '@/utils'
 import { useDictStore } from '@/store/dict'
 
 const dictStore = useDictStore()
+dictStore.initDict(['dict_sys_login_type']) // 初始化字典
+const dictLoginType = computed(() => dictStore.getDict('dict_sys_login_type'))
 
 const dataParams = ref({ log_type: 'login', pagenum: 1, pagesize: 20 })
 const tableData = ref([])
@@ -79,8 +81,7 @@ const total = ref(0)
 const loading = ref(true)
 const showFilter = ref(true) // 头部筛选栏显示
 
-onMounted(async () => {
-  await dictStore.initDict(['dict_sys_login_type']) // 初始化字典
+onMounted(() => {
   handleTable(dataParams.value)
 })
 

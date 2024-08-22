@@ -1,7 +1,7 @@
 {
   "id": "sv-intercept-back",
   "displayName": "返回拦截 阻止退出 拦截手势滑动物理按键返回",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "可主动开启/关闭拦截，可自定义拦截前操作，可自定义返回操作",
   "keywords": [
     "拦截器",

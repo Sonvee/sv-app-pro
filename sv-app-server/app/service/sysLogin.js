@@ -20,7 +20,7 @@ class SysLoginService extends Service {
 
     // jwt数据
     const jwtData = {
-      _id: one._id,
+      user_id: one.user_id,
       username: one.username,
       phone: one.phone,
       email: one.email,
@@ -299,13 +299,13 @@ class SysLoginService extends Service {
     const { ctx, app } = this
 
     // 参数校验
-    if (!isTruthy(data._id)) ctx.throw(400, { msg: '_id 必填' })
+    if (!isTruthy(data.user_id)) ctx.throw(400, { msg: 'user_id 必填' })
 
     // 权限校验
-    ctx.checkAuthority('self_id', data._id)
+    ctx.checkAuthority('self_id', data.user_id)
 
     // 查询条件处理
-    const conditions = { _id: data._id }
+    const conditions = { user_id: data.user_id }
 
     // 数据库连接
     const db = app.model.SysUser
@@ -433,19 +433,19 @@ class SysLoginService extends Service {
   /**
    * 刷新token post - 权限 self
    * @param {Object} data - 请求参数
-   * @property {String} data._id - 用户UID
+   * @property {String} data.user_id - 用户UID
    */
   async refreshToken(data) {
     const { ctx, app } = this
 
     // 参数校验
-    if (!isTruthy(data._id)) ctx.throw(400, { msg: '_id 必填' })
+    if (!isTruthy(data.user_id)) ctx.throw(400, { msg: 'user_id 必填' })
 
     // 权限校验
-    ctx.checkAuthority('self_id', data._id)
+    ctx.checkAuthority('self_id', data.user_id)
 
     // 查询条件处理
-    const conditions = { _id: data._id }
+    const conditions = { user_id: data.user_id }
 
     // 数据库连接
     const db = app.model.SysUser
@@ -459,7 +459,7 @@ class SysLoginService extends Service {
 
     // jwt数据
     const jwtData = {
-      _id: one._id,
+      user_id: one.user_id,
       username: one.username,
       phone: one.phone,
       email: one.email,

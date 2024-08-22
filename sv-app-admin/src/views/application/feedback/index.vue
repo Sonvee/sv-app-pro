@@ -18,12 +18,12 @@
         <el-table-column prop="_id" label="受理单号" width="240" show-overflow-tooltip></el-table-column>
         <el-table-column prop="type" label="类型" align="center" width="120" show-overflow-tooltip>
           <template #default="scope">
-            <DictTag :dictList="dictStore.getDict('dict_app_feedback_type')" :value="scope.row.type"></DictTag>
+            <DictTag :dictList="dictFeedbackType" :value="scope.row.type"></DictTag>
           </template>
         </el-table-column>
         <el-table-column prop="status" label="状态" align="center" width="120" show-overflow-tooltip>
           <template #default="scope">
-            <DictTag :dictList="dictStore.getDict('dict_app_feedback_status')" :value="scope.row.status"></DictTag>
+            <DictTag :dictList="dictFeedbackStatus" :value="scope.row.status"></DictTag>
           </template>
         </el-table-column>
         <el-table-column prop="name" label="名称" width="300" show-overflow-tooltip></el-table-column>
@@ -84,10 +84,11 @@
 </template>
 
 <script setup name="feedback">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import TableFilter from './components/TableFilter.vue'
 import TableForm from './components/TableForm.vue'
 import TablePagination from '@/components/TablePagination/index.vue'
+import DictTag from '@/components/DictType/DictTag.vue'
 import { feedbackList, feedbackAdd, feedbackUpdate, feedbackDelete, feedbackBatchDelete } from '@/api/feedback'
 import { RefreshRight, Plus, EditPen, Delete, View, Hide } from '@element-plus/icons-vue'
 import { ElNotification, ElMessageBox, ElMessage } from 'element-plus'
@@ -95,6 +96,9 @@ import { isTruthy, timeFormat } from '@/utils'
 import { useDictStore } from '@/store/dict'
 
 const dictStore = useDictStore()
+dictStore.initDict(['dict_app_feedback_type', 'dict_app_feedback_status']) // 初始化字典
+const dictFeedbackType = computed(() => dictStore.getDict('dict_app_feedback_type'))
+const dictFeedbackStatus = computed(() => dictStore.getDict('dict_app_feedback_status'))
 
 const dataParams = ref({ pagenum: 1, pagesize: 20 })
 const tableData = ref([])
@@ -105,8 +109,7 @@ const showForm = ref(false) // 表单弹窗
 const formInit = ref({}) // 表单初始值
 const formMode = ref('') // 表单模式 add / edit
 
-onMounted(async () => {
-  await dictStore.initDict(['dict_app_feedback_type', 'dict_app_feedback_status']) // 初始化字典
+onMounted(() => {
   handleTable(dataParams.value)
 })
 

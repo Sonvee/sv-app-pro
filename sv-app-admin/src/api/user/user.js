@@ -55,3 +55,11 @@ export function changePassword(data) {
     data
   })
 }
+
+export function verifyVip(data) {
+  return request({
+    url: '/user/verifyVip',
+    method: 'post',
+    data
+  })
+}

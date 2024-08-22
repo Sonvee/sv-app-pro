@@ -7,7 +7,8 @@ module.exports = (app) => {
     {
       // 字典项id
       dictitem_id: {
-        type: String,
+        type: mongoose.Schema.Types.ObjectId,
+        auto: true,
         unique: true,
         required: true
       },

@@ -23,8 +23,8 @@ export const useUserStore = defineStore({
     // 刷新token
     async reToken() {
       // 只在token还有效时刷新，token无效时会直接拦截，前往登录
-      if (this.userInfo._id && this.token) {
-        const { token, verify } = await refreshToken({ _id: this.userInfo._id })
+      if (this.userInfo.user_id && this.token) {
+        const { token, verify } = await refreshToken({ user_id: this.userInfo.user_id })
         // 更新token
         this.token = token
         // 解析并获取用户权限

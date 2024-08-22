@@ -6,8 +6,10 @@
     <div class="card table-container">
       <!-- 工具栏 -->
       <div class="table-control">
-        <el-button type="primary" plain :icon="Plus" v-permission="['testAdd']" @click="add">新增</el-button>
-        <el-button type="danger" plain :icon="Delete" v-permission="['testBatchDelete']" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
+        <el-button type="primary" plain :icon="Plus" v-permission="['cdkeyAdd']" @click="add">新增</el-button>
+        <el-button type="danger" plain :icon="Delete" v-permission="['cdkeyBatchDelete']" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
+        <el-button type="warning" plain v-permission="['cdkeyClear']" @click="clear(1)"><i class="sv-icons-clear text-xs mr-4"></i>清空已用</el-button>
+        <el-button type="warning" plain v-permission="['cdkeyClear']" @click="clear(2)"><i class="sv-icons-clear text-xs mr-4"></i>清空失效</el-button>
         <div style="flex: 1"></div>
         <el-button circle :icon="RefreshRight" @click="refresh" title="刷新"></el-button>
         <el-button circle :icon="showFilter ? View : Hide" @click="showFilter = !showFilter" :title="showFilter ? '隐藏筛选' : '显示筛选'"></el-button>
@@ -15,15 +17,46 @@
       <!-- 数据表格 -->
       <el-table v-loading="loading" :data="tableData" border @selection-change="handleSelectionChange">
         <el-table-column type="selection" align="center" width="50" fixed="left" />
-        <el-table-column prop="test_id" label="ID" width="200" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="test_name" label="名称" min-width="300" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="created_date" label="创建时间" align="center" width="180" sortable :formatter="(row) => timeFormat(row.created_date)" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="updated_date" label="更新时间" align="center" width="180" sortable :formatter="(row) => timeFormat(row.updated_date)" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="cdkey" label="CDKey" width="300" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="cdkey_plan_detail.plan_name" label="绑定套餐" align="center" width="120" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="status" label="状态" align="center" width="120" show-overflow-tooltip>
+          <template #default="scope">
+            <DictTag :dictList="dictCdkeyStatus" :value="scope.row.status"></DictTag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="description" label="描述" min-width="300" show-overflow-tooltip></el-table-column>
+        <el-table-column
+          prop="valid_date"
+          label="有效期至"
+          align="center"
+          width="180"
+          sortable
+          :formatter="(row) => timeFormat(row.valid_date)"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column
+          prop="created_date"
+          label="创建时间"
+          align="center"
+          width="180"
+          sortable
+          :formatter="(row) => timeFormat(row.created_date)"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column
+          prop="updated_date"
+          label="更新时间"
+          align="center"
+          width="180"
+          sortable
+          :formatter="(row) => timeFormat(row.updated_date)"
+          show-overflow-tooltip
+        ></el-table-column>
         <el-table-column label="操作" align="center" width="160" fixed="right">
           <template #default="scope">
             <el-button-group>
-              <el-button text type="primary" :icon="EditPen" v-permission="['testUpdate']" @click="edit(scope.row)">编辑</el-button>
-              <el-button text type="danger" :icon="Delete" v-permission="['testDelete']" @click="del(scope.row)">删除</el-button>
+              <el-button text type="primary" :icon="EditPen" v-permission="['cdkeyUpdate']" @click="edit(scope.row)">编辑</el-button>
+              <el-button text type="danger" :icon="Delete" v-permission="['cdkeyDelete']" @click="del(scope.row)">删除</el-button>
             </el-button-group>
           </template>
         </el-table-column>
@@ -36,15 +69,22 @@
   </div>
 </template>
 
-<script setup name="test">
-import { ref, onMounted } from 'vue'
+<script setup name="cdkey">
+import { ref, computed, onMounted } from 'vue'
 import TableFilter from './components/TableFilter.vue'
 import TableForm from './components/TableForm.vue'
 import TablePagination from '@/components/TablePagination/index.vue'
-import { testList, testAdd, testUpdate, testDelete, testBatchDelete } from '@/api/vip/plan'
+import { cdkeyList, cdkeyAdd, cdkeyUpdate, cdkeyDelete, cdkeyClear, cdkeyBatchDelete } from '@/api/vip/cdkey'
 import { RefreshRight, Plus, EditPen, Delete, View, Hide } from '@element-plus/icons-vue'
 import { ElNotification, ElMessageBox, ElMessage } from 'element-plus'
 import { isTruthy, timeFormat } from '@/utils'
+import DictTag from '@/components/DictType/DictTag.vue'
+import { useDictStore } from '@/store/dict'
+import { verifyVip } from '@/api/user/user'
+
+const dictStore = useDictStore()
+dictStore.initDict(['dict_vip_cdkey_status']) // 初始化字典
+const dictCdkeyStatus = computed(() => dictStore.getDict('dict_vip_cdkey_status'))
 
 const dataParams = ref({ pagenum: 1, pagesize: 20 })
 const tableData = ref([])
@@ -62,7 +102,7 @@ onMounted(() => {
 // 数据
 async function handleTable(params) {
   loading.value = true
-  const res = await testList(params)
+  const res = await cdkeyList(params)
   tableData.value = res.data || []
   total.value = res.total
   loading.value = false
@@ -90,18 +130,36 @@ function edit(row) {
 
 // 删
 function del(row) {
-  const { test_name, test_id } = row
-  ElMessageBox.confirm(`确认删除『 ${test_name} 』吗？`, '系统提示', {
+  const { cdkey } = row
+  ElMessageBox.confirm(`确认删除『 ${cdkey} 』吗？`, '系统提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
   })
     .then(async () => {
       // 确认删除操作
-      const deleteRes = await testDelete({ test_id })
+      const deleteRes = await cdkeyDelete({ cdkey })
       ElMessage({
         type: 'success',
         message: deleteRes?.msg
+      })
+      refresh()
+    })
+    .catch(() => {})
+}
+
+function clear(status) {
+  ElMessageBox.confirm(`确认清空所有 ${status == 1 ? '已使用' : '已失效'} 的激活码吗？`, '系统提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+    .then(async () => {
+      // 确认删除操作
+      const clearRes = await cdkeyClear({ status })
+      ElMessage({
+        type: 'success',
+        message: clearRes?.msg
       })
       refresh()
     })
@@ -119,7 +177,7 @@ function refresh() {
 // 多选
 const batchSelection = ref([])
 function handleSelectionChange(e) {
-  batchSelection.value = e.map((item) => item.test_id)
+  batchSelection.value = e.map((item) => item.cdkey)
 }
 
 // 批量删除
@@ -132,7 +190,7 @@ function batchDelete() {
   })
     .then(async () => {
       // 确认批量删除操作
-      const deleteRes = await testBatchDelete({
+      const deleteRes = await cdkeyBatchDelete({
         list: batchSelection.value
       })
       ElMessage({
@@ -151,11 +209,11 @@ async function submitForm(e) {
     switch (e.mode) {
       case 'add':
         // 新增添加
-        result = await testAdd(e.data)
+        result = await cdkeyAdd(e.data)
         break
       case 'edit':
         // 编辑更新
-        result = await testUpdate(e.data)
+        result = await cdkeyUpdate(e.data)
         break
     }
     if (result.success) {

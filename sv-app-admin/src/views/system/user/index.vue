@@ -37,12 +37,12 @@
         <el-table-column prop="comment" label="备注" min-width="300" show-overflow-tooltip></el-table-column>
         <el-table-column prop="status" label="状态" align="center" width="120" show-overflow-tooltip>
           <template #default="scope">
-            <DictTag :dictList="dictStore.getDict('dict_sys_user_status')" :value="scope.row.status"></DictTag>
+            <DictTag :dictList="dictUserStatus" :value="scope.row.status"></DictTag>
           </template>
         </el-table-column>
         <el-table-column prop="gender" label="性别" align="center" width="120" show-overflow-tooltip>
           <template #default="scope">
-            <DictTag :dictList="dictStore.getDict('dict_sys_user_gender')" :value="scope.row.gender"></DictTag>
+            <DictTag :dictList="dictUserGender" :value="scope.row.gender"></DictTag>
           </template>
         </el-table-column>
         <el-table-column
@@ -103,7 +103,7 @@
 </template>
 
 <script setup name="user">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import TableFilter from './components/TableFilter.vue'
 import TableForm from './components/TableForm.vue'
 import UserDeleteWarning from './components/UserDeleteWarning.vue'
@@ -117,6 +117,9 @@ import { isTruthy, timeFormat } from '@/utils'
 import { useDictStore } from '@/store/dict'
 
 const dictStore = useDictStore()
+dictStore.initDict(['dict_sys_user_status', 'dict_sys_user_gender']) // 初始化字典
+const dictUserStatus = computed(() => dictStore.getDict('dict_sys_user_status'))
+const dictUserGender = computed(() => dictStore.getDict('dict_sys_user_gender'))
 
 const dataParams = ref({ pagenum: 1, pagesize: 20 })
 const tableData = ref([])
@@ -128,8 +131,7 @@ const showDeleteWarning = ref(false) // 表单弹窗
 const formInit = ref({}) // 表单初始值
 const formMode = ref('') // 表单模式
 
-onMounted(async () => {
-  await dictStore.initDict(['dict_sys_user_status', 'dict_sys_user_gender']) // 初始化字典
+onMounted(() => {
   handleTable(dataParams.value)
 })
 

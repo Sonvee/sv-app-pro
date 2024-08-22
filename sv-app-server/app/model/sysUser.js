@@ -5,6 +5,13 @@ module.exports = (app) => {
 
   const SysUserSchema = new mongoose.Schema(
     {
+      // id 主键
+      user_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        auto: true,
+        unique: true,
+        required: true
+      },
       // 用户名
       username: {
         type: String,
@@ -118,10 +125,6 @@ module.exports = (app) => {
       // 第三方登录凭证
       third_party: {
         type: Object
-      },
-      // vip过期时间
-      vip_valid_date: {
-        type: Number
       },
       // 自动生成字段
       created_date: {

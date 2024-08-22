@@ -40,7 +40,7 @@ function toLogout() {
     type: 'warning'
   }).then(async () => {
     // 1.执行退出登录接口
-    await logout({ _id: userInfo.value._id })
+    await logout({ user_id: userInfo.value.user_id })
 
     // 2.清除 Token 和 用户信息 等
     userStore.clearUserInfo()

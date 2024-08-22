@@ -51,6 +51,7 @@ module.exports = (app) => {
   router.post('/user/bindWechat', controller.sysUser.bindWechat)
   router.post('/user/userDeactivate', controller.sysUser.userDeactivate)
   router.post('/user/userDelete', controller.sysUser.userDelete)
+  router.post('/user/verifyVip', controller.sysUser.verifyVip)
 
   // 角色
   router.post('/user/roleList', controller.sysRole.roleList)
@@ -160,4 +161,22 @@ module.exports = (app) => {
   router.post('/vip/benefitDelete', controller.vipBenefit.benefitDelete)
   router.post('/vip/benefitBatchAdd', controller.vipBenefit.benefitBatchAdd)
   router.post('/vip/benefitBatchDelete', controller.vipBenefit.benefitBatchDelete)
+
+  // 会员特权
+  router.post('/vip/cdkeyList', controller.vipCdkey.cdkeyList)
+  router.post('/vip/cdkeyAdd', controller.vipCdkey.cdkeyAdd)
+  router.post('/vip/cdkeyUpdate', controller.vipCdkey.cdkeyUpdate)
+  router.post('/vip/cdkeyDelete', controller.vipCdkey.cdkeyDelete)
+  router.post('/vip/cdkeyClear', controller.vipCdkey.cdkeyClear)
+  router.post('/vip/cdkeyBatchAdd', controller.vipCdkey.cdkeyBatchAdd)
+  router.post('/vip/cdkeyBatchDelete', controller.vipCdkey.cdkeyBatchDelete)
+  router.post('/vip/cdkeyActive', controller.vipCdkey.cdkeyActive)
+
+  // 会员特权
+  router.post('/vip/subscriptionList', controller.vipSubscription.subscriptionList)
+  router.post('/vip/subscriptionAdd', controller.vipSubscription.subscriptionAdd)
+  router.post('/vip/subscriptionUpdate', controller.vipSubscription.subscriptionUpdate)
+  router.post('/vip/subscriptionDelete', controller.vipSubscription.subscriptionDelete)
+  router.post('/vip/subscriptionBatchAdd', controller.vipSubscription.subscriptionBatchAdd)
+  router.post('/vip/subscriptionBatchDelete', controller.vipSubscription.subscriptionBatchDelete)
 }

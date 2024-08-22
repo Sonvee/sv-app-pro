@@ -108,7 +108,7 @@ function confirmPwd() {
       try {
         // 1. 修改密码接口
         const pwdRes = await changePassword({
-          _id: userStore.userInfo._id,
+          userInfo: userStore.userInfo.userInfo,
           old_password: pwdForm.value.old_password,
           new_password: pwdForm.value.new_password
         })
