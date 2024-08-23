@@ -49,7 +49,7 @@ const emits = defineEmits(['submit'])
 
 // 初始数据
 const formBase = {
-  _id: '',
+  help_id: '',
   sort: 0,
   type: null,
   name: '',

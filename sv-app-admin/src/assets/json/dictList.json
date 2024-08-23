@@ -5,42 +5,77 @@
       "dict_id": "dict_sys_request_status",
       "dict_name": "HTTP状态码",
       "remark": "HTTP请求状态码",
-      "sort": 1,
+      "sort": 0,
       "status": 1
     },
     {
       "dict_id": "dict_sys_status",
       "dict_name": "系统通用状态",
       "remark": "0：停用；\n1：启用；",
-      "sort": 2,
+      "sort": 20,
       "status": 1
     },
     {
       "dict_id": "dict_sys_user_gender",
       "dict_name": "用户性别",
       "remark": "用户性别字典",
-      "sort": 3,
+      "sort": 30,
       "status": 1
     },
     {
       "dict_id": "dict_sys_user_status",
       "dict_name": "用户状态",
       "remark": "用户状态字典",
-      "sort": 4,
+      "sort": 40,
       "status": 1
     },
     {
       "dict_id": "dict_sys_notice_type",
       "dict_name": "通告类型",
       "remark": "0：通知；\n1：公告；",
-      "sort": 5,
+      "sort": 50,
       "status": 1
     },
     {
       "dict_id": "dict_sys_login_type",
       "dict_name": "用户登录类型",
       "remark": "account：账号密码；\nphone：手机号登录；\nemail：邮箱登录；\nsms：短信验证码；\nemailer：邮箱验证码；\nwechat：微信登录；\nregister：注册；\nlogout：登出；",
-      "sort": 6,
+      "sort": 60,
+      "status": 1
+    },
+    {
+      "dict_id": "dict_vip_cdkey_status",
+      "dict_name": "激活码状态",
+      "remark": "0：待使用；\n1：已使用；\n2：已失效；",
+      "sort": 70,
+      "status": 1
+    },
+    {
+      "dict_id": "dict_app_feedback_type",
+      "dict_name": "反馈类型",
+      "remark": "0：BUG漏洞；\n1：优化建议；",
+      "sort": 80,
+      "status": 1
+    },
+    {
+      "dict_id": "dict_app_feedback_status",
+      "dict_name": "反馈状态",
+      "remark": "0：待解决；\n1：受理中；\n2：已解决；",
+      "sort": 90,
+      "status": 1
+    },
+    {
+      "dict_id": "dict_app_help_type",
+      "dict_name": "帮助类型",
+      "remark": "0：热门问题；\n1：账号相关；\n2：会员相关；\n3：其他；",
+      "sort": 100,
+      "status": 1
+    },
+    {
+      "dict_id": "dict_app_type",
+      "dict_name": "应用类型",
+      "remark": "0：安卓；\n1：苹果；\n2：微信小程序；\n3：H5；",
+      "sort": 110,
       "status": 1
     }
   ],

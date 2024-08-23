@@ -5,7 +5,7 @@ module.exports = (app) => {
 
   const AppFeedbackSchema = new mongoose.Schema(
     {
-      // id 主键
+      // 主键 - id
       feedback_id: {
         type: mongoose.Schema.Types.ObjectId,
         auto: true,

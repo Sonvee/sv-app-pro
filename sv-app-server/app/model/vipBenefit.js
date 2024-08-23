@@ -5,7 +5,7 @@ module.exports = (app) => {
 
   const VipBenefitSchema = new mongoose.Schema(
     {
-      // 权益id
+      // 主键 - id
       benefit_id: {
         type: String,
         unique: true,

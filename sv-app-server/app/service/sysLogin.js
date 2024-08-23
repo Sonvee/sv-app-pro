@@ -42,6 +42,7 @@ class SysLoginService extends Service {
 
     // 移除部分无需返回字段
     const projection = {
+      _id: 0,
       password: 0,
       token: 0, // token 已做出返回，此处返回用户信息时无需重复返回
       third_party: 0,
@@ -291,7 +292,7 @@ class SysLoginService extends Service {
   }
 
   /**
-   * 退出登录 post - 权限 self_id
+   * 退出登录 post - 权限 self
    * @param {Object} data - 请求参数
    * @property {String} data.username - 用户名
    */
@@ -302,7 +303,7 @@ class SysLoginService extends Service {
     if (!isTruthy(data.user_id)) ctx.throw(400, { msg: 'user_id 必填' })
 
     // 权限校验
-    ctx.checkAuthority('self_id', data.user_id)
+    ctx.checkAuthority('self', data.user_id)
 
     // 查询条件处理
     const conditions = { user_id: data.user_id }
@@ -442,7 +443,7 @@ class SysLoginService extends Service {
     if (!isTruthy(data.user_id)) ctx.throw(400, { msg: 'user_id 必填' })
 
     // 权限校验
-    ctx.checkAuthority('self_id', data.user_id)
+    ctx.checkAuthority('self', data.user_id)
 
     // 查询条件处理
     const conditions = { user_id: data.user_id }

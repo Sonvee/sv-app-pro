@@ -118,7 +118,7 @@ function edit(row) {
 
 // 删
 function del(row) {
-  const { _id, name } = row
+  const { help_id, name } = row
   ElMessageBox.confirm(`确认删除『 ${name} 』吗？`, '系统提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
@@ -126,7 +126,7 @@ function del(row) {
   })
     .then(async () => {
       // 确认删除操作
-      const deleteRes = await helpDelete({ _id })
+      const deleteRes = await helpDelete({ help_id })
       ElMessage({
         type: 'success',
         message: deleteRes?.msg

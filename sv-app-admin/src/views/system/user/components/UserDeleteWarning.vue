@@ -3,7 +3,7 @@
     <template #header>
       <h3 style="color: red">高危操作</h3>
     </template>
-    <div>确认删除『 {{ username }} 』吗？</div>
+    <div>确认删除『 {{ uid }} 』吗？</div>
     <h4 style="color: red">这将会直接删除该账号所有数据，且无法挽回！</h4>
     <h4 style="color: orange">如果只是需要封禁该账号，请点击 编辑 > 状态 > 禁用</h4>
     <div>确认继续删除吗？</div>
@@ -23,7 +23,7 @@ import { ref, watch } from 'vue'
 import { useCountdown } from '@/hooks/useCountdown'
 
 const props = defineProps({
-  username: {
+  uid: {
     type: String,
     default: ''
   }
@@ -44,7 +44,7 @@ function closeDeleteDailog() {
 }
 // 确认删除
 async function confirmDeleteDailog() {
-  emits('confirm', props.username)
+  emits('confirm', props.uid)
   // 关闭弹窗
   userDeleteRef.value.visible = false
 }

@@ -5,6 +5,7 @@ module.exports = (app) => {
 
   const SysPermissionSchema = new mongoose.Schema(
     {
+      // 主键 - id
       permission_id: {
         type: String,
         unique: true,

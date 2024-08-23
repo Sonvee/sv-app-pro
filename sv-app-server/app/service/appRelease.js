@@ -86,10 +86,7 @@ class AppReleaseService extends Service {
     if (!isTruthy(data.type, 'zero')) ctx.throw(400, { msg: 'type 必填' })
 
     // 查询条件处理
-    const conditions = {}
-
-    // 查询条件
-    if (isTruthy(data.type, 'zero')) conditions.type = data.type
+    const conditions = { type: data.type }
 
     // 数据库连接
     const db = app.model.AppRelease
@@ -120,10 +117,10 @@ class AppReleaseService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['releaseAdd'])
+    ctx.checkAuthority('permission', ['app:release:add'])
 
     // 参数处理
-    delete data._id // 去除部分参数
+    delete data.release_id // 去除部分参数
 
     // 参数校验
     if (!isTruthy(data.version)) ctx.throw(400, { msg: 'version 必填' })
@@ -150,6 +147,7 @@ class AppReleaseService extends Service {
   /**
    * 更新 post - 权限 permission
    * @param {Object} data - 请求参数
+   * @property {String} data.release_id - id
    * @property {String} data.version - 版本
    * @property {String} data.type - 应用类型
    * @property {any} 更多请前往model/appRelease.js
@@ -158,61 +156,60 @@ class AppReleaseService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['releaseUpdate'])
+    ctx.checkAuthority('permission', ['app:release:update'])
 
     // 参数校验
+    if (!isTruthy(data.release_id)) ctx.throw(400, { msg: 'release_id 必填' })
     if (!isTruthy(data.version)) ctx.throw(400, { msg: 'version 必填' })
     if (!isTruthy(data.type, 'zero')) ctx.throw(400, { msg: 'type 必填' })
 
     // 查询条件处理
-    const conditions = { version: data.version, type: data.type }
+    const conditions = { release_id: data.release_id }
 
     // 数据库连接
     const db = app.model.AppRelease
 
     // 查询
     const one = await db.findOne(conditions)
-    if (!one) ctx.throw(400, { msg: `${data.type} ${data.version} 版本不存在` })
+    if (!one) ctx.throw(400, { msg: '版本不存在' })
 
     const res = await db.findOneAndUpdate(conditions, data, { new: true })
 
     return {
       data: res,
-      msg: `${data.type} ${data.version} 版本更新成功`
+      msg: '版本更新成功'
     }
   }
 
   /**
    * 删除 post - 权限 permission
    * @param {Object} data - 请求参数
-   * @property {String} data.version - 版本
-   * @property {String} data.type - 应用类型
+   * @property {String} data.release_id - 版本
    */
   async releaseDelete(data) {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['releaseDelete'])
+    ctx.checkAuthority('permission', ['app:release:delete'])
 
     // 参数校验
-    if (!isTruthy(data.version)) ctx.throw(400, { msg: 'version 必填' })
-    if (!isTruthy(data.type, 'zero')) ctx.throw(400, { msg: 'type 必填' })
+    if (!isTruthy(data.release_id)) ctx.throw(400, { msg: 'release_id 必填' })
 
     // 查询条件处理
-    const conditions = { version: data.version, type: data.type }
+    const conditions = { release_id: data.release_id }
 
     // 数据库连接
     const db = app.model.AppRelease
 
     // 查询
     const one = await db.findOne(conditions)
-    if (!one) ctx.throw(400, { msg: `${data.type} ${data.version} 版本不存在或已被删除` })
+    if (!one) ctx.throw(400, { msg: '版本不存在或已被删除' })
 
     const res = await db.deleteOne(conditions)
 
     return {
       data: res,
-      msg: `${data.type} ${data.version} 版本删除成功`
+      msg: '版本删除成功'
     }
   }
 }

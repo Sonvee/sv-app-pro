@@ -5,7 +5,7 @@ module.exports = (app) => {
 
   const AppHelpSchema = new mongoose.Schema(
     {
-      // id 主键
+      // 主键 - id
       help_id: {
         type: mongoose.Schema.Types.ObjectId,
         auto: true,
@@ -15,7 +15,6 @@ module.exports = (app) => {
       // 帮助的名称/标题
       name: {
         type: String,
-        unique: true,
         required: true
       },
       // 序号

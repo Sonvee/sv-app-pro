@@ -576,7 +576,7 @@ class TestService extends Service {
     ctx.checkAuthority('permission', ['testAdd'])
 
     // 参数处理
-    delete data._id // 去除部分参数
+    // delete data.test_id // 去除自动生成键
 
     // 参数校验
     if (!isTruthy(data.test_id)) ctx.throw(400, { msg: 'test_id 必填' })

@@ -11,10 +11,10 @@ class FileController extends Controller {
     ctx.result(res)
   }
 
-  async avatarDelete() {
+  async myfileDelete() {
     const { ctx, service } = this
     const data = ctx.request.body
-    const res = await service.file.avatarDelete(data)
+    const res = await service.file.myfileDelete(data)
     ctx.result(res)
   }
 

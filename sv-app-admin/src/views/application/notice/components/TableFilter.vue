@@ -1,9 +1,6 @@
 <template>
   <view class="table-filter card">
     <el-form ref="filterFormRef" inline :model="filterForm">
-      <el-form-item prop="notice_id" label="ID">
-        <el-input v-model.trim="filterForm.notice_id" placeholder="请输入ID" clearable style="width: 150px" />
-      </el-form-item>
       <el-form-item prop="notice_type" label="类型">
         <DictSelect v-model="filterForm.notice_type" dictType="dict_sys_notice_type" formatNumber placeholder="请选择类型" style="width: 150px"></DictSelect>
       </el-form-item>
@@ -47,7 +44,6 @@ const emits = defineEmits(['submit'])
 const filterFormRef = ref()
 // 过滤条件表单
 const filterForm = ref({
-  notice_id: '',
   notice_name: '',
   notice_title: '',
   notice_type: null,

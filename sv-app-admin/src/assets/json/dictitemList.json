@@ -3,7 +3,6 @@
   "data": [
     {
       "dict_type": "dict_sys_request_status",
-      "dictitem_id": "dict_sys_request_status_200",
       "label": "200",
       "value": "200",
       "remark": "request:ok",
@@ -13,7 +12,6 @@
     },
     {
       "dict_type": "dict_sys_request_status",
-      "dictitem_id": "dict_sys_request_status_400",
       "label": "400",
       "value": "400",
       "remark": "Bad Request",
@@ -23,7 +21,6 @@
     },
     {
       "dict_type": "dict_sys_request_status",
-      "dictitem_id": "dict_sys_request_status_401",
       "label": "401",
       "value": "401",
       "remark": "token过期或无效",
@@ -33,7 +30,6 @@
     },
     {
       "dict_type": "dict_sys_request_status",
-      "dictitem_id": "dict_sys_request_status_403",
       "label": "403",
       "value": "403",
       "remark": "403 Forbidden",
@@ -43,7 +39,6 @@
     },
     {
       "dict_type": "dict_sys_request_status",
-      "dictitem_id": "dict_sys_request_status_404",
       "label": "404",
       "value": "404",
       "remark": "404 Not Found",
@@ -53,7 +48,6 @@
     },
     {
       "dict_type": "dict_sys_request_status",
-      "dictitem_id": "dict_sys_request_status_405",
       "label": "405",
       "value": "405",
       "remark": "Method Not Allowed",
@@ -63,7 +57,6 @@
     },
     {
       "dict_type": "dict_sys_request_status",
-      "dictitem_id": "dict_sys_request_status_429",
       "label": "429",
       "value": "429",
       "remark": "Too Many Requests",
@@ -73,7 +66,6 @@
     },
     {
       "dict_type": "dict_sys_request_status",
-      "dictitem_id": "dict_sys_request_status_500",
       "label": "500",
       "value": "500",
       "remark": "服务器错误",
@@ -83,7 +75,6 @@
     },
     {
       "dict_type": "dict_sys_request_status",
-      "dictitem_id": "dict_sys_request_status_503",
       "label": "503",
       "value": "503",
       "remark": "服务不可用",
@@ -91,9 +82,9 @@
       "action_style": "danger",
       "status": 1
     },
+
     {
       "dict_type": "dict_sys_status",
-      "dictitem_id": "dict_sys_status_0",
       "label": "禁用",
       "value": "0",
       "remark": "禁用状态",
@@ -103,7 +94,6 @@
     },
     {
       "dict_type": "dict_sys_status",
-      "dictitem_id": "dict_sys_status_1",
       "label": "启用",
       "value": "1",
       "remark": "启用状态",
@@ -111,9 +101,9 @@
       "action_style": "primary",
       "status": 1
     },
+
     {
       "dict_type": "dict_sys_user_status",
-      "dictitem_id": "dict_sys_user_status_0",
       "label": "禁用",
       "value": "0",
       "remark": "",
@@ -123,7 +113,6 @@
     },
     {
       "dict_type": "dict_sys_user_status",
-      "dictitem_id": "dict_sys_user_status_1",
       "label": "启用",
       "value": "1",
       "remark": "",
@@ -133,7 +122,6 @@
     },
     {
       "dict_type": "dict_sys_user_status",
-      "dictitem_id": "dict_sys_user_status_2",
       "label": "已注销",
       "value": "2",
       "remark": "用户主动注销，已注销的账号username将被移除，自动解绑所有数据",
@@ -141,9 +129,9 @@
       "action_style": "info",
       "status": 1
     },
+
     {
       "dict_type": "dict_sys_user_gender",
-      "dictitem_id": "dict_sys_user_gender_0",
       "label": "保密",
       "value": "0",
       "remark": "",
@@ -153,7 +141,6 @@
     },
     {
       "dict_type": "dict_sys_user_gender",
-      "dictitem_id": "dict_sys_user_gender_1",
       "label": "♂",
       "value": "1",
       "remark": "",
@@ -163,7 +150,6 @@
     },
     {
       "dict_type": "dict_sys_user_gender",
-      "dictitem_id": "dict_sys_user_gender_2",
       "label": "♀",
       "value": "2",
       "remark": "",
@@ -171,9 +157,9 @@
       "action_style": "danger",
       "status": 1
     },
+
     {
       "dict_type": "dict_sys_notice_type",
-      "dictitem_id": "dict_sys_notice_type_0",
       "label": "通知",
       "value": "0",
       "remark": "",
@@ -183,7 +169,6 @@
     },
     {
       "dict_type": "dict_sys_notice_type",
-      "dictitem_id": "dict_sys_notice_type_1",
       "label": "公告",
       "value": "1",
       "remark": "",
@@ -191,9 +176,9 @@
       "action_style": "primary",
       "status": 1
     },
+
     {
       "dict_type": "dict_sys_login_type",
-      "dictitem_id": "dict_sys_login_type_account",
       "label": "账号密码",
       "value": "account",
       "remark": "",
@@ -203,7 +188,6 @@
     },
     {
       "dict_type": "dict_sys_login_type",
-      "dictitem_id": "dict_sys_login_type_phone",
       "label": "手机号登录",
       "value": "phone",
       "remark": "",
@@ -213,7 +197,6 @@
     },
     {
       "dict_type": "dict_sys_login_type",
-      "dictitem_id": "dict_sys_login_type_email",
       "label": "邮箱登录",
       "value": "email",
       "remark": "",
@@ -223,7 +206,6 @@
     },
     {
       "dict_type": "dict_sys_login_type",
-      "dictitem_id": "dict_sys_login_type_sms",
       "label": "短信验证码",
       "value": "sms",
       "remark": "",
@@ -233,7 +215,6 @@
     },
     {
       "dict_type": "dict_sys_login_type",
-      "dictitem_id": "dict_sys_login_type_emailer",
       "label": "邮箱验证码",
       "value": "emailer",
       "remark": "",
@@ -243,7 +224,6 @@
     },
     {
       "dict_type": "dict_sys_login_type",
-      "dictitem_id": "dict_sys_login_type_wechat",
       "label": "微信登录",
       "value": "wechat",
       "remark": "",
@@ -253,7 +233,6 @@
     },
     {
       "dict_type": "dict_sys_login_type",
-      "dictitem_id": "dict_sys_login_type_register",
       "label": "注册",
       "value": "register",
       "remark": "",
@@ -263,13 +242,162 @@
     },
     {
       "dict_type": "dict_sys_login_type",
-      "dictitem_id": "dict_sys_login_type_logout",
       "label": "登出",
       "value": "logout",
       "remark": "",
       "sort": 7,
       "status": 1,
       "action_style": "danger"
+    },
+
+    {
+      "dict_type": "dict_vip_cdkey_status",
+      "label": "待使用",
+      "value": "0",
+      "remark": "",
+      "sort": 0,
+      "status": 1,
+      "action_style": "primary"
+    },
+    {
+      "dict_type": "dict_vip_cdkey_status",
+      "label": "已使用",
+      "value": "1",
+      "remark": "",
+      "sort": 1,
+      "status": 1,
+      "action_style": "success"
+    },
+    {
+      "dict_type": "dict_vip_cdkey_status",
+      "label": "已失效",
+      "value": "2",
+      "remark": "",
+      "sort": 2,
+      "status": 1,
+      "action_style": "danger"
+    },
+
+    {
+      "dict_type": "dict_app_feedback_type",
+      "label": "BUG漏洞",
+      "value": "0",
+      "remark": "",
+      "sort": 0,
+      "status": 1,
+      "action_style": "danger"
+    },
+    {
+      "dict_type": "dict_app_feedback_type",
+      "label": "优化建议",
+      "value": "1",
+      "remark": "",
+      "sort": 1,
+      "status": 1,
+      "action_style": "warning"
+    },
+
+    {
+      "dict_type": "dict_app_feedback_status",
+      "label": "待解决",
+      "value": "0",
+      "remark": "",
+      "sort": 0,
+      "status": 1,
+      "action_style": "primary"
+    },
+    {
+      "dict_type": "dict_app_feedback_status",
+      "label": "受理中",
+      "value": "1",
+      "remark": "",
+      "sort": 1,
+      "status": 1,
+      "action_style": "info"
+    },
+    {
+      "dict_type": "dict_app_feedback_status",
+      "label": "已解决",
+      "value": "2",
+      "remark": "",
+      "sort": 2,
+      "status": 1,
+      "action_style": "success"
+    },
+
+    {
+      "dict_type": "dict_app_help_type",
+      "label": "热门问题",
+      "value": "0",
+      "remark": "",
+      "sort": 0,
+      "status": 1,
+      "action_style": "primary"
+    },
+    {
+      "dict_type": "dict_app_help_type",
+      "label": "账号相关",
+      "value": "1",
+      "remark": "",
+      "sort": 1,
+      "status": 1,
+      "action_style": "success"
+    },
+    {
+      "dict_type": "dict_app_help_type",
+      "label": "会员相关",
+      "value": "2",
+      "remark": "",
+      "sort": 2,
+      "status": 1,
+      "action_style": "warning"
+    },
+    {
+      "dict_type": "dict_app_help_type",
+      "label": "其他",
+      "value": "3",
+      "remark": "",
+      "sort": 3,
+      "status": 1,
+      "action_style": "info"
+    },
+
+    {
+      "dict_type": "dict_app_type",
+      "label": "安卓",
+      "value": "android",
+      "remark": "",
+      "sort": 0,
+      "status": 1,
+      "action_style": "primary"
+    },
+    {
+      "dict_type": "dict_app_type",
+      "label": "苹果",
+      "value": "ios",
+      "remark": "",
+      "sort": 1,
+      "status": 1,
+      "action_style": "danger"
+    },
+    {
+      "dict_type": "dict_app_type",
+      "label": "微信小程序",
+      "value": "mpweixin",
+      "remark": "",
+      "sort": 2,
+      "status": 1,
+      "action_style": "success"
+    },
+
+    {
+      "dict_type": "dict_app_type",
+      "label": "H5",
+      "value": "h5",
+      "remark": "",
+      "sort": 3,
+      "status": 1,
+      "action_style": "info"
     }
   ],
   "msg": "字典项获取成功",

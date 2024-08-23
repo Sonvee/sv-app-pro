@@ -60,7 +60,7 @@ function close() {
 async function confirm() {
   // 确认分配角色权限
   const res = await menuUpdate({
-    _id: props.formInit._id,
+    menu_id: props.formInit.menu_id,
     permissions: permissionDistribution.value
   })
   if (res.success) {

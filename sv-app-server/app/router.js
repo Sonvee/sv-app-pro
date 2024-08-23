@@ -103,7 +103,7 @@ module.exports = (app) => {
 
   // 文件
   router.post('/file/avatarUpload', controller.file.avatarUpload)
-  router.post('/file/avatarDelete', controller.file.avatarDelete)
+  router.post('/file/myfileDelete', controller.file.myfileDelete)
   router.post('/file/userfilesDelete', controller.file.userfilesDelete)
   router.post('/file/releaseUpload', controller.file.releaseUpload)
   router.post('/file/releaseImageUpload', controller.file.releaseImageUpload)
@@ -168,7 +168,6 @@ module.exports = (app) => {
   router.post('/vip/cdkeyUpdate', controller.vipCdkey.cdkeyUpdate)
   router.post('/vip/cdkeyDelete', controller.vipCdkey.cdkeyDelete)
   router.post('/vip/cdkeyClear', controller.vipCdkey.cdkeyClear)
-  router.post('/vip/cdkeyBatchAdd', controller.vipCdkey.cdkeyBatchAdd)
   router.post('/vip/cdkeyBatchDelete', controller.vipCdkey.cdkeyBatchDelete)
   router.post('/vip/cdkeyActive', controller.vipCdkey.cdkeyActive)
 
@@ -177,6 +176,5 @@ module.exports = (app) => {
   router.post('/vip/subscriptionAdd', controller.vipSubscription.subscriptionAdd)
   router.post('/vip/subscriptionUpdate', controller.vipSubscription.subscriptionUpdate)
   router.post('/vip/subscriptionDelete', controller.vipSubscription.subscriptionDelete)
-  router.post('/vip/subscriptionBatchAdd', controller.vipSubscription.subscriptionBatchAdd)
   router.post('/vip/subscriptionBatchDelete', controller.vipSubscription.subscriptionBatchDelete)
 }

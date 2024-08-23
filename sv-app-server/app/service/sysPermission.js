@@ -1,6 +1,7 @@
 'use strict'
 
 const { isTruthy } = require('../utils')
+const { batchAdd, batchDelete } = require('../utils/batch')
 
 const Service = require('egg').Service
 
@@ -17,7 +18,7 @@ class SysPermissionService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['permissionList'])
+    ctx.checkAuthority('permission', ['sys:permission:query'])
 
     // 参数处理
     let { pagesize = 20, pagenum = 1 } = data
@@ -79,10 +80,7 @@ class SysPermissionService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['permissionAdd'])
-
-    // 参数处理
-    delete data._id // 去除部分参数
+    ctx.checkAuthority('permission', ['sys:permission:add'])
 
     // 参数校验
     if (!isTruthy(data.permission_id)) ctx.throw(400, { msg: 'permission_id 必填' })
@@ -117,7 +115,7 @@ class SysPermissionService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['permissionUpdate'])
+    ctx.checkAuthority('permission', ['sys:permission:update'])
 
     // 参数校验
     if (!isTruthy(data.permission_id)) ctx.throw(400, { msg: 'permission_id 必填' })
@@ -149,7 +147,7 @@ class SysPermissionService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['permissionDelete'])
+    ctx.checkAuthority('permission', ['sys:permission:delete'])
 
     // 参数校验
     if (!isTruthy(data.permission_id)) ctx.throw(400, { msg: 'permission_id 必填' })
@@ -182,7 +180,7 @@ class SysPermissionService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['permissionBatchAdd'])
+    ctx.checkAuthority('permission', ['sys:permission:batchadd'])
 
     // 参数处理
     data = Object.assign(
@@ -203,55 +201,13 @@ class SysPermissionService extends Service {
     // 主键
     const primaryKey = 'permission_id'
 
-    // 过滤掉主键缺失无效的项
-    data.list = data.list.filter((item) => item[primaryKey])
-
-    // 结果处理
-    let res, tip
-    if (data.cover) {
-      // 覆盖模式：使用 upsert 更新或插入数据
-      res = await Promise.all(
-        data.list.map(async (item) => {
-          try {
-            return await db.findOneAndUpdate({ [primaryKey]: item[primaryKey] }, item, { upsert: true, new: true })
-          } catch (error) {
-            ctx.logger.warn(`Error updating or inserting item ${item[primaryKey]}:`, error)
-            return null // 返回一个表示失败的特殊值
-          }
-        })
-      )
-    } else {
-      // 增量模式：使用 insertMany 插入数据
-      const existingIds = data.list.map((item) => item[primaryKey])
-      const batchSize = app.config.batchAddSize || 1000 // 分批数量 app.config.batchAddSize 在 config.default.js 中配置
-      const existingKeys = []
-
-      // 分批处理，避免 $in 操作符中的元素过多，
-      for (let i = 0; i < existingIds.length; i += batchSize) {
-        const batchKeys = existingIds.slice(i, i + batchSize)
-        const batchExistingItems = await db.find({ [primaryKey]: { $in: batchKeys } })
-        existingKeys.push(...batchExistingItems.map((item) => item[primaryKey]))
-      }
-
-      if (existingKeys.length > 0) {
-        tip = `已跳过存在项：${existingKeys.toString()}`
-      }
-
-      // 过滤掉已存在的记录
-      const filteredItems = data.list.filter((item) => !existingKeys.includes(item[primaryKey]))
-
-      try {
-        res = await db.insertMany(filteredItems)
-      } catch (error) {
-        ctx.logger.error('Error during insertMany operation:', error)
-        return ctx.throw(500, { msg: '服务器内部错误' })
-      }
-    }
+    // 批量添加
+    const res = await batchAdd(ctx, db, data, primaryKey)
 
     return {
-      data: res,
+      data: res?.data,
       msg: data.cover ? '批量覆盖添加成功' : '批量增量添加成功',
-      tip
+      tip: res?.tip
     }
   }
 
@@ -264,7 +220,7 @@ class SysPermissionService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['permissionBatchDelete'])
+    ctx.checkAuthority('permission', ['sys:permission:batchdelete'])
 
     // 参数处理
     data = Object.assign(
@@ -280,23 +236,12 @@ class SysPermissionService extends Service {
 
     // 数据库连接
     const db = app.model.SysPermission
-    
+
     // 主键
     const primaryKey = 'permission_id'
 
-    // 分批处理删除操作，避免单次操作处理过多数据
-    const batchSize = app.config.batchDeleteSize || 1000 // 分批数量 app.config.batchDeleteSize 在 config.default.js 中配置
-    let deletedCount = 0
-
-    // 执行批量删除
-    for (let i = 0; i < data.list.length; i += batchSize) {
-      const batchKeys = data.list.slice(i, i + batchSize)
-      const deleteRes = await db.deleteMany({ [primaryKey]: { $in: batchKeys } })
-      deletedCount += deleteRes.deletedCount
-    }
-
-    // 其他处理
-    if (deletedCount == 0) ctx.throw(400, { msg: '无有效数据项删除' })
+    // 批量删除
+    const deletedCount = await batchDelete(ctx, db, data, primaryKey)
 
     return {
       msg: '批量删除成功',

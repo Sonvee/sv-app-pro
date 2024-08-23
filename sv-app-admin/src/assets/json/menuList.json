@@ -3,26 +3,28 @@
   "data": [
     {
       "meta": {
-        "isSub": false,
+        "isOpen": false,
         "icon": "uni-icons-home-filled",
         "title": "首页",
         "isLink": "",
+        "activeMenu": "",
         "isHide": false,
+        "isSub": false,
         "isFull": false,
         "isAffix": true,
-        "isKeepAlive": true,
-        "activeMenu": ""
+        "isKeepAlive": true
       },
       "name": "home",
       "path": "/home",
       "component": "/home/index",
-      "sort": 0,
-      "permissions": [],
       "parent_name": "",
-      "redirect": ""
+      "sort": 0,
+      "redirect": "",
+      "permissions": []
     },
     {
       "meta": {
+        "isOpen": false,
         "icon": "sv-icons-portal",
         "title": "portal",
         "isLink": "",
@@ -37,14 +39,15 @@
       "path": "/portal",
       "component": "",
       "parent_name": "",
-      "sort": 400,
+      "sort": 200,
       "redirect": "/portal/pulish",
       "permissions": []
     },
     {
       "meta": {
-        "icon": "admin-icons-error-app",
-        "title": "统一发布页",
+        "isOpen": false,
+        "icon": "admin-icons-kaifashili",
+        "title": "版本管理",
         "isLink": "",
         "activeMenu": "",
         "isHide": false,
@@ -53,20 +56,84 @@
         "isAffix": false,
         "isKeepAlive": true
       },
-      "name": "publish",
-      "path": "/portal/publish",
-      "component": "/portal/publish/index",
+      "name": "release",
+      "path": "/portal/release",
+      "component": "/portal/release/index",
       "parent_name": "portal",
-      "sort": 410,
+      "sort": 220,
       "redirect": "",
       "permissions": []
     },
     {
       "meta": {
-        "icon": "sv-icons-notice",
-        "title": "通知公告",
+        "icon": "admin-icons-manager-app",
+        "title": "应用模块",
         "isLink": "",
         "activeMenu": "",
+        "isOpen": false,
+        "isHide": false,
+        "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "application",
+      "path": "/application",
+      "component": "",
+      "parent_name": "",
+      "sort": 300,
+      "redirect": "/application/help",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "icon": "uni-icons-help",
+        "title": "帮助管理",
+        "isLink": "",
+        "activeMenu": "",
+        "isOpen": false,
+        "isHide": false,
+        "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "help",
+      "path": "/application/help",
+      "component": "/application/help/index",
+      "parent_name": "application",
+      "sort": 310,
+      "redirect": "",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "icon": "cuIcon-message",
+        "title": "反馈管理",
+        "isLink": "",
+        "activeMenu": "",
+        "isOpen": false,
+        "isHide": false,
+        "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "feedback",
+      "path": "/application/feedback",
+      "component": "/application/feedback/index",
+      "parent_name": "application",
+      "sort": 320,
+      "redirect": "",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "icon": "cuIcon-notification",
+        "title": "通知管理",
+        "isLink": "",
+        "activeMenu": "",
+        "isOpen": false,
         "isHide": false,
         "isSub": false,
         "isFull": false,
@@ -74,21 +141,127 @@
         "isKeepAlive": true
       },
       "name": "notice",
-      "path": "/portal/notice",
-      "component": "/portal/notice/index",
-      "parent_name": "portal",
-      "sort": 420,
+      "path": "/application/notice",
+      "component": "/application/notice/index",
+      "parent_name": "application",
+      "sort": 340,
       "redirect": "",
       "permissions": []
     },
     {
       "meta": {
+        "icon": "uni-icons-vip",
+        "title": "会员管理",
+        "isLink": "",
+        "activeMenu": "",
+        "isOpen": false,
+        "isHide": false,
         "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "vip",
+      "path": "/application/vip",
+      "component": "",
+      "parent_name": "application",
+      "sort": 360,
+      "redirect": "/application/vip/plan",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "icon": "cuIcon-vip",
+        "title": "会员套餐",
+        "isLink": "",
+        "activeMenu": "",
+        "isOpen": false,
+        "isHide": false,
+        "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "plan",
+      "path": "/application/vip/plan",
+      "component": "/application/vip/plan/index",
+      "parent_name": "vip",
+      "sort": 361,
+      "redirect": "",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "icon": "sv-icons-vip",
+        "title": "会员特权",
+        "isLink": "",
+        "activeMenu": "",
+        "isOpen": false,
+        "isHide": false,
+        "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "benefit",
+      "path": "/application/vip/benefit",
+      "component": "/application/vip/benefit/index",
+      "parent_name": "vip",
+      "sort": 362,
+      "redirect": "",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "icon": "sv-icons-key",
+        "title": "激活码",
+        "isLink": "",
+        "activeMenu": "",
+        "isOpen": false,
+        "isHide": false,
+        "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "cdkey",
+      "path": "/application/vip/cdkey",
+      "component": "/application/vip/cdkey/index",
+      "parent_name": "vip",
+      "sort": 363,
+      "redirect": "",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "icon": "cuIcon-subscription",
+        "title": "订阅记录",
+        "isLink": "",
+        "activeMenu": "",
+        "isOpen": false,
+        "isHide": false,
+        "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "subscription",
+      "path": "/application/vip/subscription",
+      "component": "/application/vip/subscription/index",
+      "parent_name": "vip",
+      "sort": 364,
+      "redirect": "",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "isOpen": false,
         "icon": "admin-icons-fl-xitong",
-        "title": "系统管理",
+        "title": "系统模块",
         "isLink": "",
         "activeMenu": "",
         "isHide": false,
+        "isSub": false,
         "isFull": false,
         "isAffix": false,
         "isKeepAlive": true
@@ -103,12 +276,13 @@
     },
     {
       "meta": {
-        "isSub": false,
+        "isOpen": false,
         "icon": "admin-icons-manager-user",
         "title": "用户管理",
         "isLink": "",
         "activeMenu": "",
         "isHide": false,
+        "isSub": false,
         "isFull": false,
         "isAffix": false,
         "isKeepAlive": true
@@ -123,12 +297,13 @@
     },
     {
       "meta": {
-        "isSub": false,
+        "isOpen": false,
         "icon": "admin-icons-manager-role",
         "title": "角色管理",
         "isLink": "",
         "activeMenu": "",
         "isHide": false,
+        "isSub": false,
         "isFull": false,
         "isAffix": false,
         "isKeepAlive": true
@@ -143,12 +318,13 @@
     },
     {
       "meta": {
-        "isSub": false,
+        "isOpen": false,
         "icon": "admin-icons-manager-permission",
         "title": "权限管理",
         "isLink": "",
         "activeMenu": "",
         "isHide": false,
+        "isSub": false,
         "isFull": false,
         "isAffix": false,
         "isKeepAlive": true
@@ -163,32 +339,34 @@
     },
     {
       "meta": {
-        "isSub": false,
+        "isOpen": false,
         "icon": "admin-icons-manager-menu",
         "title": "菜单管理",
         "isLink": "",
+        "activeMenu": "",
         "isHide": false,
+        "isSub": false,
         "isFull": false,
         "isAffix": false,
-        "isKeepAlive": true,
-        "activeMenu": ""
+        "isKeepAlive": true
       },
       "name": "menu",
       "path": "/system/menu",
       "component": "/system/menu/index",
       "parent_name": "system",
       "sort": 540,
-      "permissions": [],
-      "redirect": ""
+      "redirect": "",
+      "permissions": []
     },
     {
       "meta": {
-        "isSub": false,
+        "isOpen": false,
         "icon": "admin-icons-help",
         "title": "字典管理",
         "isLink": "",
         "activeMenu": "",
         "isHide": false,
+        "isSub": false,
         "isFull": false,
         "isAffix": false,
         "isKeepAlive": true
@@ -203,12 +381,13 @@
     },
     {
       "meta": {
-        "isSub": true,
+        "isOpen": false,
         "icon": "admin-icons-help",
         "title": "字典项",
         "isLink": "",
         "activeMenu": "",
         "isHide": true,
+        "isSub": true,
         "isFull": false,
         "isAffix": false,
         "isKeepAlive": true
@@ -223,12 +402,13 @@
     },
     {
       "meta": {
-        "isSub": false,
+        "isOpen": false,
         "icon": "admin-icons-doc",
         "title": "日志管理",
         "isLink": "",
         "activeMenu": "",
         "isHide": false,
+        "isSub": false,
         "isFull": false,
         "isAffix": false,
         "isKeepAlive": false
@@ -243,6 +423,7 @@
     },
     {
       "meta": {
+        "isOpen": false,
         "icon": "admin-icons-doc",
         "title": "登录日志",
         "isLink": "",
@@ -263,6 +444,7 @@
     },
     {
       "meta": {
+        "isOpen": false,
         "icon": "admin-icons-doc",
         "title": "操作日志",
         "isLink": "",
@@ -283,6 +465,7 @@
     },
     {
       "meta": {
+        "isOpen": false,
         "icon": "admin-icons-dashboard",
         "title": "系统监控",
         "isLink": "",
@@ -303,6 +486,7 @@
     },
     {
       "meta": {
+        "isOpen": false,
         "icon": "admin-icons-tongji",
         "title": "统计管理",
         "isLink": "",
@@ -323,6 +507,7 @@
     },
     {
       "meta": {
+        "isOpen": false,
         "icon": "admin-icons-qudaofenxi",
         "title": "系统分析",
         "isLink": "",
@@ -343,6 +528,7 @@
     },
     {
       "meta": {
+        "isOpen": false,
         "icon": "admin-icons-eco",
         "title": "缓存监控",
         "isLink": "",
@@ -363,6 +549,7 @@
     },
     {
       "meta": {
+        "isOpen": false,
         "icon": "sv-icons-redis",
         "title": "Redis缓存",
         "isLink": "",
@@ -383,6 +570,7 @@
     },
     {
       "meta": {
+        "isOpen": false,
         "icon": "sv-icons-storage",
         "title": "本地缓存",
         "isLink": "",
@@ -403,6 +591,7 @@
     },
     {
       "meta": {
+        "isOpen": false,
         "icon": "sv-icons-tool",
         "title": "系统工具",
         "isLink": "",
@@ -423,6 +612,7 @@
     },
     {
       "meta": {
+        "isOpen": false,
         "icon": "admin-icons-icon",
         "title": "系统图标",
         "isLink": "",
@@ -443,6 +633,28 @@
     },
     {
       "meta": {
+        "isOpen": false,
+        "icon": "sv-icons-code",
+        "title": "代码生成",
+        "isLink": "",
+        "activeMenu": "",
+        "isHide": false,
+        "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "coder",
+      "path": "/tools/coder",
+      "component": "/tools/coder/index",
+      "parent_name": "tools",
+      "sort": 820,
+      "redirect": "",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "isOpen": false,
         "icon": "sv-icons-word",
         "title": "接口文档",
         "isLink": "",
@@ -457,18 +669,40 @@
       "path": "/tools/apidoc",
       "component": "/tools/apidoc/index",
       "parent_name": "tools",
-      "sort": 820,
+      "sort": 830,
       "redirect": "",
       "permissions": []
     },
     {
       "meta": {
+        "isOpen": false,
+        "icon": "cuIcon-my",
+        "title": "个人空间",
+        "isLink": "",
+        "activeMenu": "",
+        "isHide": false,
         "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "mine",
+      "path": "/mine",
+      "component": "/mine/index",
+      "parent_name": "",
+      "sort": 900,
+      "redirect": "",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "isOpen": false,
         "icon": "cuIcon-link",
         "title": "友情链接",
         "isLink": "",
         "activeMenu": "",
         "isHide": false,
+        "isSub": false,
         "isFull": false,
         "isAffix": false,
         "isKeepAlive": true
@@ -483,6 +717,7 @@
     },
     {
       "meta": {
+        "isOpen": false,
         "icon": "sv-icons-uni-app-square",
         "title": "uniapp官网",
         "isLink": "https://uniapp.dcloud.net.cn/",
@@ -503,6 +738,7 @@
     },
     {
       "meta": {
+        "isOpen": false,
         "icon": "sv-icons-wechat",
         "title": "微信公众平台",
         "isLink": "https://mp.weixin.qq.com/",
@@ -523,6 +759,7 @@
     },
     {
       "meta": {
+        "isOpen": false,
         "icon": "sv-icons-vue",
         "title": "vue",
         "isLink": "https://cn.vuejs.org/",

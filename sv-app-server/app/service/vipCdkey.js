@@ -3,12 +3,13 @@
 const dayjs = require('dayjs')
 const { isTruthy } = require('../utils')
 const { createCdkey } = require('../utils/cdkey')
+const { batchDelete } = require('../utils/batch')
 
 const Service = require('egg').Service
 
 class VipCdkeyService extends Service {
   /**
-   * 查询 post - 权限 open
+   * 查询 post - 权限 permission
    * @param {Object} data - 请求参数
    * @property {String} data.cdkey - 激活码
    * @property {String} data.cdkey_plan - 绑定套餐
@@ -21,7 +22,7 @@ class VipCdkeyService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('open')
+    ctx.checkAuthority('permission', ['vip:cdkey:query'])
 
     // 参数处理
     let { pagesize = 20, pagenum = 1 } = data
@@ -112,10 +113,7 @@ class VipCdkeyService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['cdkeyAdd'])
-
-    // 参数处理
-    delete data._id // 去除部分参数
+    ctx.checkAuthority('permission', ['vip:cdkey:add'])
 
     // 参数校验
     if (!isTruthy(data.cdkey_plan)) ctx.throw(400, { msg: 'cdkey_plan 必填' })
@@ -127,11 +125,11 @@ class VipCdkeyService extends Service {
     }
     if (!isPositiveInteger(data.num)) ctx.throw(400, { msg: '生成个数需为正整数' })
 
-    // 自动生成激活码
+    // 批量生成激活码
     let cdkeyList = []
     for (let i = 0; i < data.num; i++) {
       cdkeyList.push({
-        cdkey: createCdkey(),
+        cdkey: createCdkey(), // 自动生成激活码
         description: data?.description,
         cdkey_plan: data.cdkey_plan,
         valid_date: data.valid_date,
@@ -161,7 +159,7 @@ class VipCdkeyService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['cdkeyUpdate'])
+    ctx.checkAuthority('permission', ['vip:cdkey:update'])
 
     // 参数校验
     if (!isTruthy(data.cdkey)) ctx.throw(400, { msg: 'cdkey 必填' })
@@ -194,7 +192,7 @@ class VipCdkeyService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['cdkeyDelete'])
+    ctx.checkAuthority('permission', ['vip:cdkey:delete'])
 
     // 参数校验
     if (!isTruthy(data.cdkey)) ctx.throw(400, { msg: 'cdkey 必填' })
@@ -226,7 +224,7 @@ class VipCdkeyService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['cdkeyClear'])
+    ctx.checkAuthority('permission', ['vip:cdkey:clear'])
 
     // 参数校验
     if (!isTruthy(data.status, 'zero')) ctx.throw(400, { msg: 'status 必填' })
@@ -249,89 +247,6 @@ class VipCdkeyService extends Service {
   }
 
   /**
-   * 批量新增 post - 权限 permission
-   * @param {Object} data - 请求参数
-   * @property {Array} data.list 批量新增项
-   * @property {Boolean} data.cover - 是否覆盖 默认true
-   */
-  async cdkeyBatchAdd(data) {
-    const { ctx, app } = this
-
-    // 权限校验
-    ctx.checkAuthority('permission', ['cdkeyBatchAdd'])
-
-    // 参数处理
-    data = Object.assign(
-      {
-        list: [],
-        cover: false // 是否覆盖
-      },
-      data
-    )
-
-    // 参数校验
-    if (!Array.isArray(data.list)) ctx.throw(400, { msg: 'list 必须是数组' })
-    if (!isTruthy(data.list, 'arr')) ctx.throw(400, { msg: 'list 为空' })
-
-    // 数据库连接
-    const db = app.model.VipCdkey
-
-    // 主键
-    const primaryKey = 'cdkey'
-
-    // 过滤掉主键缺失无效的项
-    data.list = data.list.filter((item) => item[primaryKey])
-
-    // 结果处理
-    let res, tip
-    if (data.cover) {
-      // 覆盖模式：使用 upsert 更新或插入数据
-      res = await Promise.all(
-        data.list.map(async (item) => {
-          try {
-            return await db.findOneAndUpdate({ [primaryKey]: item[primaryKey] }, item, { upsert: true, new: true })
-          } catch (error) {
-            ctx.logger.warn(`Error updating or inserting item ${item[primaryKey]}:`, error)
-            return null // 返回一个表示失败的特殊值
-          }
-        })
-      )
-    } else {
-      // 增量模式：使用 insertMany 插入数据
-      const existingIds = data.list.map((item) => item[primaryKey])
-      const batchSize = app.config.batchAddSize || 1000 // 分批数量 app.config.batchAddSize 在 config.default.js 中配置
-      const existingKeys = []
-
-      // 分批处理，避免 $in 操作符中的元素过多，
-      for (let i = 0; i < existingIds.length; i += batchSize) {
-        const batchKeys = existingIds.slice(i, i + batchSize)
-        const batchExistingItems = await db.find({ [primaryKey]: { $in: batchKeys } })
-        existingKeys.push(...batchExistingItems.map((item) => item[primaryKey]))
-      }
-
-      if (existingKeys.length > 0) {
-        tip = `已跳过存在项：${existingKeys.toString()}`
-      }
-
-      // 过滤掉已存在的记录
-      const filteredItems = data.list.filter((item) => !existingKeys.includes(item[primaryKey]))
-
-      try {
-        res = await db.insertMany(filteredItems)
-      } catch (error) {
-        ctx.logger.error('Error during insertMany operation:', error)
-        return ctx.throw(500, { msg: '服务器内部错误' })
-      }
-    }
-
-    return {
-      data: res,
-      msg: data.cover ? '批量覆盖添加成功' : '批量增量添加成功',
-      tip
-    }
-  }
-
-  /**
    * 批量删除 post - 权限 permission
    * @param {Object} data - 请求参数
    * @property {Array} data.list - 批量新增项
@@ -340,7 +255,7 @@ class VipCdkeyService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['cdkeyBatchDelete'])
+    ctx.checkAuthority('permission', ['vip:cdkey:batchdelete'])
 
     // 参数处理
     data = Object.assign(
@@ -360,19 +275,8 @@ class VipCdkeyService extends Service {
     // 主键
     const primaryKey = 'cdkey'
 
-    // 分批处理删除操作，避免单次操作处理过多数据
-    const batchSize = app.config.batchDeleteSize || 1000 // 分批数量 app.config.batchDeleteSize 在 config.default.js 中配置
-    let deletedCount = 0
-
-    // 执行批量删除
-    for (let i = 0; i < data.list.length; i += batchSize) {
-      const batchKeys = data.list.slice(i, i + batchSize)
-      const deleteRes = await db.deleteMany({ [primaryKey]: { $in: batchKeys } })
-      deletedCount += deleteRes.deletedCount
-    }
-
-    // 其他处理
-    if (deletedCount == 0) ctx.throw(400, { msg: '无有效数据项删除' })
+    // 批量删除
+    const deletedCount = await batchDelete(ctx, db, data, primaryKey)
 
     return {
       msg: '批量删除成功',
@@ -381,7 +285,7 @@ class VipCdkeyService extends Service {
   }
 
   /**
-   * 激活cdkey post - 权限 self_id
+   * 激活cdkey post - 权限 self
    * @param {*} data
    */
   async cdkeyActive(data) {
@@ -391,7 +295,7 @@ class VipCdkeyService extends Service {
     if (!isTruthy(data.user_id)) ctx.throw(400, { msg: 'user_id 必填' })
 
     // 权限校验
-    ctx.checkAuthority('self_id', data.user_id)
+    ctx.checkAuthority('self', data.user_id)
 
     // 参数校验
     if (!isTruthy(data.cdkey)) ctx.throw(400, { msg: 'cdkey 必填' })
@@ -407,7 +311,7 @@ class VipCdkeyService extends Service {
 
     // 1. 获取当前用户信息
     const userdb = app.model.SysUser
-    const oneUser = await userdb.findOne({ _id: data.user_id })
+    const oneUser = await userdb.findOne({ user_id: data.user_id })
     if (!oneUser) ctx.throw(400, { msg: '用户不存在' })
 
     // 2. 判断cdkey是否正常 0:待使用 1:已使用 2:已失效

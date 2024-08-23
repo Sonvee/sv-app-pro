@@ -6,16 +6,16 @@
     <div class="card table-container">
       <!-- 工具栏 -->
       <div class="table-control">
-        <!-- <el-button type="primary" plain :icon="Plus" v-permission="['feedbackAdd']" @click="add">新增</el-button>
-        <el-button type="danger" plain :icon="Delete" v-permission="['feedbackBatchDelete']" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button> -->
+        <!-- <el-button type="primary" plain :icon="Plus" v-permission="['feedbackAdd']" @click="add">新增</el-button> -->
+        <el-button type="danger" plain :icon="Delete" v-permission="['feedbackBatchDelete']" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
         <div style="flex: 1"></div>
         <el-button circle :icon="RefreshRight" @click="refresh" title="刷新"></el-button>
         <el-button circle :icon="showFilter ? View : Hide" @click="showFilter = !showFilter" :title="showFilter ? '隐藏筛选' : '显示筛选'"></el-button>
       </div>
       <!-- 数据表格 -->
       <el-table v-loading="loading" :data="tableData" border @selection-change="handleSelectionChange">
-        <!-- <el-table-column type="selection" align="center" width="50" fixed="left" /> -->
-        <el-table-column prop="_id" label="受理单号" width="240" show-overflow-tooltip></el-table-column>
+        <el-table-column type="selection" align="center" width="50" fixed="left" />
+        <el-table-column prop="feedback_id" label="受理单号" width="240" show-overflow-tooltip></el-table-column>
         <el-table-column prop="type" label="类型" align="center" width="120" show-overflow-tooltip>
           <template #default="scope">
             <DictTag :dictList="dictFeedbackType" :value="scope.row.type"></DictTag>
@@ -70,7 +70,7 @@
           <template #default="scope">
             <el-button-group>
               <el-button text type="primary" :icon="EditPen" v-permission="['feedbackUpdate']" @click="edit(scope.row)">编辑</el-button>
-              <!-- <el-button text type="danger" :icon="Delete" v-permission="['feedbackDelete']" @click="del(scope.row)">删除</el-button> -->
+              <el-button text type="danger" :icon="Delete" v-permission="['feedbackDelete']" @click="del(scope.row)">删除</el-button>
             </el-button-group>
           </template>
         </el-table-column>

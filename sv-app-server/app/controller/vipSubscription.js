@@ -31,13 +31,6 @@ class VipPlanController extends Controller {
     ctx.result(res)
   }
 
-  async subscriptionBatchAdd() {
-    const { ctx, service } = this
-    const data = ctx.request.body
-    const res = await service.vipSubscription.subscriptionBatchAdd(data)
-    ctx.result(res)
-  }
-
   async subscriptionBatchDelete() {
     const { ctx, service } = this
     const data = ctx.request.body

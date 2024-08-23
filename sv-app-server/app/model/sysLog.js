@@ -5,6 +5,13 @@ module.exports = (app) => {
 
   const SysLogSchema = new mongoose.Schema(
     {
+      // 主键 - 日志id
+      log_id: {
+        type: mongoose.Schema.Types.ObjectId,
+        auto: true,
+        unique: true,
+        required: true
+      },
       // 日志类型：login登录日志，operation操作日志
       log_type: {
         type: String,

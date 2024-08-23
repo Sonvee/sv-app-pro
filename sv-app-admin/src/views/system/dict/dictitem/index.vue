@@ -16,7 +16,6 @@
       <el-table v-loading="loading" :data="tableData" border @selection-change="handleSelectionChange">
         <el-table-column type="selection" align="center" width="50" fixed="left" />
         <el-table-column prop="sort" label="序号" align="center" width="80"></el-table-column>
-        <el-table-column prop="dictitem_id" label="字典项ID" min-width="200" show-overflow-tooltip></el-table-column>
         <el-table-column prop="label" label="字典项键" min-width="200" show-overflow-tooltip></el-table-column>
         <el-table-column prop="value" label="字典项值" min-width="200" show-overflow-tooltip></el-table-column>
         <el-table-column prop="action_style" label="标签样式" align="center" width="100" show-overflow-tooltip>
@@ -25,6 +24,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="remark" label="备注" min-width="300" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="dict_type" label="字典类型" min-width="200" show-overflow-tooltip></el-table-column>
         <el-table-column
           prop="created_date"
           label="创建时间"

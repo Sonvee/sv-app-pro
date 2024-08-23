@@ -5,7 +5,7 @@ module.exports = (app) => {
 
   const VipCdkeySchema = new mongoose.Schema(
     {
-      // 激活码
+      // 主键 - 激活码
       cdkey: {
         type: String,
         unique: true,

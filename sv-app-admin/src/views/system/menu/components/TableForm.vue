@@ -116,7 +116,7 @@ const emits = defineEmits(['submit'])
 
 // 初始数据
 const formBase = {
-  _id: '',
+  menu_id: '', // 主键
   name: '', // 路由标识 name (对应页面组件 name, 可用作 KeepAlive 缓存标识 && 按钮权限筛选)
   path: '', // 路由访问路径
   component: '', // 视图文件路径

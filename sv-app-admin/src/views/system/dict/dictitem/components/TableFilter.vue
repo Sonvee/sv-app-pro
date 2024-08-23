@@ -1,9 +1,6 @@
 <template>
   <view class="table-filter card">
     <el-form ref="filterFormRef" inline :model="filterForm">
-      <el-form-item prop="dictitem_id" label="字典项ID">
-        <el-input v-model.trim="filterForm.dictitem_id" placeholder="请输入字典项ID" clearable style="width: 150px" />
-      </el-form-item>
       <el-form-item prop="label" label="字典项键">
         <el-input v-model.trim="filterForm.label" placeholder="请输入字典项键" clearable style="width: 150px" />
       </el-form-item>
@@ -26,7 +23,6 @@ const emits = defineEmits(['submit'])
 const filterFormRef = ref()
 // 过滤条件表单
 const filterForm = ref({
-  dictitem_id: '',
   label: '',
   value: ''
 })

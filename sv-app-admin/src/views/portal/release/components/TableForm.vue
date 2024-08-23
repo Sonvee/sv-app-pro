@@ -81,6 +81,7 @@ const emits = defineEmits(['submit'])
 
 // 初始数据
 const formBase = {
+  release_id: '', // 主键
   version: '', // 版本号
   type: null, // 应用类型
   name: '', // 应用名称

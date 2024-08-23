@@ -70,7 +70,7 @@ class TestDemoService extends Service {
             {
               // 联表指定字段：0 不显示，1 显示
               $project: {
-                _id: 1,
+                _id: 0,
                 testforeign_id: 1,
                 testforeign_name: 1
               }
@@ -125,9 +125,6 @@ class TestDemoService extends Service {
 
     // 权限校验
     ctx.checkAuthority('open')
-
-    // 参数处理
-    delete data._id // 去除部分参数
 
     // 参数校验
     if (!isTruthy(data.test_id)) ctx.throw(400, { msg: 'test_id 必填' })

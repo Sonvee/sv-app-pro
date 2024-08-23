@@ -1,6 +1,7 @@
 'use strict'
 
 const { isTruthy } = require('../utils')
+const { batchDelete } = require('../utils/batch')
 
 const Service = require('egg').Service
 
@@ -84,7 +85,8 @@ class VipSubscriptionService extends Service {
             {
               // 联表指定字段：0 不显示，1 显示
               $project: {
-                _id: 1,
+                _id: 0,
+                user_id: 1,
                 username: 1,
                 nickname: 1,
                 phone: 1,
@@ -129,23 +131,21 @@ class VipSubscriptionService extends Service {
   }
 
   /**
-   * 新增 post - 权限 permission
+   * 新增 post - 权限 self
    * @param {Object} data - 请求参数
    * @property {String} data.user_id - 用户id
    */
   async subscriptionAdd(data) {
     const { ctx, app } = this
 
-    // 权限校验
-    ctx.checkAuthority('permission', ['subscriptionAdd'])
-
     // 参数校验
     if (!isTruthy(data.user_id)) ctx.throw(400, { msg: 'user_id 必填' })
-    if (!isTruthy(data.subscription_plan)) ctx.throw(400, { msg: 'subscription_plan 必填' })
 
-    // 用户查询
-    const oneUser = await app.model.SysUser.findOne({ username: data.user_id })
-    if (!oneUser) ctx.throw(400, { msg: '用户不存在' })
+    // 权限校验
+    ctx.checkAuthority('self', data.user_id)
+
+    // 参数校验
+    if (!isTruthy(data.subscription_plan)) ctx.throw(400, { msg: 'subscription_plan 必填' })
 
     // 套餐查询
     const onePlan = await app.model.VipPlan.findOne({ plan_id: data.subscription_plan })
@@ -173,7 +173,7 @@ class VipSubscriptionService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['subscriptionUpdate'])
+    ctx.checkAuthority('permission', ['vip:subscription:update'])
 
     // 参数校验
     if (!isTruthy(data.subscription_id)) ctx.throw(400, { msg: 'subscription_id 必填' })
@@ -205,7 +205,7 @@ class VipSubscriptionService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['subscriptionDelete'])
+    ctx.checkAuthority('permission', ['vip:subscription:delete'])
 
     // 参数校验
     if (!isTruthy(data.subscription_id)) ctx.throw(400, { msg: 'subscription_id 必填' })
@@ -229,89 +229,6 @@ class VipSubscriptionService extends Service {
   }
 
   /**
-   * 批量新增 post - 权限 permission
-   * @param {Object} data - 请求参数
-   * @property {Array} data.list 批量新增项
-   * @property {Boolean} data.cover - 是否覆盖 默认true
-   */
-  async subscriptionBatchAdd(data) {
-    const { ctx, app } = this
-
-    // 权限校验
-    ctx.checkAuthority('permission', ['subscriptionBatchAdd'])
-
-    // 参数处理
-    data = Object.assign(
-      {
-        list: [],
-        cover: false // 是否覆盖
-      },
-      data
-    )
-
-    // 参数校验
-    if (!Array.isArray(data.list)) ctx.throw(400, { msg: 'list 必须是数组' })
-    if (!isTruthy(data.list, 'arr')) ctx.throw(400, { msg: 'list 为空' })
-
-    // 数据库连接
-    const db = app.model.VipSubscription
-
-    // 主键
-    const primaryKey = 'subscription_id'
-
-    // 过滤掉主键缺失无效的项
-    data.list = data.list.filter((item) => item[primaryKey])
-
-    // 结果处理
-    let res, tip
-    if (data.cover) {
-      // 覆盖模式：使用 upsert 更新或插入数据
-      res = await Promise.all(
-        data.list.map(async (item) => {
-          try {
-            return await db.findOneAndUpdate({ [primaryKey]: item[primaryKey] }, item, { upsert: true, new: true })
-          } catch (error) {
-            ctx.logger.warn(`Error updating or inserting item ${item[primaryKey]}:`, error)
-            return null // 返回一个表示失败的特殊值
-          }
-        })
-      )
-    } else {
-      // 增量模式：使用 insertMany 插入数据
-      const existingIds = data.list.map((item) => item[primaryKey])
-      const batchSize = app.config.batchAddSize || 1000 // 分批数量 app.config.batchAddSize 在 config.default.js 中配置
-      const existingKeys = []
-
-      // 分批处理，避免 $in 操作符中的元素过多，
-      for (let i = 0; i < existingIds.length; i += batchSize) {
-        const batchKeys = existingIds.slice(i, i + batchSize)
-        const batchExistingItems = await db.find({ [primaryKey]: { $in: batchKeys } })
-        existingKeys.push(...batchExistingItems.map((item) => item[primaryKey]))
-      }
-
-      if (existingKeys.length > 0) {
-        tip = `已跳过存在项：${existingKeys.toString()}`
-      }
-
-      // 过滤掉已存在的记录
-      const filteredItems = data.list.filter((item) => !existingKeys.includes(item[primaryKey]))
-
-      try {
-        res = await db.insertMany(filteredItems)
-      } catch (error) {
-        ctx.logger.error('Error during insertMany operation:', error)
-        return ctx.throw(500, { msg: '服务器内部错误' })
-      }
-    }
-
-    return {
-      data: res,
-      msg: data.cover ? '批量覆盖添加成功' : '批量增量添加成功',
-      tip
-    }
-  }
-
-  /**
    * 批量删除 post - 权限 permission
    * @param {Object} data - 请求参数
    * @property {Array} data.list - 批量新增项
@@ -320,7 +237,7 @@ class VipSubscriptionService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['subscriptionBatchDelete'])
+    ctx.checkAuthority('permission', ['vip:subscription:batchdelete'])
 
     // 参数处理
     data = Object.assign(
@@ -340,19 +257,8 @@ class VipSubscriptionService extends Service {
     // 主键
     const primaryKey = 'subscription_id'
 
-    // 分批处理删除操作，避免单次操作处理过多数据
-    const batchSize = app.config.batchDeleteSize || 1000 // 分批数量 app.config.batchDeleteSize 在 config.default.js 中配置
-    let deletedCount = 0
-
-    // 执行批量删除
-    for (let i = 0; i < data.list.length; i += batchSize) {
-      const batchKeys = data.list.slice(i, i + batchSize)
-      const deleteRes = await db.deleteMany({ [primaryKey]: { $in: batchKeys } })
-      deletedCount += deleteRes.deletedCount
-    }
-
-    // 其他处理
-    if (deletedCount == 0) ctx.throw(400, { msg: '无有效数据项删除' })
+    // 批量删除
+    const deletedCount = await batchDelete(ctx, db, data, primaryKey)
 
     return {
       msg: '批量删除成功',

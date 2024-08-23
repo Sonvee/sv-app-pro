@@ -5,6 +5,7 @@ module.exports = (app) => {
 
   const TestForeignSchema = new mongoose.Schema(
     {
+      // 主键 - id
       testforeign_id: {
         type: String,
         unique: true,

@@ -1,8 +1,8 @@
 <template>
   <view class="table-filter card">
     <el-form ref="filterFormRef" inline :model="filterForm">
-      <el-form-item prop="_id" label="用户ID">
-        <el-input v-model.trim="filterForm._id" placeholder="请输入用户ID" clearable style="width: 150px" />
+      <el-form-item prop="user_id" label="用户ID">
+        <el-input v-model.trim="filterForm.user_id" placeholder="请输入用户ID" clearable style="width: 150px" />
       </el-form-item>
       <el-form-item prop="username" label="用户名">
         <el-input v-model.trim="filterForm.username" placeholder="请输入用户名" clearable style="width: 150px" />
@@ -48,7 +48,7 @@ const emits = defineEmits(['submit'])
 const filterFormRef = ref()
 // 过滤条件表单
 const filterForm = ref({
-  _id: '',
+  user_id: '',
   username: '',
   nickname: '',
   phone: '',

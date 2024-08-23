@@ -5,9 +5,6 @@
     </template>
     <template #default>
       <el-form ref="formRef" :model="formData" :rules="rules" label-width="120px" label-position="left">
-        <el-form-item prop="notice_id" label="通告ID" required>
-          <el-input v-model="formData.notice_id" :disabled="formMode !== 'add'" placeholder="请输入通告ID" clearable />
-        </el-form-item>
         <el-form-item prop="notice_type" label="通告类型" required>
           <DictSelect v-model="formData.notice_type" :disabled="formMode !== 'add'" dictType="dict_sys_notice_type" formatNumber placeholder="请选择通告类型"></DictSelect>
         </el-form-item>
@@ -87,7 +84,6 @@ const formData = ref(formBase)
 const formBaseClone = ref()
 // 校验规则
 const rules = ref({
-  notice_id: [{ required: true, message: '请输入通告ID', trigger: 'blur' }],
   notice_name: [{ required: true, message: '请输入通告名称', trigger: 'blur' }],
   notice_type: [{ required: true, message: '请输入通告类型', trigger: 'blur' }]
 })

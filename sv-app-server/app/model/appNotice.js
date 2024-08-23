@@ -5,6 +5,7 @@ module.exports = (app) => {
 
   const AppNoticeSchema = new mongoose.Schema(
     {
+      // 主键 - id
       notice_id: {
         type: mongoose.Schema.Types.ObjectId,
         auto: true,
@@ -12,7 +13,8 @@ module.exports = (app) => {
         required: true
       },
       notice_name: {
-        type: String
+        type: String,
+        required: true
       },
       notice_title: {
         type: String
@@ -23,7 +25,8 @@ module.exports = (app) => {
       },
       // 通知公告类型：0通知 1公告
       notice_type: {
-        type: Number
+        type: Number,
+        required: true
       },
       remark: {
         type: String

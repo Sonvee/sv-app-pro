@@ -79,9 +79,6 @@ class TestForeignService extends Service {
     // 权限校验
     ctx.checkAuthority('open')
 
-    // 参数处理
-    delete data._id // 去除部分参数
-
     // 参数校验
     if (!isTruthy(data.testforeign_id)) ctx.throw(400, { msg: 'testforeign_id 必填' })
 

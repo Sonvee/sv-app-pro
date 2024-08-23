@@ -1,6 +1,7 @@
 'use strict'
 
 const { isTruthy } = require('../utils')
+const { batchDelete } = require('../utils/batch')
 
 const Service = require('egg').Service
 
@@ -76,32 +77,25 @@ class AppFeedbackService extends Service {
   /**
    * 新增 post - 权限 permission
    * @param {Object} data - 请求参数
-   * @property {String} data.feedback_id - id
+   * @property {Number} data.type - 类型
+   * @property {Number} data.status - 状态
    */
   async feedbackAdd(data) {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['feedbackAdd'])
+    ctx.checkAuthority('permission', ['app:feedback:add'])
 
-    // 参数处理
-    delete data._id // 去除部分参数
+    delete data.feedback_id // 去除部分参数
 
     // 参数校验
-    if (!isTruthy(data.feedback_id)) ctx.throw(400, { msg: 'feedback_id 必填' })
     if (!isTruthy(data.type, 'zero')) ctx.throw(400, { msg: 'type 必填' })
     if (!isTruthy(data.status, 'zero')) ctx.throw(400, { msg: 'status 必填' })
-
-    // 查询条件处理
-    const conditions = { feedback_id: data.feedback_id }
 
     // 数据库连接
     const db = app.model.AppFeedback
 
-    // 查询
-    const one = await db.findOne(conditions)
-    if (one) ctx.throw(400, { msg: '新增项已存在' })
-
+    // 新增
     const res = await db.create(data)
 
     return {
@@ -119,7 +113,7 @@ class AppFeedbackService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['feedbackUpdate'])
+    ctx.checkAuthority('permission', ['app:feedback:update'])
 
     // 参数校验
     if (!isTruthy(data.feedback_id)) ctx.throw(400, { msg: 'feedback_id 必填' })
@@ -153,7 +147,7 @@ class AppFeedbackService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['feedbackDelete'])
+    ctx.checkAuthority('permission', ['app:feedback:delete'])
 
     // 参数校验
     if (!isTruthy(data.feedback_id)) ctx.throw(400, { msg: 'feedback_id 必填' })
@@ -177,89 +171,6 @@ class AppFeedbackService extends Service {
   }
 
   /**
-   * 批量新增 post - 权限 permission
-   * @param {Object} data - 请求参数
-   * @property {Array} data.list 批量新增项
-   * @property {Boolean} data.cover - 是否覆盖 默认true
-   */
-  async feedbackBatchAdd(data) {
-    const { ctx, app } = this
-
-    // 权限校验
-    ctx.checkAuthority('permission', ['feedbackBatchAdd'])
-
-    // 参数处理
-    data = Object.assign(
-      {
-        list: [],
-        cover: false // 是否覆盖
-      },
-      data
-    )
-
-    // 参数校验
-    if (!Array.isArray(data.list)) ctx.throw(400, { msg: 'list 必须是数组' })
-    if (!isTruthy(data.list, 'arr')) ctx.throw(400, { msg: 'list 为空' })
-
-    // 数据库连接
-    const db = app.model.AppFeedback
-
-    // 主键
-    const primaryKey = 'feedback_id'
-
-    // 过滤掉主键缺失无效的项
-    data.list = data.list.filter((item) => item[primaryKey])
-
-    // 结果处理
-    let res, tip
-    if (data.cover) {
-      // 覆盖模式：使用 upsert 更新或插入数据
-      res = await Promise.all(
-        data.list.map(async (item) => {
-          try {
-            return await db.findOneAndUpdate({ [primaryKey]: item[primaryKey] }, item, { upsert: true, new: true })
-          } catch (error) {
-            ctx.logger.warn(`Error updating or inserting item ${item[primaryKey]}:`, error)
-            return null // 返回一个表示失败的特殊值
-          }
-        })
-      )
-    } else {
-      // 增量模式：使用 insertMany 插入数据
-      const existingIds = data.list.map((item) => item[primaryKey])
-      const batchSize = app.config.batchAddSize || 1000 // 分批数量 app.config.batchAddSize 在 config.default.js 中配置
-      const existingKeys = []
-
-      // 分批处理，避免 $in 操作符中的元素过多，
-      for (let i = 0; i < existingIds.length; i += batchSize) {
-        const batchKeys = existingIds.slice(i, i + batchSize)
-        const batchExistingItems = await db.find({ [primaryKey]: { $in: batchKeys } })
-        existingKeys.push(...batchExistingItems.map((item) => item[primaryKey]))
-      }
-
-      if (existingKeys.length > 0) {
-        tip = `已跳过存在项：${existingKeys.toString()}`
-      }
-
-      // 过滤掉已存在的记录
-      const filteredItems = data.list.filter((item) => !existingKeys.includes(item[primaryKey]))
-
-      try {
-        res = await db.insertMany(filteredItems)
-      } catch (error) {
-        ctx.logger.error('Error during insertMany operation:', error)
-        return ctx.throw(500, { msg: '服务器内部错误' })
-      }
-    }
-
-    return {
-      data: res,
-      msg: data.cover ? '批量覆盖添加成功' : '批量增量添加成功',
-      tip
-    }
-  }
-
-  /**
    * 批量删除 post - 权限 permission
    * @param {Object} data - 请求参数
    * @property {Array} data.list - 批量新增项
@@ -268,7 +179,7 @@ class AppFeedbackService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['feedbackBatchDelete'])
+    ctx.checkAuthority('permission', ['app:feedback:batchdelete'])
 
     // 参数处理
     data = Object.assign(
@@ -288,19 +199,8 @@ class AppFeedbackService extends Service {
     // 主键
     const primaryKey = 'feedback_id'
 
-    // 分批处理删除操作，避免单次操作处理过多数据
-    const batchSize = app.config.batchDeleteSize || 1000 // 分批数量 app.config.batchDeleteSize 在 config.default.js 中配置
-    let deletedCount = 0
-
-    // 执行批量删除
-    for (let i = 0; i < data.list.length; i += batchSize) {
-      const batchKeys = data.list.slice(i, i + batchSize)
-      const deleteRes = await db.deleteMany({ [primaryKey]: { $in: batchKeys } })
-      deletedCount += deleteRes.deletedCount
-    }
-
-    // 其他处理
-    if (deletedCount == 0) ctx.throw(400, { msg: '无有效数据项删除' })
+    // 批量删除
+    const deletedCount = await batchDelete(ctx, db, data, primaryKey)
 
     return {
       msg: '批量删除成功',

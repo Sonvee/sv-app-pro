@@ -13,7 +13,7 @@
       </div>
       <!-- 数据表格 -->
       <el-table v-loading="loading" :data="tableData" border>
-        <el-table-column prop="_id" label="UID" width="240" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="user_id" label="UID" width="240" show-overflow-tooltip></el-table-column>
         <el-table-column prop="username" label="用户名" width="240" show-overflow-tooltip></el-table-column>
         <el-table-column prop="nickname" label="用户昵称" width="240" show-overflow-tooltip></el-table-column>
         <el-table-column prop="avatar" label="头像" align="center" width="80" show-overflow-tooltip>
@@ -98,7 +98,7 @@
     <!-- 注册新用户 -->
     <UserRegister v-model="showUserRegister" @registerSuccess="refresh"></UserRegister>
     <!-- 高危操作-删除用户 -->
-    <UserDeleteWarning v-model="showDeleteWarning" :username="deleteUsername" @confirm="confirmDelete"></UserDeleteWarning>
+    <UserDeleteWarning v-model="showDeleteWarning" :uid="deleteUser" @confirm="confirmDelete"></UserDeleteWarning>
   </div>
 </template>
 
@@ -164,15 +164,15 @@ function edit(row) {
 }
 
 // 高危操作 - 删除
-const deleteUsername = ref('') // 删除用户名
+const deleteUser = ref('') // 删除用户名
 function del(row) {
   showDeleteWarning.value = true
-  deleteUsername.value = row.username
+  deleteUser.value = row.user_id
 }
 // 高危操作 - 确认删除
 async function confirmDelete() {
   // 确认删除操作
-  const deleteRes = await userDelete({ username: deleteUsername.value })
+  const deleteRes = await userDelete({ user_id: deleteUser.value })
   ElMessage({
     type: 'success',
     message: deleteRes?.msg

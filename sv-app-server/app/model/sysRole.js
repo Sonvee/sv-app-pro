@@ -5,6 +5,7 @@ module.exports = (app) => {
 
   const SysRoleSchema = new mongoose.Schema(
     {
+      // 主键 - id
       role_id: {
         type: String,
         unique: true,

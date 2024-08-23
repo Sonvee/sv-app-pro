@@ -31,7 +31,6 @@ module.exports = (options, app) => {
        * @property {String} mode.open - 开放型接口，无需做权限校验
        * @property {String} mode.needlogin - 需要登录（检验token是否有效）
        * @property {String} mode.self - 必须账号本人操作
-       * @property {String} mode.self_id - 必须账号本人操作（以_id严格匹配）
        * @property {String} mode.permission - 用户拥有指定权限
        * @property {String} mode.role - 用户拥有指定角色
        * @property {String} mode.admin - 必须为超级管理员
@@ -56,12 +55,7 @@ module.exports = (options, app) => {
             if (!result) ctx.throw(401, '请先登录!')
             break
           case 'self':
-            result = userInfo?.username === flag
-            if (error) throw error
-            if (!result) ctx.throw(403, '非本人操作!')
-            break
-          case 'self_id':
-            result = userInfo?._id === flag
+            result = userInfo?.user_id === flag
             if (error) throw error
             if (!result) ctx.throw(403, '非本人操作!')
             break

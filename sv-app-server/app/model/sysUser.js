@@ -5,14 +5,14 @@ module.exports = (app) => {
 
   const SysUserSchema = new mongoose.Schema(
     {
-      // id 主键
+      // 主键 - 用户id
       user_id: {
         type: mongoose.Schema.Types.ObjectId,
         auto: true,
         unique: true,
         required: true
       },
-      // 用户名
+      // 副键 - 用户名
       username: {
         type: String,
         unique: true,

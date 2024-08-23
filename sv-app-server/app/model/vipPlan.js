@@ -5,7 +5,7 @@ module.exports = (app) => {
 
   const VipPlanSchema = new mongoose.Schema(
     {
-      // 套餐id
+      // 主键 - 套餐id
       plan_id: {
         type: String,
         unique: true,

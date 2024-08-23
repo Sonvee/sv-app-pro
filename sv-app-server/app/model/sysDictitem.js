@@ -5,7 +5,7 @@ module.exports = (app) => {
 
   const SysDictitemSchema = new mongoose.Schema(
     {
-      // 字典项id
+      // 主键 - 字典项id
       dictitem_id: {
         type: mongoose.Schema.Types.ObjectId,
         auto: true,
@@ -22,7 +22,8 @@ module.exports = (app) => {
         required: true
       },
       value: {
-        type: String
+        type: String,
+        required: true
       },
       remark: {
         type: String

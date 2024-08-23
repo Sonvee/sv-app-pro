@@ -76,7 +76,7 @@ class FileService extends Service {
     // 权限校验
     ctx.checkAuthority('needlogin')
 
-    const userid = ctx.userInfo._id
+    const userid = ctx.userInfo.user_id
     if (!userid) ctx.throw(400, { msg: '用户信息错误' })
 
     // 文件key = 要存储的文件夹路径 + 唯一的文件名
@@ -87,7 +87,7 @@ class FileService extends Service {
     // 客户端需立即更新用户头像数据
     if (data?.platform == 'client') {
       await ctx.service.sysUser.userUpdateSimple({
-        _id: userid,
+        user_id: userid,
         avatar: fileRes
       })
     }
@@ -105,15 +105,15 @@ class FileService extends Service {
    * @property {String} data.key 要删除的文件key
    * @returns
    */
-  async avatarDelete(data) {
+  async myfileDelete(data) {
     const { ctx, app } = this
 
     // 参数校验
-    if (!isTruthy(data.username)) ctx.throw(400, { msg: 'username 必填' })
+    if (!isTruthy(data.user_id)) ctx.throw(400, { msg: 'user_id 必填' })
     if (!isTruthy(data.key)) ctx.throw(400, { msg: 'key 必填' })
 
     // 权限校验
-    ctx.checkAuthority('self', data.username)
+    ctx.checkAuthority('self', data.user_id)
 
     let deleteRes = await app.fullQiniu.delete(data.key)
 
@@ -129,7 +129,7 @@ class FileService extends Service {
    * 删除用户文件 post - 权限 admin
    * @description 高危操作，仅限超级管理员权限
    * @param {Object} data - 请求参数
-   * @property {String} data._id 要删除的用户 _id
+   * @property {String} data.user_id 要删除的用户id
    */
   async userfilesDelete(data) {
     const { ctx, app } = this
@@ -137,10 +137,10 @@ class FileService extends Service {
     // 权限校验
     ctx.checkAuthority('admin')
 
-    if (!isTruthy(data._id)) ctx.throw(400, { msg: '用户 _id 必填' })
+    if (!isTruthy(data.user_id)) ctx.throw(400, { msg: 'user_id 必填' })
 
     let listRes = await app.fullQiniu.listPrefix({
-      prefix: `userfiles/${data._id}/`
+      prefix: `userfiles/${data.user_id}/`
     })
     const keys = listRes.items.map((item) => item.key)
     let batchDeleteRes = await app.fullQiniu.batchDelete(keys)
@@ -164,7 +164,7 @@ class FileService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['releaseUpload'])
+    ctx.checkAuthority('permission', ['file:release:upload'])
 
     if (!isTruthy(data.version)) ctx.throw(400, { msg: 'version 必填' })
 
@@ -189,7 +189,7 @@ class FileService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['releaseImageUpload'])
+    ctx.checkAuthority('permission', ['file:release:upload'])
 
     // 参数校验
     if (!isTruthy(data.version)) ctx.throw(400, { msg: 'version 必填' })
@@ -206,7 +206,7 @@ class FileService extends Service {
   }
 
   /**
-   * 反馈截图上传 post - 权限 self_id
+   * 反馈截图上传 post - 权限 self
    * @description 前端需要使用FormData进行请求，请求头'Content-Type': 'multipart/form-data'
    * @param {Array<File>} files 用户上传的文件
    * @param {Object} data 请求参数
@@ -219,7 +219,7 @@ class FileService extends Service {
     if (!isTruthy(data.user_id)) ctx.throw(400, { msg: 'user_id 必填' })
 
     // 权限校验
-    ctx.checkAuthority('self_id', data.user_id)
+    ctx.checkAuthority('self', data.user_id)
 
     // 参数校验
     if (!isTruthy(data.type)) ctx.throw(400, { msg: 'type 必填' })

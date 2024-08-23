@@ -8,9 +8,6 @@
         <el-form-item prop="dict_type" label="字典类型" required>
           <el-input v-model="formData.dict_type" placeholder="请输入字典类型" clearable disabled />
         </el-form-item>
-        <el-form-item prop="dictitem_id" label="字典项ID" required>
-          <el-input v-model="formData.dictitem_id" placeholder="请输入字典项ID" clearable />
-        </el-form-item>
         <el-form-item prop="label" label="字典项键" required>
           <el-input v-model="formData.label" placeholder="请输入字典项键" clearable />
         </el-form-item>
@@ -58,9 +55,8 @@ const emits = defineEmits(['submit'])
 
 // 初始数据
 const formBase = {
-  _id: '',
+  dictitem_id: '', // 主键
   dict_type: '', // 字典类型
-  dictitem_id: '',
   label: '',
   value: '',
   sort: 0,
@@ -73,7 +69,7 @@ const formData = ref(formBase)
 const formBaseClone = ref()
 // 校验规则
 const rules = ref({
-  dictitem_id: [{ required: true, message: '请输入字典项ID', trigger: 'blur' }],
+  dict_type: [{ required: true, message: '请输入字典类型', trigger: 'blur' }],
   label: [{ required: true, message: '请输入字典项键', trigger: 'blur' }],
   value: [{ required: true, message: '请输入字典项值', trigger: 'blur' }]
 })

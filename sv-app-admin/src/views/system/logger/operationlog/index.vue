@@ -15,7 +15,7 @@
       <!-- 数据表格 -->
       <el-table v-loading="loading" :data="tableData" border @selection-change="handleSelectionChange">
         <el-table-column type="selection" align="center" width="50" fixed="left" />
-        <el-table-column prop="_id" label="日志ID" width="240" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="log_id" label="日志ID" width="240" show-overflow-tooltip></el-table-column>
         <el-table-column prop="operator_info.username" label="操作人员" width="200" show-overflow-tooltip>
           <template #default="scope">
             {{ scope.row.operator_info?.username || scope.row.operator_info?.phone || scope.row.operator_info?.email }}
@@ -91,15 +91,15 @@ async function submitFilter(e) {
 
 // 删
 function del(row) {
-  const { _id } = row
-  ElMessageBox.confirm(`确认删除『 ${_id} 』吗？`, '系统提示', {
+  const { log_id } = row
+  ElMessageBox.confirm(`确认删除『 ${log_id} 』吗？`, '系统提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'
   })
     .then(async () => {
       // 确认删除操作
-      const deleteRes = await logDelete({ _id })
+      const deleteRes = await logDelete({ log_id })
       ElMessage({
         type: 'success',
         message: deleteRes?.msg
@@ -138,7 +138,7 @@ function refresh() {
 // 多选
 const batchSelection = ref([])
 function handleSelectionChange(e) {
-  batchSelection.value = e.map((item) => item._id)
+  batchSelection.value = e.map((item) => item.log_id)
 }
 
 // 批量删除

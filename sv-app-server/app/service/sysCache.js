@@ -13,7 +13,7 @@ class SysCacheService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['cacheKeyList'])
+    ctx.checkAuthority('permission', ['sys:cache:query'])
 
     // 获取所有键
     const keys = await app.redis.keys('*')
@@ -32,7 +32,7 @@ class SysCacheService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['cacheValueByKey'])
+    ctx.checkAuthority('permission', ['sys:cache:query'])
 
     // 参数校验
     if (!isTruthy(data.key)) ctx.throw(400, { msg: 'key 必填' })
@@ -60,7 +60,7 @@ class SysCacheService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['cacheDelete'])
+    ctx.checkAuthority('permission', ['sys:cache:delete'])
 
     // 参数校验
     if (!isTruthy(data.key)) ctx.throw(400, { msg: 'key 必填' })

@@ -38,13 +38,6 @@ class VipCdkeyController extends Controller {
     ctx.result(res)
   }
 
-  async cdkeyBatchAdd() {
-    const { ctx, service } = this
-    const data = ctx.request.body
-    const res = await service.vipCdkey.cdkeyBatchAdd(data)
-    ctx.result(res)
-  }
-
   async cdkeyBatchDelete() {
     const { ctx, service } = this
     const data = ctx.request.body

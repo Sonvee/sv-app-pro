@@ -5,7 +5,7 @@ module.exports = (app) => {
 
   const SysDictSchema = new mongoose.Schema(
     {
-      // 字典id
+      // 主键 - 字典id
       dict_id: {
         type: String,
         unique: true,

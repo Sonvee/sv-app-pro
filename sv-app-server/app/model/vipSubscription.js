@@ -5,7 +5,7 @@ module.exports = (app) => {
 
   const VipSubscriptionSchema = new mongoose.Schema(
     {
-      // 订阅单号
+      // 主键 - 订阅单号
       subscription_id: {
         type: mongoose.Schema.Types.ObjectId,
         auto: true, // 自动生成
