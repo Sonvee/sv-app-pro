@@ -152,7 +152,7 @@ module.exports = {
   },
 
   /**
-   * 判断用户当前访问平台：WeChat丨Android丨iOS
+   * 判断用户当前访问平台：WeChat丨Android丨iOS | Windows | MacOS
    * @param {*} ctx eggjs的ctx对象
    */
   judgePlatform(ctx) {

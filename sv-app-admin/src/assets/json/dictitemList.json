@@ -84,6 +84,52 @@
     },
 
     {
+      "dict_type": "dict_sys_platform",
+      "label": "安卓",
+      "value": "Android",
+      "remark": "",
+      "sort": 0,
+      "action_style": "primary",
+      "status": 1
+    },
+    {
+      "dict_type": "dict_sys_platform",
+      "label": "苹果",
+      "value": "iOS",
+      "remark": "",
+      "sort": 1,
+      "action_style": "warning",
+      "status": 1
+    },
+    {
+      "dict_type": "dict_sys_platform",
+      "label": "微信小程序",
+      "value": "WeChat",
+      "remark": "",
+      "sort": 2,
+      "action_style": "success",
+      "status": 1
+    },
+    {
+      "dict_type": "dict_sys_platform",
+      "label": "Windows",
+      "value": "Windows",
+      "remark": "",
+      "sort": 3,
+      "action_style": "info",
+      "status": 1
+    },
+    {
+      "dict_type": "dict_sys_platform",
+      "label": "MacOS",
+      "value": "MacOS",
+      "remark": "",
+      "sort": 4,
+      "action_style": "info",
+      "status": 1
+    },
+
+    {
       "dict_type": "dict_sys_status",
       "label": "禁用",
       "value": "0",

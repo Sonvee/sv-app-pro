@@ -9,6 +9,13 @@
       "status": 1
     },
     {
+      "dict_id": "dict_sys_platform",
+      "dict_name": "系统平台",
+      "remark": "系统平台字典",
+      "sort": 10,
+      "status": 1
+    },
+    {
       "dict_id": "dict_sys_status",
       "dict_name": "系统通用状态",
       "remark": "0：停用；\n1：启用；",

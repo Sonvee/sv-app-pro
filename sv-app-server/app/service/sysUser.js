@@ -14,6 +14,7 @@ class SysUserService extends Service {
    * @property {String} data.nickname - 昵称
    * @property {String} data.phone - 手机号
    * @property {String} data.email - 邮箱
+   * @property {String} data.role - 角色
    * @property {String} data.login_ip - 登录IP
    * @property {String} data.login_platform - 登录平台
    * @property {String} data.register_ip - 注册IP
@@ -45,6 +46,7 @@ class SysUserService extends Service {
     if (isTruthy(data.nickname)) conditions.nickname = { $regex: data.nickname, $options: 'i' } // 模糊查询
     if (isTruthy(data.phone)) conditions.phone = data.phone
     if (isTruthy(data.email)) conditions.email = data.email
+    if (isTruthy(data.role)) conditions.role = data.role
     if (isTruthy(data.login_ip)) conditions.login_ip = data.login_ip
     if (isTruthy(data.login_platform)) conditions.login_platform = data.login_platform
     if (isTruthy(data.register_ip)) conditions.register_ip = data.register_ip

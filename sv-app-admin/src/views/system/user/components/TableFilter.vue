@@ -16,17 +16,20 @@
       <el-form-item prop="email" label="邮箱">
         <el-input v-model.trim="filterForm.email" placeholder="请输入邮箱" clearable style="width: 150px" />
       </el-form-item>
+      <el-form-item prop="role" label="角色">
+        <DictSelect v-model="filterForm.role" :dictApi="roleList" labelName="role_name" valueName="role_id" placeholder="请选择角色" style="width: 150px"></DictSelect>
+      </el-form-item>
       <el-form-item prop="login_ip" label="登录IP">
         <el-input v-model.trim="filterForm.login_ip" placeholder="请输入登录IP" clearable style="width: 150px" />
-      </el-form-item>
-      <el-form-item prop="login_platform" label="登录平台">
-        <el-input v-model.trim="filterForm.login_platform" placeholder="请输入登录平台" clearable style="width: 150px" />
       </el-form-item>
       <el-form-item prop="register_ip" label="注册IP">
         <el-input v-model.trim="filterForm.register_ip" placeholder="请输入注册IP" clearable style="width: 150px" />
       </el-form-item>
+      <el-form-item prop="login_platform" label="登录平台">
+        <DictSelect v-model="filterForm.login_platform" dictType="dict_sys_platform" placeholder="请选择登录平台" style="width: 150px"></DictSelect>
+      </el-form-item>
       <el-form-item prop="register_platform" label="注册平台">
-        <el-input v-model.trim="filterForm.register_platform" placeholder="请输入注册平台" clearable style="width: 150px" />
+        <DictSelect v-model="filterForm.register_platform" dictType="dict_sys_platform" placeholder="请选择注册平台" style="width: 150px"></DictSelect>
       </el-form-item>
       <el-form-item prop="status" label="状态">
         <DictSelect v-model="filterForm.status" dictType="dict_sys_user_status" formatNumber placeholder="请选择状态" style="width: 150px"></DictSelect>
@@ -42,6 +45,7 @@
 <script setup>
 import { ref } from 'vue'
 import DictSelect from '@/components/DictType/DictSelect.vue'
+import { roleList } from '@/api/user/role'
 
 const emits = defineEmits(['submit'])
 
@@ -53,10 +57,11 @@ const filterForm = ref({
   nickname: '',
   phone: '',
   email: '',
+  role: null,
   login_ip: '',
-  login_platform: '',
   register_ip: '',
-  register_platform: '',
+  login_platform: null,
+  register_platform: null,
   status: null
 })
 

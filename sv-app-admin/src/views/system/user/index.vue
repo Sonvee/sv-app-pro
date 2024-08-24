@@ -58,19 +58,10 @@
         <el-table-column prop="my_invite_code" label="邀请码" align="center" width="160" show-overflow-tooltip></el-table-column>
         <el-table-column prop="inviter_uid" label="邀请人" align="center" width="160" show-overflow-tooltip></el-table-column>
         <el-table-column prop="score" label="积分" align="center" width="160" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="register_ip" label="注册IP" align="center" width="160" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="register_platform" label="注册平台" align="center" width="160" show-overflow-tooltip></el-table-column>
-        <el-table-column
-          prop="register_date"
-          label="注册时间"
-          align="center"
-          width="180"
-          sortable
-          :formatter="(row) => timeFormat(row.register_date)"
-          show-overflow-tooltip
-        ></el-table-column>
         <el-table-column prop="login_ip" label="登录IP" align="center" width="160" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="register_ip" label="注册IP" align="center" width="160" show-overflow-tooltip></el-table-column>
         <el-table-column prop="login_platform" label="登录平台" align="center" width="160" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="register_platform" label="注册平台" align="center" width="160" show-overflow-tooltip></el-table-column>
         <el-table-column
           prop="login_date"
           label="登录时间"
@@ -78,6 +69,15 @@
           width="180"
           sortable
           :formatter="(row) => timeFormat(row.login_date)"
+          show-overflow-tooltip
+        ></el-table-column>
+        <el-table-column
+          prop="register_date"
+          label="注册时间"
+          align="center"
+          width="180"
+          sortable
+          :formatter="(row) => timeFormat(row.register_date)"
           show-overflow-tooltip
         ></el-table-column>
 
