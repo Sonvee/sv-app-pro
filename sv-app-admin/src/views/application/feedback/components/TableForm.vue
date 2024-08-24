@@ -5,9 +5,9 @@
     </template>
     <template #default>
       <el-form ref="formRef" :model="formData" :rules="rules" label-width="120" label-position="left">
-        <el-form-item prop="name" label="名称">
+        <!-- <el-form-item prop="name" label="名称">
           <el-input v-model="formData.name" disabled placeholder="请输入名称" clearable />
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item prop="title" label="标题">
           <el-input v-model="formData.title" disabled placeholder="请输入标题" clearable />
         </el-form-item>

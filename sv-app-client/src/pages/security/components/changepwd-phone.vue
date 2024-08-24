@@ -154,7 +154,7 @@ function toChangepwd() {
       try {
         // 1. 修改密码接口
         const pwdRes = await changePasswordByPhone({
-          _id: userStore.userInfo._id,
+          user_id: userStore.userInfo.user_id,
           phone: changepwdForm.value.phone,
           captcha: changepwdForm.value.captcha,
           password: changepwdForm.value.password

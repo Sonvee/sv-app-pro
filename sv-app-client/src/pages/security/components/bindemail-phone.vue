@@ -148,7 +148,7 @@ function formValidate(callback) {
       try {
         // 1. 绑定邮箱接口
         const emailRes = await bindEmailByPhone({
-          _id: userStore.userInfo._id,
+          user_id: userStore.userInfo.user_id,
           mode: mode.value,
           ...bindForm.value
         })

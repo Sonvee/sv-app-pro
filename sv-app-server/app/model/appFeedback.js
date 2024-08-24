@@ -18,7 +18,8 @@ module.exports = (app) => {
       },
       // 标题
       title: {
-        type: String
+        type: String,
+        required: true
       },
       // 类型：0待解决 1已解决
       type: {

@@ -59,7 +59,7 @@ function onLogout() {
     content: '确定要退出登录吗？',
     success: async ({ confirm }) => {
       if (confirm) {
-        await logout({ _id: userStore.userInfo._id })
+        await logout({ user_id: userStore.userInfo.user_id })
         onLogin()
       }
     }

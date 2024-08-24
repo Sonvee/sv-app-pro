@@ -89,7 +89,7 @@ class SysLoginService extends Service {
     // 验证码
     const ip = ctx.request.ip // IP地址
     const captcha_login = await app.redis.get(`captcha:${ip}:login:code`)
-    if (!isTruthy(captcha_login)) ctx.throw(400, { msg: '验证码已失效，请刷新' })
+    if (!isTruthy(captcha_login)) ctx.throw(400, { msg: '验证码已失效' })
     if (data.captcha.toLowerCase() != captcha_login.toLowerCase()) ctx.throw(400, { msg: '验证码错误' })
 
     // 查询条件处理
@@ -149,7 +149,7 @@ class SysLoginService extends Service {
 
     // 验证码
     const captcha_login = await app.redis.get(`emailcaptcha:${data.email}:login:code`)
-    if (!isTruthy(captcha_login)) ctx.throw(400, { msg: '邮箱验证码已失效，请刷新' })
+    if (!isTruthy(captcha_login)) ctx.throw(400, { msg: '邮箱验证码已失效' })
     if (data.captcha.toLowerCase() != captcha_login.toLowerCase()) ctx.throw(400, { msg: '邮箱验证码错误' })
 
     // 查询条件处理
@@ -360,7 +360,7 @@ class SysLoginService extends Service {
     // 验证码
     const ip = ctx.request.ip // IP地址
     const captcha_register = await app.redis.get(`captcha:${ip}:register:code`)
-    if (!isTruthy(captcha_register)) ctx.throw(400, { msg: '验证码已失效，请刷新' })
+    if (!isTruthy(captcha_register)) ctx.throw(400, { msg: '验证码已失效' })
     if (data.captcha.toLowerCase() != captcha_register.toLowerCase()) ctx.throw(400, { msg: '验证码错误' })
 
     // 注册时角色只能是user/admin

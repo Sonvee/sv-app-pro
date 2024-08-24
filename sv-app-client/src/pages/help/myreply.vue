@@ -6,7 +6,7 @@
           <view class="paging-item" @click="onDetail(data.item)">
             <view class="text-bold flex-vc">
               <view class="item-prefix">受理单号</view>
-              <view class="text-line-1">{{ data.item?._id }}</view>
+              <view class="text-line-1">{{ data.item?.feedback_id }}</view>
             </view>
             <view class="margin-top-xs text-sm flex-vc">
               <view class="item-prefix">反馈类型</view>
@@ -14,7 +14,7 @@
             </view>
             <view class="margin-top-xs text-sm flex-vc">
               <view class="item-prefix">反馈标题</view>
-              <view class="text-line-1">{{ data.item?.name }}</view>
+              <view class="text-line-1">{{ data.item?.title }}</view>
             </view>
             <view class="margin-top-xs text-sm flex-vc">
               <view class="item-prefix">反馈时间</view>
@@ -34,7 +34,7 @@
       <view class="sub-page-main padding flex-col">
         <view class="margin-bottom-sm flex-vc">
           <view class="text-bold">受理单号：</view>
-          <view>{{ curReply?._id }}</view>
+          <view>{{ curReply?.feedback_id }}</view>
         </view>
         <view class="margin-bottom-sm flex-vc">
           <view class="text-bold">反馈类型：</view>
@@ -42,7 +42,7 @@
         </view>
         <view class="margin-bottom-sm flex-vc">
           <view class="text-bold flex-shrink-0">反馈标题：</view>
-          <view class="text-line-1">{{ curReply?.name }}</view>
+          <view class="text-line-1">{{ curReply?.title }}</view>
         </view>
         <view class="margin-bottom-sm">
           <view class="text-bold margin-bottom-xs">反馈内容：</view>
@@ -73,7 +73,7 @@ import { timeFormat } from '@/utils/util'
 import DictTag from '@/components/dict-type/dict-tag.vue'
 
 const userStore = useUserStore()
-const userId = computed(() => userStore.userInfo._id)
+const userId = computed(() => userStore.userInfo.user_id)
 const dictStore = useDictStroe()
 dictStore.initDict(['dict_app_feedback_type', 'dict_app_feedback_status']) // 初始化字典
 const typeDict = computed(() => dictStore.getDict('dict_app_feedback_type'))

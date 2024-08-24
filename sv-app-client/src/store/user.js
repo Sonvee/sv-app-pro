@@ -83,8 +83,8 @@ export const useUserStore = defineStore('sv-user', () => {
   // 刷新token
   async function reToken() {
     // 只在token还有效时刷新，token无效时会直接拦截，前往登录
-    if (userInfo.value._id && token.value) {
-      const tokenRes = await refreshToken({ _id: userInfo.value._id })
+    if (userInfo.value.user_id && token.value) {
+      const tokenRes = await refreshToken({ user_id: userInfo.value.user_id })
       // 更新token
       token.value = tokenRes.token
       // 解析并获取用户权限

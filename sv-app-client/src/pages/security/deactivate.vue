@@ -83,7 +83,7 @@ function cancel() {
 
 async function confirm() {
   // 确认注销
-  const deRes = await userDeactivate({ _id: userInfo.value._id })
+  const deRes = await userDeactivate({ user_id: userInfo.value.user_id })
   if (deRes.success) {
     uni.showToast({
       title: deRes.msg,
@@ -91,7 +91,7 @@ async function confirm() {
       duration: 2000
     })
     await sleep(2000)
-    await logout({ _id: userInfo.value._id })
+    await logout({ user_id: userInfo.value.user_id })
     userStore.clearUserInfo()
     uni.reLaunch({ url: '/pages/login/login' })
   }

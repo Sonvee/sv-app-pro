@@ -26,7 +26,7 @@
             <DictTag :dictList="dictFeedbackStatus" :value="scope.row.status"></DictTag>
           </template>
         </el-table-column>
-        <el-table-column prop="name" label="名称" width="300" show-overflow-tooltip></el-table-column>
+        <!-- <el-table-column prop="name" label="名称" width="300" show-overflow-tooltip></el-table-column> -->
         <el-table-column prop="title" label="标题" width="300" show-overflow-tooltip></el-table-column>
         <el-table-column prop="content" label="内容" min-width="300" show-overflow-tooltip></el-table-column>
         <el-table-column prop="screenshot" label="应用截图" min-width="300">
@@ -144,8 +144,8 @@ function edit(row) {
 
 // 删
 function del(row) {
-  const { name, feedback_id } = row
-  ElMessageBox.confirm(`确认删除『 ${name} 』吗？`, '系统提示', {
+  const { title, feedback_id } = row
+  ElMessageBox.confirm(`确认删除『 ${title} 』吗？`, '系统提示', {
     confirmButtonText: '确定',
     cancelButtonText: '取消',
     type: 'warning'

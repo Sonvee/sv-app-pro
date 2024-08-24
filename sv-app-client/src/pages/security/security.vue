@@ -208,7 +208,7 @@ async function bindWX() {
     onlyAuthorize: true, // 微信登录请求授权认证
     success: async (res) => {
       // 执行绑定接口
-      const wxRes = await bindWechat({ _id: userStore.userInfo._id, code: res.code })
+      const wxRes = await bindWechat({ user_id: userStore.userInfo.user_id, code: res.code })
       if (wxRes.success) {
         uni.showToast({
           title: wxRes.msg,

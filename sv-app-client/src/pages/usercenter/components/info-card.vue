@@ -44,8 +44,8 @@
         </view>
         <view class="margin-top-xs text-grey text-sm">
           <text class="sv-icons-idcard margin-right-xs"></text>
-          <text>UID：{{ userInfo?._id }}</text>
-          <text v-if="userInfo?._id" class="cuIcon-copy margin-left-xs" @click="onCopy(userInfo?._id)"></text>
+          <text>UID：{{ userInfo?.user_id }}</text>
+          <text v-if="userInfo?.user_id" class="cuIcon-copy margin-left-xs" @click="onCopy(userInfo?.user_id)"></text>
         </view>
       </view>
     </view>

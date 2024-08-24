@@ -2,8 +2,8 @@
   <sv-page>
     <view class="feedback-page">
       <uni-forms ref="fbFormRef" :model="fbForm" :rules="fbRules">
-        <uni-forms-item label="标题" name="name" required>
-          <uni-easyinput v-model="fbForm.name" type="text" placeholder="请输入标题" />
+        <uni-forms-item label="标题" name="title" required>
+          <uni-easyinput v-model="fbForm.title" type="text" placeholder="请输入标题" />
         </uni-forms-item>
         <uni-forms-item label="类型" name="type" required>
           <uni-data-select v-model="fbForm.type" :localdata="types" clear></uni-data-select>
@@ -42,7 +42,7 @@ import { feedbackAdd } from '@/api/feedback'
 import { sleep } from '@/utils/util'
 
 const userStore = useUserStore()
-const userId = computed(() => userStore.userInfo._id)
+const userId = computed(() => userStore.userInfo.user_id)
 const dictStore = useDictStroe()
 const feedbackTypeList = computed(() => dictStore.getDict('dict_app_feedback_type'))
 const types = computed(() => {
@@ -59,7 +59,7 @@ const loading = ref(false)
 const fbFormRef = ref()
 const fbForm = ref({
   feedback_id: '', // id主键
-  name: '', // 名称
+  title: '', // 标题
   type: '', // 类型
   content: '', // 反馈内容
   screenshot: [], // 截图

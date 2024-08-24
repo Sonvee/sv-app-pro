@@ -355,7 +355,7 @@ class SysUserService extends Service {
 
     // 验证码正确性校验
     const captcha_verify = await app.redis.get(`emailcaptcha:${data.email}:verify:code`)
-    if (!isTruthy(captcha_verify)) ctx.throw(400, { msg: '邮箱验证码已失效，请刷新' })
+    if (!isTruthy(captcha_verify)) ctx.throw(400, { msg: '邮箱验证码已失效' })
     if (data.captcha.toLowerCase() != captcha_verify.toLowerCase()) ctx.throw(400, { msg: '邮箱验证码错误' })
 
     // 密码合法性校验
@@ -411,7 +411,7 @@ class SysUserService extends Service {
 
     // 验证码正确性校验
     const captcha_bind = await app.redis.get(`emailcaptcha:${data.email}:${data.mode}:code`)
-    if (!isTruthy(captcha_bind)) ctx.throw(400, { msg: '邮箱验证码已失效，请刷新' })
+    if (!isTruthy(captcha_bind)) ctx.throw(400, { msg: '邮箱验证码已失效' })
     if (data.captcha.toLowerCase() != captcha_bind.toLowerCase()) ctx.throw(400, { msg: '邮箱验证码错误' })
 
     // 查询条件处理

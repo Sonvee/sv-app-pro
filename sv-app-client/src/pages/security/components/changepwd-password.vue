@@ -113,7 +113,7 @@ function toChangepwd() {
 			try {
 				// 1. 修改密码接口
 				const pwdRes = await changePassword({
-					_id: userStore.userInfo._id,
+					user_id: userStore.userInfo.user_id,
 					old_password: changepwdForm.value.old_password,
 					new_password: changepwdForm.value.new_password
 				})

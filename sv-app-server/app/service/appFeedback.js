@@ -11,6 +11,7 @@ class AppFeedbackService extends Service {
    * @param {Object} data - 请求参数
    * @property {String} data.feedback_id - id
    * @property {String} data.name - 名称
+   * @property {String} data.title - 标题
    * @property {Number} data.type - 类型
    * @property {Number} data.status - 状态
    * @property {String} data.created_by - 创建者
@@ -40,6 +41,7 @@ class AppFeedbackService extends Service {
     if (isTruthy(data.status, 'zero')) conditions.status = data.status
     if (isTruthy(data.created_by)) conditions.created_by = data.created_by
     if (isTruthy(data.name)) conditions.name = { $regex: data.name, $options: 'i' } // 模糊查询
+    if (isTruthy(data.title)) conditions.title = { $regex: data.title, $options: 'i' } // 模糊查询
 
     // 数据库连接
     const db = app.model.AppFeedback
@@ -77,6 +79,7 @@ class AppFeedbackService extends Service {
   /**
    * 新增 post - 权限 permission
    * @param {Object} data - 请求参数
+   * @property {String} data.title - 标题
    * @property {Number} data.type - 类型
    * @property {Number} data.status - 状态
    */
@@ -89,6 +92,7 @@ class AppFeedbackService extends Service {
     delete data.feedback_id // 去除部分参数
 
     // 参数校验
+    if (!isTruthy(data.title)) ctx.throw(400, { msg: 'title 必填' })
     if (!isTruthy(data.type, 'zero')) ctx.throw(400, { msg: 'type 必填' })
     if (!isTruthy(data.status, 'zero')) ctx.throw(400, { msg: 'status 必填' })
 
@@ -117,6 +121,7 @@ class AppFeedbackService extends Service {
 
     // 参数校验
     if (!isTruthy(data.feedback_id)) ctx.throw(400, { msg: 'feedback_id 必填' })
+    if (!isTruthy(data.title)) ctx.throw(400, { msg: 'title 必填' })
     if (!isTruthy(data.type, 'zero')) ctx.throw(400, { msg: 'type 必填' })
     if (!isTruthy(data.status, 'zero')) ctx.throw(400, { msg: 'status 必填' })
 

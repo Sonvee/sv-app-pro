@@ -1,6 +1,7 @@
 import http from '@/config/request'
 
 export function avatarUpload(data) {
+	// 单文件上传
   return http.upload('/file/avatarUpload', {
     fileType: 'image',
     ...data,
@@ -24,7 +25,7 @@ export function userfilesDelete(data) {
 }
 
 export async function feedbackImageUpload(data) {
-
+	// 多文件上传
   const uploadPromise = (filePath) => {
     return new Promise((resolve, reject) => {
       http.upload('/file/feedbackImageUpload', {
@@ -39,9 +40,9 @@ export async function feedbackImageUpload(data) {
     })
   }
 
-  const promise = data?.files?.map(async (item) => {
+  const promises = data?.files?.map(async (item) => {
     return await uploadPromise(item.url);
   });
 
-  return await Promise.all(promise);
+  return await Promise.all(promises);
 }

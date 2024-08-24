@@ -49,10 +49,10 @@
       </uv-cell-group>
       <view class="margin-top"></view>
       <uv-cell-group>
-        <uv-cell title="UID" clickable @click="onCopy(userInfo._id)">
+        <uv-cell title="UID" clickable @click="onCopy(userInfo.user_id)">
           <template #value>
             <text class="value-text text-line-1 text-cyan">
-              {{ userInfo._id }}
+              {{ userInfo.user_id }}
             </text>
           </template>
         </uv-cell>
@@ -150,7 +150,7 @@ function onCopy(text) {
 
 // 二维码
 const qrcodeRef = ref()
-const qrcodeValue = computed(() => `${userInfo.value._id}_${userInfo.value.my_invite_code}`)
+const qrcodeValue = computed(() => `${userInfo.value.user_id}_${userInfo.value.my_invite_code}`)
 
 function onQRcode() {
   qrcodeRef.value.make()
@@ -179,7 +179,7 @@ async function updateUserInfo(data) {
     })
   }
 
-  const params = Object.assign({ _id: userInfo.value._id }, data)
+  const params = Object.assign({ user_id: userInfo.value.user_id }, data)
   // 更新用户信息
   const upRes = await userUpdateSimple(params)
   if (upRes.success) {

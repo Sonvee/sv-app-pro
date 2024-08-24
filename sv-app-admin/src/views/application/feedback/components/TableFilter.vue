@@ -4,8 +4,11 @@
       <el-form-item prop="feedback_id" label="单号">
         <el-input v-model.trim="filterForm.feedback_id" placeholder="请输入单号" clearable style="width: 150px" />
       </el-form-item>
-      <el-form-item prop="name" label="名称">
+      <!-- <el-form-item prop="name" label="名称">
         <el-input v-model.trim="filterForm.name" placeholder="请输入名称" clearable style="width: 150px" />
+      </el-form-item> -->
+      <el-form-item prop="title" label="标题">
+        <el-input v-model.trim="filterForm.title" placeholder="请输入标题" clearable style="width: 150px" />
       </el-form-item>
       <el-form-item prop="type" label="类型">
         <DictSelect v-model="filterForm.type" dictType="dict_app_feedback_type" formatNumber placeholder="请选择类型" style="width: 150px"></DictSelect>
@@ -32,6 +35,7 @@ const filterFormRef = ref()
 const filterForm = ref({
   feedback_id: '',
   name: '',
+  title: '',
   type: null,
   status: null
 })
