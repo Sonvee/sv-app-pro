@@ -70,6 +70,9 @@ import { RefreshRight, Plus, EditPen, Delete, View, Hide } from '@element-plus/i
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { isTruthy, timeFormat } from '@/utils'
 import { useDictStore } from '@/store/dict'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
 
 const dictStore = useDictStore()
 dictStore.initDict(['dict_sys_login_type']) // 初始化字典
@@ -82,7 +85,7 @@ const loading = ref(true)
 const showFilter = ref(true) // 头部筛选栏显示
 
 onMounted(() => {
-  handleTable(dataParams.value)
+  handleTable(Object.assign(dataParams.value, route.query))
 })
 
 // 数据

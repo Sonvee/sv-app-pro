@@ -34,7 +34,7 @@
           <template #header>
             <div class="flx-justify-between">
               <span>账号安全</span>
-              <el-button plain :icon="Tickets" circle @click="viewLogger" />
+              <el-button plain :icon="Tickets" circle title="查看日志" @click="viewLogger" />
             </div>
           </template>
           <div class="flex-vc">
