@@ -70,7 +70,7 @@ const fbForm = ref({
 })
 
 const fbRules = ref({
-  name: { rules: [{ required: true, errorMessage: '请输入标题' }] },
+  title: { rules: [{ required: true, errorMessage: '请输入标题' }] },
   type: { rules: [{ required: true, errorMessage: '请选择类型' }] },
   content: { rules: [{ required: true, errorMessage: '请输入内容' }] }
 })

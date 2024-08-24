@@ -549,6 +549,7 @@ export default [
   'sv-icons-element-ui',
   'sv-icons-vue',
   'sv-icons-size',
+  'sv-icons-fontsize',
   'sv-icons-notice',
   'sv-icons-search',
   'sv-icons-down',

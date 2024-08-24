@@ -1,13 +1,14 @@
 <template>
   <div class="menu-search-dialog">
-    <i class="sv-icons-search toolBar-icon" @click="handleOpen"></i>
+    <i class="sv-icons-search" @click="handleOpen"></i>
     <el-dialog v-model="isShowSearch" destroy-on-close :modal="false" :show-close="false" fullscreen @click="closeSearch">
       <el-autocomplete
         ref="menuInputRef"
         v-model="searchMenu"
         value-key="path"
-        placeholder="菜单搜索 ：支持菜单名称、路径"
+        placeholder="菜单搜索：支持菜单名称、路径"
         :fetch-suggestions="searchMenuList"
+        clearable
         @select="handleClickMenu"
         @click.stop
       >
@@ -17,9 +18,7 @@
           </el-icon>
         </template>
         <template #default="{ item }">
-          <el-icon>
-            <component :is="item.meta.icon"></component>
-          </el-icon>
+          <i :class="item.meta.icon"></i>
           <span> {{ item.meta.title }} </span>
         </template>
       </el-autocomplete>

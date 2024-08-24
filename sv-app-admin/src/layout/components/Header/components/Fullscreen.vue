@@ -1,6 +1,6 @@
 <template>
   <div class="fullscreen">
-    <i :class="[isFullscreen ? 'sv-icons-fullscreen-exit' : 'sv-icons-fullscreen']" class="toolBar-icon" @click="handleFullScreen"></i>
+    <i :class="[isFullscreen ? 'sv-icons-fullscreen-exit' : 'sv-icons-fullscreen']" class="" @click="handleFullScreen"></i>
   </div>
 </template>
 

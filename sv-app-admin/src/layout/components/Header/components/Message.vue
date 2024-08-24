@@ -3,7 +3,7 @@
     <el-popover placement="bottom" :width="310" trigger="click">
       <template #reference>
         <el-badge :value="5" class="item">
-          <i class="sv-icons-notice toolBar-icon"></i>
+          <i class="sv-icons-notice"></i>
         </el-badge>
       </template>
       <el-tabs v-model="activeName">

@@ -20,6 +20,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.sv-icons-fontsize:before {
+  content: "\e676";
+}
+
 .sv-icons-upgrade-fill:before {
   content: "\e635";
 }

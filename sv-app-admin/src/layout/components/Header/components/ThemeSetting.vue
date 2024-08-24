@@ -1,6 +1,6 @@
 <template>
   <div class="theme-setting">
-    <i class="sv-icons-skin toolBar-icon" @click="openDrawer"></i>
+    <i class="sv-icons-skin" @click="openDrawer"></i>
   </div>
 </template>
 

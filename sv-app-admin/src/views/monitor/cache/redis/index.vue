@@ -12,8 +12,7 @@
           <el-input v-model="filterText" :prefix-icon="Search" placeholder="请输入检索" class="w-full mb-10" />
           <el-tree
             ref="treeRef"
-            style="max-width: 600px"
-            default-expand-all
+            accordion
             :data="treedata"
             :filter-node-method="filterNode"
             :props="{
