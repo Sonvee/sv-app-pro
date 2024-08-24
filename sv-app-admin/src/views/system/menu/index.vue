@@ -6,7 +6,7 @@
     <div class="card table-container">
       <!-- 工具栏 -->
       <div class="table-control">
-        <el-button type="primary" plain :icon="Plus" @click="addFirst">新增一级菜单</el-button>
+        <el-button type="primary" plain :icon="Plus" v-permission="['sys:menu:add']" @click="addFirst">新增一级菜单</el-button>
         <el-button type="success" plain :icon="Sort" @click="toggleExpandAll">展开/折叠</el-button>
         <div style="flex: 1"></div>
         <el-button circle :icon="RefreshRight" @click="refresh" title="刷新"></el-button>
@@ -27,12 +27,12 @@
         <!-- <el-table-column prop="redirect" label="路由重定向地址" min-width="240" show-overflow-tooltip></el-table-column> -->
         <!-- <el-table-column prop="meta.activeMenu" label="需要高亮的path" width="200" show-overflow-tooltip></el-table-column> -->
         <el-table-column prop="meta.isLink" label="外链地址" width="240" show-overflow-tooltip></el-table-column>
-        <el-table-column label="权限分配" align="center" width="100">
+        <el-table-column label="权限分配" align="center" width="100" v-permission="['sys:menu:update']">
           <template #default="scope">
             <el-button type="primary" plain :icon="Setting" circle :disabled="scope.row?.meta?.isLocal" @click="editPermission(scope.row)"></el-button>
           </template>
         </el-table-column>
-        <el-table-column prop="meta.isKeepAlive" align="center" label="是否缓存" width="120" show-overflow-tooltip>
+        <el-table-column prop="meta.isKeepAlive" align="center" label="是否缓存" width="120" show-overflow-tooltip v-permission="['sys:menu:update']">
           <template #default="scope">
             <el-switch
               v-model="scope.row.meta.isKeepAlive"
@@ -44,7 +44,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column prop="meta.isHide" align="center" label="是否隐藏" width="120" show-overflow-tooltip>
+        <el-table-column prop="meta.isHide" align="center" label="是否隐藏" width="120" show-overflow-tooltip v-permission="['sys:menu:update']">
           <template #default="scope">
             <el-switch
               v-model="scope.row.meta.isHide"
@@ -56,7 +56,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column prop="meta.isSub" align="center" label="是否子详情页面" width="120" show-overflow-tooltip>
+        <el-table-column prop="meta.isSub" align="center" label="是否子详情页面" width="120" show-overflow-tooltip v-permission="['sys:menu:update']">
           <template #default="scope">
             <el-switch
               v-model="scope.row.meta.isSub"
@@ -68,7 +68,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column prop="meta.isFull" align="center" label="是否全屏" width="120" show-overflow-tooltip>
+        <el-table-column prop="meta.isFull" align="center" label="是否全屏" width="120" show-overflow-tooltip v-permission="['sys:menu:update']">
           <template #default="scope">
             <el-switch
               v-model="scope.row.meta.isFull"
@@ -80,7 +80,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column prop="meta.isAffix" align="center" label="是否固定" width="120" show-overflow-tooltip>
+        <el-table-column prop="meta.isAffix" align="center" label="是否固定" width="120" show-overflow-tooltip v-permission="['sys:menu:update']">
           <template #default="scope">
             <el-switch
               v-model="scope.row.meta.isAffix"
@@ -92,7 +92,7 @@
             />
           </template>
         </el-table-column>
-        <el-table-column prop="meta.isOpen" align="center" label="无需登录" width="120" show-overflow-tooltip>
+        <el-table-column prop="meta.isOpen" align="center" label="无需登录" width="120" show-overflow-tooltip v-permission="['sys:menu:update']">
           <template #default="scope">
             <el-switch
               v-model="scope.row.meta.isOpen"
@@ -108,9 +108,9 @@
         <el-table-column label="操作" align="center" width="220" fixed="right">
           <template #default="scope">
             <el-button-group v-if="!scope.row?.meta?.isLocal">
-              <el-button text type="info" :icon="Plus" @click="add(scope.row)">新增</el-button>
-              <el-button text type="primary" :icon="EditPen" @click="edit(scope.row)">编辑</el-button>
-              <el-button text type="danger" :icon="Delete" v-if="!isTruthy(scope.row.children, 'arr')" @click="del(scope.row)">删除</el-button>
+              <el-button text type="info" :icon="Plus" v-permission="['sys:menu:add']" @click="add(scope.row)">新增</el-button>
+              <el-button text type="primary" :icon="EditPen" v-permission="['sys:menu:update']" @click="edit(scope.row)">编辑</el-button>
+              <el-button text type="danger" :icon="Delete" v-permission="['sys:menu:delete']" v-if="!isTruthy(scope.row.children, 'arr')" @click="del(scope.row)">删除</el-button>
             </el-button-group>
             <el-tag v-else type="warning">本地路由请配置localRouter</el-tag>
           </template>

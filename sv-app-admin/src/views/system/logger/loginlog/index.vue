@@ -6,10 +6,10 @@
     <div class="card table-container">
       <!-- 工具栏 -->
       <div class="table-control">
-        <el-button type="danger" plain :icon="Delete" v-permission="['logBatchDelete']" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
-        <el-button type="danger" plain v-permission="['logClear']" @click="clear"><i class="sv-icons-clear text-xs mr-4"></i>清空</el-button>
+        <el-button type="danger" plain :icon="Delete" v-permission="['sys:log:batchdelete']" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
+        <el-button type="danger" plain v-permission="['sys:log:clear']" @click="clear"><i class="sv-icons-clear text-xs mr-4"></i>清空</el-button>
         <div style="flex: 1"></div>
-        <el-button circle :icon="RefreshRight" v-permission="['logList']" @click="refresh" title="刷新"></el-button>
+        <el-button circle :icon="RefreshRight" v-permission="['sys:log:query']" @click="refresh" title="刷新"></el-button>
         <el-button circle :icon="showFilter ? View : Hide" @click="showFilter = !showFilter" :title="showFilter ? '隐藏筛选' : '显示筛选'"></el-button>
       </div>
       <!-- 数据表格 -->
@@ -49,7 +49,7 @@
         <el-table-column label="操作" align="center" width="120" fixed="right">
           <template #default="scope">
             <el-button-group>
-              <el-button text type="danger" :icon="Delete" v-permission="['logDelete']" @click="del(scope.row)">删除</el-button>
+              <el-button text type="danger" :icon="Delete" v-permission="['sys:log:delete']" @click="del(scope.row)">删除</el-button>
             </el-button-group>
           </template>
         </el-table-column>

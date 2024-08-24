@@ -1,6 +1,7 @@
 'use strict'
 
 const { isTruthy } = require('../utils')
+const useRegExp = require('../utils/regexp')
 
 const Service = require('egg').Service
 
@@ -125,6 +126,10 @@ class AppReleaseService extends Service {
     // 参数校验
     if (!isTruthy(data.version)) ctx.throw(400, { msg: 'version 必填' })
     if (!isTruthy(data.type, 'zero')) ctx.throw(400, { msg: 'type 必填' })
+
+    // version格式校验
+    const versionRegExp = useRegExp('version')
+    if (!versionRegExp.regexp.test(data.version)) ctx.throw(400, { msg: versionRegExp.msg })
 
     // 查询条件处理
     const conditions = { version: data.version, type: data.type }

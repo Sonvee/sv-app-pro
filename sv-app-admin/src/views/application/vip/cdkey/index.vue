@@ -6,12 +6,14 @@
     <div class="card table-container">
       <!-- 工具栏 -->
       <div class="table-control">
-        <el-button type="primary" plain :icon="Plus" v-permission="['cdkeyAdd']" @click="add">新增</el-button>
-        <el-button type="danger" plain :icon="Delete" v-permission="['cdkeyBatchDelete']" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
-        <el-button type="warning" plain v-permission="['cdkeyClear']" @click="clear(1)"><i class="sv-icons-clear text-xs mr-4"></i>清空已用</el-button>
-        <el-button type="warning" plain v-permission="['cdkeyClear']" @click="clear(2)"><i class="sv-icons-clear text-xs mr-4"></i>清空失效</el-button>
+        <el-button type="primary" plain :icon="Plus" v-permission="['vip:cdkey:add']" @click="add">新增</el-button>
+        <el-button type="danger" plain :icon="Delete" v-permission="['vip:cdkey:batchdelete']" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">
+          批量删除
+        </el-button>
+        <el-button type="warning" plain v-permission="['vip:cdkey:clear']" @click="clear(1)"><i class="sv-icons-clear text-xs mr-4"></i>清空已用</el-button>
+        <el-button type="warning" plain v-permission="['vip:cdkey:clear']" @click="clear(2)"><i class="sv-icons-clear text-xs mr-4"></i>清空失效</el-button>
         <div style="flex: 1"></div>
-        <el-button circle :icon="RefreshRight" @click="refresh" title="刷新"></el-button>
+        <el-button circle :icon="RefreshRight" v-permission="['vip:cdkey:query']" @click="refresh" title="刷新"></el-button>
         <el-button circle :icon="showFilter ? View : Hide" @click="showFilter = !showFilter" :title="showFilter ? '隐藏筛选' : '显示筛选'"></el-button>
       </div>
       <!-- 数据表格 -->
@@ -55,8 +57,8 @@
         <el-table-column label="操作" align="center" width="160" fixed="right">
           <template #default="scope">
             <el-button-group>
-              <el-button text type="primary" :icon="EditPen" v-permission="['cdkeyUpdate']" @click="edit(scope.row)">编辑</el-button>
-              <el-button text type="danger" :icon="Delete" v-permission="['cdkeyDelete']" @click="del(scope.row)">删除</el-button>
+              <el-button text type="primary" :icon="EditPen" v-permission="['vip:cdkey:update']" @click="edit(scope.row)">编辑</el-button>
+              <el-button text type="danger" :icon="Delete" v-permission="['vip:cdkey:delete']" @click="del(scope.row)">删除</el-button>
             </el-button-group>
           </template>
         </el-table-column>

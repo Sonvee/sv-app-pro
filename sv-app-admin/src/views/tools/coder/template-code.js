@@ -8,10 +8,10 @@ const table = `> 表格页面 index.vue
     <div class="card table-container">
       <!-- 工具栏 -->
       <div class="table-control">
-        <el-button type="primary" plain :icon="Plus" v-permission="['testAdd']" @click="add">新增</el-button>
-        <el-button type="danger" plain :icon="Delete" v-permission="['testBatchDelete']" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
+        <el-button type="primary" plain :icon="Plus" v-permission="['sys:test:add']" @click="add">新增</el-button>
+        <el-button type="danger" plain :icon="Delete" v-permission="['sys:test:batchdelete']" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
         <div style="flex: 1"></div>
-        <el-button circle :icon="RefreshRight" @click="refresh" title="刷新"></el-button>
+        <el-button circle :icon="RefreshRight" v-permission="['sys:test:query']" @click="refresh" title="刷新"></el-button>
         <el-button circle :icon="showFilter ? View : Hide" @click="showFilter = !showFilter" :title="showFilter ? '隐藏筛选' : '显示筛选'"></el-button>
       </div>
       <!-- 数据表格 -->
@@ -24,8 +24,8 @@ const table = `> 表格页面 index.vue
         <el-table-column label="操作" align="center" width="160" fixed="right">
           <template #default="scope">
             <el-button-group>
-              <el-button text type="primary" :icon="EditPen" v-permission="['testUpdate']" @click="edit(scope.row)">编辑</el-button>
-              <el-button text type="danger" :icon="Delete" v-permission="['testDelete']" @click="del(scope.row)">删除</el-button>
+              <el-button text type="primary" :icon="EditPen" v-permission="['sys:test:update']" @click="edit(scope.row)">编辑</el-button>
+              <el-button text type="danger" :icon="Delete" v-permission="['sys:test:delete']" @click="del(scope.row)">删除</el-button>
             </el-button-group>
           </template>
         </el-table-column>
@@ -201,7 +201,7 @@ const filter = `> 筛选栏 TableFilter.vue
         <el-input v-model.trim="filterForm.test_name" placeholder="请输入名称" clearable style="width: 150px" />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" v-permission="['testList']" @click="submit">搜索</el-button>
+        <el-button type="primary" v-permission="['sys:test:query']" @click="submit">搜索</el-button>
         <el-button type="danger" @click="reset">重置</el-button>
       </el-form-item>
     </el-form>
@@ -497,6 +497,7 @@ const service = `> EggJs service/test.js
 'use strict'
 
 const { isTruthy } = require('../utils')
+const { batchAdd, batchDelete } = require('../utils/batch')
 
 const Service = require('egg').Service
 
@@ -573,7 +574,7 @@ class TestService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['testAdd'])
+    ctx.checkAuthority('permission', ['sys:test:add'])
 
     // 参数处理
     // delete data.test_id // 去除自动生成键
@@ -609,7 +610,7 @@ class TestService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['testUpdate'])
+    ctx.checkAuthority('permission', ['sys:test:update'])
 
     // 参数校验
     if (!isTruthy(data.test_id)) ctx.throw(400, { msg: 'test_id 必填' })
@@ -641,7 +642,7 @@ class TestService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['testDelete'])
+    ctx.checkAuthority('permission', ['sys:test:delete'])
 
     // 参数校验
     if (!isTruthy(data.test_id)) ctx.throw(400, { msg: 'test_id 必填' })
@@ -674,7 +675,7 @@ class TestService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['testBatchAdd'])
+    ctx.checkAuthority('permission', ['sys:test:batchadd'])
 
     // 参数处理
     data = Object.assign(
@@ -695,55 +696,13 @@ class TestService extends Service {
     // 主键
     const primaryKey = 'test_id'
 
-    // 过滤掉主键缺失无效的项
-    data.list = data.list.filter((item) => item[primaryKey])
-
-    // 结果处理
-    let res, tip
-    if (data.cover) {
-      // 覆盖模式：使用 upsert 更新或插入数据
-      res = await Promise.all(
-        data.list.map(async (item) => {
-          try {
-            return await db.findOneAndUpdate({ [primaryKey]: item[primaryKey] }, item, { upsert: true, new: true })
-          } catch (error) {
-            ctx.logger.warn(\`Error updating or inserting item \${item[primaryKey]}:\`, error)
-            return null // 返回一个表示失败的特殊值
-          }
-        })
-      )
-    } else {
-      // 增量模式：使用 insertMany 插入数据
-      const existingIds = data.list.map((item) => item[primaryKey])
-      const batchSize = app.config.batchAddSize || 1000 // 分批数量 app.config.batchAddSize 在 config.default.js 中配置
-      const existingKeys = []
-
-      // 分批处理，避免 $in 操作符中的元素过多，
-      for (let i = 0; i < existingIds.length; i += batchSize) {
-        const batchKeys = existingIds.slice(i, i + batchSize)
-        const batchExistingItems = await db.find({ [primaryKey]: { $in: batchKeys } })
-        existingKeys.push(...batchExistingItems.map((item) => item[primaryKey]))
-      }
-
-      if (existingKeys.length > 0) {
-        tip = \`已跳过存在项：\${existingKeys.toString()}\`
-      }
-
-      // 过滤掉已存在的记录
-      const filteredItems = data.list.filter((item) => !existingKeys.includes(item[primaryKey]))
-
-      try {
-        res = await db.insertMany(filteredItems)
-      } catch (error) {
-        ctx.logger.error('Error during insertMany operation:', error)
-        return ctx.throw(500, { msg: '服务器内部错误' })
-      }
-    }
+    // 批量添加
+    const res = await batchAdd(ctx, db, data, primaryKey)
 
     return {
-      data: res,
+      data: res?.data,
       msg: data.cover ? '批量覆盖添加成功' : '批量增量添加成功',
-      tip
+      tip: res?.tip
     }
   }
 
@@ -756,7 +715,7 @@ class TestService extends Service {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['testBatchDelete'])
+    ctx.checkAuthority('permission', ['sys:test:batchdelete'])
 
     // 参数处理
     data = Object.assign(
@@ -776,19 +735,8 @@ class TestService extends Service {
     // 主键
     const primaryKey = 'test_id'
 
-    // 分批处理删除操作，避免单次操作处理过多数据
-    const batchSize = app.config.batchDeleteSize || 1000 // 分批数量 app.config.batchDeleteSize 在 config.default.js 中配置
-    let deletedCount = 0
-
-    // 执行批量删除
-    for (let i = 0; i < data.list.length; i += batchSize) {
-      const batchKeys = data.list.slice(i, i + batchSize)
-      const deleteRes = await db.deleteMany({ [primaryKey]: { $in: batchKeys } })
-      deletedCount += deleteRes.deletedCount
-    }
-
-    // 其他处理
-    if (deletedCount == 0) ctx.throw(400, { msg: '无有效数据项删除' })
+    // 批量删除
+    const deletedCount = await batchDelete(ctx, db, data, primaryKey)
 
     return {
       msg: '批量删除成功',

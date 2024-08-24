@@ -22,7 +22,7 @@
         />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" v-permission="['cdkeyList']" @click="submit">搜索</el-button>
+        <el-button type="primary" v-permission="['vip:cdkey:query']" @click="submit">搜索</el-button>
         <el-button type="danger" @click="reset">重置</el-button>
       </el-form-item>
     </el-form>

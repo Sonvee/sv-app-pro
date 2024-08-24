@@ -8,7 +8,7 @@
       <div class="table-control">
         <el-button type="primary" plain :icon="Plus" @click="register">注册新用户</el-button>
         <div style="flex: 1"></div>
-        <el-button circle :icon="RefreshRight" @click="refresh" title="刷新"></el-button>
+        <el-button circle :icon="RefreshRight" v-permission="['sys:user:query']" @click="refresh" title="刷新"></el-button>
         <el-button circle :icon="showFilter ? View : Hide" @click="showFilter = !showFilter" :title="showFilter ? '隐藏筛选' : '显示筛选'"></el-button>
       </div>
       <!-- 数据表格 -->
@@ -84,8 +84,8 @@
         <el-table-column label="操作" align="center" width="160" fixed="right">
           <template #default="scope">
             <el-button-group>
-              <el-button text type="primary" :icon="EditPen" @click="edit(scope.row)">编辑</el-button>
-              <el-button text type="danger" :icon="Delete" @click="del(scope.row)">删除</el-button>
+              <el-button text type="primary" :icon="EditPen" v-role="['admin']" @click="edit(scope.row)">编辑</el-button>
+              <el-button text type="danger" :icon="Delete" v-role="['admin']" @click="del(scope.row)">删除</el-button>
             </el-button-group>
           </template>
         </el-table-column>

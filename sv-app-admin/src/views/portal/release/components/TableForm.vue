@@ -14,7 +14,7 @@
         <el-form-item prop="name" label="应用名称">
           <el-input v-model="formData.name" placeholder="请输入应用名称" clearable />
         </el-form-item>
-        <el-form-item prop="file" label="应用资源包">
+        <el-form-item prop="file" label="应用资源包" v-permission="['file:release:upload']">
           <DragSingleUpload v-model:file="formData.file" height="140px" ref="dragSingleUploadRef"></DragSingleUpload>
         </el-form-item>
         <el-form-item prop="link" label="资源链接">
@@ -32,7 +32,7 @@
         <el-form-item prop="intro" label="更新内容">
           <TinymceEditor v-model="formData.upgrade" :custom-style="{ minHeight: '300px' }"></TinymceEditor>
         </el-form-item>
-        <el-form-item prop="screenshot" label="应用截图">
+        <el-form-item prop="screenshot" label="应用截图" v-permission="['file:release:upload']">
           <ImageUpload v-model:files="formData.screenshot" size="80px" ref="imageUploadRef"></ImageUpload>
         </el-form-item>
         <el-form-item prop="remark" label="备注">

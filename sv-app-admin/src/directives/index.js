@@ -1,4 +1,5 @@
 import permission from './modules/permission'
+import role from './modules/role'
 import waterMarker from './modules/waterMarker'
 import draggable from './modules/draggable'
 import debounce from './modules/debounce'
@@ -7,6 +8,7 @@ import longpress from './modules/longpress'
 
 const directivesList = {
   permission,
+  role,
   waterMarker,
   draggable,
   debounce,

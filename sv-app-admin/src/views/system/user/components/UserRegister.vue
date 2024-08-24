@@ -49,7 +49,7 @@
       <div class="dialog-footer">
         <el-button @click="closeRegister">取消</el-button>
         <el-button type="warning" @click="reset">重置</el-button>
-        <el-button type="primary" @click="confirmRegister">确认</el-button>
+        <el-button type="primary" v-role="['admin']" @click="confirmRegister">确认</el-button>
       </div>
     </template>
   </el-dialog>

@@ -6,8 +6,8 @@
     <div class="card table-container">
       <!-- 工具栏 -->
       <div class="table-control">
-        <el-button type="primary" plain :icon="Plus" @click="add">新增</el-button>
-        <el-button type="danger" plain :icon="Delete" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
+        <el-button type="primary" plain :icon="Plus" v-permission="['sys:dict:add']" @click="add">新增</el-button>
+        <el-button type="danger" plain :icon="Delete" v-permission="['sys:dict:batchdelete']" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
         <div style="flex: 1"></div>
         <el-button circle @click="updateCache" title="更新字典缓存"><i class="sv-icons-storage text-xs"></i></el-button>
         <el-button circle :icon="RefreshRight" @click="refresh" title="刷新"></el-button>
@@ -47,8 +47,8 @@
         <el-table-column label="操作" align="center" width="160" fixed="right">
           <template #default="scope">
             <el-button-group>
-              <el-button text type="primary" :icon="EditPen" @click="edit(scope.row)">编辑</el-button>
-              <el-button text type="danger" :icon="Delete" v-permission="['dictDelete']" @click="del(scope.row)">删除</el-button>
+              <el-button text type="primary" :icon="EditPen" v-permission="['sys:dict:update']" @click="edit(scope.row)">编辑</el-button>
+              <el-button text type="danger" :icon="Delete" v-permission="['sys:dict:delete']" @click="del(scope.row)">删除</el-button>
             </el-button-group>
           </template>
         </el-table-column>

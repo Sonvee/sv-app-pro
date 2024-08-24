@@ -20,6 +20,10 @@ function useRegExp(type) {
     phone: {
       regexp: /^1[3-9]\d{9}$/,
       msg: '请输入有效的手机号码'
+    },
+    version: {
+      regexp: /^(\d+\.\d+\.\d+)(\.\w+)?$/,
+      msg: '版本号格式应为num.num.num[.other]'
     }
   }
 

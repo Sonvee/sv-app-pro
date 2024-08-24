@@ -40,7 +40,7 @@ const permissions = ref([])
 const permissionDistribution = ref([])
 
 // 数据
-handleTable()
+handleTable({ pagesize: -1 })
 async function handleTable(params) {
   const res = await permissionList(params)
   permissions.value = res.data || []

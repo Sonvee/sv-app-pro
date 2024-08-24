@@ -20,12 +20,21 @@
               children: 'children',
               label: 'label'
             }"
+            v-permission="['sys:cache:query']"
             @node-click="handleNodeClick"
           >
             <template #default="{ node, data }">
               <div class="custom-tree-node">
                 <div>{{ node.label }}</div>
-                <el-button v-if="!isTruthy(data.children, 'arr')" size="small" :icon="Delete" link type="danger" @click.stop="deleteRedis(node.label)"></el-button>
+                <el-button
+                  v-if="!isTruthy(data.children, 'arr')"
+                  size="small"
+                  :icon="Delete"
+                  link
+                  type="danger"
+                  v-permission="['sys:cache:delete']"
+                  @click.stop="deleteRedis(node.label)"
+                ></el-button>
               </div>
             </template>
           </el-tree>
@@ -39,11 +48,11 @@
                 <i class="admin-icons-doc mr-5"></i>
                 缓存内容 {{ curKey ? ' 『 ' + curKey + ' 』 ' : '' }}
               </div>
-              <el-button size="large" :icon="Delete" link type="danger" @click="deleteRedis(curKey)" />
+              <el-button size="large" :icon="Delete" link type="danger" v-permission="['sys:cache:delete']" @click="deleteRedis(curKey)" />
             </div>
           </template>
           <div class="json-viewer">
-            <JsonViewer :value="valuedata" :expand-depth="2"></JsonViewer>
+            <JsonViewer :value="valuedata" :expand-depth="2" v-permission="['sys:cache:query']"></JsonViewer>
           </div>
         </el-card>
       </el-col>

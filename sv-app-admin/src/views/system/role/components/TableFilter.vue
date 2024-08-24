@@ -8,7 +8,7 @@
         <el-input v-model.trim="filterForm.role_name" placeholder="请输入角色名称" clearable style="width: 150px" />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submit">搜索</el-button>
+        <el-button type="primary" v-permission="['sys:role:query']" @click="submit">搜索</el-button>
         <el-button type="danger" @click="reset">重置</el-button>
       </el-form-item>
     </el-form>

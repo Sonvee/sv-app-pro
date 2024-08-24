@@ -10,7 +10,7 @@
     <template #footer>
       <div class="dialog-footer">
         <el-button @click="closeDeleteDailog">取消</el-button>
-        <el-button type="primary" :disabled="countdownIns.disabled.value" @click="confirmDeleteDailog">
+        <el-button type="primary" :disabled="countdownIns.disabled.value" v-role="['admin']" @click="confirmDeleteDailog">
           确认 {{ countdownIns.cd.value ? '(' + countdownIns.cd.value + ')' : '' }}
         </el-button>
       </div>

@@ -6,8 +6,8 @@
     <div class="card table-container">
       <!-- 工具栏 -->
       <div class="table-control">
-        <el-button type="primary" plain :icon="Plus" v-permission="['benefitAdd']" @click="add">新增</el-button>
-        <el-button type="danger" plain :icon="Delete" v-permission="['benefitBatchDelete']" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
+        <el-button type="primary" plain :icon="Plus" v-permission="['vip:benefit:add']" @click="add">新增</el-button>
+        <el-button type="danger" plain :icon="Delete" v-permission="['vip:benefit:batchdelete']" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
         <div style="flex: 1"></div>
         <el-button circle :icon="RefreshRight" @click="refresh" title="刷新"></el-button>
         <el-button circle :icon="showFilter ? View : Hide" @click="showFilter = !showFilter" :title="showFilter ? '隐藏筛选' : '显示筛选'"></el-button>
@@ -45,8 +45,8 @@
         <el-table-column label="操作" align="center" width="160" fixed="right">
           <template #default="scope">
             <el-button-group>
-              <el-button text type="primary" :icon="EditPen" v-permission="['benefitUpdate']" @click="edit(scope.row)">编辑</el-button>
-              <el-button text type="danger" :icon="Delete" v-permission="['benefitDelete']" @click="del(scope.row)">删除</el-button>
+              <el-button text type="primary" :icon="EditPen" v-permission="['vip:benefit:update']" @click="edit(scope.row)">编辑</el-button>
+              <el-button text type="danger" :icon="Delete" v-permission="['vip:benefit:delete']" @click="del(scope.row)">删除</el-button>
             </el-button-group>
           </template>
         </el-table-column>

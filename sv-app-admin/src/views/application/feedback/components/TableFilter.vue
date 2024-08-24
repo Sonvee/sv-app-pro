@@ -14,7 +14,7 @@
         <DictSelect v-model="filterForm.status" dictType="dict_app_feedback_status" formatNumber placeholder="请选择状态" style="width: 150px"></DictSelect>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" v-permission="['feedbackList']" @click="submit">搜索</el-button>
+        <el-button type="primary" @click="submit">搜索</el-button>
         <el-button type="danger" @click="reset">重置</el-button>
       </el-form-item>
     </el-form>

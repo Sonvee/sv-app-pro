@@ -12,7 +12,7 @@ module.exports = (app) => {
         unique: true,
         required: true
       },
-      // 版本号 num.num.num.xxx
+      // 版本号 num.num.num[.other]
       version: {
         type: String,
         required: true

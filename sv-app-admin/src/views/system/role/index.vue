@@ -6,10 +6,10 @@
     <div class="card table-container">
       <!-- 工具栏 -->
       <div class="table-control">
-        <el-button type="primary" plain :icon="Plus" @click="add">新增</el-button>
-        <el-button type="danger" plain :icon="Delete" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
+        <el-button type="primary" plain :icon="Plus" v-permission="['sys:role:add']" @click="add">新增</el-button>
+        <el-button type="danger" plain :icon="Delete" v-permission="['sys:role:batchdelete']" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
         <div style="flex: 1"></div>
-        <el-button circle :icon="RefreshRight" @click="refresh" title="刷新"></el-button>
+        <el-button circle :icon="RefreshRight" v-permission="['sys:role:query']" @click="refresh" title="刷新"></el-button>
         <el-button circle :icon="showFilter ? View : Hide" @click="showFilter = !showFilter" :title="showFilter ? '隐藏筛选' : '显示筛选'"></el-button>
       </div>
       <!-- 数据表格 -->
@@ -19,7 +19,7 @@
         <el-table-column prop="role_id" label="角色ID" width="200" show-overflow-tooltip></el-table-column>
         <el-table-column prop="role_name" label="角色名称" min-width="300" show-overflow-tooltip></el-table-column>
         <el-table-column prop="remark" label="备注" min-width="300" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="permissions" label="权限分配" align="center" width="100">
+        <el-table-column prop="permissions" label="权限分配" align="center" width="100" v-permission="['sys:role:update']">
           <template #default="scope">
             <el-button type="primary" plain :icon="Setting" circle @click="editPermission(scope.row)"></el-button>
           </template>
@@ -46,8 +46,8 @@
         <el-table-column label="操作" align="center" width="160" fixed="right">
           <template #default="scope">
             <el-button-group>
-              <el-button text type="primary" :icon="EditPen" @click="edit(scope.row)">编辑</el-button>
-              <el-button text type="danger" :icon="Delete" @click="del(scope.row)">删除</el-button>
+              <el-button text type="primary" :icon="EditPen" v-permission="['sys:role:update']" @click="edit(scope.row)">编辑</el-button>
+              <el-button text type="danger" :icon="Delete" v-permission="['sys:role:delete']" @click="del(scope.row)">删除</el-button>
             </el-button-group>
           </template>
         </el-table-column>

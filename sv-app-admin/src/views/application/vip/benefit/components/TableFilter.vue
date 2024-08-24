@@ -8,7 +8,7 @@
         <el-input v-model.trim="filterForm.benefit_name" placeholder="请输入权益名称" clearable style="width: 150px" />
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" v-permission="['benefitList']" @click="submit">搜索</el-button>
+        <el-button type="primary" @click="submit">搜索</el-button>
         <el-button type="danger" @click="reset">重置</el-button>
       </el-form-item>
     </el-form>
