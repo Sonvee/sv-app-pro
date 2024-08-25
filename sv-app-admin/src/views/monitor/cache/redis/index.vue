@@ -5,8 +5,13 @@
       <el-col :span="8">
         <el-card shadow="hover" class="h-full">
           <template #header>
-            <i class="sv-icons-redis mr-5"></i>
-            缓存键名
+            <div class="flx-justify-between">
+              <div>
+                <i class="sv-icons-redis mr-5"></i>
+                缓存键名
+              </div>
+              <el-button size="large" :icon="Refresh" link type="danger" v-permission="['sys:cache:query']" @click="refresh" />
+            </div>
           </template>
           <!-- 键名结构（树状） -->
           <el-input v-model="filterText" :prefix-icon="Search" placeholder="请输入检索" class="w-full mb-10" />
@@ -66,7 +71,7 @@ import { isTruthy } from '@/utils'
 import { JsonViewer } from 'vue3-json-viewer'
 import 'vue3-json-viewer/dist/index.css'
 import { useElementSize } from '@vueuse/core'
-import { Search, Delete } from '@element-plus/icons-vue'
+import { Search, Delete, Refresh } from '@element-plus/icons-vue'
 
 const treedata = ref([])
 const filterText = ref('')

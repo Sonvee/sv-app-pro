@@ -51,8 +51,13 @@ module.exports = (appInfo) => {
    * egg-mongoose 配置
    */
   config.mongoose = {
-    url: 'mongodb://127.0.0.1:27017/egg_mongo',
-    options: {}
+    client: {
+      url: 'mongodb://101.34.89.199:27017/sv_database',
+      options: {
+        user: 'sv_database',
+        pass: 'Sonve_5817'
+      }
+    }
   }
 
   /**
@@ -93,8 +98,8 @@ module.exports = (appInfo) => {
   config.redis = {
     client: {
       port: 6379, // Redis port
-      host: '127.0.0.1', // Redis host
-      password: '1949100115', // Redis password
+      host: '101.34.89.199', // Redis host
+      password: 'Sonve_5817', // Redis password
       db: 0
     }
   }
@@ -122,8 +127,7 @@ module.exports = (appInfo) => {
   config.cluster = {
     listen: {
       port: 7001,
-      // hostname: '192.168.1.209'
-      hostname: '192.168.6.118'
+      hostname: '0.0.0.0'
     }
   }
 
