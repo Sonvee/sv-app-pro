@@ -11,6 +11,12 @@ module.exports = (appInfo) => {
    **/
   const config = (exports = {})
 
+  config.cors = {
+    origin: '*', // 或者指定允许访问的源
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
+    credentials: true // 允许携带Cookie
+  }
+
   /**
    * egg-mongoose 配置
    */

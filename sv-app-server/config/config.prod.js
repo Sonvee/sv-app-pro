@@ -11,6 +11,12 @@ module.exports = (appInfo) => {
    **/
   const config = (exports = {})
 
+  config.cors = {
+    origin: 'http://101.34.89.199', // 或者指定允许访问的源
+    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
+    credentials: true // 允许携带Cookie
+  }
+
   /**
    * egg-mongoose 配置
    */
@@ -53,7 +59,7 @@ module.exports = (appInfo) => {
   config.cluster = {
     listen: {
       port: 7001,
-      hostname: '127.0.0.1'
+      hostname: '0.0.0.0'
     }
   }
 

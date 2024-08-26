@@ -27,12 +27,6 @@ module.exports = (appInfo) => {
     domainWhiteList: [] // 跨域白名单
   }
 
-  config.cors = {
-    origin: '*', // 或者指定允许访问的源
-    allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
-    credentials: true // 允许携带Cookie
-  }
-
   /**
    * egg-jwt 配置
    */
