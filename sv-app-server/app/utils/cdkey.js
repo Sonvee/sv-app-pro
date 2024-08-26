@@ -6,13 +6,13 @@
  * @return {String} cdkey
  */
 function createCdkey(segments = 5, segmentLength = 5, flag = '-') {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
   const cdkey = Array(segments)
     .fill(null)
-    .flatMap(() => [[...Array(segmentLength)].map(() => chars[Math.floor(Math.random() * chars.length)]).join(''), flag])
-    .slice(0, -1) // 去掉最后一个破折号
-  return cdkey.join('')
+    .flatMap(() => [ [ ...Array(segmentLength) ].map(() => chars[Math.floor(Math.random() * chars.length)]).join(''), flag ])
+    .slice(0, -1); // 去掉最后一个破折号
+  return cdkey.join('');
 }
 
 /**
@@ -24,11 +24,11 @@ function createCdkey(segments = 5, segmentLength = 5, flag = '-') {
  * @return {boolean} 是否校验成功
  */
 function validCdkey(cdkey, segments = 5, segmentLength = 5, flag = '-') {
-  const regexPattern = new RegExp(`^(?:[A-Za-z0-9]{${segmentLength}}\\${flag}){${segments - 1}}[A-Za-z0-9]{${segmentLength}}$`)
-  return regexPattern.test(cdkey)
+  const regexPattern = new RegExp(`^(?:[A-Za-z0-9]{${segmentLength}}\\${flag}){${segments - 1}}[A-Za-z0-9]{${segmentLength}}$`);
+  return regexPattern.test(cdkey);
 }
 
 module.exports = {
   createCdkey,
-  validCdkey
-}
+  validCdkey,
+};

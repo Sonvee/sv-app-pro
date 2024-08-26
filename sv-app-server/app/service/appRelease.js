@@ -1,9 +1,9 @@
-'use strict'
+'use strict';
 
-const { isTruthy } = require('../utils')
-const useRegExp = require('../utils/regexp')
+const { isTruthy } = require('../utils');
+const useRegExp = require('../utils/regexp');
 
-const Service = require('egg').Service
+const Service = require('egg').Service;
 
 class AppReleaseService extends Service {
   /**
@@ -17,50 +17,50 @@ class AppReleaseService extends Service {
    * @property {Number} data.pagenum - 页码
    */
   async releaseList(data) {
-    const { ctx, app } = this
+    const { ctx, app } = this;
 
     // 权限校验
-    ctx.checkAuthority('open')
+    ctx.checkAuthority('open');
 
     // 参数处理
-    let { pagesize = 20, pagenum = 1 } = data
-    pagesize = Number(pagesize)
-    pagenum = Number(pagenum)
+    let { pagesize = 20, pagenum = 1 } = data;
+    pagesize = Number(pagesize);
+    pagenum = Number(pagenum);
 
     // 错误参数处理
-    if (pagenum < 1) ctx.throw(400, { msg: 'pagenum不能小于1' })
+    if (pagenum < 1) ctx.throw(400, { msg: 'pagenum不能小于1' });
 
     // 查询条件处理
-    const conditions = {}
+    const conditions = {};
 
     // 查询条件
-    if (isTruthy(data.version)) conditions.version = { $regex: data.version, $options: 'i' } // 模糊查询
-    if (isTruthy(data.name)) conditions.name = { $regex: data.name, $options: 'i' } // 模糊查询
-    if (isTruthy(data.type, 'zero')) conditions.type = data.type
-    if (isTruthy(data.release_range, 'arr')) conditions.release_date = { $gte: data.release_range[0], $lte: data.release_range[1] } // 时间范围
+    if (isTruthy(data.version)) conditions.version = { $regex: data.version, $options: 'i' }; // 模糊查询
+    if (isTruthy(data.name)) conditions.name = { $regex: data.name, $options: 'i' }; // 模糊查询
+    if (isTruthy(data.type, 'zero')) conditions.type = data.type;
+    if (isTruthy(data.release_range, 'arr')) conditions.release_date = { $gte: data.release_range[0], $lte: data.release_range[1] }; // 时间范围
 
     // 数据库连接
-    const db = app.model.AppRelease
+    const db = app.model.AppRelease;
 
     // 查询
-    let query = db.find(conditions)
+    let query = db.find(conditions);
 
     // 排序：1升序，-1降序
-    query = query.sort({ version: -1, release_date: -1 })
+    query = query.sort({ version: -1, release_date: -1 });
 
     // 分页
     if (pagesize > 0) {
-      query = query.skip(pagesize * (pagenum - 1)).limit(pagesize)
+      query = query.skip(pagesize * (pagenum - 1)).limit(pagesize);
     }
 
     // 计数
-    const count = await db.countDocuments(conditions)
+    const count = await db.countDocuments(conditions);
 
     // 页数
-    const pages = pagesize > 0 ? Math.ceil(count / pagesize) : count > 0 ? 1 : 0
+    const pages = pagesize > 0 ? Math.ceil(count / pagesize) : count > 0 ? 1 : 0;
 
     // 处理查询结果
-    const res = await query.exec()
+    const res = await query.exec();
 
     return {
       data: res,
@@ -68,8 +68,8 @@ class AppReleaseService extends Service {
       total: count,
       pagenum,
       pagesize,
-      pages
-    }
+      pages,
+    };
   }
 
   /**
@@ -78,34 +78,34 @@ class AppReleaseService extends Service {
    * @property {String} data.type - 应用类型
    */
   async releaseLatest(data) {
-    const { ctx, app } = this
+    const { ctx, app } = this;
 
     // 权限校验
-    ctx.checkAuthority('open')
+    ctx.checkAuthority('open');
 
     // 参数校验
-    if (!isTruthy(data.type, 'zero')) ctx.throw(400, { msg: 'type 必填' })
+    if (!isTruthy(data.type, 'zero')) ctx.throw(400, { msg: 'type 必填' });
 
     // 查询条件处理
-    const conditions = { type: data.type }
+    const conditions = { type: data.type };
 
     // 数据库连接
-    const db = app.model.AppRelease
+    const db = app.model.AppRelease;
 
     // 查询
-    let query = db.find(conditions)
+    let query = db.find(conditions);
 
     // 排序：1升序，-1降序
-    query = query.sort({ version: -1, release_date: -1 })
+    query = query.sort({ version: -1, release_date: -1 });
 
     // 处理查询结果
-    const res = await query.exec()
-    if (!isTruthy(res, 'arr')) ctx.throw(400, { msg: `无最新 ${data.type} 版本资源` })
+    const res = await query.exec();
+    if (!isTruthy(res, 'arr')) ctx.throw(400, { msg: `无最新 ${data.type} 版本资源` });
 
     return {
       data: res[0],
-      msg: `最新 ${data.type} 版本获取成功`
-    }
+      msg: `最新 ${data.type} 版本获取成功`,
+    };
   }
 
   /**
@@ -115,38 +115,38 @@ class AppReleaseService extends Service {
    * @property {String} data.type - 应用类型
    */
   async releaseAdd(data) {
-    const { ctx, app } = this
+    const { ctx, app } = this;
 
     // 权限校验
-    ctx.checkAuthority('permission', ['app:release:add'])
+    ctx.checkAuthority('permission', [ 'app:release:add' ]);
 
     // 参数处理
-    delete data.release_id // 去除部分参数
+    delete data.release_id; // 去除部分参数
 
     // 参数校验
-    if (!isTruthy(data.version)) ctx.throw(400, { msg: 'version 必填' })
-    if (!isTruthy(data.type, 'zero')) ctx.throw(400, { msg: 'type 必填' })
+    if (!isTruthy(data.version)) ctx.throw(400, { msg: 'version 必填' });
+    if (!isTruthy(data.type, 'zero')) ctx.throw(400, { msg: 'type 必填' });
 
     // version格式校验
-    const versionRegExp = useRegExp('version')
-    if (!versionRegExp.regexp.test(data.version)) ctx.throw(400, { msg: versionRegExp.msg })
+    const versionRegExp = useRegExp('version');
+    if (!versionRegExp.regexp.test(data.version)) ctx.throw(400, { msg: versionRegExp.msg });
 
     // 查询条件处理
-    const conditions = { version: data.version, type: data.type }
+    const conditions = { version: data.version, type: data.type };
 
     // 数据库连接
-    const db = app.model.AppRelease
+    const db = app.model.AppRelease;
 
     // 查询
-    const one = await db.findOne(conditions)
-    if (one) ctx.throw(400, { msg: `${data.type} ${data.version} 版本已存在` })
+    const one = await db.findOne(conditions);
+    if (one) ctx.throw(400, { msg: `${data.type} ${data.version} 版本已存在` });
 
-    const res = await db.create(data)
+    const res = await db.create(data);
 
     return {
       data: res,
-      msg: `${data.type} ${data.version} 版本发布成功`
-    }
+      msg: `${data.type} ${data.version} 版本发布成功`,
+    };
   }
 
   /**
@@ -158,32 +158,32 @@ class AppReleaseService extends Service {
    * @property {any} 更多请前往model/appRelease.js
    */
   async releaseUpdate(data) {
-    const { ctx, app } = this
+    const { ctx, app } = this;
 
     // 权限校验
-    ctx.checkAuthority('permission', ['app:release:update'])
+    ctx.checkAuthority('permission', [ 'app:release:update' ]);
 
     // 参数校验
-    if (!isTruthy(data.release_id)) ctx.throw(400, { msg: 'release_id 必填' })
-    if (!isTruthy(data.version)) ctx.throw(400, { msg: 'version 必填' })
-    if (!isTruthy(data.type, 'zero')) ctx.throw(400, { msg: 'type 必填' })
+    if (!isTruthy(data.release_id)) ctx.throw(400, { msg: 'release_id 必填' });
+    if (!isTruthy(data.version)) ctx.throw(400, { msg: 'version 必填' });
+    if (!isTruthy(data.type, 'zero')) ctx.throw(400, { msg: 'type 必填' });
 
     // 查询条件处理
-    const conditions = { release_id: data.release_id }
+    const conditions = { release_id: data.release_id };
 
     // 数据库连接
-    const db = app.model.AppRelease
+    const db = app.model.AppRelease;
 
     // 查询
-    const one = await db.findOne(conditions)
-    if (!one) ctx.throw(400, { msg: '版本不存在' })
+    const one = await db.findOne(conditions);
+    if (!one) ctx.throw(400, { msg: '版本不存在' });
 
-    const res = await db.findOneAndUpdate(conditions, data, { new: true })
+    const res = await db.findOneAndUpdate(conditions, data, { new: true });
 
     return {
       data: res,
-      msg: '版本更新成功'
-    }
+      msg: '版本更新成功',
+    };
   }
 
   /**
@@ -192,31 +192,31 @@ class AppReleaseService extends Service {
    * @property {String} data.release_id - 版本
    */
   async releaseDelete(data) {
-    const { ctx, app } = this
+    const { ctx, app } = this;
 
     // 权限校验
-    ctx.checkAuthority('permission', ['app:release:delete'])
+    ctx.checkAuthority('permission', [ 'app:release:delete' ]);
 
     // 参数校验
-    if (!isTruthy(data.release_id)) ctx.throw(400, { msg: 'release_id 必填' })
+    if (!isTruthy(data.release_id)) ctx.throw(400, { msg: 'release_id 必填' });
 
     // 查询条件处理
-    const conditions = { release_id: data.release_id }
+    const conditions = { release_id: data.release_id };
 
     // 数据库连接
-    const db = app.model.AppRelease
+    const db = app.model.AppRelease;
 
     // 查询
-    const one = await db.findOne(conditions)
-    if (!one) ctx.throw(400, { msg: '版本不存在或已被删除' })
+    const one = await db.findOne(conditions);
+    if (!one) ctx.throw(400, { msg: '版本不存在或已被删除' });
 
-    const res = await db.deleteOne(conditions)
+    const res = await db.deleteOne(conditions);
 
     return {
       data: res,
-      msg: '版本删除成功'
-    }
+      msg: '版本删除成功',
+    };
   }
 }
 
-module.exports = AppReleaseService
+module.exports = AppReleaseService;

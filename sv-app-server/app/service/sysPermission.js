@@ -1,9 +1,9 @@
-'use strict'
+'use strict';
 
-const { isTruthy } = require('../utils')
-const { batchAdd, batchDelete } = require('../utils/batch')
+const { isTruthy } = require('../utils');
+const { batchAdd, batchDelete } = require('../utils/batch');
 
-const Service = require('egg').Service
+const Service = require('egg').Service;
 
 class SysPermissionService extends Service {
   /**
@@ -15,48 +15,48 @@ class SysPermissionService extends Service {
    * @property {Number} data.pagenum - 页码
    */
   async permissionList(data) {
-    const { ctx, app } = this
+    const { ctx, app } = this;
 
     // 权限校验
-    ctx.checkAuthority('permission', ['sys:permission:query'])
+    ctx.checkAuthority('permission', [ 'sys:permission:query' ]);
 
     // 参数处理
-    let { pagesize = 20, pagenum = 1 } = data
-    pagesize = Number(pagesize)
-    pagenum = Number(pagenum)
+    let { pagesize = 20, pagenum = 1 } = data;
+    pagesize = Number(pagesize);
+    pagenum = Number(pagenum);
 
     // 错误参数处理
-    if (pagenum < 1) ctx.throw(400, { msg: 'pagenum不能小于1' })
+    if (pagenum < 1) ctx.throw(400, { msg: 'pagenum不能小于1' });
 
     // 查询条件处理
-    const conditions = {}
+    const conditions = {};
 
     // 查询条件
-    if (isTruthy(data.permission_id)) conditions.permission_id = data.permission_id
-    if (isTruthy(data.permission_name)) conditions.permission_name = { $regex: data.permission_name, $options: 'i' } // 模糊查询
+    if (isTruthy(data.permission_id)) conditions.permission_id = data.permission_id;
+    if (isTruthy(data.permission_name)) conditions.permission_name = { $regex: data.permission_name, $options: 'i' }; // 模糊查询
 
     // 数据库连接
-    const db = app.model.SysPermission
+    const db = app.model.SysPermission;
 
     // 查询
-    let query = db.find(conditions)
+    let query = db.find(conditions);
 
     // 排序：1升序，-1降序
-    query = query.sort({ sort: 1 })
+    query = query.sort({ sort: 1 });
 
     // 分页
     if (pagesize > 0) {
-      query = query.skip(pagesize * (pagenum - 1)).limit(pagesize)
+      query = query.skip(pagesize * (pagenum - 1)).limit(pagesize);
     }
 
     // 计数
-    const count = await db.countDocuments(conditions)
+    const count = await db.countDocuments(conditions);
 
     // 页数
-    const pages = pagesize > 0 ? Math.ceil(count / pagesize) : count > 0 ? 1 : 0
+    const pages = pagesize > 0 ? Math.ceil(count / pagesize) : count > 0 ? 1 : 0;
 
     // 处理查询结果
-    const res = await query.exec()
+    const res = await query.exec();
 
     return {
       data: res,
@@ -64,8 +64,8 @@ class SysPermissionService extends Service {
       total: count,
       pagenum,
       pagesize,
-      pages
-    }
+      pages,
+    };
   }
 
   /**
@@ -77,31 +77,31 @@ class SysPermissionService extends Service {
    * @property {String} data.remark - 备注
    */
   async permissionAdd(data) {
-    const { ctx, app } = this
+    const { ctx, app } = this;
 
     // 权限校验
-    ctx.checkAuthority('permission', ['sys:permission:add'])
+    ctx.checkAuthority('permission', [ 'sys:permission:add' ]);
 
     // 参数校验
-    if (!isTruthy(data.permission_id)) ctx.throw(400, { msg: 'permission_id 必填' })
-    if (!isTruthy(data.permission_name)) ctx.throw(400, { msg: 'permission_name 必填' })
+    if (!isTruthy(data.permission_id)) ctx.throw(400, { msg: 'permission_id 必填' });
+    if (!isTruthy(data.permission_name)) ctx.throw(400, { msg: 'permission_name 必填' });
 
     // 查询条件处理
-    const conditions = { permission_id: data.permission_id }
+    const conditions = { permission_id: data.permission_id };
 
     // 数据库连接
-    const db = app.model.SysPermission
+    const db = app.model.SysPermission;
 
     // 查询
-    const one = await db.findOne(conditions)
-    if (one) ctx.throw(400, { msg: '新增项已存在' })
+    const one = await db.findOne(conditions);
+    if (one) ctx.throw(400, { msg: '新增项已存在' });
 
-    const res = await db.create(data)
+    const res = await db.create(data);
 
     return {
       data: res,
-      msg: '新增成功'
-    }
+      msg: '新增成功',
+    };
   }
 
   /**
@@ -112,30 +112,30 @@ class SysPermissionService extends Service {
    * @property {Number} data.sort - 排序
    */
   async permissionUpdate(data) {
-    const { ctx, app } = this
+    const { ctx, app } = this;
 
     // 权限校验
-    ctx.checkAuthority('permission', ['sys:permission:update'])
+    ctx.checkAuthority('permission', [ 'sys:permission:update' ]);
 
     // 参数校验
-    if (!isTruthy(data.permission_id)) ctx.throw(400, { msg: 'permission_id 必填' })
+    if (!isTruthy(data.permission_id)) ctx.throw(400, { msg: 'permission_id 必填' });
 
     // 查询条件处理
-    const conditions = { permission_id: data.permission_id }
+    const conditions = { permission_id: data.permission_id };
 
     // 数据库连接
-    const db = app.model.SysPermission
+    const db = app.model.SysPermission;
 
     // 查询
-    const one = await db.findOne(conditions)
-    if (!one) ctx.throw(400, { msg: '更新项不存在' })
+    const one = await db.findOne(conditions);
+    if (!one) ctx.throw(400, { msg: '更新项不存在' });
 
-    const res = await db.findOneAndUpdate(conditions, data, { new: true })
+    const res = await db.findOneAndUpdate(conditions, data, { new: true });
 
     return {
       data: res,
-      msg: '更新成功'
-    }
+      msg: '更新成功',
+    };
   }
 
   /**
@@ -144,30 +144,30 @@ class SysPermissionService extends Service {
    * @property {String} data.permission_id - id
    */
   async permissionDelete(data) {
-    const { ctx, app } = this
+    const { ctx, app } = this;
 
     // 权限校验
-    ctx.checkAuthority('permission', ['sys:permission:delete'])
+    ctx.checkAuthority('permission', [ 'sys:permission:delete' ]);
 
     // 参数校验
-    if (!isTruthy(data.permission_id)) ctx.throw(400, { msg: 'permission_id 必填' })
+    if (!isTruthy(data.permission_id)) ctx.throw(400, { msg: 'permission_id 必填' });
 
     // 查询条件处理
-    const conditions = { permission_id: data.permission_id }
+    const conditions = { permission_id: data.permission_id };
 
     // 数据库连接
-    const db = app.model.SysPermission
+    const db = app.model.SysPermission;
 
     // 查询
-    const one = await db.findOne(conditions)
-    if (!one) ctx.throw(400, { msg: '删除项不存在或已被删除' })
+    const one = await db.findOne(conditions);
+    if (!one) ctx.throw(400, { msg: '删除项不存在或已被删除' });
 
-    const res = await db.deleteOne(conditions)
+    const res = await db.deleteOne(conditions);
 
     return {
       data: res,
-      msg: '删除成功'
-    }
+      msg: '删除成功',
+    };
   }
 
   /**
@@ -177,38 +177,38 @@ class SysPermissionService extends Service {
    * @property {Boolean} data.cover - 是否覆盖 默认false
    */
   async permissionBatchAdd(data) {
-    const { ctx, app } = this
+    const { ctx, app } = this;
 
     // 权限校验
-    ctx.checkAuthority('permission', ['sys:permission:batchadd'])
+    ctx.checkAuthority('permission', [ 'sys:permission:batchadd' ]);
 
     // 参数处理
     data = Object.assign(
       {
         list: [],
-        cover: false // 是否覆盖
+        cover: false, // 是否覆盖
       },
       data
-    )
+    );
 
     // 参数校验
-    if (!Array.isArray(data.list)) ctx.throw(400, { msg: 'list 必须是数组' })
-    if (!isTruthy(data.list, 'arr')) ctx.throw(400, { msg: 'list 为空' })
+    if (!Array.isArray(data.list)) ctx.throw(400, { msg: 'list 必须是数组' });
+    if (!isTruthy(data.list, 'arr')) ctx.throw(400, { msg: 'list 为空' });
 
     // 数据库连接
-    const db = app.model.SysPermission
+    const db = app.model.SysPermission;
 
     // 主键
-    const primaryKey = 'permission_id'
+    const primaryKey = 'permission_id';
 
     // 批量添加
-    const res = await batchAdd(ctx, db, data, primaryKey)
+    const res = await batchAdd(ctx, db, data, primaryKey);
 
     return {
       data: res?.data,
       msg: data.cover ? '批量覆盖添加成功' : '批量增量添加成功',
-      tip: res?.tip
-    }
+      tip: res?.tip,
+    };
   }
 
   /**
@@ -217,37 +217,37 @@ class SysPermissionService extends Service {
    * @property {Array} data.list - 批量删除项
    */
   async permissionBatchDelete(data) {
-    const { ctx, app } = this
+    const { ctx, app } = this;
 
     // 权限校验
-    ctx.checkAuthority('permission', ['sys:permission:batchdelete'])
+    ctx.checkAuthority('permission', [ 'sys:permission:batchdelete' ]);
 
     // 参数处理
     data = Object.assign(
       {
-        list: [] // 需要删除的记录的ID列表
+        list: [], // 需要删除的记录的ID列表
       },
       data
-    )
+    );
 
     // 参数校验
-    if (!Array.isArray(data.list)) ctx.throw(400, { msg: 'list 必须是数组' })
-    if (!isTruthy(data.list)) ctx.throw(400, { msg: 'list 为空' })
+    if (!Array.isArray(data.list)) ctx.throw(400, { msg: 'list 必须是数组' });
+    if (!isTruthy(data.list)) ctx.throw(400, { msg: 'list 为空' });
 
     // 数据库连接
-    const db = app.model.SysPermission
+    const db = app.model.SysPermission;
 
     // 主键
-    const primaryKey = 'permission_id'
+    const primaryKey = 'permission_id';
 
     // 批量删除
-    const deletedCount = await batchDelete(ctx, db, data, primaryKey)
+    const deletedCount = await batchDelete(ctx, db, data, primaryKey);
 
     return {
       msg: '批量删除成功',
-      tip: `共删除${deletedCount}条记录`
-    }
+      tip: `共删除${deletedCount}条记录`,
+    };
   }
 }
 
-module.exports = SysPermissionService
+module.exports = SysPermissionService;

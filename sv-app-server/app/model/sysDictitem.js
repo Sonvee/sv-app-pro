@@ -1,7 +1,7 @@
-'use strict'
+'use strict';
 
-module.exports = (app) => {
-  const mongoose = app.mongoose
+module.exports = app => {
+  const mongoose = app.mongoose;
 
   const SysDictitemSchema = new mongoose.Schema(
     {
@@ -10,50 +10,50 @@ module.exports = (app) => {
         type: mongoose.Schema.Types.ObjectId,
         auto: true,
         unique: true,
-        required: true
+        required: true,
       },
       // 字典类型，对应dict_id
       dict_type: {
         type: String,
-        required: true
+        required: true,
       },
       label: {
         type: String,
-        required: true
+        required: true,
       },
       value: {
         type: String,
-        required: true
+        required: true,
       },
       remark: {
-        type: String
+        type: String,
       },
       sort: {
         type: Number,
-        default: 0
+        default: 0,
       },
       status: {
         type: Number,
-        default: 1
+        default: 1,
       },
       // 行为样式：default(空),primary,success,info,warning,danger
       action_style: {
         type: String,
-        default: ''
+        default: '',
       },
       // 自动生成字段
       created_date: {
-        type: Number
+        type: Number,
       },
       updated_date: {
-        type: Number
-      }
+        type: Number,
+      },
     },
     {
       versionKey: false, // 去除版本号字段
-      timestamps: { createdAt: 'created_date', updatedAt: 'updated_date' }
+      timestamps: { createdAt: 'created_date', updatedAt: 'updated_date' },
     }
-  )
+  );
 
-  return mongoose.model('sys_dictitem', SysDictitemSchema)
-}
+  return mongoose.model('sys_dictitem', SysDictitemSchema);
+};

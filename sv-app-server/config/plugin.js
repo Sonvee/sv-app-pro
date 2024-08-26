@@ -6,18 +6,22 @@ module.exports = {
   // }
   jwt: {
     enable: true,
-    package: 'egg-jwt'
+    package: 'egg-jwt',
   },
   mongoose: {
     enable: true,
-    package: 'egg-mongoose'
+    package: 'egg-mongoose',
   },
   fullQiniu: {
     enable: true,
-    package: 'egg-full-qiniu'
+    package: 'egg-full-qiniu',
   },
   redis: {
     enable: true,
-    package: 'egg-redis'
-  }
-}
+    package: 'egg-redis',
+  },
+  cors: {
+    enable: true,
+    package: 'egg-cors',
+  },
+};

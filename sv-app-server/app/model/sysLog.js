@@ -1,7 +1,7 @@
-'use strict'
+'use strict';
 
-module.exports = (app) => {
-  const mongoose = app.mongoose
+module.exports = app => {
+  const mongoose = app.mongoose;
 
   const SysLogSchema = new mongoose.Schema(
     {
@@ -10,76 +10,76 @@ module.exports = (app) => {
         type: mongoose.Schema.Types.ObjectId,
         auto: true,
         unique: true,
-        required: true
+        required: true,
       },
       // 日志类型：login登录日志，operation操作日志
       log_type: {
         type: String,
-        required: true
+        required: true,
       },
       // 操作人员信息
       operator_info: {
-        type: Object
+        type: Object,
       },
       // IP地址
       operator_ip: {
-        type: String
+        type: String,
       },
       // 地理位置
       operator_location: {
-        type: String
+        type: String,
       },
       // 请求相关
       request_method: {
-        type: String
+        type: String,
       },
       request_url: {
-        type: String
+        type: String,
       },
       request_status: {
-        type: Number
+        type: Number,
       },
       request_msg: {
-        type: String
+        type: String,
       },
       request_err: {
-        type: Object
+        type: Object,
       },
       request_params: {
-        type: Object
+        type: Object,
       },
       // 消耗时长（毫秒）
       costtime: {
-        type: Number
+        type: Number,
       },
       // User-Agent
       userAgent: {
-        type: Object
+        type: Object,
       },
       // 登录方式，仅登录日志
       login_type: {
-        type: String
+        type: String,
       },
       // 以下参数暂时用不到
       created_by: {
-        type: String
+        type: String,
       },
       updated_by: {
-        type: String
+        type: String,
       },
       // 自动生成字段
       created_date: {
-        type: Number
+        type: Number,
       },
       updated_date: {
-        type: Number
-      }
+        type: Number,
+      },
     },
     {
       versionKey: false, // 去除版本号字段
-      timestamps: { createdAt: 'created_date', updatedAt: 'updated_date' }
+      timestamps: { createdAt: 'created_date', updatedAt: 'updated_date' },
     }
-  )
+  );
 
-  return mongoose.model('sys_log', SysLogSchema)
-}
+  return mongoose.model('sys_log', SysLogSchema);
+};

@@ -1,9 +1,9 @@
-'use strict'
+'use strict';
 
-const { isTruthy } = require('../utils')
-const { batchAdd, batchDelete } = require('../utils/batch')
+const { isTruthy } = require('../utils');
+const { batchAdd, batchDelete } = require('../utils/batch');
 
-const Service = require('egg').Service
+const Service = require('egg').Service;
 
 class TestDemoService extends Service {
   /**
@@ -15,28 +15,28 @@ class TestDemoService extends Service {
    * @property {Number} data.pagenum - 页码
    */
   async testList(data) {
-    const { ctx, app } = this
+    const { ctx, app } = this;
 
     // 权限校验
-    ctx.checkAuthority('open')
+    ctx.checkAuthority('open');
 
     // 参数处理
-    let { pagesize = 20, pagenum = 1 } = data
-    pagesize = Number(pagesize)
-    pagenum = Number(pagenum)
+    let { pagesize = 20, pagenum = 1 } = data;
+    pagesize = Number(pagesize);
+    pagenum = Number(pagenum);
 
     // 参数校验
-    if (pagenum < 1) ctx.throw(400, { msg: 'pagenum不能小于1' })
+    if (pagenum < 1) ctx.throw(400, { msg: 'pagenum不能小于1' });
 
     // 查询条件处理
-    const conditions = {}
+    const conditions = {};
 
     // 查询条件
-    if (isTruthy(data.test_id)) conditions.test_id = data.test_id
-    if (isTruthy(data.test_name)) conditions.test_name = { $regex: data.test_name, $options: 'i' } // 模糊查询
+    if (isTruthy(data.test_id)) conditions.test_id = data.test_id;
+    if (isTruthy(data.test_name)) conditions.test_name = { $regex: data.test_name, $options: 'i' }; // 模糊查询
 
     // 数据库连接
-    const db = app.model.TestDemo
+    const db = app.model.TestDemo;
 
     // 聚合联表查询操作
     let query = db.aggregate([
@@ -54,11 +54,11 @@ class TestDemoService extends Service {
               $project: {
                 _id: 0,
                 testforeign_id: 1,
-                testforeign_name: 1
-              }
-            }
-          ]
-        }
+                testforeign_name: 1,
+              },
+            },
+          ],
+        },
       },
       {
         // 联表
@@ -73,35 +73,35 @@ class TestDemoService extends Service {
               $project: {
                 _id: 0,
                 testforeign_id: 1,
-                testforeign_name: 1
-              }
-            }
-          ]
-        }
+                testforeign_name: 1,
+              },
+            },
+          ],
+        },
       },
       {
         // 数组严禁使用$unwind，会展开为单个对象
         $unwind: {
           path: '$test_foreign_link_detail',
-          preserveNullAndEmptyArrays: true // 必须开启，否则其他为空的数据项将不会被查询
-        }
+          preserveNullAndEmptyArrays: true, // 必须开启，否则其他为空的数据项将不会被查询
+        },
       },
-      { $sort: { created_date: -1 } } // 排序：1升序，-1降序
-    ])
+      { $sort: { created_date: -1 } }, // 排序：1升序，-1降序
+    ]);
 
     // 分页
     if (pagesize > 0) {
-      query = query.skip(pagesize * (pagenum - 1)).limit(pagesize)
+      query = query.skip(pagesize * (pagenum - 1)).limit(pagesize);
     }
 
     // 计数
-    const count = await db.countDocuments(conditions)
+    const count = await db.countDocuments(conditions);
 
     // 页数
-    const pages = pagesize > 0 ? Math.ceil(count / pagesize) : count > 0 ? 1 : 0
+    const pages = pagesize > 0 ? Math.ceil(count / pagesize) : count > 0 ? 1 : 0;
 
     // 处理查询结果
-    const res = await query.exec()
+    const res = await query.exec();
 
     return {
       data: res,
@@ -109,8 +109,8 @@ class TestDemoService extends Service {
       total: count,
       pagenum,
       pagesize,
-      pages
-    }
+      pages,
+    };
   }
 
   /**
@@ -122,30 +122,30 @@ class TestDemoService extends Service {
    * @property {String} data.remark - 备注
    */
   async testAdd(data) {
-    const { ctx, app } = this
+    const { ctx, app } = this;
 
     // 权限校验
-    ctx.checkAuthority('open')
+    ctx.checkAuthority('open');
 
     // 参数校验
-    if (!isTruthy(data.test_id)) ctx.throw(400, { msg: 'test_id 必填' })
+    if (!isTruthy(data.test_id)) ctx.throw(400, { msg: 'test_id 必填' });
 
     // 查询条件处理
-    const conditions = { test_id: data.test_id }
+    const conditions = { test_id: data.test_id };
 
     // 数据库连接
-    const db = app.model.TestDemo
+    const db = app.model.TestDemo;
 
     // 查询
-    const one = await db.findOne(conditions)
-    if (one) ctx.throw(400, { msg: '新增项已存在' })
+    const one = await db.findOne(conditions);
+    if (one) ctx.throw(400, { msg: '新增项已存在' });
 
-    const res = await db.create(data)
+    const res = await db.create(data);
 
     return {
       data: res,
-      msg: '新增成功'
-    }
+      msg: '新增成功',
+    };
   }
 
   /**
@@ -156,30 +156,30 @@ class TestDemoService extends Service {
    * @property {String} data.remark - 备注
    */
   async testUpdate(data) {
-    const { ctx, app } = this
+    const { ctx, app } = this;
 
     // 权限校验
-    ctx.checkAuthority('open')
+    ctx.checkAuthority('open');
 
     // 参数校验
-    if (!isTruthy(data.test_id)) ctx.throw(400, { msg: 'test_id 必填' })
+    if (!isTruthy(data.test_id)) ctx.throw(400, { msg: 'test_id 必填' });
 
     // 查询条件处理
-    const conditions = { test_id: data.test_id }
+    const conditions = { test_id: data.test_id };
 
     // 数据库连接
-    const db = app.model.TestDemo
+    const db = app.model.TestDemo;
 
     // 查询
-    const one = await db.findOne(conditions)
-    if (!one) ctx.throw(400, { msg: '更新项不存在' })
+    const one = await db.findOne(conditions);
+    if (!one) ctx.throw(400, { msg: '更新项不存在' });
 
-    const res = await db.findOneAndUpdate(conditions, data, { new: true })
+    const res = await db.findOneAndUpdate(conditions, data, { new: true });
 
     return {
       data: res,
-      msg: '更新成功'
-    }
+      msg: '更新成功',
+    };
   }
 
   /**
@@ -188,30 +188,30 @@ class TestDemoService extends Service {
    * @property {String} data.test_id - id
    */
   async testDelete(data) {
-    const { ctx, app } = this
+    const { ctx, app } = this;
 
     // 权限校验
-    ctx.checkAuthority('open')
+    ctx.checkAuthority('open');
 
     // 参数校验
-    if (!isTruthy(data.test_id)) ctx.throw(400, { msg: 'test_id 必填' })
+    if (!isTruthy(data.test_id)) ctx.throw(400, { msg: 'test_id 必填' });
 
     // 查询条件处理
-    const conditions = { test_id: data.test_id }
+    const conditions = { test_id: data.test_id };
 
     // 数据库连接
-    const db = app.model.TestDemo
+    const db = app.model.TestDemo;
 
     // 查询
-    const one = await db.findOne(conditions)
-    if (!one) ctx.throw(400, { msg: '删除项不存在或已被删除' })
+    const one = await db.findOne(conditions);
+    if (!one) ctx.throw(400, { msg: '删除项不存在或已被删除' });
 
-    const res = await db.deleteOne(conditions)
+    const res = await db.deleteOne(conditions);
 
     return {
       data: res,
-      msg: '删除成功'
-    }
+      msg: '删除成功',
+    };
   }
 
   /**
@@ -221,35 +221,35 @@ class TestDemoService extends Service {
    * @property {Boolean} data.cover - 是否覆盖 默认true
    */
   async testBatchAdd(data) {
-    const { ctx, app } = this
+    const { ctx, app } = this;
 
     // 参数处理
     data = Object.assign(
       {
         list: [],
-        cover: false // 是否覆盖
+        cover: false, // 是否覆盖
       },
       data
-    )
+    );
 
     // 参数校验
-    if (!Array.isArray(data.list)) ctx.throw(400, { msg: 'list 必须是数组' })
-    if (!isTruthy(data.list, 'arr')) ctx.throw(400, { msg: 'list 为空' })
+    if (!Array.isArray(data.list)) ctx.throw(400, { msg: 'list 必须是数组' });
+    if (!isTruthy(data.list, 'arr')) ctx.throw(400, { msg: 'list 为空' });
 
     // 数据库连接
-    const db = app.model.TestDemo
+    const db = app.model.TestDemo;
 
     // 主键
-    const primaryKey = 'test_id'
+    const primaryKey = 'test_id';
 
     // 批量添加
-    const res = await batchAdd(ctx, db, data, primaryKey)
+    const res = await batchAdd(ctx, db, data, primaryKey);
 
     return {
       data: res?.data,
       msg: data.cover ? '批量覆盖添加成功' : '批量增量添加成功',
-      tip: res?.tip
-    }
+      tip: res?.tip,
+    };
   }
 
   /**
@@ -258,34 +258,34 @@ class TestDemoService extends Service {
    * @property {Array} data.list - 批量新增项
    */
   async testBatchDelete(data) {
-    const { ctx, app } = this
+    const { ctx, app } = this;
 
     // 参数处理
     data = Object.assign(
       {
-        list: [] // 需要删除的记录的ID列表
+        list: [], // 需要删除的记录的ID列表
       },
       data
-    )
+    );
 
     // 参数校验
-    if (!Array.isArray(data.list)) ctx.throw(400, { msg: 'list 必须是数组' })
-    if (!isTruthy(data.list, 'arr')) ctx.throw(400, { msg: 'list 为空' })
+    if (!Array.isArray(data.list)) ctx.throw(400, { msg: 'list 必须是数组' });
+    if (!isTruthy(data.list, 'arr')) ctx.throw(400, { msg: 'list 为空' });
 
     // 数据库连接
-    const db = app.model.TestDemo
+    const db = app.model.TestDemo;
 
     // 主键
-    const primaryKey = 'test_id'
+    const primaryKey = 'test_id';
 
     // 批量删除
-    const deletedCount = await batchDelete(ctx, db, data, primaryKey)
+    const deletedCount = await batchDelete(ctx, db, data, primaryKey);
 
     return {
       msg: '批量删除成功',
-      tip: `共删除${deletedCount}条记录`
-    }
+      tip: `共删除${deletedCount}条记录`,
+    };
   }
 }
 
-module.exports = TestDemoService
+module.exports = TestDemoService;

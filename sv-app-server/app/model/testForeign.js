@@ -1,7 +1,7 @@
-'use strict'
+'use strict';
 
-module.exports = (app) => {
-  const mongoose = app.mongoose
+module.exports = app => {
+  const mongoose = app.mongoose;
 
   const TestForeignSchema = new mongoose.Schema(
     {
@@ -9,24 +9,24 @@ module.exports = (app) => {
       testforeign_id: {
         type: String,
         unique: true,
-        required: true
+        required: true,
       },
       testforeign_name: {
-        type: String
+        type: String,
       },
       // 自动生成字段
       created_date: {
-        type: Number
+        type: Number,
       },
       updated_date: {
-        type: Number
-      }
+        type: Number,
+      },
     },
     {
       versionKey: false, // 去除版本号字段
-      timestamps: { createdAt: 'created_date', updatedAt: 'updated_date' }
+      timestamps: { createdAt: 'created_date', updatedAt: 'updated_date' },
     }
-  )
+  );
 
-  return mongoose.model('test_foreign', TestForeignSchema)
-}
+  return mongoose.model('test_foreign', TestForeignSchema);
+};

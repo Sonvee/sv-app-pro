@@ -1,7 +1,7 @@
-'use strict'
+'use strict';
 
-module.exports = (app) => {
-  const mongoose = app.mongoose
+module.exports = app => {
+  const mongoose = app.mongoose;
 
   const AppNoticeSchema = new mongoose.Schema(
     {
@@ -10,52 +10,52 @@ module.exports = (app) => {
         type: mongoose.Schema.Types.ObjectId,
         auto: true,
         unique: true,
-        required: true
+        required: true,
       },
       notice_name: {
         type: String,
-        required: true
+        required: true,
       },
       notice_title: {
-        type: String
+        type: String,
       },
       // 内容：富文本格式
       notice_content: {
-        type: String
+        type: String,
       },
       // 通知公告类型：0通知 1公告
       notice_type: {
         type: Number,
-        required: true
+        required: true,
       },
       remark: {
-        type: String
+        type: String,
       },
       status: {
         type: Number,
-        default: 1
+        default: 1,
       },
       // 公布时间范围：[起始时间戳, 结束时间戳]
       publish_timerange: {
-        type: Array
+        type: Array,
       },
       // 是否置顶
       top: {
-        type: Boolean
+        type: Boolean,
       },
       // 自动生成字段
       created_date: {
-        type: Number
+        type: Number,
       },
       updated_date: {
-        type: Number
-      }
+        type: Number,
+      },
     },
     {
       versionKey: false, // 去除版本号字段
-      timestamps: { createdAt: 'created_date', updatedAt: 'updated_date' }
+      timestamps: { createdAt: 'created_date', updatedAt: 'updated_date' },
     }
-  )
+  );
 
-  return mongoose.model('app_notice', AppNoticeSchema)
-}
+  return mongoose.model('app_notice', AppNoticeSchema);
+};

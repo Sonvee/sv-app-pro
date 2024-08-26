@@ -1,9 +1,9 @@
-'use strict'
+'use strict';
 
-const { isTruthy } = require('../utils')
-const { batchDelete } = require('../utils/batch')
+const { isTruthy } = require('../utils');
+const { batchDelete } = require('../utils/batch');
 
-const Service = require('egg').Service
+const Service = require('egg').Service;
 
 class SysLogService extends Service {
   /**
@@ -22,58 +22,58 @@ class SysLogService extends Service {
    * @property {Number} data.pagenum - 页码
    */
   async logList(data) {
-    const { ctx, app } = this
+    const { ctx, app } = this;
 
     // 权限校验
-    ctx.checkAuthority('permission', ['sys:log:query'])
+    ctx.checkAuthority('permission', [ 'sys:log:query' ]);
 
     // 参数处理
-    let { pagesize = 20, pagenum = 1 } = data
-    pagesize = Number(pagesize)
-    pagenum = Number(pagenum)
+    let { pagesize = 20, pagenum = 1 } = data;
+    pagesize = Number(pagesize);
+    pagenum = Number(pagenum);
 
     // 错误参数处理
-    if (pagenum < 1) ctx.throw(400, { msg: 'pagenum不能小于1' })
+    if (pagenum < 1) ctx.throw(400, { msg: 'pagenum不能小于1' });
 
     // 参数校验
-    if (!isTruthy(data.log_type, 'zero')) ctx.throw(400, { msg: 'log_type 必填' })
+    if (!isTruthy(data.log_type, 'zero')) ctx.throw(400, { msg: 'log_type 必填' });
 
     // 查询条件处理
-    const conditions = {}
+    const conditions = {};
 
     // 查询条件
-    if (isTruthy(data.log_id)) conditions.log_id = data.log_id
-    if (isTruthy(data.log_type, 'zero')) conditions.log_type = data.log_type
-    if (isTruthy(data.operator_ip)) conditions.operator_ip = data.operator_ip // IP
-    if (isTruthy(data.operator_location)) conditions.operator_location = { $regex: data.operator_location, $options: 'i' } // 地理位置 模糊查询
-    if (data.log_type == 'login' && isTruthy(data.login_type, 'zero')) conditions.login_type = data.login_type // 登录方式（仅限登录日志）
-    if (isTruthy(data.request_method)) conditions.request_method = data.request_method.toUpperCase() // 请求方式（自动转换大写）
-    if (isTruthy(data.request_url)) conditions.request_url = { $regex: data.request_url, $options: 'i' } // 请求地址 模糊查询
-    if (isTruthy(data.request_status, 'zero')) conditions.request_status = Number(data.request_status) // 请求状态（自动转换数字）
-    if (isTruthy(data.operator_username)) conditions['operator_info.username'] = { $regex: data.operator_username, $options: 'i' } // 操作人员用户名 模糊查询
+    if (isTruthy(data.log_id)) conditions.log_id = data.log_id;
+    if (isTruthy(data.log_type, 'zero')) conditions.log_type = data.log_type;
+    if (isTruthy(data.operator_ip)) conditions.operator_ip = data.operator_ip; // IP
+    if (isTruthy(data.operator_location)) conditions.operator_location = { $regex: data.operator_location, $options: 'i' }; // 地理位置 模糊查询
+    if (data.log_type == 'login' && isTruthy(data.login_type, 'zero')) conditions.login_type = data.login_type; // 登录方式（仅限登录日志）
+    if (isTruthy(data.request_method)) conditions.request_method = data.request_method.toUpperCase(); // 请求方式（自动转换大写）
+    if (isTruthy(data.request_url)) conditions.request_url = { $regex: data.request_url, $options: 'i' }; // 请求地址 模糊查询
+    if (isTruthy(data.request_status, 'zero')) conditions.request_status = Number(data.request_status); // 请求状态（自动转换数字）
+    if (isTruthy(data.operator_username)) conditions['operator_info.username'] = { $regex: data.operator_username, $options: 'i' }; // 操作人员用户名 模糊查询
 
     // 数据库连接
-    const db = app.model.SysLog
+    const db = app.model.SysLog;
 
     // 查询操作
-    let query = db.find(conditions)
+    let query = db.find(conditions);
 
     // 排序：1升序，-1降序
-    query = query.sort({ created_date: -1 })
+    query = query.sort({ created_date: -1 });
 
     // 分页
     if (pagesize > 0) {
-      query = query.skip(pagesize * (pagenum - 1)).limit(pagesize)
+      query = query.skip(pagesize * (pagenum - 1)).limit(pagesize);
     }
 
     // 计数
-    const count = await db.countDocuments(conditions)
+    const count = await db.countDocuments(conditions);
 
     // 页数
-    const pages = pagesize > 0 ? Math.ceil(count / pagesize) : count > 0 ? 1 : 0
+    const pages = pagesize > 0 ? Math.ceil(count / pagesize) : count > 0 ? 1 : 0;
 
     // 处理查询结果
-    const res = await query.exec()
+    const res = await query.exec();
 
     return {
       data: res,
@@ -81,8 +81,8 @@ class SysLogService extends Service {
       total: count,
       pagenum,
       pagesize,
-      pages
-    }
+      pages,
+    };
   }
 
   /**
@@ -92,27 +92,27 @@ class SysLogService extends Service {
    * @property {String} data.log_type - 类型
    */
   async logAdd(data) {
-    const { ctx, app } = this
+    const { ctx, app } = this;
 
     // 权限校验
-    ctx.checkAuthority('open')
+    ctx.checkAuthority('open');
 
     // 参数处理
-    delete data.log_id // 去除部分参数
+    delete data.log_id; // 去除部分参数
 
     // 参数校验
-    if (!isTruthy(data.log_type, 'zero')) ctx.throw(400, { msg: 'log_type 必填' })
+    if (!isTruthy(data.log_type, 'zero')) ctx.throw(400, { msg: 'log_type 必填' });
 
     // 数据库连接
-    const db = app.model.SysLog
+    const db = app.model.SysLog;
 
     // 直接新增
-    const res = await db.create(data)
+    const res = await db.create(data);
 
     return {
       data: res,
-      msg: '日志新增成功'
-    }
+      msg: '日志新增成功',
+    };
   }
 
   /**
@@ -121,27 +121,27 @@ class SysLogService extends Service {
    * @property {String} data.log_id - id
    */
   async logDelete(data) {
-    const { ctx, app } = this
+    const { ctx, app } = this;
 
     // 权限校验
-    ctx.checkAuthority('permission', ['sys:log:delete'])
+    ctx.checkAuthority('permission', [ 'sys:log:delete' ]);
 
     // 参数校验
-    if (!isTruthy(data.log_id)) ctx.throw(400, { msg: 'log_id 必填' })
+    if (!isTruthy(data.log_id)) ctx.throw(400, { msg: 'log_id 必填' });
 
     // 查询条件处理
-    const conditions = { log_id: data.log_id }
+    const conditions = { log_id: data.log_id };
 
     // 数据库连接
-    const db = app.model.SysLog
+    const db = app.model.SysLog;
 
     // 直接删除
-    const res = await db.deleteOne(conditions)
+    const res = await db.deleteOne(conditions);
 
     return {
       data: res,
-      msg: '日志删除成功'
-    }
+      msg: '日志删除成功',
+    };
   }
 
   /**
@@ -150,35 +150,35 @@ class SysLogService extends Service {
    * @property {Array} data.list - 批量删除项
    */
   async logBatchDelete(data) {
-    const { ctx, app } = this
+    const { ctx, app } = this;
 
     // 权限校验
-    ctx.checkAuthority('permission', ['sys:log:batchdelete'])
+    ctx.checkAuthority('permission', [ 'sys:log:batchdelete' ]);
 
     // 参数处理
     data = Object.assign(
       {
-        list: [] // 需要删除的记录的ID列表
+        list: [], // 需要删除的记录的ID列表
       },
       data
-    )
+    );
 
     // 参数校验
-    if (!Array.isArray(data.list)) ctx.throw(400, { msg: 'list 必须是数组' })
-    if (!isTruthy(data.list)) ctx.throw(400, { msg: 'list 为空' })
+    if (!Array.isArray(data.list)) ctx.throw(400, { msg: 'list 必须是数组' });
+    if (!isTruthy(data.list)) ctx.throw(400, { msg: 'list 为空' });
 
     // 数据库连接
-    const db = app.model.SysLog
+    const db = app.model.SysLog;
     // 主键
-    const primaryKey = 'log_id'
+    const primaryKey = 'log_id';
 
     // 批量删除
-    const deletedCount = await batchDelete(ctx, db, data, primaryKey)
+    const deletedCount = await batchDelete(ctx, db, data, primaryKey);
 
     return {
       msg: '批量删除成功',
-      tip: `共删除${deletedCount}条记录`
-    }
+      tip: `共删除${deletedCount}条记录`,
+    };
   }
 
   /**
@@ -187,28 +187,28 @@ class SysLogService extends Service {
    * @property {String} data.log_type - 类型：login登录日志，operation操作日志
    */
   async logClear(data) {
-    const { ctx, app } = this
+    const { ctx, app } = this;
 
     // 权限校验
-    ctx.checkAuthority('permission', ['sys:log:clear'])
+    ctx.checkAuthority('permission', [ 'sys:log:clear' ]);
 
     // 参数校验
-    if (!isTruthy(data.log_type, 'zero')) ctx.throw(400, { msg: 'log_type 必填' })
+    if (!isTruthy(data.log_type, 'zero')) ctx.throw(400, { msg: 'log_type 必填' });
 
     // 查询条件处理
-    const conditions = { log_type: data.log_type }
+    const conditions = { log_type: data.log_type };
 
     // 数据库连接
-    const db = app.model.SysLog
+    const db = app.model.SysLog;
 
     // 清空指定类型日志
-    const res = await db.deleteMany(conditions)
+    const res = await db.deleteMany(conditions);
 
     return {
       data: res,
-      msg: '日志清空成功'
-    }
+      msg: '日志清空成功',
+    };
   }
 }
 
-module.exports = SysLogService
+module.exports = SysLogService;
