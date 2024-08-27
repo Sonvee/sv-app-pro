@@ -28,7 +28,7 @@
         </button>
       </view>
       <!-- 弹窗 -->
-      <uv-modal ref="modalRef" title="账号注销">
+      <uv-modal ref="modalRef" title="账号注销" @close="close">
         <view>注销是不可逆操作，注销后账号数据将会彻底移除，无法找回！请谨慎操作！</view>
         <template #confirmButton>
           <view class="flex justify-between padding-lr padding-bottom">
@@ -73,12 +73,17 @@ function back() {
   uni.navigateBack()
 }
 
+// 主动关闭对话框
 function cancel() {
   modalRef.value.close()
-  // 弹窗完全关闭时（建议加延时等待弹窗关闭动画结束）
+  close()
+}
+
+function close() {
   setTimeout(() => {
+    // 清除计时
     countdownIns.clearCountdown()
-  }, 600)
+  }, 300) // 建议加延时等待弹窗关闭动画结束）
 }
 
 async function confirm() {
@@ -91,9 +96,14 @@ async function confirm() {
       duration: 2000
     })
     await sleep(2000)
-    await logout({ user_id: userInfo.value.user_id })
-    userStore.clearUserInfo()
-    uni.reLaunch({ url: '/pages/login/login' })
+    try {
+      await logout({ user_id: userInfo.value.user_id })
+    } catch (e) {
+      //TODO handle the exception
+    } finally {
+      userStore.clearUserInfo()
+      uni.reLaunch({ url: '/pages/login/login' })
+    }
   }
 }
 </script>

@@ -5,7 +5,10 @@ export function releaseLatest(data) {
   return http.request({
     url: '/app/releaseLatest',
     method: 'post',
-    data
+    data,
+    custom: {
+      notip: true
+    }
   })
 }
 

@@ -19,12 +19,7 @@ http.setConfig((conf) => {
    * conf 为默认全局配置
    * @tutorial https://www.quanzhan.co/luch-request/guide/3.x/#%E5%8F%AF%E9%85%8D%E7%BD%AE%E9%A1%B9
    */
-  // #ifdef H5
-  conf.baseURL = '/api' // 以便使用代理解决跨域问题
-  // #endif
-  // #ifndef H5
   conf.baseURL = config.api_url
-  // #endif
   conf.method = 'POST'
   conf.header = {
     "Content-Type": "application/json;charset=UTF-8",
@@ -111,7 +106,11 @@ function useResponse(response) {
           duration: 2000,
         })
       }
-      // 请求失败处理
+      /**
+       * 请求失败信息处理 默认以toast提示
+       * @param {Boolean} custom.notip 为true时关闭任何提示
+       * @param {Boolean} custom.modal 为true时以对话框提示
+       */
       if (!response.data.success) {
         // 消息提示模式判断
         if (response.config.custom?.notip) {

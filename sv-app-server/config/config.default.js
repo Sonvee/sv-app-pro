@@ -23,8 +23,7 @@ module.exports = (appInfo) => {
   config.security = {
     csrf: {
       enable: false
-    },
-    domainWhiteList: [] // 跨域白名单
+    }
   }
 
   /**
@@ -71,19 +70,6 @@ module.exports = (appInfo) => {
       }
     },
     expires: 60 // 过期时长（分钟）
-  }
-
-  /**
-   * egg-redis 配置
-   * @tutorial https://www.cnblogs.com/ruozhisi/p/12199311.html Redis密码修改
-   */
-  config.redis = {
-    client: {
-      port: 6379, // Redis port
-      host: 'sonve.asia', // Redis host
-      password: 'Sonve_5817', // Redis password
-      db: 0
-    }
   }
 
   /**

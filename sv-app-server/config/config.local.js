@@ -11,6 +11,10 @@ module.exports = (appInfo) => {
    **/
   const config = (exports = {})
 
+  config.security = {
+    domainWhiteList: [] // 跨域白名单
+  }
+
   config.cors = {
     origin: '*', // 或者指定允许访问的源
     allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH,OPTIONS',
@@ -19,10 +23,11 @@ module.exports = (appInfo) => {
 
   /**
    * egg-mongoose 配置
+   * 开发环境数据库
    */
   config.mongoose = {
     client: {
-      url: 'mongodb://sonve.asia:27017/sv_dev_database',
+      url: 'mongodb://101.34.89.199:27017/sv_dev_database',
       options: {
         user: 'sv_dev_database',
         pass: 'Sonve_5817'
@@ -31,7 +36,20 @@ module.exports = (appInfo) => {
   }
 
   /**
-   * 七牛云 oss
+   * egg-redis 配置
+   * 开发环境Redis
+   */
+  config.redis = {
+    client: {
+      port: 6379, // Redis port
+      host: '101.34.89.199', // Redis host
+      password: 'Sonve_5817', // Redis password
+      db: 1 // selected db
+    }
+  }
+
+  /**
+   * 七牛云 - 开发环境
    * @tutorial https://github.com/alex-my/egg-full-qiniu
    */
   config.fullQiniu = {
@@ -53,7 +71,7 @@ module.exports = (appInfo) => {
   }
 
   /**
-   * 集群配置
+   * 集群配置 - 开发环境
    * @description 可更改 端口号、host 等
    * @tutorial https://www.eggjs.org/zh-CN/core/deployment
    */

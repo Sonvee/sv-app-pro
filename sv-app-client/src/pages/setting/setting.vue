@@ -59,8 +59,13 @@ function onLogout() {
     content: '确定要退出登录吗？',
     success: async ({ confirm }) => {
       if (confirm) {
-        await logout({ user_id: userStore.userInfo.user_id })
-        onLogin()
+        try {
+          await logout({ user_id: userStore.userInfo.user_id })
+        } catch (e) {
+          //TODO handle the exception
+        } finally {
+          onLogin()
+        }
       }
     }
   })

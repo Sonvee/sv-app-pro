@@ -35,7 +35,7 @@ import { releaseLatest } from '@/api/release/index.js'
 import throttle from '@climblee/uv-ui/libs/function/throttle'
 
 const props = defineProps({
-  // 是否自动检测
+  // 是否自动检测，静默请求，不做提示
   auto: {
     type: Boolean,
     default: false
@@ -82,6 +82,7 @@ function confirm() {
   // #endif
 }
 
+// 资源下载
 function downloadResource() {
   const resource = latest.value?.file?.url || latest.value?.link
 
@@ -141,28 +142,30 @@ function downloadResource() {
 
 // 请求线上最新版本信息
 async function checkUpgrade() {
-  if (!props.auto) uni.showLoading({ title: '检查更新中...' })
+  const { auto } = props
+  if (!auto) uni.showLoading({ title: '检查更新中...' })
   const sysInfo = uni.getSystemInfoSync()
   const curVersion = sysInfo.appWgtVersion || sysInfo.appVersion
-  let releaseRes = await releaseLatest({ type: 'android' })
-  if (releaseRes.success) {
-    latest.value = releaseRes.data
-    mandatory.value = releaseRes.data?.mandatory
-    const latestVersion = releaseRes.data?.version
-    // 线上版本号大于本地版本号时，需要升级
-    if (compareVersion(latestVersion, curVersion) == 1) {
-      hasUpgrade.value = true
-      open()
-    } else {
-      hasUpgrade.value = false
-      if (props.auto) {
-        close()
-      } else {
+  try {
+    let releaseRes = await releaseLatest({ type: 'android' })
+    if (releaseRes.success) {
+      latest.value = releaseRes.data
+      mandatory.value = releaseRes.data?.mandatory
+      const latestVersion = releaseRes.data?.version
+      // 线上版本号大于本地版本号时，需要升级
+      if (compareVersion(latestVersion, curVersion) == 1) {
+        hasUpgrade.value = true
         open()
+      } else {
+        hasUpgrade.value = false
+        if (auto) close()
+        else open()
       }
     }
+  } catch (e) {
+    if (!auto) uni.showToast({ title: e.msg, icon: 'none' })
   }
-  if (!props.auto) uni.hideLoading()
+  if (!auto) uni.hideLoading()
 }
 
 /**
