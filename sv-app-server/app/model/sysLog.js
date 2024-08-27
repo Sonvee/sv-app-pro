@@ -7,10 +7,10 @@ module.exports = app => {
     {
       // 主键 - 日志id
       log_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        auto: true,
+        type: String,
         unique: true,
         required: true,
+        default: () => new mongoose.Types.ObjectId().toString()
       },
       // 日志类型：login登录日志，operation操作日志
       log_type: {

@@ -162,7 +162,7 @@ module.exports = app => {
   router.post('/vip/benefitBatchAdd', controller.vipBenefit.benefitBatchAdd);
   router.post('/vip/benefitBatchDelete', controller.vipBenefit.benefitBatchDelete);
 
-  // 会员特权
+  // 激活码
   router.post('/vip/cdkeyList', controller.vipCdkey.cdkeyList);
   router.post('/vip/cdkeyAdd', controller.vipCdkey.cdkeyAdd);
   router.post('/vip/cdkeyUpdate', controller.vipCdkey.cdkeyUpdate);
@@ -171,7 +171,7 @@ module.exports = app => {
   router.post('/vip/cdkeyBatchDelete', controller.vipCdkey.cdkeyBatchDelete);
   router.post('/vip/cdkeyActive', controller.vipCdkey.cdkeyActive);
 
-  // 会员特权
+  // 订阅
   router.post('/vip/subscriptionList', controller.vipSubscription.subscriptionList);
   router.post('/vip/subscriptionAdd', controller.vipSubscription.subscriptionAdd);
   router.post('/vip/subscriptionUpdate', controller.vipSubscription.subscriptionUpdate);

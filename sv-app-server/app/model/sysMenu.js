@@ -7,10 +7,10 @@ module.exports = app => {
     {
       // 主键 - 菜单id
       menu_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        auto: true,
+        type: String,
         unique: true,
         required: true,
+        default: () => new mongoose.Types.ObjectId().toString()
       },
       // 副键 - 路由 name (对应页面组件 name, 可用作 KeepAlive 缓存标识 && 按钮权限筛选)
       name: {

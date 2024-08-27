@@ -10,8 +10,8 @@ class VipSubscriptionService extends Service {
    * 查询 post - 权限 open
    * @param {Object} data - 请求参数
    * @property {String} data.subscription_id - id
-   * @property {String} data.user_id - 用户id
    * @property {String} data.subscription_plan - 套餐id
+   * @property {String} data.user_id - 用户id
    * @property {Number} data.status - 状态
    * @property {Number} data.type - 订阅类型
    * @property {Number} data.pagesize - 每页条数
@@ -134,6 +134,7 @@ class VipSubscriptionService extends Service {
    * 新增 post - 权限 self
    * @param {Object} data - 请求参数
    * @property {String} data.user_id - 用户id
+   * @property {String} data.subscription_plan - 套餐id
    */
   async subscriptionAdd(data) {
     const { ctx, app } = this;

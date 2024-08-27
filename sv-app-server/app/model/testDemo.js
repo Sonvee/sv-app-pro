@@ -10,6 +10,10 @@ module.exports = app => {
         type: String,
         unique: true,
         required: true,
+        // type: mongoose.Schema.Types.ObjectId,
+        // unique: true,
+        // required: true,
+        // default: () => new mongoose.Types.ObjectId().toString()
       },
       test_name: {
         type: String,

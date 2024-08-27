@@ -7,10 +7,10 @@ module.exports = app => {
     {
       // 主键 - 用户id
       user_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        auto: true,
+        type: String,
         unique: true,
         required: true,
+        default: () => new mongoose.Types.ObjectId().toString()
       },
       // 副键 - 用户名
       username: {

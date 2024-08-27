@@ -7,10 +7,10 @@ module.exports = app => {
     {
       // 主键 - id
       feedback_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        auto: true,
+        type: String,
         unique: true,
         required: true,
+        default: () => new mongoose.Types.ObjectId().toString()
       },
       // 名称
       name: {

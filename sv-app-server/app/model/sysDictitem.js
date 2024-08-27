@@ -7,10 +7,10 @@ module.exports = app => {
     {
       // 主键 - 字典项id
       dictitem_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        auto: true,
+        type: String,
         unique: true,
         required: true,
+        default: () => new mongoose.Types.ObjectId().toString()
       },
       // 字典类型，对应dict_id
       dict_type: {

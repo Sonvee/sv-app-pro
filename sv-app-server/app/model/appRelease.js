@@ -7,10 +7,10 @@ module.exports = app => {
     {
       // 主键 - id
       release_id: {
-        type: mongoose.Schema.Types.ObjectId,
-        auto: true,
+        type: String,
         unique: true,
         required: true,
+        default: () => new mongoose.Types.ObjectId().toString()
       },
       // 版本号 num.num.num[.other]
       version: {

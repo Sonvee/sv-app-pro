@@ -1,11 +1,14 @@
 <template>
   <view class="table-filter card">
     <el-form ref="filterFormRef" inline :model="filterForm">
-      <el-form-item prop="test_id" label="ID">
-        <el-input v-model.trim="filterForm.test_id" placeholder="请输入ID" clearable style="width: 150px" />
+      <el-form-item prop="subscription_id" label="单号">
+        <el-input v-model.trim="filterForm.subscription_id" placeholder="请输入单号" clearable style="width: 150px" />
       </el-form-item>
-      <el-form-item prop="test_name" label="名称">
-        <el-input v-model.trim="filterForm.test_name" placeholder="请输入名称" clearable style="width: 150px" />
+      <el-form-item prop="subscription_plan" label="套餐">
+        <DictSelect v-model="filterForm.subscription_plan" :dictApi="planList" labelName="plan_name" valueName="plan_id" placeholder="请选择套餐" style="width: 150px"></DictSelect>
+      </el-form-item>
+      <el-form-item prop="user_id" label="用户UID">
+        <el-input v-model.trim="filterForm.user_id" placeholder="请输入用户UID" clearable style="width: 150px" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submit">搜索</el-button>
@@ -17,14 +20,17 @@
 
 <script setup>
 import { ref } from 'vue'
+import { planList } from '@/api/vip/plan'
+import DictSelect from '@/components/DictType/DictSelect.vue'
 
 const emits = defineEmits(['submit'])
 
 const filterFormRef = ref()
 // 过滤条件表单
 const filterForm = ref({
-  test_id: '',
-  test_name: ''
+  subscription_id: '',
+  subscription_plan: null,
+  user_id: ''
 })
 
 // 提交
