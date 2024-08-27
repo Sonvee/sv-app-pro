@@ -90,14 +90,6 @@ onMounted(() => {
   getCaptchaImg()
   getHasAdmin()
   loginForm.value = Object.assign({ ...loginForm.value }, userStore.rememberLoginForm)
-
-  // 绑定键盘回车事件
-  window.addEventListener('keydown', keyDown)
-})
-
-onUnmounted(() => {
-  // 销毁键盘回车事件
-  window.removeEventListener('keydown', keyDown, false)
 })
 
 function getCaptchaImg() {
@@ -167,13 +159,6 @@ function toLogin() {
       btnLoading.value = false
     }
   })
-}
-
-// 回车事件
-function keyDown(e) {
-  if (e.code === 'Enter' || e.code === 'enter' || e.code === 'NumpadEnter') {
-    toLogin()
-  }
 }
 </script>
 

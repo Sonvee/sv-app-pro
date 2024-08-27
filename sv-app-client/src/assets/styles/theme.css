@@ -12,6 +12,7 @@ page {
 /* light主题 */
 :root[data-theme='light'] {
   --bg-color: #f8f8f8;
+  --bg-alpha-color: #f8f8f888;
 
   --text-color: #141414;
   --text-hl-color: #000000;
@@ -25,6 +26,7 @@ page {
   --shadow-color-reverse: #32323288;
 
   --card-color: #ffffff;
+  --card-alpha-color: #ffffff88;
 
   --popup-color: #f2f2f2;
 
@@ -36,6 +38,7 @@ page {
 /* dark主题 */
 :root[data-theme='dark'] {
   --bg-color: #141414;
+  --bg-alpha-color: #14141488;
 
   --text-color: #f8f8f8;
   --text-hl-color: #ffffff;
@@ -49,6 +52,7 @@ page {
   --shadow-color-reverse: #dedede88;
 
   --card-color: #222222;
+  --card-alpha-color: #22222288;
 
   --popup-color: #262626;
 

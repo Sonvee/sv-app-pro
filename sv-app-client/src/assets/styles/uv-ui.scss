@@ -45,6 +45,36 @@
 	:deep(.uv-popup__content) {
 		background-color: var(--card-color) !important;
 
+		// 选择器样式
+		.uv-picker {
+			.uv-picker__view {
+				/* #ifdef MP-WEIXIN */
+				background-image: linear-gradient(180deg, var(--card-alpha-color), var(--bg-alpha-color)),
+					linear-gradient(0deg, var(--bg-alpha-color), var(--card-alpha-color));
+				/* #endif */
+				.uni-picker-view-wrapper {
+					.uni-picker-view-group {
+						.uni-picker-view-mask {
+							background-image: linear-gradient(180deg, var(--card-alpha-color), var(--bg-alpha-color)),
+								linear-gradient(0deg, var(--bg-alpha-color), var(--card-alpha-color));
+						}
+						.uni-picker-view-indicator {
+							&::before,
+							&::after {
+								border-color: var(--border-color);
+							}
+						}
+						.uni-picker-view-content {
+							.uv-picker__view__column__item {
+								color: var(--text-color);
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// 对话框样式
 		.uv-modal {
 			.uv-modal__title {
 				color: var(--text-color);
