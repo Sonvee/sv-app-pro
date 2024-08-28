@@ -58,7 +58,7 @@
 .sv-uv-picker {
   :deep(.uv-popup__content) {
     /* #ifdef MP-WEIXIN */
-    background-color: #ffffff !important; // 微信小程序只能白色
+    background-color: #ffffff !important; // 微信小程序只能白色，或者通过mask-class设置样式
     /* #endif */
 
     // 选择器样式
