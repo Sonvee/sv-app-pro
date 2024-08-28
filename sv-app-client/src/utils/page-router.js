@@ -45,9 +45,9 @@ export function getTabBarList(type) {
  * @param {string} type 路由类型，'/'表示带/前缀，否则不带
  */
 export function getPageRoute(type) {
-  // const pages = getCurrentPages()
-  // const page = pages[pages.length - 1]
-  // const route = type === '/' ? '/' + page.route : page.route
-  // return route
-  return '标题'
+  const pages = getCurrentPages()
+  const page = pages[pages.length - 1]
+  const route = type === '/' ? '/' + page.route : page.route
+  return route
+  // return '标题'
 }
