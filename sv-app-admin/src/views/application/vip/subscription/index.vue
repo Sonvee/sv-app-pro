@@ -17,12 +17,20 @@
       <el-table v-loading="loading" :data="tableData" border @selection-change="handleSelectionChange">
         <el-table-column type="selection" align="center" width="50" fixed="left" />
         <el-table-column prop="subscription_id" label="单号" width="240" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="subscription_plan" label="订阅套餐" min-width="300" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="user_id" label="用户" min-width="300" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="start_date" label="生效开始日期" min-width="300" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="duration_time" label="订阅持续时长" min-width="300" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="status" label="订阅状态" min-width="300" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="type" label="订阅类型" min-width="300" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="subscription_plan_detail.plan_name" label="订阅套餐" align="center" min-width="120" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="user_id" label="用户" min-width="240" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="type" label="订阅类型" align="center" width="120" show-overflow-tooltip>
+          <template #default="scope">
+            <DictTag :dictList="dictSubscriptionType" :value="scope.row.type"></DictTag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="status" label="订阅状态" align="center" width="120" show-overflow-tooltip>
+          <template #default="scope">
+            <DictTag :dictList="dictSubscriptionStatus" :value="scope.row.status"></DictTag>
+          </template>
+        </el-table-column>
+        <!-- <el-table-column prop="duration_time" label="订阅持续时长（毫秒）" align="center" width="180" show-overflow-tooltip></el-table-column> -->
+        <el-table-column prop="start_date" label="生效开始日期" align="center" width="180" :formatter="(row) => timeFormat(row.start_date)" show-overflow-tooltip></el-table-column>
         <el-table-column
           prop="created_date"
           label="创建时间"
@@ -56,13 +64,20 @@
 </template>
 
 <script setup name="subscription">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import TableFilter from './components/TableFilter.vue'
 import TablePagination from '@/components/TablePagination/index.vue'
 import { subscriptionList, subscriptionDelete, subscriptionBatchDelete } from '@/api/vip/subscription'
 import { RefreshRight, Delete, View, Hide } from '@element-plus/icons-vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { isTruthy, timeFormat } from '@/utils'
+import DictTag from '@/components/DictType/DictTag.vue'
+import { useDictStore } from '@/store/dict'
+
+const dictStore = useDictStore()
+dictStore.initDict(['dict_vip_subscription_type', 'dict_vip_subscription_status']) // 初始化字典
+const dictSubscriptionType = computed(() => dictStore.getDict('dict_vip_subscription_type'))
+const dictSubscriptionStatus = computed(() => dictStore.getDict('dict_vip_subscription_status'))
 
 const dataParams = ref({ pagenum: 1, pagesize: 20 })
 const tableData = ref([])

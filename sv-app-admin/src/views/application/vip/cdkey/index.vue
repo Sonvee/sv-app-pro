@@ -20,7 +20,7 @@
       <el-table v-loading="loading" :data="tableData" border @selection-change="handleSelectionChange">
         <el-table-column type="selection" align="center" width="50" fixed="left" />
         <el-table-column prop="cdkey" label="CDKey" width="300" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="cdkey_plan_detail.plan_name" label="绑定套餐" align="center" width="120" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="cdkey_plan_detail.plan_name" label="绑定套餐" align="center" min-width="120" show-overflow-tooltip></el-table-column>
         <el-table-column prop="status" label="状态" align="center" width="120" show-overflow-tooltip>
           <template #default="scope">
             <DictTag :dictList="dictCdkeyStatus" :value="scope.row.status"></DictTag>
@@ -81,8 +81,8 @@ import { RefreshRight, Plus, EditPen, Delete, View, Hide } from '@element-plus/i
 import { ElNotification, ElMessageBox, ElMessage } from 'element-plus'
 import { isTruthy, timeFormat } from '@/utils'
 import DictTag from '@/components/DictType/DictTag.vue'
-import { useDictStore } from '@/store/dict'
 import { verifyVip } from '@/api/user/user'
+import { useDictStore } from '@/store/dict'
 
 const dictStore = useDictStore()
 dictStore.initDict(['dict_vip_cdkey_status']) // 初始化字典

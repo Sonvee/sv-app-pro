@@ -70,7 +70,7 @@
     </div>
 
     <!-- 全局主题 -->
-    <el-divider class="divider" content-position="center">
+    <el-divider class="divider mt-30" content-position="center">
       <el-icon><ColdDrink /></el-icon>
       全局主题
     </el-divider>
@@ -92,7 +92,7 @@
     </div>
 
     <!-- 界面设置 -->
-    <el-divider class="divider" content-position="center">
+    <el-divider class="divider mt-30" content-position="center">
       <el-icon><Setting /></el-icon>
       界面设置
     </el-divider>
@@ -124,22 +124,28 @@
       <span>页脚</span>
       <el-switch v-model="footer" />
     </div>
+    <div class="theme-item">
+      <span>水印</span>
+      <el-switch v-model="watermark" />
+    </div>
   </el-drawer>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useTheme } from '@/hooks/useTheme'
 import { useGlobalStore } from '@/store/global'
 import { DEFAULT_PRIMARY } from '@/config'
 import mittBus from '@/utils/mittBus'
 import SwitchDark from '@/components/SwitchDark/SwitchDark.vue'
+import { useWatermark } from '@/hooks/useWatermark'
 
 const { changePrimary, changeGreyOrWeak, setAsideTheme, setHeaderTheme } = useTheme()
 
 const globalStore = useGlobalStore()
-const { layout, primary, isGrey, isWeak, asideInverted, headerInverted, isCollapse, accordion, breadcrumb, breadcrumbIcon, tabs, tabsIcon, footer } = storeToRefs(globalStore)
+const { layout, primary, isGrey, isWeak, asideInverted, headerInverted, isCollapse, accordion, breadcrumb, breadcrumbIcon, tabs, tabsIcon, footer, watermark } =
+  storeToRefs(globalStore)
 
 // 预定义主题颜色
 const colorList = [DEFAULT_PRIMARY, '#daa96e', '#0c819f', '#27ae60', '#e74c3c', '#f39c12', '#9b59b6', '#66ccff', '#39c5bb', '#fb7299']
@@ -153,6 +159,16 @@ const setLayout = (val) => {
 // 打开主题设置
 const drawerVisible = ref(false)
 mittBus.on('openThemeDrawer', () => (drawerVisible.value = true))
+
+// 水印
+const markText = import.meta.env.VITE_GLOB_APP_TITLE
+watch(watermark, (newVal) => {
+  if (newVal) {
+    useWatermark().set(markText)
+  } else {
+    useWatermark().del()
+  }
+}, { immediate: true })
 </script>
 
 <style scoped lang="scss">

@@ -297,34 +297,6 @@
     },
 
     {
-      "dict_type": "dict_vip_cdkey_status",
-      "label": "待使用",
-      "value": "0",
-      "remark": "",
-      "sort": 0,
-      "status": 1,
-      "action_style": "primary"
-    },
-    {
-      "dict_type": "dict_vip_cdkey_status",
-      "label": "已使用",
-      "value": "1",
-      "remark": "",
-      "sort": 1,
-      "status": 1,
-      "action_style": "success"
-    },
-    {
-      "dict_type": "dict_vip_cdkey_status",
-      "label": "已失效",
-      "value": "2",
-      "remark": "",
-      "sort": 2,
-      "status": 1,
-      "action_style": "danger"
-    },
-
-    {
       "dict_type": "dict_app_feedback_type",
       "label": "BUG漏洞",
       "value": "0",
@@ -444,6 +416,99 @@
       "sort": 3,
       "status": 1,
       "action_style": "info"
+    },
+
+    {
+      "dict_type": "dict_vip_cdkey_status",
+      "label": "待使用",
+      "value": "0",
+      "remark": "",
+      "sort": 0,
+      "status": 1,
+      "action_style": "primary"
+    },
+    {
+      "dict_type": "dict_vip_cdkey_status",
+      "label": "已使用",
+      "value": "1",
+      "remark": "",
+      "sort": 1,
+      "status": 1,
+      "action_style": "success"
+    },
+    {
+      "dict_type": "dict_vip_cdkey_status",
+      "label": "已失效",
+      "value": "2",
+      "remark": "",
+      "sort": 2,
+      "status": 1,
+      "action_style": "danger"
+    },
+
+    {
+      "dict_type": "dict_vip_subscription_type",
+      "label": "普通支付",
+      "value": "0",
+      "remark": "",
+      "sort": 0,
+      "status": 1,
+      "action_style": "primary"
+    },
+    {
+      "dict_type": "dict_vip_subscription_type",
+      "label": "激活码",
+      "value": "1",
+      "remark": "",
+      "sort": 1,
+      "status": 1,
+      "action_style": "success"
+    },
+
+    {
+      "dict_type": "dict_vip_subscription_status",
+      "label": "待生效",
+      "value": "0",
+      "remark": "",
+      "sort": 0,
+      "status": 1,
+      "action_style": "primary"
+    },
+    {
+      "dict_type": "dict_vip_subscription_status",
+      "label": "生效中",
+      "value": "1",
+      "remark": "",
+      "sort": 1,
+      "status": 1,
+      "action_style": "success"
+    },
+    {
+      "dict_type": "dict_vip_subscription_status",
+      "label": "已失效",
+      "value": "2",
+      "remark": "",
+      "sort": 2,
+      "status": 1,
+      "action_style": "danger"
+    },
+    {
+      "dict_type": "dict_vip_subscription_status",
+      "label": "待付款",
+      "value": "3",
+      "remark": "",
+      "sort": 3,
+      "status": 1,
+      "action_style": "info"
+    },
+    {
+      "dict_type": "dict_vip_subscription_status",
+      "label": "付款中",
+      "value": "4",
+      "remark": "",
+      "sort": 4,
+      "status": 1,
+      "action_style": "warning"
     }
   ],
   "msg": "字典项获取成功",

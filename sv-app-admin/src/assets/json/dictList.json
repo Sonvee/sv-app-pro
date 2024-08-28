@@ -51,38 +51,52 @@
       "status": 1
     },
     {
-      "dict_id": "dict_vip_cdkey_status",
-      "dict_name": "激活码状态",
-      "remark": "0：待使用；\n1：已使用；\n2：已失效；",
-      "sort": 70,
-      "status": 1
-    },
-    {
       "dict_id": "dict_app_feedback_type",
       "dict_name": "反馈类型",
       "remark": "0：BUG漏洞；\n1：优化建议；",
-      "sort": 80,
+      "sort": 70,
       "status": 1
     },
     {
       "dict_id": "dict_app_feedback_status",
       "dict_name": "反馈状态",
       "remark": "0：待解决；\n1：受理中；\n2：已解决；",
-      "sort": 90,
+      "sort": 80,
       "status": 1
     },
     {
       "dict_id": "dict_app_help_type",
       "dict_name": "帮助类型",
       "remark": "0：热门问题；\n1：账号相关；\n2：会员相关；\n3：其他；",
-      "sort": 100,
+      "sort": 90,
       "status": 1
     },
     {
       "dict_id": "dict_app_type",
       "dict_name": "应用类型",
       "remark": "0：安卓；\n1：苹果；\n2：微信小程序；\n3：H5；",
+      "sort": 100,
+      "status": 1
+    },
+    {
+      "dict_id": "dict_vip_cdkey_status",
+      "dict_name": "激活码状态",
+      "remark": "0：待使用；\n1：已使用；\n2：已失效；",
       "sort": 110,
+      "status": 1
+    },
+    {
+      "dict_id": "dict_vip_subscription_type",
+      "dict_name": "订阅类型",
+      "remark": "0：普通支付；\n1：激活码；",
+      "sort": 120,
+      "status": 1
+    },
+    {
+      "dict_id": "dict_vip_subscription_status",
+      "dict_name": "订阅状态",
+      "remark": "0：待生效；\n1：生效中；\n2：已失效；\n3：待付款；\n4：付款中；",
+      "sort": 130,
       "status": 1
     }
   ],

@@ -10,6 +10,12 @@
       <el-form-item prop="user_id" label="用户UID">
         <el-input v-model.trim="filterForm.user_id" placeholder="请输入用户UID" clearable style="width: 150px" />
       </el-form-item>
+      <el-form-item prop="type" label="类型">
+        <DictSelect v-model="filterForm.type" dictType="dict_vip_subscription_type" formatNumber placeholder="请选择类型" style="width: 150px"></DictSelect>
+      </el-form-item>
+      <el-form-item prop="status" label="状态">
+        <DictSelect v-model="filterForm.status" dictType="dict_vip_subscription_status" formatNumber placeholder="请选择状态" style="width: 150px"></DictSelect>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submit">搜索</el-button>
         <el-button type="danger" @click="reset">重置</el-button>
@@ -30,7 +36,9 @@ const filterFormRef = ref()
 const filterForm = ref({
   subscription_id: '',
   subscription_plan: null,
-  user_id: ''
+  user_id: '',
+  type: null,
+  status: null
 })
 
 // 提交

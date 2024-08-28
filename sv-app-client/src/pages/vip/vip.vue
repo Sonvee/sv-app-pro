@@ -1,7 +1,7 @@
 <template>
   <sv-page>
     <view class="vip-page">
-      会员
+      
     </view>
   </sv-page>
 </template>

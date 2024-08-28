@@ -9,8 +9,8 @@ import { ref, computed, onMounted } from 'vue'
 import { useGlobalStore } from '@/store/global'
 import { useTheme } from '@/hooks/useTheme'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
-import { useUserStore } from './store/user';
-import { useDatabaseInit } from './hooks/useDatabaseInit';
+import { useUserStore } from './store/user'
+import { useDatabaseInit } from '@/hooks/useDatabaseInit'
 
 // 项目启动时自动刷新token
 useUserStore().reToken()
