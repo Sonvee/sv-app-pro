@@ -49,5 +49,4 @@ export function getPageRoute(type) {
   const page = pages[pages.length - 1]
   const route = type === '/' ? '/' + page.route : page.route
   return route
-  // return '标题'
 }

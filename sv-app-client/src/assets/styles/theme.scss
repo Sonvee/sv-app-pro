@@ -1,0 +1,114 @@
+/* 通用 */
+:root,
+page {
+  --primary-color: #409eff;
+  --success-color: #67c23a;
+  --warning-color: #e6a23c;
+  --danger-color: #f56c6c;
+  --error-color: #d83b01;
+  --info-color: #909399;
+}
+
+/* light主题 */
+html {
+  --bg-color: #f8f8f8;
+  --bg-alpha-color: #f8f8f888;
+
+  --text-color: #141414;
+  --text-hl-color: #000000;
+  --text-sub-color: #414141;
+
+  --border-color: #cfcfcf;
+  --border-hl-color: #363637;
+  --border-tint-color: #bfbfbf;
+
+  --shadow-color: #dedede;
+  --shadow-color-reverse: #32323288;
+
+  --card-color: #ffffff;
+  --card-alpha-color: #ffffff88;
+
+  --popup-color: #f2f2f2;
+
+  --hover-color: #ecf5ff;
+
+  --click-color: #ecf5ff;
+}
+
+/* dark主题 */
+html.dark {
+  --bg-color: #141414;
+  --bg-alpha-color: #14141488;
+
+  --text-color: #f8f8f8;
+  --text-hl-color: #ffffff;
+  --text-sub-color: #a8a8a8;
+
+  --border-color: #585858;
+  --border-hl-color: #636466;
+  --border-tint-color: #636466;
+
+  --shadow-color: #323232;
+  --shadow-color-reverse: #dedede88;
+
+  --card-color: #222222;
+  --card-alpha-color: #22222288;
+
+  --popup-color: #262626;
+
+  --hover-color: #243343;
+
+  --click-color: #243343;
+}
+
+/* light主题 */
+/* :root[data-theme='light'] {
+  --bg-color: #f8f8f8;
+  --bg-alpha-color: #f8f8f888;
+
+  --text-color: #141414;
+  --text-hl-color: #000000;
+  --text-sub-color: #414141;
+
+  --border-color: #cfcfcf;
+  --border-hl-color: #363637;
+  --border-tint-color: #bfbfbf;
+
+  --shadow-color: #dedede;
+  --shadow-color-reverse: #32323288;
+
+  --card-color: #ffffff;
+  --card-alpha-color: #ffffff88;
+
+  --popup-color: #f2f2f2;
+
+  --hover-color: #ecf5ff;
+
+  --click-color: #ecf5ff;
+} */
+
+/* dark主题 */
+/* :root[data-theme='dark'] {
+  --bg-color: #141414;
+  --bg-alpha-color: #14141488;
+
+  --text-color: #f8f8f8;
+  --text-hl-color: #ffffff;
+  --text-sub-color: #a8a8a8;
+
+  --border-color: #585858;
+  --border-hl-color: #636466;
+  --border-tint-color: #636466;
+
+  --shadow-color: #323232;
+  --shadow-color-reverse: #dedede88;
+
+  --card-color: #222222;
+  --card-alpha-color: #22222288;
+
+  --popup-color: #262626;
+
+  --hover-color: #243343;
+
+  --click-color: #243343;
+} */

@@ -179,14 +179,13 @@
   ],
   "globalStyle": {
     "navigationBarTitleText": "sv-app-pro",
-    "navigationBarBackgroundColor": "#000000",
+    "navigationBarBackgroundColor": "#141414",
     "navigationBarTextStyle": "white",
     "navigationStyle": "custom",
-    "backgroundColor": "#222222",
     "app-plus": {
-      "titleNView": false,
-      "background": "#222222",
-      "bounce": "none"
+      "bounce": "none",
+      "animationType": "zoom-fade-out",
+      "animationDuration": 300
     }
   },
   "uniIdRouter": {},

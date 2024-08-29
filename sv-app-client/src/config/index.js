@@ -1,8 +1,8 @@
 import manifest from '../manifest.json'
 
 // const base_url = 'http://101.34.89.199:7001' // 生产环境
-// const base_url = 'http://192.168.1.209:7001' // 开发环境 内网
-const base_url = 'http://192.168.6.118:7001' // 开发环境 内网
+const base_url = 'http://192.168.1.209:7001' // 开发环境 内网
+// const base_url = 'http://192.168.6.118:7001' // 开发环境 内网
 
 const config = {
   name: manifest.name,
