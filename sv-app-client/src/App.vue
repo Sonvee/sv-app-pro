@@ -1,14 +1,14 @@
 <script>
 import { preProcess } from '@/utils/pre-process'
 export default {
-  onLaunch: function () {
+  onLaunch: () => {
     console.log('App Launch')
     preProcess()
   },
-  onShow: function () {
+  onShow: () => {
     console.log('App Show')
   },
-  onHide: function () {
+  onHide: () => {
     console.log('App Hide')
   }
 }
@@ -17,6 +17,4 @@ export default {
 <style lang="scss">
 /* 每个页面公共css */
 @import '@/assets/styles/main.scss';
-
-
 </style>

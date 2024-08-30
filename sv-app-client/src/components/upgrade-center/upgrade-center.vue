@@ -143,11 +143,12 @@ function downloadResource() {
 // 请求线上最新版本信息
 async function checkUpgrade() {
   const { auto } = props
-  if (!auto) uni.showLoading({ title: '检查更新中...' })
+  if (!auto) uni.showLoading({ title: '检查更新中' })
   const sysInfo = uni.getSystemInfoSync()
   const curVersion = sysInfo.appWgtVersion || sysInfo.appVersion
   try {
     let releaseRes = await releaseLatest({ type: 'android' })
+    if (!auto) uni.hideLoading() // 请求结束关闭loading
     if (releaseRes.success) {
       latest.value = releaseRes.data
       mandatory.value = releaseRes.data?.mandatory
@@ -165,7 +166,6 @@ async function checkUpgrade() {
   } catch (e) {
     if (!auto) uni.showToast({ title: e.msg, icon: 'none' })
   }
-  if (!auto) uni.hideLoading()
 }
 
 /**

@@ -57,7 +57,7 @@ function checkVersion() {
 
 <style lang="scss">
 .about-page {
-  min-height: var(--page-notab-height);
+  min-height: var(--page-height);
   display: flex;
   flex-direction: column;
   align-items: center;

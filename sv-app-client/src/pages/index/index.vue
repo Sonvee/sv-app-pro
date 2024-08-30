@@ -25,9 +25,6 @@ import { noticeInTime } from '@/api/notice'
 import { skipPage } from '@/utils/util'
 
 onLoad(() => {
-  // 首页加载完成时，隐藏底部导航栏
-  uni.hideTabBar()
-
   getNoticeInTime()
 })
 

@@ -272,7 +272,7 @@ async function confirmPicker(e) {
 
 <style lang="scss">
 .userinfo-page {
-  min-height: var(--page-notab-height);
+  min-height: var(--page-height);
   padding: 30rpx 0;
 
   .value-text {

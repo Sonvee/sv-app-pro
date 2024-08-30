@@ -66,7 +66,7 @@ function onRelease(item) {
 
 <style lang="scss">
 .introduction-page {
-  height: var(--page-notab-height);
+  height: var(--page-height);
   padding: 30rpx 0;
 
   .list-item {

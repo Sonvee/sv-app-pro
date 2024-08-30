@@ -29,17 +29,17 @@ page {
   font-family: Helvetica Neue, Helvetica, sans-serif;
 }
 
-html,
-page {
-  // 根节点底色
-  // background-color: #444444;
-}
-
 // 主题基础色
 body,
 .sv-page {
   background-color: var(--bg-color);
   color: var(--text-color);
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    background: #141414;
+  }
 }
 
 /* 

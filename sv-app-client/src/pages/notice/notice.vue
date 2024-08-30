@@ -12,7 +12,7 @@
           @change="tabChange"
         ></z-tabs>
         <swiper
-          style="height: calc(var(--page-notab-height) - 80rpx)"
+          style="height: calc(var(--page-height) - 80rpx)"
           :current="curTab"
           @transition="swiperTransition"
           @animationfinish="swiperAnimationfinish"
@@ -116,7 +116,7 @@ function onNoticeDetail(item) {
 
 <style lang="scss">
 .notice-page {
-  height: var(--page-notab-height);
+  height: var(--page-height);
 
   .tabs-swiper {
     width: 100%;

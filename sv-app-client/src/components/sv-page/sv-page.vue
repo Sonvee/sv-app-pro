@@ -1,6 +1,6 @@
 <template>
   <sv-preload></sv-preload>
-  <view class="sv-page">
+  <view class="sv-page" :class="theme">
     <sv-navbar v-if="showNavbar"></sv-navbar>
     <slot></slot>
     <sv-tabbar v-if="showTabbar"></sv-tabbar>
@@ -10,6 +10,7 @@
 <script setup>
 import { computed } from 'vue'
 import SvPreload from './sv-preload.vue'
+import { useSysStore } from '@/store/sys'
 
 const props = defineProps({
   // 显示头部导航栏 默认显示
@@ -28,21 +29,25 @@ const props = defineProps({
 const statusBarHeight = computed(() => {
   return uni.getSystemInfoSync().statusBarHeight + 'px'
 })
+
+const theme = computed(() => useSysStore().getTheme())
 </script>
 
 <style lang="scss">
 .sv-page {
   // 页面视窗高度（顶部状态栏和底部安全距离除外）
-  --page-height: calc(100vh - env(safe-area-inset-bottom) - #{v-bind(statusBarHeight)});
-  // 页面内容主高度（页面视窗高度 - navbar - tabbar）
-  --page-main-height: calc(var(--page-height) - 88rpx - 100rpx);
-  // 页面内容无tabbar高度（页面视窗高度 - tabbar）
-  --page-notab-height: calc(var(--page-height) - 88rpx);
-  // 页面内容无navbar高度（页面视窗高度 - navbar）
-  --page-nonav-height: calc(var(--page-height) - 100rpx);
+  --page-vh: calc(100vh - env(safe-area-inset-bottom) - #{v-bind(statusBarHeight)});
+  // 无tabbar的页面（页面视窗高度 - tabbar）
+  --page-height: calc(var(--page-vh) - 88rpx);
+  // 无navbar的页面（页面视窗高度 - navbar）
+  --page-nonav-height: calc(var(--page-vh) - 100rpx);
+  // 无navbar和tabbar的页面（页面视窗高度 - navbar - tabbar）
+  --page-main-height: calc(var(--page-vh) - 88rpx - 100rpx);
 
   // 其他全局变量
   --navbar-height: calc(88rpx + v-bind(statusBarHeight));
   --tabbar-height: calc(100rpx + env(safe-area-inset-bottom));
+
+  min-height: 100vh;
 }
 </style>

@@ -95,7 +95,7 @@ function onDetail(item) {
 
 <style lang="scss">
 .myreply-page {
-  height: var(--page-notab-height);
+  height: var(--page-height);
 
   .paging-item {
     padding: 20rpx;

@@ -74,7 +74,7 @@ function onLogout() {
 
 <style lang="scss">
 .setting-page {
-  min-height: var(--page-notab-height);
+  min-height: var(--page-height);
   padding: 30rpx 0;
 }
 </style>

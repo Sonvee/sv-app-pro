@@ -10,6 +10,6 @@
 
 <style lang="scss">
 .vip-page {
-  min-height: var(--page-notab-height);
+  min-height: var(--page-height);
 }
 </style>

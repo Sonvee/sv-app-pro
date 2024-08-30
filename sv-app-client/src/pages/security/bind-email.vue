@@ -60,7 +60,7 @@ function openSubPage(type) {
 
 <style lang="scss">
 .bind-password-page {
-  min-height: var(--page-notab-height);
+  min-height: var(--page-height);
   padding: 30rpx 0;
 }
 </style>

@@ -74,10 +74,10 @@ export default {
 <style lang="scss">
 .sv-sub-page {
   :deep(.sub-page-main) {
-    min-height: var(--page-notab-height);
+    min-height: var(--page-height);
   }
   :deep(.sub-page-height) {
-    height: var(--page-notab-height);
+    height: var(--page-height);
   }
 
   .uv-popup {

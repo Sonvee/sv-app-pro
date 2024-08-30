@@ -239,7 +239,7 @@ async function bindWX() {
 
 <style lang="scss">
 .security-page {
-  min-height: var(--page-notab-height);
+  min-height: var(--page-height);
 
   .security-score {
     height: 300rpx;

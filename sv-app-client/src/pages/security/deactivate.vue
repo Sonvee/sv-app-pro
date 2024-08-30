@@ -111,7 +111,7 @@ async function confirm() {
 <style lang="scss">
 .deactivate-page {
   --footer-height: 120rpx;
-  min-height: var(--page-notab-height);
+  min-height: var(--page-height);
 
   .deactivate-header {
     position: relative;

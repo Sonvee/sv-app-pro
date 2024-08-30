@@ -184,7 +184,7 @@
     "navigationStyle": "custom",
     "app-plus": {
       "bounce": "none",
-      "animationType": "zoom-fade-out",
+      "animationType": "fade-in",
       "animationDuration": 300
     }
   },
@@ -196,7 +196,7 @@
     }
   },
   "tabBar": {
-    "height": "0.01px",
+    "height": "0.1px",
     "list": [{
       "pagePath": "pages/index/index"
     }, {

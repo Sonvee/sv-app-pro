@@ -14,6 +14,13 @@ export default {
       return useSysStore().getTheme()
     }
   },
+  // #ifdef APP-PLUS
+  watch: {
+    theme(newVal) {
+      plus.nativeUI.setUIStyle(newVal)
+    }
+  },
+  // #endif
   methods: {
     change(e) {
       useSysStore().setTheme(e)
@@ -25,11 +32,13 @@ export default {
 <script module="preload" lang="wxs">
 module.exports = {
   themeObserver: function(newValue, oldValue, ownerInstance, instance) {
-    // #ifndef MP-WEIXIN
+    if (newValue) {
+      // #ifndef MP-WEIXIN
       document.documentElement.classList.remove('light', 'dark');
       document.documentElement.classList.add(newValue);
       ownerInstance.callMethod('change', newValue)
-    // #endif
+      // #endif
+    }
   }
 }
 </script>
