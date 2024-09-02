@@ -1,4 +1,5 @@
 <script>
+import { useSysStore } from '@/store/sys'
 import { preProcess } from '@/utils/pre-process'
 export default {
   onLaunch: () => {

@@ -11,6 +11,7 @@ export function timeFormat(time, format = "YYYY-MM-DD HH:mm:ss") {
   if (format === 'timestamp') {
     return dayjs(time).valueOf()
   }
+  time = Number(time) // 转化为时间戳数字
   return dayjs(time).format(format)
 }
 
@@ -301,4 +302,34 @@ export function skipPage(path, needlogin = false, params, callback) {
       icon: 'none'
     })
   }
+}
+
+/**
+ * cdkey校验
+ * @param {string} cdkey 要校验的cdkey
+ * @param {Number} segments 分组数
+ * @param {Number} segmentLength 每组字符数
+ * @param {String} flag 分组标志
+ * @return {boolean} 是否校验成功
+ */
+export function validCdkey(cdkey, segments = 5, segmentLength = 5, flag = '-') {
+  const regexPattern = new RegExp(
+    `^(?:[A-Za-z0-9]{${segmentLength}}\\${flag}){${segments - 1}}[A-Za-z0-9]{${segmentLength}}$`);
+  return regexPattern.test(cdkey);
+}
+
+/**
+ * 精确将分转为元
+ * @param {Object} fen 金额(分) 100分=1元
+ */
+export function convertFenToYuan(fen) {
+  if (!fen) return 0
+  // 将分转换为元，过程中放大100倍
+  let yuan = fen / 100
+  // 创建一个足够大的基数（这里是100）的幂次，用于去除不需要的小数位
+  const base = 10
+  const precision = 2
+  const multiplier = base ** precision
+  // 四舍五入并转为整数，然后再除以基数的幂次，得到精确到小数点后两位的结果
+  return Math.round(yuan * multiplier) / multiplier
 }

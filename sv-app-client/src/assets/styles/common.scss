@@ -4262,6 +4262,14 @@ scroll-view.cu-steps .cu-item {
   background-image: linear-gradient(135deg, rgba(176, 174, 229, 0.2), rgba(237, 245, 163, 0.1));
 }
 
+.sv-gradual-glaze {
+  background-image: linear-gradient(135deg, rgba(245, 78, 162, 0.5), rgba(255, 118, 118, 0.5));
+}
+
+.sv-gradual-paleblue {
+  background-image: linear-gradient(135deg, rgba(94, 252, 232, 0.5), rgba(115, 110, 254, 0.5));
+}
+
 /**
  * 其他
  */
@@ -4279,4 +4287,13 @@ scroll-view.cu-steps .cu-item {
 
 .overflow-x {
   overflow-x: scroll;
+}
+
+/**
+ * 缩小
+ */
+@for $i from 1 through 10 {
+  .scale-#{$i} {
+    transform: scale(#{$i * 0.1});
+  }
 }

@@ -56,11 +56,18 @@
     {
       "root": "pages/vip",
       "pages": [{
-        "path": "vip",
-        "style": {
-          "navigationBarTitleText": "会员"
+          "path": "vip",
+          "style": {
+            "navigationBarTitleText": "会员"
+          }
+        },
+        {
+          "path": "getcdkey",
+          "style": {
+            "navigationBarTitleText": "获取激活码"
+          }
         }
-      }]
+      ]
     },
     {
       "root": "pages/agreements",

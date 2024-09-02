@@ -1,6 +1,24 @@
-/* 通用 */
-:root,
-page {
+// 主题基础色
+/* #ifdef MP-WEIXIN */
+.sv-page,
+/* #endif */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
+// 页面底色
+@media (prefers-color-scheme: dark) {
+  html {
+    background: #141414;
+  }
+}
+
+// 通用主题色变量
+/* #ifdef MP-WEIXIN */
+page,
+/* #endif */
+:root {
   --primary-color: #409eff;
   --success-color: #67c23a;
   --warning-color: #e6a23c;
@@ -9,7 +27,7 @@ page {
   --info-color: #909399;
 }
 
-/* light主题 */
+// light主题
 /* #ifdef MP-WEIXIN */
 .sv-page,
 /* #endif */
@@ -38,7 +56,7 @@ html {
   --click-color: #ecf5ff;
 }
 
-/* dark主题 */
+// dark主题
 /* #ifdef MP-WEIXIN */
 .sv-page.dark,
 /* #endif */

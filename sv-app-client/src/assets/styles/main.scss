@@ -29,19 +29,6 @@ page {
   font-family: Helvetica Neue, Helvetica, sans-serif;
 }
 
-// 主题基础色
-body,
-.sv-page {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    background: #141414;
-  }
-}
-
 /* 
  * css正则匹配类目规则
  * [class^="test"]：头部匹配；

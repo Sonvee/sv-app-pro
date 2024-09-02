@@ -121,6 +121,7 @@ export function timeFormat(time, format = 'YYYY-MM-DD HH:mm:ss') {
   if (format === 'timestamp') {
     return dayjs(time).valueOf()
   }
+  time = Number(time) // 转化为时间戳数字
   return dayjs(time).format(format)
 }
 
