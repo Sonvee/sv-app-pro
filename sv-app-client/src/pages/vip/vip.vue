@@ -123,7 +123,7 @@ import { ref, computed } from 'vue'
 import { useUserStore } from '@/store/user'
 import { skipPage, timeFormat, convertFenToYuan, validCdkey } from '@/utils/util'
 import { onLoad } from '@dcloudio/uni-app'
-import { benefitList, cdkeyActive, planList } from '@/api/vip'
+import { benefitList, cdkeyActive, planList, subscriptionInfo } from '@/api/vip'
 import { useLoginModal } from '@/hooks/useLoginModal'
 import PayInfo from './components/pay-info.vue'
 
@@ -150,9 +150,14 @@ const vipInfo = computed(() => {
 })
 
 onLoad(() => {
+  getVipInfo()
   getPlanList()
   getBenefitList()
 })
+
+async function getVipInfo() {
+  await subscriptionInfo({ user_id: userInfo.value.user_id })
+}
 
 const plans = ref([])
 const curPlan = ref()

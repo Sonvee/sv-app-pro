@@ -22,7 +22,11 @@ module.exports = (app) => {
         type: String,
         required: true
       },
-      // 生效开始日期（时间戳 毫秒）
+      // 订阅日期（时间戳 毫秒，并不一定代表从此刻开始计时）
+      subscription_data: {
+        type: Number
+      },
+      // 生效日期
       start_date: {
         type: Number
       },

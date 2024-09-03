@@ -38,10 +38,10 @@ class VipPlanController extends Controller {
     ctx.result(res)
   }
 
-  async vipInfo() {
+  async subscriptionInfo() {
     const { ctx, service } = this
     const data = ctx.request.body
-    const res = await service.vipSubscription.vipInfo(data)
+    const res = await service.vipSubscription.subscriptionInfo(data)
     ctx.result(res)
   }
 }

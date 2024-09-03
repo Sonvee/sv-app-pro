@@ -23,3 +23,11 @@ export function cdkeyActive(data) {
     data
   })
 }
+
+export function subscriptionInfo(data) {
+  return http.request({
+    url: '/vip/subscriptionInfo',
+    method: 'post',
+    data
+  })
+}

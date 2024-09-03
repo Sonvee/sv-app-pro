@@ -177,4 +177,5 @@ module.exports = app => {
   router.post('/vip/subscriptionUpdate', controller.vipSubscription.subscriptionUpdate);
   router.post('/vip/subscriptionDelete', controller.vipSubscription.subscriptionDelete);
   router.post('/vip/subscriptionBatchDelete', controller.vipSubscription.subscriptionBatchDelete);
+  router.post('/vip/subscriptionInfo', controller.vipSubscription.subscriptionInfo);
 };
