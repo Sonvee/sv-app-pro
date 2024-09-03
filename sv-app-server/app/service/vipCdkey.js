@@ -318,10 +318,14 @@ class VipCdkeyService extends Service {
     const oneUser = await app.model.SysUser.findOne({ user_id: data.user_id })
     if (!oneUser) ctx.throw(400, { msg: '用户不存在' })
 
-    // 2. 判断cdkey是否正常 0:待使用 1:已使用 2:已失效
+    // 2. 判断cdkey是否异常 0:待使用 1:已使用 2:已失效
     const cdkeyRes = await this.cdkeyList({ cdkey: data.cdkey })
     const findCdkey = cdkeyRes.data[0]
     if (findCdkey.status !== 0) ctx.throw(400, { msg: 'CDKEY 已使用或已失效' })
+    if (findCdkey.valid_date < Date.now()) {
+      await db.findOneAndUpdate({ cdkey: data.cdkey }, { status: 2 }, { new: true }) // 标记失效状态
+      return ctx.throw(400, { msg: 'CDKEY 已失效' })
+    }
 
     // 3. 查询cdkey绑定的套餐
     const valid_day = findCdkey?.cdkey_plan_detail?.valid_day || 0 // 套餐有效天数

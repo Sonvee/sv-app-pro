@@ -82,6 +82,18 @@
           "style": {
             "navigationBarTitleText": "用户协议"
           }
+        },
+        {
+          "path": "payment",
+          "style": {
+            "navigationBarTitleText": "支付条款"
+          }
+        },
+        {
+          "path": "vip",
+          "style": {
+            "navigationBarTitleText": "会员协议"
+          }
         }
       ]
     },

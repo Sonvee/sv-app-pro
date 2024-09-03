@@ -1,10 +1,6 @@
 <template>
   <sv-page>
     <view class="agreements-service-page">
-      <!-- <h2 class="head-title-2">
-        <text class="uni-icons-back abs-left" @click="goBack"></text>
-        用户协议
-      </h2> -->
       <article>
         <h4 class="head-title-4">一、引言</h4>
         <p class="paragraph">
@@ -72,10 +68,6 @@
 <script setup>
 import config from '@/config/index.js'
 
-function goBack() {
-  uni.navigateBack()
-}
-
 function toPrivacy() {
   uni.navigateTo({ url: '/pages/agreements/privacy' })
 }
@@ -88,21 +80,7 @@ function toPrivacy() {
   padding: 20px;
   box-sizing: border-box;
 
-  // .head-title-2 {
-  //   text-align: center;
-  //   position: relative;
-
-  //   .abs-left {
-  //     color: unset !important;
-  //     cursor: pointer;
-  //     position: absolute;
-  //     left: 0;
-  //     font-size: 28px;
-  //   }
-  // }
-  
   .head-title-4 {
-    // margin-top: 20px;
     line-height: 2;
   }
   .paragraph {

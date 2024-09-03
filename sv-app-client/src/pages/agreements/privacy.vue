@@ -1,12 +1,8 @@
 <template>
   <sv-page>
     <view class="agreements-privacy-page">
-      <!-- <h2 class="head-title-2">
-        <text class="uni-icons-back abs-left" @click="goBack"></text>
-        隐私政策
-      </h2> -->
       <article>
-        <h4 class="head-title-4">一、引言与目的</h4>
+        <h4 class="head-title-4">一、引言</h4>
         <p class="paragraph">
           &emsp;&emsp;本隐私政策适用于【{{ config.name }}】提供的所有服务，
           包括但不限于手机验证码登录、微信一键登录及可能的实名认证功能。
@@ -59,10 +55,6 @@
 <script setup>
 import config from '@/config/index.js'
 
-function goBack() {
-  uni.navigateBack()
-}
-
 function toService() {
   uni.navigateTo({ url: '/pages/agreements/service' })
 }
@@ -75,21 +67,7 @@ function toService() {
   padding: 20px;
   box-sizing: border-box;
 
-  // .head-title-2 {
-  //   text-align: center;
-  //   position: relative;
-
-  //   .abs-left {
-  //     color: unset !important;
-  //     cursor: pointer;
-  //     position: absolute;
-  //     left: 0;
-  //     font-size: 28px;
-  //   }
-  // }
-  
   .head-title-4 {
-    // margin-top: 20px;
     line-height: 2;
   }
   .paragraph {
