@@ -1,21 +1,21 @@
-'use strict';
+'use strict'
 
-const Controller = require('egg').Controller;
+const Controller = require('egg').Controller
 
 class HomeController extends Controller {
   async index() {
-    const { ctx } = this;
+    const { ctx } = this
     ctx.result({
-      data: 'Hello Node',
-    });
+      data: 'Hello Node'
+    })
   }
 
   async test() {
-    const { ctx } = this;
+    const { ctx } = this
     ctx.result({
-      data: 'test auth',
-    });
+      data: 'test auth'
+    })
   }
 }
 
-module.exports = HomeController;
+module.exports = HomeController
