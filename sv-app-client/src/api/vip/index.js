@@ -24,6 +24,14 @@ export function cdkeyActive(data) {
   })
 }
 
+export function subscriptionList(data) {
+  return http.request({
+    url: '/vip/subscriptionList',
+    method: 'post',
+    data
+  })
+}
+
 export function subscriptionInfo(data) {
   return http.request({
     url: '/vip/subscriptionInfo',

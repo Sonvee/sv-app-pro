@@ -140,6 +140,58 @@ export function getTimeState() {
 }
 
 /**
+ * 将毫秒转换为x天x小时x分钟
+ * @param {Number} ms 要转换的毫秒数
+ * @returns 转换结果x天x小时x分钟，当x为0则该部分单位不显示，不足1分钟则显示秒，不足1秒则显示毫秒
+ */
+export function durationFormat(ms) {
+  // 定义各个时间单位对应的毫秒数
+  const milliSecondsInSecond = 1000
+  const milliSecondsInMinute = 60 * milliSecondsInSecond
+  const milliSecondsInHour = milliSecondsInMinute * 60
+  const milliSecondsInDay = milliSecondsInHour * 24
+
+  // 计算天数、小时数、分钟数、秒数和毫秒数
+  const days = Math.floor(ms / milliSecondsInDay)
+  const hours = Math.floor((ms % milliSecondsInDay) / milliSecondsInHour)
+  const minutes = Math.floor((ms % milliSecondsInHour) / milliSecondsInMinute)
+  const seconds = Math.floor((ms % milliSecondsInMinute) / milliSecondsInSecond)
+  const milliseconds = ms % milliSecondsInSecond
+
+  // 创建一个数组来存储非零时间单位
+  const parts = []
+
+  // 如果天数大于0，添加到数组
+  if (days > 0) {
+    parts.push(`${days}天`)
+  }
+  // 如果小时数大于0，添加到数组
+  if (hours > 0) {
+    parts.push(`${hours}小时`)
+  }
+  // 如果分钟数大于0，添加到数组
+  if (minutes > 0) {
+    parts.push(`${minutes}分钟`)
+  }
+  // 如果总时间小于1分钟，且秒数大于0，添加到数组
+  if (ms < milliSecondsInMinute && seconds > 0) {
+    parts.push(`${seconds}秒`)
+  }
+  // 如果总时间小于1秒，且毫秒数大于0，添加到数组
+  if (ms < milliSecondsInSecond && milliseconds > 0) {
+    parts.push(`${milliseconds}毫秒`)
+  }
+
+  // 如果数组为空，说明毫秒数不足1毫秒，直接返回"0"
+  if (parts.length === 0) {
+    return '0'
+  }
+
+  // 返回格式化的字符串
+  return parts.join('')
+}
+
+/**
  * 合并对象，只合并原有对象中存在的参数，用法同 Object.assign()
  * @param {Object} target 原对象
  * @param {Object} source 要合并覆盖的对象 为假时返回原对象

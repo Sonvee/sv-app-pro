@@ -45,37 +45,32 @@ class VipCdkeyService extends Service {
     const db = app.model.VipCdkey
 
     // 聚合联表查询操作
-    let query = db.aggregate([
-      { $match: conditions },
-      {
-        // 联表
-        $lookup: {
-          from: 'vip_plans', // 这里需要是集合名，不是模型名
-          localField: 'cdkey_plan', // 这里的字段名需要和Schema中指定键名匹配
-          foreignField: 'plan_id', // 这里的字段名需要和Schema中指定键的ref匹配
-          as: 'cdkey_plan_detail', // 自定义输出字段名
-          pipeline: [
-            {
-              // 联表指定字段：0 不显示，1 显示
-              $project: {
-                _id: 0,
-                plan_id: 1,
-                plan_name: 1,
-                valid_day: 1
-              }
-            }
-          ]
+    let query = db.aggregate()
+    query = query.match(conditions)
+    query = query.lookup({
+      from: 'vip_plans', // 这里需要是集合名，不是模型名
+      localField: 'cdkey_plan', // 这里的字段名需要和Schema中指定键名匹配
+      foreignField: 'plan_id', // 这里的字段名需要和Schema中指定键的ref匹配
+      as: 'cdkey_plan_detail', // 自定义输出字段名
+      pipeline: [
+        {
+          // 联表指定字段：0 不显示，1 显示
+          $project: {
+            _id: 0,
+            plan_id: 1,
+            plan_name: 1,
+            valid_day: 1
+          }
         }
-      },
-      {
-        // 数组严禁使用$unwind，会展开为单个对象
-        $unwind: {
-          path: '$cdkey_plan_detail',
-          preserveNullAndEmptyArrays: true // 必须开启，否则其他为空的数据项将不会被查询
-        }
-      },
-      { $sort: { valid_date: -1, created_date: -1 } } // 排序：1升序，-1降序
-    ])
+      ]
+    })
+    query = query.unwind({
+      path: '$cdkey_plan_detail', // 数组严禁使用unwind，会展开为单个对象
+      preserveNullAndEmptyArrays: true // 必须开启，否则其他为空的数据项将不会被查询
+    })
+
+    // 排序：1升序，-1降序
+    query = query.sort({ valid_date: -1, created_date: -1 })
 
     // 分页
     if (pagesize > 0) {
@@ -335,7 +330,7 @@ class VipCdkeyService extends Service {
     const subscribeData = {
       user_id: data.user_id, // 用户id
       subscription_plan: findCdkey.cdkey_plan, // 激活码绑定的套餐
-      subscription_data: Date.now(), // 订阅日期（时间戳 毫秒）
+      subscription_date: Date.now(), // 订阅日期（时间戳 毫秒）
       duration_time: valid_time, // 订阅持续时长（毫秒）
       status: 0, // 待生效
       type: 1 // 激活码

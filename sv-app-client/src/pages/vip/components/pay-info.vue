@@ -1,5 +1,5 @@
 <template>
-  <view class="pay-info cu-bar tabbar border foot" v-if="show">
+  <view class="pay-info border" v-if="show">
     <view class="h-full padding-lr-sm flex-col justify-evenly">
       <view class="text-bold text-green" @click="onFold">
         <text class="text-xxl text-price">
@@ -13,7 +13,9 @@
       </view>
       <view class="text-sm text-blue flex-vc">
         <sv-checkbox v-model:checked="readed">&nbsp;已阅读同意</sv-checkbox>
-        <text class="margin-left-xs text-gray" @click="skipPage('/pages/agreements/vip')">会员协议</text>
+        <text class="margin-left-xs text-gray" @click="skipPage('/pages/agreements/vip')">
+          会员协议
+        </text>
         <text>丨</text>
         <text class="text-gray" @click="skipPage('/pages/agreements/payment')">支付条款</text>
       </view>
@@ -51,7 +53,7 @@
         </text>
       </view>
     </view>
-    <view class="tabbar-placehoder"></view>
+    <view class="footer-placehoder"></view>
   </uv-popup>
 </template>
 
@@ -66,6 +68,8 @@ const props = defineProps({
     default: () => {}
   }
 })
+
+const emits = defineEmits(['success'])
 
 const show = computed(() => isTruthy(props.info, 'obj'))
 
@@ -104,9 +108,9 @@ async function onPay() {
   try {
     await sleep(1500)
 
-    uni.showToast({
-      title: '支付成功'
-    })
+    uni.showToast({ title: '支付成功' })
+    payPopup.value.close() // 关闭弹窗
+    emits('success') // 成功回调
   } catch (e) {
     //TODO handle the exception
   } finally {
@@ -121,8 +125,15 @@ async function onPay() {
   bottom: 0;
   left: 0;
   right: 0;
-  height: var(--tabbar-height);
+  height: calc(120rpx + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
   background-color: var(--card-color);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   z-index: 99999;
+}
+.footer-placehoder {
+  height: 120rpx;
 }
 </style>

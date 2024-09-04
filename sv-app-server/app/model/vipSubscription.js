@@ -23,7 +23,7 @@ module.exports = (app) => {
         required: true
       },
       // 订阅日期（时间戳 毫秒，并不一定代表从此刻开始计时）
-      subscription_data: {
+      subscription_date: {
         type: Number
       },
       // 生效日期

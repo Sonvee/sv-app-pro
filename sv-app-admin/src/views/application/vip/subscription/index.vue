@@ -29,8 +29,18 @@
             <DictTag :dictList="dictSubscriptionStatus" :value="scope.row.status"></DictTag>
           </template>
         </el-table-column>
-        <!-- <el-table-column prop="duration_time" label="订阅持续时长（毫秒）" align="center" width="180" show-overflow-tooltip></el-table-column> -->
-        <el-table-column prop="start_date" label="生效开始日期" align="center" width="180" :formatter="(row) => timeFormat(row.start_date)" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="duration_time" label="订阅时长" align="center" width="180" show-overflow-tooltip>
+          <template #default="scope">{{ durationFormat(scope.row.duration_time) }}</template>
+        </el-table-column>
+        <el-table-column prop="start_date" label="生效日期" align="center" width="180" :formatter="(row) => timeFormat(row.start_date)" show-overflow-tooltip></el-table-column>
+        <el-table-column
+          prop="subscription_date"
+          label="订阅日期"
+          align="center"
+          width="180"
+          :formatter="(row) => timeFormat(row.subscription_date)"
+          show-overflow-tooltip
+        ></el-table-column>
         <el-table-column
           prop="created_date"
           label="创建时间"
@@ -70,7 +80,7 @@ import TablePagination from '@/components/TablePagination/index.vue'
 import { subscriptionList, subscriptionDelete, subscriptionBatchDelete } from '@/api/vip/subscription'
 import { RefreshRight, Delete, View, Hide } from '@element-plus/icons-vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
-import { isTruthy, timeFormat } from '@/utils'
+import { durationFormat, isTruthy, timeFormat } from '@/utils'
 import DictTag from '@/components/DictType/DictTag.vue'
 import { useDictStore } from '@/store/dict'
 

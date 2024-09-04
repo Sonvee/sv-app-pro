@@ -66,6 +66,12 @@
           "style": {
             "navigationBarTitleText": "获取激活码"
           }
+        },
+        {
+          "path": "subscription",
+          "style": {
+            "navigationBarTitleText": "订阅记录"
+          }
         }
       ]
     },

@@ -174,7 +174,7 @@ class AppHelpService extends Service {
    * 批量新增 post - 权限 permission
    * @param {Object} data - 请求参数
    * @property {Array} data.list 批量新增项
-   * @property {Boolean} data.cover - 是否覆盖 默认true
+   * @property {Boolean} data.cover - 是否覆盖 默认false
    */
   async helpBatchAdd(data) {
     const { ctx, app } = this;

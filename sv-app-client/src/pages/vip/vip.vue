@@ -1,21 +1,21 @@
 <template>
-  <sv-page>
+  <sv-page enablePullDownRefresh @onRefresh="onPullDown">
     <view class="vip-page">
       <!-- 用户信息 -->
-      <view class="user-info flex-vc" @click="skipPage('/pages/usercenter/userinfo', true)">
+      <view class="user-info flex-vc" @click="skipPage('/pages/vip/subscription', true)">
         <uv-avatar size="100rpx" :src="userInfo?.avatar?.url"></uv-avatar>
         <view class="margin-left-sm">
           <view class="text-bold text-lg">
-            <text :class="{ 'sv-text-streamer': vipInfo.vip }">
+            <text :class="{ 'sv-text-streamer': vipInfo?.vip }">
               {{ userInfo.nickname || userInfo.username }}
             </text>
-            <text class="sv-icons-vip margin-left-xs text-yellow" v-if="vipInfo.vip">
+            <text class="sv-icons-vip margin-left-xs text-yellow" v-if="vipInfo?.vip">
               <text class="vip-flag">
-                {{ vipInfo.current.subscription_plan_detail.plan_name }}
+                {{ vipInfo?.current.subscription_plan_detail.plan_name }}
               </text>
             </text>
           </view>
-          <view class="margin-top-xs text-cyan">会员于 {{ timeFormat(vipInfo.expire) }} 到期</view>
+          <view class="margin-top-xs text-cyan">会员于 {{ timeFormat(vipInfo?.expire) }} 到期</view>
         </view>
       </view>
       <!-- 套餐 -->
@@ -91,7 +91,12 @@
       <!-- 支付方式 -->
       <view class="margin-lg" v-if="curSubscriptionWay == 'wallet'">
         <uv-radio-group v-model="curPayWay" placement="column" iconPlacement="right">
-          <uv-radio :name="item.value" :label="item.label" v-for="item in payWays" :key="item.value">
+          <uv-radio
+            :name="item.value"
+            :label="item.label"
+            v-for="item in payWays"
+            :key="item.value"
+          >
             <view class="padding-tb-sm" :class="item.color">
               <text class="margin-right-xs text-lg" :class="item.icon" style="width: 1.6em"></text>
               <text>{{ item.label }}</text>
@@ -102,7 +107,11 @@
       <!-- 激活码方式 -->
       <view class="margin-lg" v-else>
         <uni-easyinput v-model.trim="cdkeyValue" placeholder="请输入CDKEY"></uni-easyinput>
-        <button class="margin-top block cu-btn bg-gradual-pink" :disabled="cdkeyLoading" @click="confirmCdkey">
+        <button
+          class="margin-top block cu-btn bg-gradual-pink"
+          :disabled="cdkeyLoading"
+          @click="confirmCdkey"
+        >
           <text v-if="cdkeyLoading" class="cuIcon-loading2 cuIconfont-spin margin-right-xs"></text>
           <text>确定激活</text>
         </button>
@@ -113,7 +122,11 @@
       <!-- 底部占位 -->
       <view class="tabbar-placehoder"></view>
       <!-- 底部栏 -->
-      <pay-info v-if="curSubscriptionWay == 'wallet'" :info="curPlan"></pay-info>
+      <pay-info
+        v-if="curSubscriptionWay == 'wallet'"
+        :info="curPlan"
+        @success="getVipInfo"
+      ></pay-info>
     </view>
   </sv-page>
 </template>
@@ -121,33 +134,14 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { useUserStore } from '@/store/user'
-import { skipPage, timeFormat, convertFenToYuan, validCdkey } from '@/utils/util'
+import { skipPage, timeFormat, convertFenToYuan, validCdkey, sleep } from '@/utils/util'
 import { onLoad } from '@dcloudio/uni-app'
 import { benefitList, cdkeyActive, planList, subscriptionInfo } from '@/api/vip'
 import { useLoginModal } from '@/hooks/useLoginModal'
 import PayInfo from './components/pay-info.vue'
 
 const userInfo = computed(() => useUserStore().userInfo)
-const vipInfo = computed(() => {
-  return {
-    vip: true,
-    subscription: [
-      { subscription_plan: 'vip_plan_week', start_date: '1725261202000', duration_time: '604800000', status: 1 },
-      { subscription_plan: 'vip_plan_day', start_date: '1725866002000', duration_time: '86400000', status: 0 }
-    ],
-    current: {
-      subscription_plan_detail: {
-        plan_id: 'vip_plan_week',
-        plan_name: '周卡',
-        valid_day: 7
-      },
-      start_date: '1725261202000',
-      duration_time: '604800000',
-      status: 1
-    },
-    expire: '1725952402000'
-  }
-})
+const vipInfo = ref({})
 
 onLoad(() => {
   getVipInfo()
@@ -155,8 +149,15 @@ onLoad(() => {
   getBenefitList()
 })
 
+// 下拉刷新
+async function onPullDown(e) {
+  await getVipInfo()
+  e.complete() // 刷新完成
+}
+
 async function getVipInfo() {
-  await subscriptionInfo({ user_id: userInfo.value.user_id })
+  const subRes = await subscriptionInfo({ user_id: userInfo.value.user_id })
+  vipInfo.value = subRes.data
 }
 
 const plans = ref([])
@@ -211,9 +212,9 @@ async function confirmCdkey() {
     })
     // 无需再手动hideLoading，因为无论成功与否都会showToast自动关闭loding
     if (activeRes.success) {
-      uni.showToast({
-        title: activeRes.msg
-      })
+      uni.showToast({ title: activeRes.msg })
+      cdkeyValue.value = '' // 置空
+      getVipInfo() // 刷新会员信息
     }
   } catch (e) {
     //TODO handle the exception

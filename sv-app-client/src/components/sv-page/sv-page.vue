@@ -1,16 +1,28 @@
 <template>
+  <!-- 页面预加载 -->
   <sv-preload></sv-preload>
   <view class="sv-page" :class="theme">
+    <!-- 头部标题栏 -->
     <sv-navbar v-if="showNavbar"></sv-navbar>
-    <slot></slot>
+    <!-- 页面可下拉刷新 -->
+    <template v-if="enablePullDownRefresh">
+      <z-paging ref="pagingRef" refresher-only @onRefresh="onRefresh">
+        <slot></slot>
+      </z-paging>
+    </template>
+    <!-- 普通页面 -->
+    <template v-else>
+      <slot></slot>
+    </template>
+    <!-- 底部导航栏 -->
     <sv-tabbar v-if="showTabbar"></sv-tabbar>
   </view>
 </template>
 
 <script setup>
-import { computed } from 'vue'
-import SvPreload from './sv-preload.vue'
+import { computed, ref } from 'vue'
 import { useSysStore } from '@/store/sys'
+import SvPreload from './sv-preload.vue'
 
 const props = defineProps({
   // 显示头部导航栏 默认显示
@@ -22,8 +34,15 @@ const props = defineProps({
   showTabbar: {
     type: Boolean,
     default: false
+  },
+  // 是否开启下拉刷新 默认关闭
+  enablePullDownRefresh: {
+    type: Boolean,
+    default: false
   }
 })
+
+const emits = defineEmits(['onRefresh'])
 
 // 获取状态栏高度
 const statusBarHeight = computed(() => {
@@ -31,6 +50,11 @@ const statusBarHeight = computed(() => {
 })
 
 const theme = computed(() => useSysStore().getTheme())
+
+const pagingRef = ref()
+function onRefresh() {
+  emits('onRefresh', pagingRef.value)
+}
 </script>
 
 <style lang="scss">
