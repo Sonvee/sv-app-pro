@@ -1,5 +1,5 @@
 <template>
-	<view class="sv-navbar" :style="dynamicStyle">
+	<view class="sv-navbar" :style="navStyle" :class="{ 'dynamic-opacity': dynamic }">
 		<view class="navbar-left">
 			<slot name="left">
 				<text v-if="!isTabbar" class="cuIcon-back text-xxl padding-lr-sm" @click="onBack"></text>
@@ -12,13 +12,13 @@
 			<slot name="right"></slot>
 		</view>
 	</view>
-	<view class="sv-navbar-placeholder" v-if="placeholder"></view>
+	<view class="sv-navbar-placeholder" v-if="placeholder && !dynamic"></view>
 </template>
 
 <script setup>
 import { computed } from 'vue'
 import { useSysStore } from '@/store/sys'
-import { getPageRoute } from '@/utils/page-router';
+import { getPageRoute } from '@/utils/page-router'
 
 const props = defineProps({
 	// 自定义页面标题 - 不设默认值将会自动根据页面路由查找标题
@@ -45,12 +45,17 @@ const props = defineProps({
 				glass: true // 毛玻璃特效
 			}
 		}
+	},
+	// 是否动态显示导航栏（由透明逐渐显示）
+	dynamic: {
+		type: Boolean,
+		default: true
 	}
 })
 
 const sysStore = useSysStore()
 
-const dynamicStyle = computed(() => {
+const navStyle = computed(() => {
 	let { effect } = props
 	if (effect === true) effect = { frosted: true, glass: true } // 如果 effect 为 true，则默认开启全特效
 	return {
@@ -78,6 +83,7 @@ function onBack() {
 		uni.navigateBack()
 	}
 }
+
 </script>
 
 <style lang="scss">
@@ -126,5 +132,10 @@ $sv-navbar-height: calc(88rpx + v-bind(statusBarHeight));
 		font-size: 28rpx;
 		text-align: center;
 	}
+}
+
+// 动态显示导航栏
+.dynamic-opacity {
+	opacity: 0;
 }
 </style>
