@@ -20,6 +20,10 @@ body,
   height: 100%;
 }
 
+a {
+  text-decoration: none;
+}
+
 /* 解决 h1 标签在 webkit 内核浏览器中文字大小失效问题 */
 :-webkit-any(article, aside, nav, section) h1 {
   font-size: 2em;

@@ -37,13 +37,6 @@ page {
  * 例如：p[class^="test"] 匹配所有以test开头类名的p标签
  */
 
-.navbar-placehoder {
-  height: var(--navbar-height);
-}
-.tabbar-placehoder {
-  height: var(--tabbar-height);
-}
-
 .glass {
   border-radius: 10px;
   box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);

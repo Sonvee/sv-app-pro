@@ -12,7 +12,8 @@ module.exports = (appInfo) => {
   const config = (exports = {})
 
   config.security = {
-    domainWhiteList: ['http://101.34.89.199', 'http://101.34.89.199:3030'] // 跨域白名单
+    // 跨域白名单
+    domainWhiteList: ['http://101.34.89.199', 'http://101.34.89.199:3030', 'http://app.admin.sonve.asia', 'http://app.client.sonve.asia']
   }
 
   config.cors = {
@@ -27,7 +28,7 @@ module.exports = (appInfo) => {
    */
   config.mongoose = {
     client: {
-      url: 'mongodb://101.34.89.199:27017/sv_database',
+      url: 'mongodb://app.server.sonve.asia:27017/sv_database',
       options: {
         user: 'sv_database',
         pass: 'Sonve_5817'
@@ -42,7 +43,7 @@ module.exports = (appInfo) => {
   config.redis = {
     client: {
       port: 6379, // Redis port
-      host: '101.34.89.199', // Redis host
+      host: 'app.server.sonve.asia', // Redis host
       password: 'Sonve_5817', // Redis password
       db: 0 // selected db
     }

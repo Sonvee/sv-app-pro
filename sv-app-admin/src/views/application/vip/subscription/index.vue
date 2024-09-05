@@ -77,11 +77,11 @@
 import { ref, computed, onMounted } from 'vue'
 import TableFilter from './components/TableFilter.vue'
 import TablePagination from '@/components/TablePagination/index.vue'
+import DictTag from '@/components/DictType/DictTag.vue'
 import { subscriptionList, subscriptionDelete, subscriptionBatchDelete } from '@/api/vip/subscription'
 import { RefreshRight, Delete, View, Hide } from '@element-plus/icons-vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { durationFormat, isTruthy, timeFormat } from '@/utils'
-import DictTag from '@/components/DictType/DictTag.vue'
 import { useDictStore } from '@/store/dict'
 
 const dictStore = useDictStore()

@@ -108,7 +108,7 @@ async function onPay() {
   try {
     await sleep(1500)
 
-    uni.showToast({ title: '支付成功' })
+    uni.showToast({ title: '支付成功(测试)' })
     payPopup.value.close() // 关闭弹窗
     emits('success') // 成功回调
   } catch (e) {

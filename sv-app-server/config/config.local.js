@@ -27,7 +27,7 @@ module.exports = (appInfo) => {
    */
   config.mongoose = {
     client: {
-      url: 'mongodb://101.34.89.199:27017/sv_dev_database',
+      url: 'mongodb://app.server.sonve.asia:27017/sv_dev_database',
       options: {
         user: 'sv_dev_database',
         pass: 'Sonve_5817'
@@ -42,7 +42,7 @@ module.exports = (appInfo) => {
   config.redis = {
     client: {
       port: 6379, // Redis port
-      host: '101.34.89.199', // Redis host
+      host: 'app.server.sonve.asia', // Redis host
       password: 'Sonve_5817', // Redis password
       db: 1 // selected db
     }

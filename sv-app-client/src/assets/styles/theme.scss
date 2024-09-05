@@ -8,11 +8,13 @@ body {
 }
 
 // 页面底色
+/* #ifdef APP */
 @media (prefers-color-scheme: dark) {
   html {
     background: #141414;
   }
 }
+/* #endif */
 
 // 通用主题色变量
 /* #ifdef MP-WEIXIN */

@@ -29,14 +29,20 @@
           <text @click="skipPage('/pages/agreements/service')">《用户协议》</text>
           <text @click="skipPage('/pages/agreements/privacy')">《隐私政策》</text>
         </view>
-        <view class="text-gray text-center cursor-pointer margin-top-xs">
-          <text>ICP备案号：沪ICP备2022007161号-1</text>
+        <view class="text-cyan text-center cursor-pointer margin-top-xs">
+          <!-- #ifdef H5 -->
+          <a href="https://beian.miit.gov.cn/" target="_blank" class="text-cyan">
+            ICP备案号：皖ICP备2023019657号-2
+          </a>
+          <!-- #endif -->
+          <!-- #ifndef H5 -->
+          <text @click="skipPage('https://beian.miit.gov.cn/')">
+            ICP备案号：皖ICP备2023019657号-2
+          </text>
+          <!-- #endif -->
         </view>
         <view class="text-gray text-center margin-top-xs">
-          <text>Sonve 版权所有</text>
-        </view>
-        <view class="text-gray text-center margin-top-xs">
-          <text>Copyright © 2023-2024 Sonve. All Rights Reserved.</text>
+          <text>Copyright © 2024 Sonve. All Rights Reserved.</text>
         </view>
       </view>
     </view>

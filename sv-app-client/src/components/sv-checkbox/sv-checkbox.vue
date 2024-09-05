@@ -60,6 +60,7 @@ function onCheck() {
     border-radius: 8rpx;
     border: 1px solid;
     flex-shrink: 0;
+    overflow: hidden;
 
     .box-checked {
       width: 100%;

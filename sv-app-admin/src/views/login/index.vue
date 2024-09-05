@@ -10,6 +10,11 @@
         <component :is="componentId" @changeMode="changeMode"></component>
       </div>
     </div>
+    <div class="footer">
+      <span class="text-gray">Copyright © 2024 Sonve.</span>
+      <el-divider direction="vertical" />
+      <a href="https://beian.miit.gov.cn/" target="_blank">皖ICP备2023019657号-2</a>
+    </div>
   </div>
 </template>
 
@@ -73,6 +78,15 @@ function changeMode(e) {
       flex: 2;
       flex-shrink: 0;
     }
+  }
+
+  .footer {
+    position: absolute;
+    bottom: 0;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 12px;
   }
 }
 
