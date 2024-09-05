@@ -388,10 +388,16 @@
       "sort": 145
     },
     {
+      "permission_id": "vip:cdkey:check",
+      "permission_name": "激活码检查",
+      "remark": "",
+      "sort": 146
+    },
+    {
       "permission_id": "vip:cdkey:batchdelete",
       "permission_name": "激活码批量删除",
       "remark": "",
-      "sort": 146
+      "sort": 147
     },
 
     {
