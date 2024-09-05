@@ -168,6 +168,7 @@ module.exports = app => {
   router.post('/vip/cdkeyUpdate', controller.vipCdkey.cdkeyUpdate);
   router.post('/vip/cdkeyDelete', controller.vipCdkey.cdkeyDelete);
   router.post('/vip/cdkeyClear', controller.vipCdkey.cdkeyClear);
+  router.post('/vip/cdkeyCheck', controller.vipCdkey.cdkeyCheck);
   router.post('/vip/cdkeyBatchDelete', controller.vipCdkey.cdkeyBatchDelete);
   router.post('/vip/cdkeyActive', controller.vipCdkey.cdkeyActive);
 

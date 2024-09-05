@@ -40,6 +40,14 @@ export function cdkeyClear(data) {
   })
 }
 
+export function cdkeyCheck(data) {
+  return request({
+    url: '/vip/cdkeyCheck',
+    method: 'post',
+    data
+  })
+}
+
 export function cdkeyBatchAdd(data) {
   return request({
     url: '/vip/cdkeyBatchAdd',

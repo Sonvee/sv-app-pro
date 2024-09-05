@@ -10,8 +10,9 @@
         <el-button type="danger" plain :icon="Delete" v-permission="['vip:cdkey:batchdelete']" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">
           批量删除
         </el-button>
-        <el-button type="warning" plain v-permission="['vip:cdkey:clear']" @click="clear(1)"><i class="sv-icons-clear text-xs mr-4"></i>清空已用</el-button>
+        <el-button type="info" plain v-permission="['vip:cdkey:check']" @click="check"><i class="sv-icons-search text-xs mr-4"></i>检查失效</el-button>
         <el-button type="warning" plain v-permission="['vip:cdkey:clear']" @click="clear(2)"><i class="sv-icons-clear text-xs mr-4"></i>清空失效</el-button>
+        <el-button type="warning" plain v-permission="['vip:cdkey:clear']" @click="clear(1)"><i class="sv-icons-clear text-xs mr-4"></i>清空已用</el-button>
         <div style="flex: 1"></div>
         <el-button circle :icon="RefreshRight" v-permission="['vip:cdkey:query']" @click="refresh" title="刷新"></el-button>
         <el-button circle :icon="showFilter ? View : Hide" @click="showFilter = !showFilter" :title="showFilter ? '隐藏筛选' : '显示筛选'"></el-button>
@@ -76,7 +77,7 @@ import { ref, computed, onMounted } from 'vue'
 import TableFilter from './components/TableFilter.vue'
 import TableForm from './components/TableForm.vue'
 import TablePagination from '@/components/TablePagination/index.vue'
-import { cdkeyList, cdkeyAdd, cdkeyUpdate, cdkeyDelete, cdkeyClear, cdkeyBatchDelete } from '@/api/vip/cdkey'
+import { cdkeyList, cdkeyAdd, cdkeyUpdate, cdkeyDelete, cdkeyClear, cdkeyBatchDelete, cdkeyCheck } from '@/api/vip/cdkey'
 import { RefreshRight, Plus, EditPen, Delete, View, Hide } from '@element-plus/icons-vue'
 import { ElNotification, ElMessageBox, ElMessage } from 'element-plus'
 import { isTruthy, timeFormat } from '@/utils'
@@ -148,6 +149,19 @@ function del(row) {
       refresh()
     })
     .catch(() => {})
+}
+
+async function check() {
+  const res = await cdkeyCheck()
+  if (res.success) {
+    const { matchedCount } = res?.data
+    ElNotification({
+      title: 'Success',
+      message: `共检测到 ${matchedCount} 条已失效`,
+      type: 'success'
+    })
+    refresh()
+  }
 }
 
 function clear(status) {

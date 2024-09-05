@@ -242,6 +242,30 @@ class VipCdkeyService extends Service {
   }
 
   /**
+   * cdkey失效检测 post - 权限 permission
+   */
+  async cdkeyCheck(data) {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['vip:cdkey:check'])
+
+    // 查询条件处理
+    const conditions = { valid_date: { $lt: Date.now() }, status: { $ne: 2 } }
+
+    // 数据库连接
+    const db = app.model.VipCdkey
+
+    // 批量更新为失效
+    const res = await db.updateMany(conditions, { $set: { status: 2 } })
+
+    return {
+      data: res,
+      msg: '检查完成'
+    }
+  }
+
+  /**
    * 批量删除 post - 权限 permission
    * @param {Object} data - 请求参数
    * @property {Array} data.list - 批量新增项
