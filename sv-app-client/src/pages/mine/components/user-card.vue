@@ -9,7 +9,14 @@
 			<!-- 昵称 -->
 			<view class="user-name margin-left flex-sub">
 				<view class="text-bold text-lg text-line-1">
-					{{ hasLogin ? userInfo?.nickname || '起个昵称吧' : '前往登录' }}
+					<text :class="{ 'sv-text-streamer': vipInfo?.vip }">
+						{{ hasLogin ? userInfo?.nickname || '起个昵称吧' : '前往登录' }}
+					</text>
+					<text class="sv-icons-vip margin-left-xs text-yellow" v-if="vipInfo?.vip">
+						<text class="vip-flag">
+							{{ vipInfo?.current.subscription_plan_detail.plan_name }}
+						</text>
+					</text>
 				</view>
 				<view v-if="hasLogin" class="text-gray text-sm margin-top-xs text-line-1">
 					{{ userInfo?.comment || '写点什么吧 ~' }}
@@ -28,13 +35,20 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useUserStore } from '@/store/user'
 import { useLoginModal } from '@/hooks/useLoginModal.js'
 
 const statusBarHeight = computed(() => uni.getSystemInfoSync().statusBarHeight + 'px')
 const userInfo = computed(() => useUserStore().getUserInfo())
 const hasLogin = computed(() => useUserStore().hasLogin)
+
+const vipInfo = ref({})
+onMounted(async () => {
+	uni.$on('E_VIP_INFO', (e) => {
+		vipInfo.value = e
+	})
+})
 
 const dataStatistics = [
 	{ lable: '数据甲', value: '782' },
@@ -60,5 +74,15 @@ $sv-navbar-height: calc(44px + v-bind(statusBarHeight));
 	position: relative;
 	overflow: hidden;
 	z-index: 0;
+
+	.user-info {
+		.user-name {
+			.vip-flag {
+				font-size: 12px;
+				display: inline-block;
+				transform: scale(0.75);
+			}
+		}
+	}
 }
 </style>

@@ -361,7 +361,10 @@ class VipCdkeyService extends Service {
     }
     const subRes = await ctx.service.vipSubscription.subscriptionAdd(subscribeData)
 
-    // 5. cdkey标记已使用：状态 0-待使用，1-已使用，2-已失效(激活码已过期或绑定的套餐不存在)
+    // 5. 订阅量更新
+    await ctx.service.vipPlan.planInc({ plan_id: findCdkey.cdkey_plan })
+
+    // 6. cdkey标记已使用：状态 0-待使用，1-已使用，2-已失效(激活码已过期或绑定的套餐不存在)
     await db.findOneAndUpdate({ cdkey: data.cdkey }, { status: 1 }, { new: true })
 
     return {

@@ -60,7 +60,8 @@ class VipSubscriptionService extends Service {
             _id: 0,
             plan_id: 1,
             plan_name: 1,
-            valid_day: 1
+            valid_day: 1,
+            benefits: 1
           }
         }
       ]
@@ -260,7 +261,7 @@ class VipSubscriptionService extends Service {
   }
 
   /**
-   * 批量更新 post - 非api接口 只提供内部调用
+   * 批量更新 - 非api接口 仅提供内部调用
    * @param {Object} data - 请求参数
    * @property {Array} data.list 批量更新项
    */
@@ -337,7 +338,7 @@ class VipSubscriptionService extends Service {
   }
 
   /**
-   * 会员验证处理 - 非api接口 只提供内部调用
+   * 会员验证处理 - 非api接口 仅提供内部调用
    * @param {Array} list 订阅列表
    * @param {Function} decb 失效回调
    * @returns {Object} result - 处理结果

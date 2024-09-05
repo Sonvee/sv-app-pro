@@ -2,11 +2,23 @@
 	<view class="email-login flex-col justify-between">
 		<uni-forms ref="emailFormRef" :model="emailForm" :rules="emailRules">
 			<uni-forms-item name="email">
-				<uni-easyinput v-model="emailForm.email" type="text" placeholder="请输入邮箱" prefixIcon="email" />
+				<uni-easyinput
+					v-model="emailForm.email"
+					type="text"
+					placeholder="请输入邮箱"
+					prefixIcon="email"
+					:adjust-position="false"
+				/>
 			</uni-forms-item>
 			<uni-forms-item name="captcha">
 				<view class="captcha-input">
-					<uni-easyinput v-model="emailForm.captcha" type="text" :maxlength="6" placeholder="请输入验证码">
+					<uni-easyinput
+						v-model="emailForm.captcha"
+						type="text"
+						placeholder="请输入验证码"
+						:maxlength="6"
+						:adjust-position="false"
+					>
 						<template #left>
 							<text class="sv-icons-verify" style="color: #c4c8d0; font-size: 22px; padding: 0 5px"></text>
 						</template>

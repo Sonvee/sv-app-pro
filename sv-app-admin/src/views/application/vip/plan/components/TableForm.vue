@@ -17,6 +17,9 @@
         <el-form-item prop="description" label="套餐描述">
           <el-input v-model="formData.description" type="textarea" :autosize="{ minRows: 4 }" placeholder="请输入套餐描述" />
         </el-form-item>
+        <el-form-item prop="benefits" label="权益">
+          <DictSelect v-model="formData.benefits" :dictApi="benefitList" labelName="benefit_name" valueName="benefit_id" multiple placeholder="请选择权益"></DictSelect>
+        </el-form-item>
         <el-form-item prop="price" label="价格（分）">
           <el-input-number v-model="formData.price" :min="0" :step="1" step-strictly />
           <span class="ml-8 text-cyan">=&nbsp;{{ convertFenToYuan(formData.price) }}&nbsp;元</span>
@@ -28,8 +31,8 @@
         <el-form-item prop="valid_day" label="有效期（天）">
           <el-input-number v-model="formData.valid_day" :min="0" :step="1" step-strictly />
         </el-form-item>
-        <el-form-item prop="benefits" label="权益">
-          <DictSelect v-model="formData.benefits" :dictApi="benefitList" labelName="benefit_name" valueName="benefit_id" multiple placeholder="请选择权益"></DictSelect>
+        <el-form-item prop="style" label="样式">
+          <el-color-picker v-model="formData.style" :predefine="['#409EFF', '#67C23A', '#E6A23C', '#F56C6C', '#909399']" />
         </el-form-item>
       </el-form>
     </template>
@@ -66,11 +69,12 @@ const formBase = {
   plan_id: '', // 主键
   plan_name: '',
   description: '',
+  benefits: [],
   sort: 0,
   price: 0,
   discount: 0,
   valid_day: 0,
-  benefits: []
+  style: ''
 }
 // 表单数据
 const formData = ref(formBase)

@@ -56,6 +56,9 @@ class VipPlanService extends Service {
             icon: 1,
             sort: 1
           }
+        },
+        {
+          $sort: { sort: 1 } // 按照sort字段升序排列
         }
       ]
     })
@@ -91,7 +94,6 @@ class VipPlanService extends Service {
    * 新增 post - 权限 permission
    * @param {Object} data - 请求参数
    * @property {String} data.plan_id - id
-   * @property {String} data.plan_name - 名称
    */
   async planAdd(data) {
     const { ctx, app } = this
@@ -124,7 +126,6 @@ class VipPlanService extends Service {
    * 更新 post - 权限 permission
    * @param {Object} data - 请求参数
    * @property {String} data.plan_id - id
-   * @property {String} data.plan_name - 名称
    */
   async planUpdate(data) {
     const { ctx, app } = this
@@ -150,6 +151,31 @@ class VipPlanService extends Service {
     return {
       data: res,
       msg: '更新成功'
+    }
+  }
+
+  /**
+   * 自增更新 - 非api接口 仅提供内部调用
+   * @param {Object} data - 请求参数
+   * @property {String} data.plan_id - id
+   */
+  async planInc(data) {
+    const { ctx, app } = this
+
+    // 参数校验
+    if (!isTruthy(data.plan_id)) ctx.throw(400, { msg: 'plan_id 必填' })
+
+    // 查询条件处理
+    const conditions = { plan_id: data.plan_id }
+
+    // 数据库连接
+    const db = app.model.VipPlan
+
+    const res = await db.findOneAndUpdate(conditions, { $inc: { subscribed_count: 1 } }, { new: true })
+
+    return {
+      data: res,
+      msg: '自增更新成功'
     }
   }
 

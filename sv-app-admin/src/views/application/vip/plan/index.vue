@@ -15,8 +15,8 @@
       <!-- 数据表格 -->
       <el-table v-loading="loading" :data="tableData" border @selection-change="handleSelectionChange">
         <el-table-column type="selection" align="center" width="50" fixed="left" />
-        <el-table-column prop="plan_id" label="套餐ID" width="200" show-overflow-tooltip></el-table-column>
         <el-table-column prop="sort" label="序号" align="center" width="80" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="plan_id" label="套餐ID" width="200" show-overflow-tooltip></el-table-column>
         <el-table-column prop="plan_name" label="套餐名称" min-width="200" show-overflow-tooltip></el-table-column>
         <el-table-column prop="description" label="套餐描述" min-width="300" show-overflow-tooltip></el-table-column>
         <el-table-column prop="price" label="定价（分）" min-width="200" show-overflow-tooltip>
@@ -43,6 +43,8 @@
             <i v-for="item in scope.row.benefits_detail" :key="item.benefit_id" :class="item.icon" class="text-xl mr-8" :title="item.benefit_name"></i>
           </template>
         </el-table-column>
+        <el-table-column prop="style" label="样式" align="center" width="140" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="subscribed_count" label="订阅数量" align="center" width="140" show-overflow-tooltip></el-table-column>
         <el-table-column
           prop="created_date"
           label="创建时间"
