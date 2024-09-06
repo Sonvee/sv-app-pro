@@ -6,7 +6,7 @@
         <uv-avatar size="100rpx" :src="userInfo?.avatar?.url"></uv-avatar>
         <view class="margin-left-sm">
           <view class="text-bold text-lg">
-            <text :class="{ 'sv-text-streamer': vipInfo?.vip }">
+            <text :class="{ 'sv-text-streamer': hasStreamerStyle }">
               {{ userInfo.nickname || userInfo.username }}
             </text>
             <text
@@ -15,7 +15,7 @@
               :style="{ color: vipInfo?.current.subscription_plan_detail.style }"
             >
               <text class="vip-flag">
-                {{ vipInfo?.current.subscription_plan_detail.plan_name }}
+                {{ vipInfo?.current.subscription_plan_detail.abbreviation }}
               </text>
             </text>
           </view>
@@ -28,7 +28,7 @@
       <!-- 套餐 -->
       <view class="cu-bar margin-top">
         <view class="action sub-title">
-          <text class="text-lg text-bold text-bili">会员套餐</text>
+          <text class="text-lg text-bold text-bili">会员订阅</text>
           <text class="text-sm text-ABC text-bili">vipplan</text>
         </view>
       </view>
@@ -41,7 +41,7 @@
               @click="selectPlan(item)"
             >
               <view class="plan-header text-bold text-red text-center">
-                <text>{{ item.plan_name }}</text>
+                <text :style="{ color: item.style }">{{ item.plan_name }}</text>
                 <text class="cuIcon-hotfill margin-left-xs" v-if="item.hot"></text>
               </view>
               <view class="flex-sub flex-col-hc justify-evenly">
@@ -146,20 +146,22 @@ import { onLoad } from '@dcloudio/uni-app'
 import { benefitList, cdkeyActive, planList, subscriptionInfo } from '@/api/vip'
 import { useLoginModal } from '@/hooks/useLoginModal'
 import PayInfo from './components/pay-info.vue'
+import { usePromise } from '@/hooks/usePromise'
 
 const userInfo = computed(() => useUserStore().userInfo)
+const hasStreamerStyle = computed(() =>
+  vipInfo.value?.current?.subscription_plan_detail.benefits.includes('streamer_style')
+)
 
-onLoad(() => {
-  getVipInfo()
-  getPlanList()
-  getBenefitList()
+onLoad(async () => {
+  uni.showLoading({ title: '加载中' })
+  await usePromise().executeConcurrent([getVipInfo, getPlanList, getBenefitList])
+  uni.hideLoading()
 })
 
 // 下拉刷新
 async function onPullDown(e) {
-  await getVipInfo()
-  await getPlanList()
-  await getBenefitList()
+  await usePromise().executeConcurrent([getVipInfo, getPlanList, getBenefitList])
   curPlan.value = {}
   e.complete() // 刷新完成
 }

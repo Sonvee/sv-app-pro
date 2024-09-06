@@ -11,6 +11,9 @@
         <el-form-item prop="plan_name" label="套餐名称" required>
           <el-input v-model="formData.plan_name" placeholder="请输入套餐名称" clearable />
         </el-form-item>
+        <el-form-item prop="abbreviation" label="套餐简称">
+          <el-input v-model="formData.abbreviation" placeholder="请输入套餐简称" clearable />
+        </el-form-item>
         <el-form-item prop="sort" label="序号">
           <el-input-number v-model="formData.sort" :min="0" :step="1" step-strictly />
         </el-form-item>
@@ -68,6 +71,7 @@ const emits = defineEmits(['submit'])
 const formBase = {
   plan_id: '', // 主键
   plan_name: '',
+  abbreviation: '',
   description: '',
   benefits: [],
   sort: 0,

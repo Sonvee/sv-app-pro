@@ -9,7 +9,7 @@
       <!-- 昵称 -->
       <view class="user-name margin-left flex-sub">
         <view class="text-bold text-lg text-line-1">
-          <text :class="{ 'sv-text-streamer': vipInfo?.vip }">
+          <text :class="{ 'sv-text-streamer': hasStreamerStyle }">
             {{ hasLogin ? userInfo?.nickname || '起个昵称吧' : '前往登录' }}
           </text>
           <text
@@ -18,7 +18,7 @@
             :style="{ color: vipInfo?.current.subscription_plan_detail.style }"
           >
             <text class="vip-flag">
-              {{ vipInfo?.current.subscription_plan_detail.plan_name }}
+              {{ vipInfo?.current.subscription_plan_detail.abbreviation }}
             </text>
           </text>
         </view>
@@ -46,6 +46,9 @@ import { useLoginModal } from '@/hooks/useLoginModal.js'
 const statusBarHeight = computed(() => uni.getSystemInfoSync().statusBarHeight + 'px')
 const userInfo = computed(() => useUserStore().getUserInfo())
 const hasLogin = computed(() => useUserStore().hasLogin)
+const hasStreamerStyle = computed(() =>
+  vipInfo.value?.current?.subscription_plan_detail.benefits.includes('streamer_style')
+)
 
 const vipInfo = ref({})
 onMounted(async () => {

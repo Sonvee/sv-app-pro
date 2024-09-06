@@ -18,6 +18,7 @@
         <el-table-column prop="sort" label="序号" align="center" width="80" show-overflow-tooltip></el-table-column>
         <el-table-column prop="plan_id" label="套餐ID" width="200" show-overflow-tooltip></el-table-column>
         <el-table-column prop="plan_name" label="套餐名称" min-width="200" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="abbreviation" label="套餐简称" width="120" show-overflow-tooltip></el-table-column>
         <el-table-column prop="description" label="套餐描述" min-width="300" show-overflow-tooltip></el-table-column>
         <el-table-column prop="price" label="定价（分）" min-width="200" show-overflow-tooltip>
           <template #default="scope">
@@ -46,7 +47,7 @@
         <el-table-column prop="style" label="样式" align="center" width="140" show-overflow-tooltip>
           <template #default="scope">
             <i class="sv-icons-vip margin-left-xs text-lg" :style="{ color: scope.row.style }">
-              <i class="vip-flag">{{ scope.row.plan_name }}</i>
+              <i class="vip-flag">{{ scope.row.abbreviation }}</i>
             </i>
           </template>
         </el-table-column>

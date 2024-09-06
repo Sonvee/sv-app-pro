@@ -10,7 +10,7 @@
       class="sv-pulldown-paging"
       :class="{ 'sv-paging-top': showNavbar, 'sv-paging-bottom': showTabbar }"
     >
-      <z-paging ref="pagingRef" refresher-only @onRefresh="onRefresh">
+      <z-paging ref="pagingRef" refresher-only @scroll="scroll" @onRefresh="onRefresh">
         <slot></slot>
       </z-paging>
     </view>
@@ -44,7 +44,7 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits(['onRefresh'])
+const emits = defineEmits(['scroll', 'onRefresh'])
 
 // 获取状态栏高度
 const statusBarHeight = computed(() => {
@@ -56,6 +56,9 @@ const theme = computed(() => useSysStore().getTheme())
 const pagingRef = ref()
 function onRefresh() {
   emits('onRefresh', pagingRef.value)
+}
+function scroll(e) {
+  emits('scroll', e.detail)
 }
 </script>
 

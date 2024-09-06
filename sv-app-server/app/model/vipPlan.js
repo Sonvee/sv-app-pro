@@ -15,6 +15,10 @@ module.exports = (app) => {
       plan_name: {
         type: String
       },
+      // 缩写简称
+      abbreviation: {
+        type: String
+      },
       // 套餐描述
       description: {
         type: String

@@ -60,6 +60,7 @@ class VipSubscriptionService extends Service {
             _id: 0,
             plan_id: 1,
             plan_name: 1,
+            abbreviation: 1,
             valid_day: 1,
             benefits: 1,
             subscribed_count: 1,
