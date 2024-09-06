@@ -90,6 +90,7 @@ async function onPullDown(e) {
 }
 
 async function getVipInfo() {
+  if (!userInfo.value.user_id) return
 	const subRes = await subscriptionInfo({ user_id: userInfo.value.user_id })
 	const vipInfo = subRes.data
 	// 分发会员订阅信息

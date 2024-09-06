@@ -43,7 +43,13 @@
             <i v-for="item in scope.row.benefits_detail" :key="item.benefit_id" :class="item.icon" class="text-xl mr-8" :title="item.benefit_name"></i>
           </template>
         </el-table-column>
-        <el-table-column prop="style" label="样式" align="center" width="140" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="style" label="样式" align="center" width="140" show-overflow-tooltip>
+          <template #default="scope">
+            <i class="sv-icons-vip margin-left-xs text-lg" :style="{ color: scope.row.style }">
+              <i class="vip-flag">{{ scope.row.plan_name }}</i>
+            </i>
+          </template>
+        </el-table-column>
         <el-table-column prop="subscribed_count" label="订阅数量" align="center" width="140" show-overflow-tooltip></el-table-column>
         <el-table-column
           prop="created_date"
@@ -227,4 +233,10 @@ function handleCurrentChange(e) {
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.vip-flag {
+  font-size: 12px;
+  display: inline-block;
+  transform: scale(0.75);
+}
+</style>
