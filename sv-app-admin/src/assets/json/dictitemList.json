@@ -511,6 +511,6 @@
       "action_style": "warning"
     }
   ],
-  "msg": "字典项获取成功",
+  "msg": "字典项列表",
   "success": true
 }

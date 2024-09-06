@@ -11,6 +11,7 @@
           批量删除
         </el-button>
         <div style="flex: 1"></div>
+        <ExcelTool ref="excelToolRef" class="mr-12" @onTool="onExcelTool"></ExcelTool>
         <el-button circle :icon="RefreshRight" v-permission="['sys:permission:query']" @click="refresh" title="刷新"></el-button>
         <el-button circle :icon="showFilter ? View : Hide" @click="showFilter = !showFilter" :title="showFilter ? '隐藏筛选' : '显示筛选'"></el-button>
       </div>
@@ -62,8 +63,18 @@ import { ref, onMounted } from 'vue'
 import TableFilter from './components/TableFilter.vue'
 import TableForm from './components/TableForm.vue'
 import TablePagination from '@/components/TablePagination/index.vue'
-import { permissionList, permissionAdd, permissionUpdate, permissionDelete, permissionBatchDelete } from '@/api/user/permission'
-import { RefreshRight, Plus, EditPen, Delete, View, Hide } from '@element-plus/icons-vue'
+import ExcelTool from '@/components/ExcelTool/ExcelTool.vue'
+import {
+  permissionList,
+  permissionAdd,
+  permissionUpdate,
+  permissionDelete,
+  permissionBatchDelete,
+  permissionImport,
+  permissionExport,
+  permissionTemplate
+} from '@/api/user/permission'
+import { RefreshRight, Plus, EditPen, Delete, View, Hide, Upload, Download } from '@element-plus/icons-vue'
 import { ElNotification, ElMessageBox, ElMessage } from 'element-plus'
 import { isTruthy, timeFormat } from '@/utils'
 
@@ -127,6 +138,25 @@ function del(row) {
       refresh()
     })
     .catch(() => {})
+}
+
+// excel工具
+const excelToolRef = ref()
+function onExcelTool(e) {
+  switch (e) {
+    case 'import':
+      // 打开导入文件面板
+      // permissionImport()
+      excelToolRef.value.openUpload()
+      break
+    case 'export':
+      const params = Object.assign({ ...dataParams.value }, { pagenum: 1, pagesize: -1 })
+      permissionExport(params)
+      break
+    case 'template':
+      permissionTemplate()
+      break
+  }
 }
 
 // 刷新

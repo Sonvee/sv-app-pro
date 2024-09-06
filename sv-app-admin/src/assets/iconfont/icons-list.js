@@ -589,5 +589,8 @@ export default [
   'sv-icons-deactivate',
   'sv-icons-deactivate-fill',
   'sv-icons-upgrade',
-  'sv-icons-upgrade-fill'
+  'sv-icons-upgrade-fill',
+  'sv-icons-export-file',
+  'sv-icons-import-file',
+  'sv-icons-download-templete'
 ]

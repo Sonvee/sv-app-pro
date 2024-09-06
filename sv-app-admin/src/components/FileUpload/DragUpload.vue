@@ -1,22 +1,26 @@
 <template>
   <el-upload
-    class="image-upload"
+    class="drag-single-upload"
+    drag
     ref="uploadRef"
     action="#"
-    v-model:file-list="imageList"
+    v-model:file-list="fileList"
     :auto-upload="false"
     :multiple="true"
-    list-type="picture-card"
     :show-file-list="true"
     :limit="9"
     :disabled="disabled"
     :accept="fileType.join(',')"
-    :on-preview="handlePreview"
     :on-exceed="handleExceed"
   >
-    <el-icon><Plus /></el-icon>
+    <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+    <div class="el-upload__text">将文件拖到此处，或 <em>点击上传</em></div>
+    <template #tip>
+      <div class="flex-hc mt-10">
+        <el-checkbox v-model="cover" label="是否覆盖已存在数据" />
+      </div>
+    </template>
   </el-upload>
-  <el-image-viewer v-if="showViewer" @close="closeViewer" :url-list="previewList" teleported hide-on-click-modal :initial-index="curImgIndex" />
 </template>
 
 <script setup>
@@ -24,28 +28,29 @@ import { ref, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 
 const props = defineProps({
-  // 文件对象数组 [{url,key,hash},...]
   files: {
-    type: Array,
-    default: []
+    type: Object,
+    default: () => []
   },
   fileType: {
     type: Array,
-    default: () => ['image/jpg', 'image/jpeg', 'image/png', 'image/gif']
+    default: () => []
   },
   disabled: {
     type: Boolean,
     default: false
   },
-  size: {
+  height: {
     type: String,
-    default: '100px'
+    default: '200px'
   }
 })
 const emits = defineEmits(['update:files'])
 
 const uploadRef = ref()
-const imageList = computed({
+const cover = ref(false)
+
+const fileList = computed({
   set(newVal) {
     emits('update:files', newVal)
   },
@@ -59,19 +64,6 @@ function handleExceed() {
     type: 'warning',
     message: '超出最大文件个数限制'
   })
-}
-
-const previewList = computed(() => imageList.value.map((file) => file.url))
-const showViewer = ref(false)
-const curImgIndex = ref(0)
-
-function handlePreview(uploadFile) {
-  curImgIndex.value = previewList.value.indexOf(uploadFile.url)
-  showViewer.value = true
-}
-
-function closeViewer() {
-  showViewer.value = false
 }
 
 /**
@@ -104,12 +96,18 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
-.image-upload {
-  --image-upload-size: v-bind(size);
-  :deep(.el-upload-list) {
-    --el-upload-list-picture-card-size: var(--image-upload-size);
-    .el-upload--picture-card {
-      --el-upload-picture-card-size: var(--image-upload-size);
+.drag-single-upload {
+  width: 100%;
+  --drag-single-upload-height: v-bind(height);
+
+  :deep(.el-upload) {
+    .el-upload-dragger {
+      padding: 0;
+      height: var(--drag-single-upload-height);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
   }
 }

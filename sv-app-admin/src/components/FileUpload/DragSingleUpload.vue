@@ -33,7 +33,7 @@ const props = defineProps({
   },
   fileType: {
     type: Array,
-    default: () => ['.apk', '.zip']
+    default: () => []
   },
   disabled: {
     type: Boolean,

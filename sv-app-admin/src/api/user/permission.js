@@ -47,3 +47,28 @@ export function permissionBatchDelete(data) {
     data
   })
 }
+
+// 导入 导出 模版
+export function permissionImport(data) {
+  return request({
+    url: '/user/permissionImport',
+    method: 'post',
+    data
+  })
+}
+
+export function permissionExport(data) {
+  return request({
+    url: '/user/permissionExport',
+    method: 'post',
+    data
+  })
+}
+
+export function permissionTemplate(data) {
+  return request({
+    url: '/user/permissionTemplate',
+    method: 'post',
+    data
+  })
+}

@@ -20,6 +20,18 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.sv-icons-export-file:before {
+  content: "\e6c9";
+}
+
+.sv-icons-import-file:before {
+  content: "\e6ca";
+}
+
+.sv-icons-download-templete:before {
+  content: "\e6f1";
+}
+
 .sv-icons-fontsize:before {
   content: "\e676";
 }

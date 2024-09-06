@@ -15,7 +15,7 @@
           <el-input v-model="formData.name" placeholder="请输入应用名称" clearable />
         </el-form-item>
         <el-form-item prop="file" label="应用资源包" v-permission="['file:release:upload']">
-          <DragSingleUpload v-model:file="formData.file" height="140px" ref="dragSingleUploadRef"></DragSingleUpload>
+          <DragSingleUpload v-model:file="formData.file" :fileType="['.apk', '.zip']" height="140px" ref="dragSingleUploadRef"></DragSingleUpload>
         </el-form-item>
         <el-form-item prop="link" label="资源链接">
           <el-input v-model="formData.link" placeholder="请输入资源链接" clearable />
