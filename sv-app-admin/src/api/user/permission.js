@@ -65,10 +65,10 @@ export function permissionExport(data) {
   })
 }
 
-export function permissionTemplate(data) {
+export function permissionExcelTemplate() {
   return request({
-    url: '/user/permissionTemplate',
-    method: 'post',
-    data
+    url: '/user/permissionExcelTemplate',
+    method: 'get',
+    responseType: 'arraybuffer', // 指定响应类型为二进制数据
   })
 }

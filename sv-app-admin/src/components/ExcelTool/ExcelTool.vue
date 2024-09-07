@@ -10,7 +10,7 @@
         </el-dropdown-menu>
       </template>
     </el-dropdown>
-    <el-dialog v-model="showUpload" title="文件上传" width="400" :close-on-click-modal="false" destroy-on-close append-to-body>
+    <el-dialog v-model="showUpload" title="文件上传" width="500" :close-on-click-modal="false" destroy-on-close append-to-body>
       <DragUpload :fileType="['.xls', '.xlsx']"></DragUpload>
       <template #footer>
         <el-button @click="closeUpload">取消</el-button>

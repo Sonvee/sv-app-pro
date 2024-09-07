@@ -42,12 +42,12 @@ function close() {
  * @returns {Promise<boolean>} 是否返回
  */
 async function beforeIntercept() {
-  // const isBack = await new Promise((callback) => {
+  // const isBack = await new Promise((resolve) => {
   // 	uni.showModal({
   // 		title: '系统提示',
   // 		content: '是否退出当前页面',
   // 		success: ({ confirm }) => {
-  // 			callback(confirm)
+  // 			resolve(confirm)
   // 		}
   // 	})
   // })

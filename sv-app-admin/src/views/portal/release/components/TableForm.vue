@@ -6,10 +6,10 @@
     <template #default>
       <el-form ref="formRef" :model="formData" :rules="rules" label-width="120px" label-position="left">
         <el-form-item prop="version" label="版本号" required>
-          <el-input v-model="formData.version" :disabled="formMode !== 'add'" placeholder="请输入版本号" clearable />
+          <el-input v-model="formData.version" placeholder="请输入版本号" clearable />
         </el-form-item>
         <el-form-item prop="type" label="应用类型" required>
-          <DictSelect v-model="formData.type" dictType="dict_app_type" :disabled="formMode !== 'add'" placeholder="请选择应用类型" style="width: 100%"></DictSelect>
+          <DictSelect v-model="formData.type" dictType="dict_app_type" placeholder="请选择应用类型" style="width: 100%"></DictSelect>
         </el-form-item>
         <el-form-item prop="name" label="应用名称">
           <el-input v-model="formData.name" placeholder="请输入应用名称" clearable />

@@ -44,6 +44,12 @@ class SysPermissionController extends Controller {
     const res = await service.sysPermission.permissionBatchDelete(data)
     ctx.result(res)
   }
+
+  async permissionExcelTemplate() {
+    const { ctx, service } = this
+    const res = await service.sysPermission.permissionExcelTemplate()
+    ctx.result(res)
+  }
 }
 
 module.exports = SysPermissionController

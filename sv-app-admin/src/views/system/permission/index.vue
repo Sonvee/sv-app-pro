@@ -72,7 +72,7 @@ import {
   permissionBatchDelete,
   permissionImport,
   permissionExport,
-  permissionTemplate
+  permissionExcelTemplate
 } from '@/api/user/permission'
 import { RefreshRight, Plus, EditPen, Delete, View, Hide, Upload, Download } from '@element-plus/icons-vue'
 import { ElNotification, ElMessageBox, ElMessage } from 'element-plus'
@@ -142,7 +142,7 @@ function del(row) {
 
 // excel工具
 const excelToolRef = ref()
-function onExcelTool(e) {
+async function onExcelTool(e) {
   switch (e) {
     case 'import':
       // 打开导入文件面板
@@ -154,7 +154,15 @@ function onExcelTool(e) {
       permissionExport(params)
       break
     case 'template':
-      permissionTemplate()
+      const templateRes = await permissionExcelTemplate()
+      const blob = new Blob([templateRes])
+      // 创建临时下载链接
+      const url = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = 'permissionExcelTemplate.xlsx'
+      link.click()
+      URL.revokeObjectURL(url) // 清理临时URL
       break
   }
 }
