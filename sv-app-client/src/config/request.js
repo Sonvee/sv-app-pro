@@ -58,11 +58,11 @@ http.interceptors.request.use((conf) => {
  */
 http.interceptors.response.use((response) => {
 	// console.log('对响应成功做点什么 ==> ', response)
-	const res = useResponse(response)
-	if (!res.success) {
-		return Promise.reject(res.response)
+	const { success, res } = useResponse(response)
+	if (!success) {
+		return Promise.reject(res)
 	}
-	return res.response
+	return res
 }, (err) => {
 	// console.log('对响应错误做点什么 ==> ', err)
 	const { statusCode = 400 } = err
@@ -80,7 +80,7 @@ http.interceptors.response.use((response) => {
 function useResponse(response) {
 	let result = {
 		success: false,
-		response
+		res: {}
 	}
 
 	/**
@@ -92,7 +92,7 @@ function useResponse(response) {
 			// 下载接口不做拦截处理
 			if (response.config.method === 'DOWNLOAD') {
 				result.success = true
-				result.response = {
+				result.res = {
 					code: response.statusCode,
 					data: response.tempFilePath,
 					msg: response.errMsg,
@@ -144,7 +144,7 @@ function useResponse(response) {
 			}
 
 			result.success = response.data.success
-			result.response = response.data
+			result.res = response.data
 			break
 
 		case 401:

@@ -10,7 +10,8 @@
 
 <script setup>
 import { permissionExcelTemplate } from '@/api/file/download'
-import { useDownloadFile } from '@/hooks/useDownloadFile'
+import { useSaveFile } from '@/hooks/useSaveFile'
+
 function toIndex() {
 	uni.reLaunch({
 		url: '/pages/index/index'
@@ -20,8 +21,8 @@ function toIndex() {
 async function toDown() {
 	const templateRes = await permissionExcelTemplate()
 	const url = templateRes.data
-	const fileName = 'permission_excel_template.xlsx'
-	useDownloadFile(url, fileName)
+	const fileName = 'excel/permission_excel_template.xlsx'
+	await useSaveFile().save(url, fileName)
 }
 </script>
 

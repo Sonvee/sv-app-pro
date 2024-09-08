@@ -67,7 +67,7 @@ module.exports = (appInfo) => {
     client: {
       zone: 'Zone_z2', // Zone_z0 华东, Zone_z1 华北, Zone_z2 华南, Zone_na0 北美
       bucket: 'sv-kodo', // 空间名称
-      baseUrl: 'http://sitga4tm1.hn-bkt.clouddn.com/' // 用于拼接已上传文件的完整地址，后缀'/'不能丢
+      baseUrl: 'http://qiniu.sonve.asia/' // 用于拼接已上传文件的完整地址，后缀'/'不能丢
     }
   }
 

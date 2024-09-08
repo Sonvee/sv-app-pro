@@ -279,6 +279,7 @@ class SysPermissionService extends Service {
     })
     // 设置响应类型为Excel文件
     ctx.set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    ctx.set('Access-Control-Expose-Headers', 'Content-Disposition,download-filename')
     // 设置正确的Content-Disposition响应头
     const fileName = 'permission_excel_template'
     ctx.set('Content-Disposition', `attachment; filename*=UTF-8''${fileName}.xlsx`)
