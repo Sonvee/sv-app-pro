@@ -163,7 +163,13 @@ async function onExcelTool(e) {
 // 确认上传
 async function excelUpload(e, refEntry) {
   const upRes = await excelToolRef.value.upload(permissionImport, 'files')
-  console.log('upRes :>> ', upRes)
+  if (upRes.success) {
+    ElNotification({
+      title: 'Success',
+      message: upRes?.msg,
+      type: 'success'
+    })
+  }
   excelToolRef.value.closeUpload()
 }
 

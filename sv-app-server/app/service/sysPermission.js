@@ -317,7 +317,9 @@ class SysPermissionService extends Service {
       cover: isTruthy(data.cover, 'strbo') // 经过formdata处理后会自动转为字符串，需要解析一下
     }
     const impRes = await this.permissionBatchAdd(addParams)
-    console.log('impRes :>> ', impRes);
+
+    if (!isTruthy(impRes.data, 'arrobj')) impRes.msg = '无有效数据项导入'
+
     return impRes
   }
 }
