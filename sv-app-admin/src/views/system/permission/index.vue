@@ -11,7 +11,7 @@
           批量删除
         </el-button>
         <div style="flex: 1"></div>
-        <ExcelTool ref="excelToolRef" class="mr-12" @onTool="onExcelTool"></ExcelTool>
+        <ExcelTool ref="excelToolRef" class="mr-12" @onTool="onExcelTool" @confirmUpload="excelUpload"></ExcelTool>
         <el-button circle :icon="RefreshRight" v-permission="['sys:permission:query']" @click="refresh" title="刷新"></el-button>
         <el-button circle :icon="showFilter ? View : Hide" @click="showFilter = !showFilter" :title="showFilter ? '隐藏筛选' : '显示筛选'"></el-button>
       </div>
@@ -77,6 +77,7 @@ import {
 import { RefreshRight, Plus, EditPen, Delete, View, Hide, Upload, Download } from '@element-plus/icons-vue'
 import { ElNotification, ElMessageBox, ElMessage } from 'element-plus'
 import { isTruthy, timeFormat } from '@/utils'
+import { useSaveFile } from '@/hooks/useSaveFile'
 
 const dataParams = ref({ pagenum: 1, pagesize: 20 })
 const tableData = ref([])
@@ -146,7 +147,6 @@ async function onExcelTool(e) {
   switch (e) {
     case 'import':
       // 打开导入文件面板
-      // permissionImport()
       excelToolRef.value.openUpload()
       break
     case 'export':
@@ -155,16 +155,16 @@ async function onExcelTool(e) {
       break
     case 'template':
       const templateRes = await permissionExcelTemplate()
-      const blob = new Blob([templateRes])
-      // 创建临时下载链接
-      const url = URL.createObjectURL(blob)
-      const link = document.createElement('a')
-      link.href = url
-      link.download = 'permissionExcelTemplate.xlsx'
-      link.click()
-      URL.revokeObjectURL(url) // 清理临时URL
+      useSaveFile().buffer(templateRes)
       break
   }
+}
+
+// 确认上传
+async function excelUpload(e, refEntry) {
+  const upRes = await excelToolRef.value.upload(permissionImport, 'files')
+  console.log('upRes :>> ', upRes)
+  excelToolRef.value.closeUpload()
 }
 
 // 刷新

@@ -76,9 +76,9 @@ function closeViewer() {
 
 /**
  * 手动上传文件
- * @param apiFunc api接口函数
- * @param filed 上传文件字段名
- * @param params 上传参数
+ * @param {Function} apiFunc api接口函数
+ * @param {String} filed 上传文件字段名
+ * @param {Object} params 上传参数
  */
 async function upload(apiFunc, filed, params) {
   let fd = new FormData()

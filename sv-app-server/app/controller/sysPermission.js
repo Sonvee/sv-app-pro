@@ -50,6 +50,14 @@ class SysPermissionController extends Controller {
     const res = await service.sysPermission.permissionExcelTemplate()
     ctx.result(res)
   }
+
+  async permissionImport() {
+    const { ctx, service } = this
+    const files = ctx.request.files
+    const data = ctx.request.body
+    const res = await service.sysPermission.permissionImport({ data, files })
+    ctx.result(res)
+  }
 }
 
 module.exports = SysPermissionController

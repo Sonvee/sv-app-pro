@@ -2,7 +2,7 @@
 
 const { isTruthy } = require('../utils')
 const { batchAdd, batchDelete } = require('../utils/batch')
-const ExcelJS = require('exceljs')
+const useExcel = require('../utils/excel')
 
 const Service = require('egg').Service
 
@@ -259,43 +259,66 @@ class SysPermissionService extends Service {
     // 权限校验
     ctx.checkAuthority('permission', ['sys:permission:excel'])
 
-    // 创建一个新的工作簿对象
-    const workbook = new ExcelJS.Workbook()
-    // 添加一个新的工作表
-    const worksheet = workbook.addWorksheet('Sheet 1')
-    // 添加表头
-    worksheet.columns = [
-      { header: 'ID', key: 'id', width: 10 },
-      { header: 'Name', key: 'name', width: 32 },
-      { header: 'Message', key: 'message', width: 50 }
+    const columns = [
+      { header: '序号', key: 'sort', width: 10, style: { alignment: { horizontal: 'center' } } },
+      { header: '权限ID', key: 'permission_id', width: 30 },
+      { header: '权限名称', key: 'permission_name', width: 30 },
+      { header: '状态', key: 'status', width: 10, style: { alignment: { horizontal: 'center' } } },
+      { header: '备注', key: 'remark', width: 40 }
     ]
+
     // 填充数据
     const data = [
-      { id: 1, name: 'John Doe', message: 'Hello World' }
-      // 更多数据...
+      { sort: 0, permission_id: 'sys:user:query', permission_name: '用户查询', status: 1, remark: '' },
+      { sort: 1, permission_id: 'sys:role:query', permission_name: '角色查询', status: 1, remark: '' }
     ]
-    data.forEach((rowData) => {
-      worksheet.addRow(rowData)
-    })
-    // 设置响应类型为Excel文件
-    ctx.set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    ctx.set('Access-Control-Expose-Headers', 'Content-Disposition,download-filename')
-    // 设置正确的Content-Disposition响应头
-    const fileName = 'permission_excel_template'
-    ctx.set('Content-Disposition', `attachment; filename*=UTF-8''${fileName}.xlsx`)
-
-    const buffer = await workbook.xlsx.writeBuffer()
 
     try {
-      // 将工作簿内容写入Buffer
-      const buffer = await workbook.xlsx.writeBuffer()
+      const options = { columns, data, fileName: 'permission_excel_template' }
+      const buffer = await useExcel().createWorkSheet(ctx, options)
+
       return {
         type: 'buffer', // 注明类型为二进制文件
         data: buffer
       }
     } catch (error) {
-      ctx.throw(500, { msg: '下载模板失败', errMsg: error })
+      ctx.throw(500, { msg: '下载模板失败', errMsg: error.message })
     }
+  }
+
+  /**
+   * excel导入 post - 权限 permission
+   * @param {Array<File>} files 用户上传的文件
+   * @param {Object} data 请求参数
+   */
+  async permissionImport({ data, files }) {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['sys:permission:excel'])
+
+    // 参数校验
+    if (!isTruthy(files, 'arrobj')) ctx.throw(400, { msg: 'files 为空' })
+
+    // 表头：key对应列标，value对应字段键名（严格对应列匹配）
+    const header = {
+      A: 'sort',
+      B: 'permission_id',
+      C: 'permission_name',
+      D: 'status',
+      E: 'remark'
+    }
+    // 解析成JSON数据
+    const jsondata = await useExcel().readExcelFilesToJson(files, header)
+
+    // 导入数据
+    const addParams = {
+      list: jsondata,
+      cover: isTruthy(data.cover, 'strbo') // 经过formdata处理后会自动转为字符串，需要解析一下
+    }
+    const impRes = await this.permissionBatchAdd(addParams)
+    console.log('impRes :>> ', impRes);
+    return impRes
   }
 }
 

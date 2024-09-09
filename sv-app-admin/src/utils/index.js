@@ -215,6 +215,7 @@ export function assignOverride(target, source) {
  * 3. type 含有 'arr' 时，空数组为假
  * 4. type 含有 'obj' 时，空对象为假
  * 5. type 含有 'bool' 时，false为真
+ * 6. type 含有 'strbo' 时，仅'true'或true为真，其他皆为假
  * @param {any} value 要判断的值
  * @param {String} type 模式 可为包含[zero|arr丨obj]的字符串组合
  * @returns {Boolean} 判断结果
@@ -243,6 +244,11 @@ export function isTruthy(value, type = '') {
   if (type.includes('bool') && value === false) {
     result = true
   }
+  // strbo模式下仅'true'或true为真，其他皆为假
+  if (type.includes('strbo') && value !== 'true' && value !== true) {
+    result = false;
+  }
+
   return result
 }
 

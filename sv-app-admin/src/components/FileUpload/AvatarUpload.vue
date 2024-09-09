@@ -72,8 +72,8 @@ async function deleteImg() {
 
 /**
  * 手动上传文件
- * @param apiFunc api接口函数
- * @param params 上传参数
+ * @param {Function} apiFunc api接口函数
+ * @param {Object} params 上传参数
  */
  async function upload(apiFunc, params) {
   let fd = new FormData()

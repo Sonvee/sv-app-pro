@@ -11,10 +11,10 @@
       </template>
     </el-dropdown>
     <el-dialog v-model="showUpload" title="文件上传" width="500" :close-on-click-modal="false" destroy-on-close append-to-body>
-      <DragUpload :fileType="['.xls', '.xlsx']"></DragUpload>
+      <DragExcelUpload ref="dragExcelUploadRef" v-model:files="excelFiles" v-model:cover="cover" :fileType="['.xls', '.xlsx']"></DragExcelUpload>
       <template #footer>
         <el-button @click="closeUpload">取消</el-button>
-        <el-button type="primary" @click="closeUpload">确定</el-button>
+        <el-button type="primary" @click="confirmUpload">确定</el-button>
       </template>
     </el-dialog>
   </div>
@@ -22,7 +22,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import DragUpload from '@/components/FileUpload/DragUpload.vue'
+import DragExcelUpload from '@/components/FileUpload/DragExcelUpload.vue'
 
 const props = defineProps({
   tools: {
@@ -31,7 +31,7 @@ const props = defineProps({
   }
 })
 
-const emits = defineEmits(['onTool'])
+const emits = defineEmits(['onTool', 'confirmUpload'])
 
 const toolMap = {
   import: { name: '导入', icon: 'sv-icons-import-file' },
@@ -39,10 +39,14 @@ const toolMap = {
   template: { name: '模板', icon: 'sv-icons-download-templete' }
 }
 
+const excelFiles = ref([])
+const cover = ref(false)
+
 function onExcelTool(e) {
   emits('onTool', e)
 }
 
+const dragExcelUploadRef = ref()
 const showUpload = ref(false)
 function openUpload() {
   showUpload.value = true
@@ -51,9 +55,30 @@ function closeUpload() {
   showUpload.value = false
 }
 
+function confirmUpload() {
+  /**
+   * 确认上传回调事件
+   * @param {Array} excelFiles 文件列表
+   * @param {ref} refEntry 上传组件实例（可直接调用该实例进行上传）
+   */
+  emits('confirmUpload', excelFiles.value, dragExcelUploadRef.value)
+}
+
+/**
+ * 手动上传文件 预处理（建议使用该方式触发上传）
+ * @param {Function} apiFunc api接口函数
+ * @param {String} filed 上传文件字段名
+ * @param {Object} params 上传参数
+ */
+function upload(apiFunc, filed, params = {}) {
+  const resource = { [filed]: excelFiles.value, cover: cover.value }
+  return dragExcelUploadRef.value.upload(apiFunc, filed, { ...resource, ...params })
+}
+
 defineExpose({
   openUpload,
-  closeUpload
+  closeUpload,
+  upload
 })
 </script>
 

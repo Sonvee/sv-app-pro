@@ -53,7 +53,10 @@ export function permissionImport(data) {
   return request({
     url: '/user/permissionImport',
     method: 'post',
-    data
+    data,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
   })
 }
 
@@ -69,6 +72,6 @@ export function permissionExcelTemplate() {
   return request({
     url: '/user/permissionExcelTemplate',
     method: 'get',
-    responseType: 'arraybuffer', // 指定响应类型为二进制数据
+    responseType: 'arraybuffer' // 指定响应类型为二进制数据
   })
 }

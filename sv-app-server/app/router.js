@@ -70,6 +70,7 @@ module.exports = (app) => {
   router.post('/user/permissionBatchAdd', controller.sysPermission.permissionBatchAdd)
   router.post('/user/permissionBatchDelete', controller.sysPermission.permissionBatchDelete)
   router.get('/user/permissionExcelTemplate', controller.sysPermission.permissionExcelTemplate)
+  router.post('/user/permissionImport', controller.sysPermission.permissionImport)
 
   // 菜单
   router.post('/sys/menuList', controller.sysMenu.menuList)

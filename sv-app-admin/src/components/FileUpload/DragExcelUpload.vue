@@ -1,6 +1,6 @@
 <template>
   <el-upload
-    class="drag-single-upload"
+    class="drag-excel-upload"
     drag
     ref="uploadRef"
     action="#"
@@ -48,7 +48,7 @@ const props = defineProps({
 const emits = defineEmits(['update:files'])
 
 const uploadRef = ref()
-const cover = ref(false)
+const cover = defineModel('cover', { type: Boolean, default: false })
 
 const fileList = computed({
   set(newVal) {
@@ -68,9 +68,9 @@ function handleExceed() {
 
 /**
  * 手动上传文件
- * @param apiFunc api接口函数
- * @param filed 上传文件字段名
- * @param params 上传参数
+ * @param {Function} apiFunc api接口函数
+ * @param {String} filed 上传文件字段名
+ * @param {Object} params 上传参数
  */
 async function upload(apiFunc, filed, params) {
   let fd = new FormData()
@@ -96,14 +96,14 @@ defineExpose({
 </script>
 
 <style lang="scss" scoped>
-.drag-single-upload {
+.drag-excel-upload {
   width: 100%;
-  --drag-single-upload-height: v-bind(height);
+  --drag-excel-upload-height: v-bind(height);
 
   :deep(.el-upload) {
     .el-upload-dragger {
       padding: 0;
-      height: var(--drag-single-upload-height);
+      height: var(--drag-excel-upload-height);
       display: flex;
       flex-direction: column;
       align-items: center;

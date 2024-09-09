@@ -6,7 +6,7 @@ const Service = require('egg').Service;
 
 class FileService extends Service {
   /**
-   * 单文件上传 - 统一处理
+   * 单文件上传 - 非api接口 仅提供内部调用
    * @param {Array} files 上传的文件列表
    * @param {String} fieldname file请求时指定文件字段名
    * @param {String} keyBase 文件基础路径
@@ -29,7 +29,7 @@ class FileService extends Service {
   }
 
   /**
-   * 多文件上传
+   * 多文件上传 - 非api接口 仅提供内部调用
    * @param {Array} files 上传的文件列表
    * @param {String} fieldname file请求时指定文件字段名
    * @param {String} keyBase 文件基础路径
