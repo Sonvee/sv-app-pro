@@ -108,8 +108,8 @@ async function deleteFile() {
  */
 async function upload(apiFunc, params) {
   let fd = new FormData()
-  const fileds = Object.keys(params)
-  fileds.forEach((item) => {
+  const fields = Object.keys(params)
+  fields.forEach((item) => {
     fd.append(item, params[item])
   })
   const uploadRes = await apiFunc(fd)

@@ -11,6 +11,7 @@ const table = `> 表格页面 index.vue
         <el-button type="primary" plain :icon="Plus" v-permission="['sys:test:add']" @click="add">新增</el-button>
         <el-button type="danger" plain :icon="Delete" v-permission="['sys:test:batchdelete']" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
         <div style="flex: 1"></div>
+        <ExcelTool ref="excelToolRef" class="mr-12" @onTool="onExcelTool" @confirmUpload="excelUpload"></ExcelTool>
         <el-button circle :icon="RefreshRight" v-permission="['sys:test:query']" @click="refresh" title="刷新"></el-button>
         <el-button circle :icon="showFilter ? View : Hide" @click="showFilter = !showFilter" :title="showFilter ? '隐藏筛选' : '显示筛选'"></el-button>
       </div>
@@ -43,10 +44,12 @@ import { ref, onMounted } from 'vue'
 import TableFilter from './components/TableFilter.vue'
 import TableForm from './components/TableForm.vue'
 import TablePagination from '@/components/TablePagination/index.vue'
-import { testList, testAdd, testUpdate, testDelete, testBatchDelete } from '@/api/test'
+import ExcelTool from '@/components/ExcelTool/ExcelTool.vue'
+import { testList, testAdd, testUpdate, testDelete, testBatchDelete, testImport, testExport, testExcelTemplate } from '@/api/test'
 import { RefreshRight, Plus, EditPen, Delete, View, Hide } from '@element-plus/icons-vue'
 import { ElNotification, ElMessageBox, ElMessage } from 'element-plus'
 import { isTruthy, timeFormat } from '@/utils'
+import { useSaveFile } from '@/hooks/useSaveFile'
 
 const dataParams = ref({ pagenum: 1, pagesize: 20 })
 const tableData = ref([])
@@ -182,6 +185,37 @@ function handleSizeChange(e) {
 function handleCurrentChange(e) {
   dataParams.value.pagenum = e
   handleTable(dataParams.value)
+}
+
+// excel工具
+const excelToolRef = ref()
+async function onExcelTool(e) {
+  switch (e) {
+    case 'import':
+      // 打开导入文件面板
+      excelToolRef.value.openUpload()
+      break
+    case 'export':
+      // 在当前筛选条件下进行全量导出
+      const params = Object.assign({ ...dataParams.value }, { pagenum: 1, pagesize: -1 })
+      const exportRes = await testExport(params)
+      useSaveFile().start(exportRes, '测试列表.xlsx')
+      break
+    case 'template':
+      const templateRes = await testExcelTemplate()
+      useSaveFile().start(templateRes, '测试模板.xlsx')
+      break
+  }
+}
+
+// 确认导入
+async function excelUpload() {
+  const upRes = await excelToolRef.value.upload(testImport, 'files')
+  if (upRes.success) {
+    ElNotification({ title: 'Success', message: upRes?.msg, type: 'success' })
+    refresh()
+  }
+  excelToolRef.value.closeUpload()
 }
 </script>
 
@@ -347,7 +381,7 @@ import request from '@/config/request/request.js'
 
 export function testList(data) {
   return request({
-    url: '/test/testList',
+    url: '/sys/testList',
     method: 'post',
     data
   })
@@ -355,7 +389,7 @@ export function testList(data) {
 
 export function testAdd(data) {
   return request({
-    url: '/test/testAdd',
+    url: '/sys/testAdd',
     method: 'post',
     data
   })
@@ -363,7 +397,7 @@ export function testAdd(data) {
 
 export function testUpdate(data) {
   return request({
-    url: '/test/testUpdate',
+    url: '/sys/testUpdate',
     method: 'post',
     data
   })
@@ -371,7 +405,7 @@ export function testUpdate(data) {
 
 export function testDelete(data) {
   return request({
-    url: '/test/testDelete',
+    url: '/sys/testDelete',
     method: 'post',
     data
   })
@@ -379,7 +413,7 @@ export function testDelete(data) {
 
 export function testBatchAdd(data) {
   return request({
-    url: '/test/testBatchAdd',
+    url: '/sys/testBatchAdd',
     method: 'post',
     data
   })
@@ -387,23 +421,52 @@ export function testBatchAdd(data) {
 
 export function testBatchDelete(data) {
   return request({
-    url: '/test/testBatchDelete',
+    url: '/sys/testBatchDelete',
     method: 'post',
     data
+  })
+}
+
+// 导入 导出 模版
+export function testImport(data) {
+  return request({
+    url: '/sys/testImport',
+    method: 'post',
+    data,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
+
+export function testExport(data) {
+  return request({
+    url: '/sys/testExport',
+    method: 'post',
+    data,
+    responseType: 'blob' // 指定响应类型为二进制数据
+  })
+}
+
+export function testExcelTemplate() {
+  return request({
+    url: '/sys/testExcelTemplate',
+    method: 'get',
+    responseType: 'blob' // 指定响应类型为二进制数据
   })
 }
 
 \`\`\`
 `
 
-const model = `> EggJs model/test.js 
+const model = `> EggJs model/sysTest.js 
 \`\`\`js
 'use strict'
 
 module.exports = (app) => {
   const mongoose = app.mongoose
 
-  const TestSchema = new mongoose.Schema(
+  const SysTestSchema = new mongoose.Schema(
     {
       test_id: {
         type: String,
@@ -431,77 +494,99 @@ module.exports = (app) => {
    * 创建数据模型
    * 参数1：连接表名称（自动添加复数形式，自动转为小写），参数2：Schema，参数3：连接表自定义名称（可选，优先级大于参数1）
    */
-  return mongoose.model('test', TestSchema)
+  return mongoose.model('sys_test', SysTestSchema)
 }
 
 \`\`\`
 `
 
-const controller = `> EggJs controller/test.js
+const controller = `> EggJs controller/sysTest.js
 \`\`\`js
 'use strict'
 
 const Controller = require('egg').Controller
 
-class TestController extends Controller {
+class SysTestController extends Controller {
   async testList() {
     const { ctx, service } = this
     const data = ctx.request.body
-    const res = await service.test.testList(data)
+    const res = await service.sysTest.testList(data)
     ctx.result(res)
   }
 
   async testAdd() {
     const { ctx, service } = this
     const data = ctx.request.body
-    const res = await service.test.testAdd(data)
+    const res = await service.sysTest.testAdd(data)
     ctx.result(res)
   }
 
   async testUpdate() {
     const { ctx, service } = this
     const data = ctx.request.body
-    const res = await service.test.testUpdate(data)
+    const res = await service.sysTest.testUpdate(data)
     ctx.result(res)
   }
 
   async testDelete() {
     const { ctx, service } = this
     const data = ctx.request.body
-    const res = await service.test.testDelete(data)
+    const res = await service.sysTest.testDelete(data)
     ctx.result(res)
   }
 
   async testBatchAdd() {
     const { ctx, service } = this
     const data = ctx.request.body
-    const res = await service.test.testBatchAdd(data)
+    const res = await service.sysTest.testBatchAdd(data)
     ctx.result(res)
   }
 
   async testBatchDelete() {
     const { ctx, service } = this
     const data = ctx.request.body
-    const res = await service.test.testBatchDelete(data)
+    const res = await service.sysTest.testBatchDelete(data)
+    ctx.result(res)
+  }
+
+  async testExcelTemplate() {
+    const { ctx, service } = this
+    const res = await service.sysTest.testExcelTemplate()
+    ctx.result(res)
+  }
+
+  async testImport() {
+    const { ctx, service } = this
+    const files = ctx.request.files
+    const data = ctx.request.body
+    const res = await service.sysTest.testImport({ data, files })
+    ctx.result(res)
+  }
+
+  async testExport() {
+    const { ctx, service } = this
+    const data = ctx.request.body
+    const res = await service.sysTest.testExport(data)
     ctx.result(res)
   }
 }
 
-module.exports = TestController
+module.exports = SysTestController
 
 \`\`\`
 `
 
-const service = `> EggJs service/test.js
+const service = `> EggJs service/sysTest.js
 \`\`\`js
 'use strict'
 
 const { isTruthy } = require('../utils')
 const { batchAdd, batchDelete } = require('../utils/batch')
+const useExcel = require('../utils/excel');
 
 const Service = require('egg').Service
 
-class TestService extends Service {
+class SysTestService extends Service {
   /**
    * 查询 post - 权限 open
    * @param {Object} data - 请求参数
@@ -532,7 +617,7 @@ class TestService extends Service {
     if (isTruthy(data.test_name)) conditions.test_name = { $regex: data.test_name, $options: 'i' } // 模糊查询
 
     // 数据库连接
-    const db = app.model.Test
+    const db = app.model.SysTest
 
     // 查询
     let query = db.find(conditions)
@@ -586,7 +671,7 @@ class TestService extends Service {
     const conditions = { test_id: data.test_id }
 
     // 数据库连接
-    const db = app.model.Test
+    const db = app.model.SysTest
 
     // 查询
     const one = await db.findOne(conditions)
@@ -619,7 +704,7 @@ class TestService extends Service {
     const conditions = { test_id: data.test_id }
 
     // 数据库连接
-    const db = app.model.Test
+    const db = app.model.SysTest
 
     // 查询
     const one = await db.findOne(conditions)
@@ -651,7 +736,7 @@ class TestService extends Service {
     const conditions = { test_id: data.test_id }
 
     // 数据库连接
-    const db = app.model.Test
+    const db = app.model.SysTest
 
     // 查询
     const one = await db.findOne(conditions)
@@ -691,7 +776,7 @@ class TestService extends Service {
     if (!isTruthy(data.list, 'arr')) ctx.throw(400, { msg: 'list 为空' })
 
     // 数据库连接
-    const db = app.model.Test
+    const db = app.model.SysTest
 
     // 主键
     const primaryKey = 'test_id'
@@ -699,9 +784,12 @@ class TestService extends Service {
     // 批量添加
     const res = await batchAdd(ctx, db, data, primaryKey)
 
+    let msg = data.cover ? '批量覆盖添加成功' : '批量增量添加成功'
+    if (!isTruthy(res?.data, 'arrobj')) msg += ' - 无有效数据项添加'
+
     return {
       data: res?.data,
-      msg: data.cover ? '批量覆盖添加成功' : '批量增量添加成功',
+      msg: msg,
       tip: res?.tip
     }
   }
@@ -730,7 +818,7 @@ class TestService extends Service {
     if (!isTruthy(data.list, 'arr')) ctx.throw(400, { msg: 'list 为空' })
 
     // 数据库连接
-    const db = app.model.Test
+    const db = app.model.SysTest
     
     // 主键
     const primaryKey = 'test_id'
@@ -743,9 +831,116 @@ class TestService extends Service {
       tip: \`共删除\${deletedCount}条记录\`
     }
   }
+
+  /**
+   * excel模板下载 get - 权限 permission
+   */
+  async testExcelTemplate() {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['sys:test:excel'])
+
+    const columns = [
+      { header: '序号', key: 'sort', width: 10, style: { alignment: { horizontal: 'center' } } },
+      { header: '测试ID', key: 'test_id', width: 40 },
+      { header: '测试名称', key: 'test_name', width: 40 },
+      { header: '状态', key: 'status', width: 10, style: { alignment: { horizontal: 'center' } } },
+      { header: '备注', key: 'remark', width: 40 }
+    ]
+
+    // 填充数据
+    const tableData = [
+      { sort: 0, test_id: 'text_0', test_name: '测试0', status: 1, remark: '测试备注0' },
+      { sort: 1, test_id: 'text_1', test_name: '测试1', status: 1, remark: '测试备注1' }
+    ]
+
+    try {
+      const options = { columns, data: tableData, fileName: 'test_excel_template' }
+      const buffer = await useExcel().createWorkSheet(ctx, options)
+
+      return {
+        type: 'buffer', // 注明类型为二进制文件
+        data: buffer
+      }
+    } catch (error) {
+      ctx.throw(500, { msg: '下载模板失败', errMsg: error.message })
+    }
+  }
+
+  /**
+   * excel导入 post - 权限 permission
+   * @param {Array<File>} files 用户上传的文件
+   * @param {Object} data 请求参数（经过FormData上传处理的参数像Boolean等类型会被自动转为字符串，需手动解析）
+   */
+  async testImport({ data, files }) {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['sys:test:excel'])
+
+    // 参数校验
+    if (!isTruthy(files, 'arrobj')) ctx.throw(400, { msg: 'files 为空' })
+
+    // 表头：column对应列，name对应名称，field对应字段键名（严格对应列匹配）
+    const header = [
+      { column: 'A', name: '序号', field: 'sort' },
+      { column: 'B', name: '测试ID', field: 'test_id' },
+      { column: 'C', name: '测试名称', field: 'test_name' },
+      { column: 'D', name: '状态', field: 'status' },
+      { column: 'E', name: '备注', field: 'remark' }
+    ]
+    // 解析成JSON数据
+    const jsondata = await useExcel().readExcelFilesToJson(files, header)
+
+    // 导入数据
+    const addParams = {
+      list: jsondata,
+      cover: isTruthy(data.cover, 'strbo') // 经过formdata处理后会自动转为字符串，需要解析一下
+    }
+    const impRes = await this.testBatchAdd(addParams)
+
+    return impRes
+  }
+
+  /**
+   * excel导出 post - 权限 permission
+   * @param {Object} data 请求参数
+   */
+  async testExport(data) {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['sys:test:excel'])
+
+    const listRes = await this.testList(data)
+
+    const columns = [
+      { header: '序号', key: 'sort', width: 10, style: { alignment: { horizontal: 'center' } } },
+      { header: '测试ID', key: 'test_id', width: 40 },
+      { header: '测试名称', key: 'test_name', width: 40 },
+      { header: '状态', key: 'status', width: 10, style: { alignment: { horizontal: 'center' } } },
+      { header: '备注', key: 'remark', width: 40 }
+    ]
+
+    // 填充数据
+    const tableData = listRes.data
+
+    try {
+      const options = { columns, data: tableData, fileName: 'test_list' }
+      const buffer = await useExcel().createWorkSheet(ctx, options)
+
+      return {
+        type: 'buffer', // 注明类型为二进制文件
+        data: buffer
+      }
+    } catch (error) {
+      ctx.throw(500, { msg: '导出文件失败', errMsg: error.message })
+    }
+  }
 }
 
-module.exports = TestService
+module.exports = SysTestService
 
 \`\`\`
 `

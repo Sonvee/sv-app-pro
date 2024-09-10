@@ -197,11 +197,14 @@ class TestForeignService extends Service {
     // 批量添加
     const res = await batchAdd(ctx, db, data, primaryKey);
 
+    let msg = data.cover ? '批量覆盖添加成功' : '批量增量添加成功'
+    if (!isTruthy(res?.data, 'arrobj')) msg += ' - 无有效数据项添加'
+
     return {
       data: res?.data,
-      msg: data.cover ? '批量覆盖添加成功' : '批量增量添加成功',
-      tip: res?.tip,
-    };
+      msg: msg,
+      tip: res?.tip
+    }
   }
 
   /**

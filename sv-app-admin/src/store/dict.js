@@ -1,4 +1,4 @@
-import { dictitemListByRedis } from '@/api/dict'
+import { dictitemListByRedis } from '@/api/dict/dictitem'
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 

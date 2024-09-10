@@ -9,6 +9,7 @@
         <el-button type="primary" plain :icon="Plus" v-permission="['sys:menu:add']" @click="addFirst">新增一级菜单</el-button>
         <el-button type="success" plain :icon="Sort" @click="toggleExpandAll">展开/折叠</el-button>
         <div style="flex: 1"></div>
+        <ExcelTool ref="excelToolRef" class="mr-12" @onTool="onExcelTool" @confirmUpload="excelUpload"></ExcelTool>
         <el-button circle :icon="RefreshRight" @click="refresh" title="刷新"></el-button>
         <el-button circle :icon="showFilter ? View : Hide" @click="showFilter = !showFilter" :title="showFilter ? '隐藏筛选' : '显示筛选'"></el-button>
       </div>
@@ -129,11 +130,13 @@ import { ref, onMounted, nextTick } from 'vue'
 import TableFilter from './components/TableFilter.vue'
 import TableForm from './components/TableForm.vue'
 import TableTransfer from './components/TableTransfer.vue'
-import { menuList, menuAdd, menuUpdate, menuDelete } from '@/api/menu'
+import ExcelTool from '@/components/ExcelTool/ExcelTool.vue'
+import { menuList, menuAdd, menuUpdate, menuDelete, menuImport, menuExport, menuExcelTemplate } from '@/api/menu'
 import { RefreshRight, Plus, EditPen, Delete, View, Hide, Sort, Check, Close, Setting } from '@element-plus/icons-vue'
 import { ElNotification, ElMessageBox, ElMessage } from 'element-plus'
 import { getTreeMenuList, isTruthy } from '@/utils'
 import { localFlatMenuList } from '@/router/modules/localRouter'
+import { useSaveFile } from '@/hooks/useSaveFile'
 
 const dataParams = ref({ pagenum: 1, pagesize: 20 })
 const tableData = ref([])
@@ -266,6 +269,37 @@ async function submitForm(e) {
   } catch (error) {
     console.warn(error.msg)
   }
+}
+
+// excel工具
+const excelToolRef = ref()
+async function onExcelTool(e) {
+  switch (e) {
+    case 'import':
+      // 打开导入文件面板
+      excelToolRef.value.openUpload()
+      break
+    case 'export':
+      // 在当前筛选条件下进行全量导出
+      const params = Object.assign({ ...dataParams.value }, { pagenum: 1, pagesize: -1 })
+      const exportRes = await menuExport(params)
+      useSaveFile().start(exportRes, '菜单列表.xlsx')
+      break
+    case 'template':
+      const templateRes = await menuExcelTemplate()
+      useSaveFile().start(templateRes, '菜单模板.xlsx')
+      break
+  }
+}
+
+// 确认导入
+async function excelUpload() {
+  const upRes = await excelToolRef.value.upload(menuImport, 'files')
+  if (upRes.success) {
+    ElNotification({ title: 'Success', message: upRes?.msg, type: 'success' })
+    refresh()
+  }
+  // excelToolRef.value.closeUpload()
 }
 </script>
 

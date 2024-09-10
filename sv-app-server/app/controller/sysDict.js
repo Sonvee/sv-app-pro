@@ -44,6 +44,27 @@ class SysDictController extends Controller {
     const res = await service.sysDict.dictBatchDelete(data)
     ctx.result(res)
   }
+
+  async dictExcelTemplate() {
+    const { ctx, service } = this
+    const res = await service.sysDict.dictExcelTemplate()
+    ctx.result(res)
+  }
+
+  async dictImport() {
+    const { ctx, service } = this
+    const files = ctx.request.files
+    const data = ctx.request.body
+    const res = await service.sysDict.dictImport({ data, files })
+    ctx.result(res)
+  }
+
+  async dictExport() {
+    const { ctx, service } = this
+    const data = ctx.request.body
+    const res = await service.sysDict.dictExport(data)
+    ctx.result(res)
+  }
 }
 
 module.exports = SysDictController

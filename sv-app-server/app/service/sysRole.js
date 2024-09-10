@@ -2,6 +2,7 @@
 
 const { isTruthy } = require('../utils');
 const { batchAdd, batchDelete } = require('../utils/batch');
+const useExcel = require('../utils/excel');
 
 const Service = require('egg').Service;
 
@@ -254,11 +255,14 @@ class SysRoleService extends Service {
     // 批量添加
     const res = await batchAdd(ctx, db, data, primaryKey);
 
+    let msg = data.cover ? '批量覆盖添加成功' : '批量增量添加成功'
+    if (!isTruthy(res?.data, 'arrobj')) msg += ' - 无有效数据项添加'
+
     return {
       data: res?.data,
-      msg: data.cover ? '批量覆盖添加成功' : '批量增量添加成功',
-      tip: res?.tip,
-    };
+      msg: msg,
+      tip: res?.tip
+    }
   }
 
   /**
@@ -297,6 +301,113 @@ class SysRoleService extends Service {
       msg: '批量删除成功',
       tip: `共删除${deletedCount}条记录`,
     };
+  }
+
+  /**
+   * excel模板下载 get - 权限 permission
+   */
+  async roleExcelTemplate() {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['sys:role:excel'])
+
+    const columns = [
+      { header: '序号', key: 'sort', width: 10, style: { alignment: { horizontal: 'center' } } },
+      { header: '角色ID', key: 'role_id', width: 40 },
+      { header: '角色名称', key: 'role_name', width: 40 },
+      { header: '状态', key: 'status', width: 10, style: { alignment: { horizontal: 'center' } } },
+      { header: '备注', key: 'remark', width: 40 }
+    ]
+
+    // 填充数据
+    const tableData = [
+      { sort: 0, role_id: 'admin', role_name: '超级管理员', status: 1, remark: '超级管理员拥有所有权限' },
+      { sort: 1, role_id: 'master', role_name: '管理员', status: 1, remark: '管理员备注' }
+    ]
+
+    try {
+      const options = { columns, data: tableData, fileName: 'role_excel_template' }
+      const buffer = await useExcel().createWorkSheet(ctx, options)
+
+      return {
+        type: 'buffer', // 注明类型为二进制文件
+        data: buffer
+      }
+    } catch (error) {
+      ctx.throw(500, { msg: '下载模板失败', errMsg: error.message })
+    }
+  }
+
+  /**
+   * excel导入 post - 权限 permission
+   * @param {Array<File>} files 用户上传的文件
+   * @param {Object} data 请求参数（经过FormData上传处理的参数像Boolean等类型会被自动转为字符串，需手动解析）
+   */
+  async roleImport({ data, files }) {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['sys:role:excel'])
+
+    // 参数校验
+    if (!isTruthy(files, 'arrobj')) ctx.throw(400, { msg: 'files 为空' })
+
+    // 表头：column对应列，name对应名称，field对应字段键名（严格对应列匹配）
+    const header = [
+      { column: 'A', name: '序号', field: 'sort' },
+      { column: 'B', name: '角色ID', field: 'role_id' },
+      { column: 'C', name: '角色名称', field: 'role_name' },
+      { column: 'D', name: '状态', field: 'status' },
+      { column: 'E', name: '备注', field: 'remark' }
+    ]
+    // 解析成JSON数据
+    const jsondata = await useExcel().readExcelFilesToJson(files, header)
+
+    // 导入数据
+    const addParams = {
+      list: jsondata,
+      cover: isTruthy(data.cover, 'strbo') // 经过formdata处理后会自动转为字符串，需要解析一下
+    }
+    const impRes = await this.roleBatchAdd(addParams)
+
+    return impRes
+  }
+
+  /**
+   * excel导出 post - 权限 permission
+   * @param {Object} data 请求参数
+   */
+  async roleExport(data) {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['sys:role:excel'])
+
+    const listRes = await this.roleList(data)
+
+    const columns = [
+      { header: '序号', key: 'sort', width: 10, style: { alignment: { horizontal: 'center' } } },
+      { header: '角色ID', key: 'role_id', width: 40 },
+      { header: '角色名称', key: 'role_name', width: 40 },
+      { header: '状态', key: 'status', width: 10, style: { alignment: { horizontal: 'center' } } },
+      { header: '备注', key: 'remark', width: 40 }
+    ]
+
+    // 填充数据
+    const tableData = listRes.data
+
+    try {
+      const options = { columns, data: tableData, fileName: 'role_list' }
+      const buffer = await useExcel().createWorkSheet(ctx, options)
+
+      return {
+        type: 'buffer', // 注明类型为二进制文件
+        data: buffer
+      }
+    } catch (error) {
+      ctx.throw(500, { msg: '导出文件失败', errMsg: error.message })
+    }
   }
 }
 

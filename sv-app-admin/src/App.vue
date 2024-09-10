@@ -15,7 +15,7 @@ import { useDatabaseInit } from '@/hooks/useDatabaseInit'
 // 项目启动时自动刷新token
 useUserStore().reToken()
 
-// useDatabaseInit()
+useDatabaseInit()
 
 // 初始化主题风格
 const { initTheme } = useTheme()

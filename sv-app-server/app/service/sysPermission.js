@@ -205,9 +205,12 @@ class SysPermissionService extends Service {
     // 批量添加
     const res = await batchAdd(ctx, db, data, primaryKey)
 
+    let msg = data.cover ? '批量覆盖添加成功' : '批量增量添加成功'
+    if (!isTruthy(res?.data, 'arrobj')) msg += ' - 无有效数据项添加'
+
     return {
       data: res?.data,
-      msg: data.cover ? '批量覆盖添加成功' : '批量增量添加成功',
+      msg: msg,
       tip: res?.tip
     }
   }
@@ -261,20 +264,20 @@ class SysPermissionService extends Service {
 
     const columns = [
       { header: '序号', key: 'sort', width: 10, style: { alignment: { horizontal: 'center' } } },
-      { header: '权限ID', key: 'permission_id', width: 30 },
-      { header: '权限名称', key: 'permission_name', width: 30 },
+      { header: '权限ID', key: 'permission_id', width: 40 },
+      { header: '权限名称', key: 'permission_name', width: 40 },
       { header: '状态', key: 'status', width: 10, style: { alignment: { horizontal: 'center' } } },
       { header: '备注', key: 'remark', width: 40 }
     ]
 
     // 填充数据
-    const data = [
-      { sort: 0, permission_id: 'sys:user:query', permission_name: '用户查询', status: 1, remark: '' },
-      { sort: 1, permission_id: 'sys:role:query', permission_name: '角色查询', status: 1, remark: '' }
+    const tableData = [
+      { sort: 0, permission_id: 'sys:user:query', permission_name: '用户查询', status: 1, remark: '备注1' },
+      { sort: 1, permission_id: 'sys:role:query', permission_name: '角色查询', status: 1, remark: '备注2' }
     ]
 
     try {
-      const options = { columns, data, fileName: 'permission_excel_template' }
+      const options = { columns, data: tableData, fileName: 'permission_excel_template' }
       const buffer = await useExcel().createWorkSheet(ctx, options)
 
       return {
@@ -289,7 +292,7 @@ class SysPermissionService extends Service {
   /**
    * excel导入 post - 权限 permission
    * @param {Array<File>} files 用户上传的文件
-   * @param {Object} data 请求参数
+   * @param {Object} data 请求参数（经过FormData上传处理的参数像Boolean等类型会被自动转为字符串，需手动解析）
    */
   async permissionImport({ data, files }) {
     const { ctx, app } = this
@@ -300,14 +303,14 @@ class SysPermissionService extends Service {
     // 参数校验
     if (!isTruthy(files, 'arrobj')) ctx.throw(400, { msg: 'files 为空' })
 
-    // 表头：key对应列标，value对应字段键名（严格对应列匹配）
-    const header = {
-      A: 'sort',
-      B: 'permission_id',
-      C: 'permission_name',
-      D: 'status',
-      E: 'remark'
-    }
+    // 表头：column对应列，name对应名称，field对应字段键名（严格对应列匹配）
+    const header = [
+      { column: 'A', name: '序号', field: 'sort' },
+      { column: 'B', name: '权限ID', field: 'permission_id' },
+      { column: 'C', name: '权限名称', field: 'permission_name' },
+      { column: 'D', name: '状态', field: 'status' },
+      { column: 'E', name: '备注', field: 'remark' }
+    ]
     // 解析成JSON数据
     const jsondata = await useExcel().readExcelFilesToJson(files, header)
 
@@ -318,9 +321,43 @@ class SysPermissionService extends Service {
     }
     const impRes = await this.permissionBatchAdd(addParams)
 
-    if (!isTruthy(impRes.data, 'arrobj')) impRes.msg = '无有效数据项导入'
-
     return impRes
+  }
+
+  /**
+   * excel导出 post - 权限 permission
+   * @param {Object} data 请求参数
+   */
+  async permissionExport(data) {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['sys:permission:excel'])
+
+    const listRes = await this.permissionList(data)
+
+    const columns = [
+      { header: '序号', key: 'sort', width: 10, style: { alignment: { horizontal: 'center' } } },
+      { header: '权限ID', key: 'permission_id', width: 40 },
+      { header: '权限名称', key: 'permission_name', width: 40 },
+      { header: '状态', key: 'status', width: 10, style: { alignment: { horizontal: 'center' } } },
+      { header: '备注', key: 'remark', width: 40 }
+    ]
+
+    // 填充数据
+    const tableData = listRes.data
+
+    try {
+      const options = { columns, data: tableData, fileName: 'permission_list' }
+      const buffer = await useExcel().createWorkSheet(ctx, options)
+
+      return {
+        type: 'buffer', // 注明类型为二进制文件
+        data: buffer
+      }
+    } catch (error) {
+      ctx.throw(500, { msg: '导出文件失败', errMsg: error.message })
+    }
   }
 }
 

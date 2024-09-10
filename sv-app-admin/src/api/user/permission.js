@@ -64,7 +64,8 @@ export function permissionExport(data) {
   return request({
     url: '/user/permissionExport',
     method: 'post',
-    data
+    data,
+    responseType: 'blob' // 指定响应类型为二进制数据
   })
 }
 
@@ -72,6 +73,6 @@ export function permissionExcelTemplate() {
   return request({
     url: '/user/permissionExcelTemplate',
     method: 'get',
-    responseType: 'arraybuffer' // 指定响应类型为二进制数据
+    responseType: 'blob' // 指定响应类型为二进制数据
   })
 }

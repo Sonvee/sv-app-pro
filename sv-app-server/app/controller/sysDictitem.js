@@ -51,6 +51,27 @@ class SysDictitemController extends Controller {
     const res = await service.sysDictitem.dictitemBatchDelete(data)
     ctx.result(res)
   }
+
+  async dictitemExcelTemplate() {
+    const { ctx, service } = this
+    const res = await service.sysDictitem.dictitemExcelTemplate()
+    ctx.result(res)
+  }
+
+  async dictitemImport() {
+    const { ctx, service } = this
+    const files = ctx.request.files
+    const data = ctx.request.body
+    const res = await service.sysDictitem.dictitemImport({ data, files })
+    ctx.result(res)
+  }
+
+  async dictitemExport() {
+    const { ctx, service } = this
+    const data = ctx.request.body
+    const res = await service.sysDictitem.dictitemExport(data)
+    ctx.result(res)
+  }
 }
 
 module.exports = SysDictitemController

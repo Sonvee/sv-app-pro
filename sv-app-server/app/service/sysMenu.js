@@ -2,6 +2,7 @@
 
 const { isTruthy, removeNode } = require('../utils');
 const { batchAdd, batchDelete } = require('../utils/batch');
+const useExcel = require('../utils/excel');
 
 const Service = require('egg').Service;
 
@@ -288,11 +289,14 @@ class SysMenuService extends Service {
     // 删除redis缓存
     app.redis.del('menu:admin:menulist');
 
+    let msg = data.cover ? '批量覆盖添加成功' : '批量增量添加成功'
+    if (!isTruthy(res?.data, 'arrobj')) msg += ' - 无有效数据项添加'
+
     return {
       data: res?.data,
-      msg: data.cover ? '批量覆盖添加成功' : '批量增量添加成功',
-      tip: res?.tip,
-    };
+      msg: msg,
+      tip: res?.tip
+    }
   }
 
   /**
@@ -333,6 +337,137 @@ class SysMenuService extends Service {
       msg: '批量删除成功',
       tip: `共删除${deletedCount}条记录`,
     };
+  }
+
+  /**
+   * excel模板下载 get - 权限 permission
+   */
+  async menuExcelTemplate() {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['sys:menu:excel'])
+
+    // {
+    //   "meta": {
+    //     "isOpen": false,
+    //     "icon": "admin-icons-doc",
+    //     "title": "操作日志",
+    //     "isLink": "",
+    //     "activeMenu": "",
+    //     "isHide": false,
+    //     "isSub": false,
+    //     "isFull": false,
+    //     "isAffix": false,
+    //     "isKeepAlive": false
+    //   },
+    //   "name": "operationlog",
+    //   "path": "/system/logger/operationlog",
+    //   "component": "/system/logger/operationlog/index",
+    //   "parent_name": "logger",
+    //   "sort": 562,
+    //   "redirect": "",
+    //   "permissions": ["sys:log:query"]
+    // },
+
+    const columns = [
+      { header: '序号', key: 'sort', width: 10, style: { alignment: { horizontal: 'center' } } },
+      { header: '测试ID', key: 'menu_id', width: 40 },
+      { header: '测试名称', key: 'menu_name', width: 40 },
+      { header: '状态', key: 'status', width: 10, style: { alignment: { horizontal: 'center' } } },
+      { header: '备注', key: 'remark', width: 40 }
+    ]
+
+    // 填充数据
+    const tableData = [
+      { sort: 0, menu_id: 'text_0', menu_name: '测试0', status: 1, remark: '测试备注0' },
+      { sort: 1, menu_id: 'text_1', menu_name: '测试1', status: 1, remark: '测试备注1' }
+    ]
+
+    try {
+      const options = { columns, data: tableData, fileName: 'menu_excel_template' }
+      const buffer = await useExcel().createWorkSheet(ctx, options)
+
+      return {
+        type: 'buffer', // 注明类型为二进制文件
+        data: buffer
+      }
+    } catch (error) {
+      ctx.throw(500, { msg: '下载模板失败', errMsg: error.message })
+    }
+  }
+
+  /**
+   * excel导入 post - 权限 permission
+   * @param {Array<File>} files 用户上传的文件
+   * @param {Object} data 请求参数（经过FormData上传处理的参数像Boolean等类型会被自动转为字符串，需手动解析）
+   */
+  async menuImport({ data, files }) {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['sys:menu:excel'])
+
+    // 参数校验
+    if (!isTruthy(files, 'arrobj')) ctx.throw(400, { msg: 'files 为空' })
+
+    // 表头：column对应列，name对应名称，field对应字段键名（严格对应列匹配）
+    const header = [
+      { column: 'A', name: '序号', field: 'sort' },
+      { column: 'B', name: '测试ID', field: 'menu_id' },
+      { column: 'C', name: '测试名称', field: 'menu_name' },
+      { column: 'D', name: '状态', field: 'status' },
+      { column: 'E', name: '备注', field: 'remark' }
+    ]
+    // 解析成JSON数据
+    const jsondata = await useExcel().readExcelFilesToJson(files, header)
+    console.log('jsondata :>> ', jsondata);
+
+
+    // 导入数据
+    // const addParams = {
+    //   list: jsondata,
+    //   cover: isTruthy(data.cover, 'strbo') // 经过formdata处理后会自动转为字符串，需要解析一下
+    // }
+    // const impRes = await this.menuBatchAdd(addParams)
+
+    // return impRes
+  }
+
+  /**
+   * excel导出 post - 权限 permission
+   * @param {Object} data 请求参数
+   */
+  async menuExport(data) {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['sys:menu:excel'])
+
+    const listRes = await this.menuList(data)
+
+    const columns = [
+      { header: '序号', key: 'sort', width: 10, style: { alignment: { horizontal: 'center' } } },
+      { header: '测试ID', key: 'menu_id', width: 40 },
+      { header: '测试名称', key: 'menu_name', width: 40 },
+      { header: '状态', key: 'status', width: 10, style: { alignment: { horizontal: 'center' } } },
+      { header: '备注', key: 'remark', width: 40 }
+    ]
+
+    // 填充数据
+    const tableData = listRes.data
+
+    try {
+      const options = { columns, data: tableData, fileName: 'menu_list' }
+      const buffer = await useExcel().createWorkSheet(ctx, options)
+
+      return {
+        type: 'buffer', // 注明类型为二进制文件
+        data: buffer
+      }
+    } catch (error) {
+      ctx.throw(500, { msg: '导出文件失败', errMsg: error.message })
+    }
   }
 }
 

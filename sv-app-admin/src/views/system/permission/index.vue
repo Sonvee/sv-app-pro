@@ -141,38 +141,6 @@ function del(row) {
     .catch(() => {})
 }
 
-// excel工具
-const excelToolRef = ref()
-async function onExcelTool(e) {
-  switch (e) {
-    case 'import':
-      // 打开导入文件面板
-      excelToolRef.value.openUpload()
-      break
-    case 'export':
-      const params = Object.assign({ ...dataParams.value }, { pagenum: 1, pagesize: -1 })
-      permissionExport(params)
-      break
-    case 'template':
-      const templateRes = await permissionExcelTemplate()
-      useSaveFile().buffer(templateRes)
-      break
-  }
-}
-
-// 确认上传
-async function excelUpload(e, refEntry) {
-  const upRes = await excelToolRef.value.upload(permissionImport, 'files')
-  if (upRes.success) {
-    ElNotification({
-      title: 'Success',
-      message: upRes?.msg,
-      type: 'success'
-    })
-  }
-  excelToolRef.value.closeUpload()
-}
-
 // 刷新
 function refresh() {
   // 置空数据
@@ -245,6 +213,37 @@ function handleSizeChange(e) {
 function handleCurrentChange(e) {
   dataParams.value.pagenum = e
   handleTable(dataParams.value)
+}
+
+// excel工具
+const excelToolRef = ref()
+async function onExcelTool(e) {
+  switch (e) {
+    case 'import':
+      // 打开导入文件面板
+      excelToolRef.value.openUpload()
+      break
+    case 'export':
+      // 在当前筛选条件下进行全量导出
+      const params = Object.assign({ ...dataParams.value }, { pagenum: 1, pagesize: -1 })
+      const exportRes = await permissionExport(params)
+      useSaveFile().start(exportRes, '权限列表.xlsx')
+      break
+    case 'template':
+      const templateRes = await permissionExcelTemplate()
+      useSaveFile().start(templateRes, '权限模板.xlsx')
+      break
+  }
+}
+
+// 确认导入
+async function excelUpload() {
+  const upRes = await excelToolRef.value.upload(permissionImport, 'files')
+  if (upRes.success) {
+    ElNotification({ title: 'Success', message: upRes?.msg, type: 'success' })
+    refresh()
+  }
+  excelToolRef.value.closeUpload()
 }
 </script>
 

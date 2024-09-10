@@ -59,7 +59,7 @@ function confirmUpload() {
   /**
    * 确认上传回调事件
    * @param {Array} excelFiles 文件列表
-   * @param {ref} refEntry 上传组件实例（可直接调用该实例进行上传）
+   * @param {ref} uploadRef 上传组件实例（可直接调用该实例进行上传）
    */
   emits('confirmUpload', excelFiles.value, dragExcelUploadRef.value)
 }
@@ -67,12 +67,12 @@ function confirmUpload() {
 /**
  * 手动上传文件 预处理（建议使用该方式触发上传）
  * @param {Function} apiFunc api接口函数
- * @param {String} filed 上传文件字段名
+ * @param {String} field 上传文件字段名
  * @param {Object} params 上传参数
  */
-function upload(apiFunc, filed, params = {}) {
-  const resource = { [filed]: excelFiles.value, cover: cover.value }
-  return dragExcelUploadRef.value.upload(apiFunc, filed, { ...resource, ...params })
+function upload(apiFunc, field, params = {}) {
+  const resource = { [field]: excelFiles.value, cover: cover.value }
+  return dragExcelUploadRef.value.upload(apiFunc, field, { ...resource, ...params })
 }
 
 defineExpose({

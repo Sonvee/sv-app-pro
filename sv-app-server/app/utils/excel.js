@@ -1,4 +1,5 @@
 const ExcelJS = require('exceljs')
+const { isTruthy } = require('.')
 
 /**
  * 创建excel工作表（常规）
@@ -26,7 +27,13 @@ async function createWorkSheet(ctx, options) {
   // 添加一个新的工作表
   const worksheet = workbook.addWorksheet(sheetName, sheetOption)
 
-  // 添加表头（列）
+  // 所有列的全局默认样式
+  columns.forEach((item) => {
+    if (!item.style) item.style = {}
+    if (!item.style.alignment) item.style.alignment = {}
+    if (!item.style.alignment.vertical) item.style.alignment.vertical = 'middle'
+  })
+  // 设置表头（列）
   worksheet.columns = columns
   // 给表头设置样式
   const header = worksheet.getRow(1)
@@ -88,16 +95,11 @@ async function readExcelFileToJson(filepath, header) {
   let excelData = [] // 文件数据
   // 遍历exceljson对象，以获取每个sheet中数据
   for (let key in sheetsData) {
-    sheetsData[key].shift() // 去掉表头（第一行）
-    // excelData = [...excelData, ...sheetsData[key]] // 循环解构会不断创建数组，消耗性能
-    Array.prototype.push.apply(excelData, sheetsData[key]) // 直接追加数据而不创建新数组
+    const parseSheetData = transformDataByHeader(sheetsData[key], header)
+    Array.prototype.push.apply(excelData, parseSheetData) // 直接追加数据而不创建新数组
   }
 
-  // 解析成对应header的数组
-  const parseExcelData = transformDataByHeader(header, excelData)
-  // console.log('文件parseExcelData :>> ', parseExcelData);
-
-  return parseExcelData
+  return excelData
 }
 
 /**
@@ -113,10 +115,8 @@ async function readExcelFilesToJson(files, header) {
   for (let i = 0; i < files.length; i++) {
     const item = files[i]
     const excelData = await readExcelFileToJson(item.filepath, header)
-    // allExcelData = [...allExcelData, ...excelData] // 循环解构会不断创建数组，消耗性能
     Array.prototype.push.apply(allExcelData, excelData) // 直接追加数据而不创建新数组
   }
-  // console.log('总文件allExcelData :>> ', allExcelData)
 
   return allExcelData
 }
@@ -124,21 +124,52 @@ async function readExcelFilesToJson(files, header) {
 // 转换函数
 /**
  * 根据表头字段，将表格数据转换为JSON格式
- * @param {Object} header 表头 {A:'字段1',B:'字段2'}
  * @param {Array} data 要转换的数据
+ * @param {Array} header 表头 [{ column: 'A', name: '序号', field: 'sort' }, ...]
  * @returns {Array} 转换后的数据
  */
-function transformDataByHeader(header, data) {
+function transformDataByHeader(data, header) {
+  const head = data.shift() // 移除表头行（第一行）的同时获取表头
+
+  const valid = validateHeader(header, head)
+  if (!valid) return [] // 如果表头不匹配，则返回空数组
+
+  // 先进行表头严格匹配
   return data.map((item) => {
-    let newItem = {}
+    let fieldItem = {}
     for (let key in item) {
-      let newKey = header[key.substring(0, 1)]
-      if (newKey) {
-        newItem[newKey] = item[key]
+      let fieldKey = header.find((i) => i.column == key.substring(0, 1)).field
+      if (fieldKey) {
+        fieldItem[fieldKey] = item[key]
       }
     }
-    return newItem
+    return fieldItem
   })
+}
+
+/**
+ * 表头验证
+ * @param {Array} expectedHeaders 标准表头
+ * @param {Array} dataHeaders 实际表头
+ * @returns {Boolean} 是否通过验证
+ */
+function validateHeader(expectedHeaders, dataHeaders) {
+  // 创建一个映射存储预期的列标识符到其详情的映射
+  const expectedHeaderMap = {}
+  expectedHeaders.forEach((header) => {
+    expectedHeaderMap[header.column] = header
+  })
+  // 遍历数据中的表头对象
+  for (const key in dataHeaders) {
+    // 忽略键后面的数字，并提取出基本的列标识符（如'A1' -> 'A'）
+    const baseColumn = key.match(/^[A-Z]/)[0]
+    // 检查此列是否存在并且名字是否一致
+    if (!expectedHeaderMap.hasOwnProperty(baseColumn) || expectedHeaderMap[baseColumn].name !== dataHeaders[key]) {
+      return false // 如果有任何一项不符合，则返回false
+    }
+  }
+  // 如果所有项都符合，则返回true
+  return true
 }
 
 const useExcel = () => {

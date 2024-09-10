@@ -1,7 +1,8 @@
 import { menuBatchAdd } from '@/api/menu'
 import { roleBatchAdd } from '@/api/user/role'
 import { permissionBatchAdd } from '@/api/user/permission'
-import { dictBatchAdd, dictitemBatchAdd } from '@/api/dict'
+import { dictBatchAdd } from '@/api/dict/dict'
+import { dictitemBatchAdd } from '@/api/dict/dictitem'
 
 import menuData from '@/assets/json/menuList.json'
 import roleData from '@/assets/json/roleList.json'
@@ -16,7 +17,7 @@ import dictitemData from '@/assets/json/dictitemList.json'
 export const useDatabaseInit = () => {
   // menuBatchAdd({ list: menuData.data, cover: false })
   // roleBatchAdd({ list: roleData.data, cover: false })
-  permissionBatchAdd({ list: permissionData.data, cover: false })
+  // permissionBatchAdd({ list: permissionData.data, cover: false })
   // dictBatchAdd({ list: dictData.data, cover: false })
-  // dictitemBatchAdd({ list: dictitemData.data, cover: false })
+  dictitemBatchAdd({ list: dictitemData.data, cover: false })
 }

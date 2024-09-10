@@ -30,7 +30,7 @@ function resHandler(params) {
   )
 
   // 二进制文件直接返回
-  if (res.type == 'buffer') return res.data
+  if (res.type == 'buffer' || res.type == 'blob') return res.data
 
   if (!res.msg) {
     res.msg = codeMap[res.code]

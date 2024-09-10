@@ -51,6 +51,27 @@ class SysRoleController extends Controller {
     const res = await service.sysRole.roleBatchDelete(data)
     ctx.result(res)
   }
+
+  async roleExcelTemplate() {
+    const { ctx, service } = this
+    const res = await service.sysRole.roleExcelTemplate()
+    ctx.result(res)
+  }
+
+  async roleImport() {
+    const { ctx, service } = this
+    const files = ctx.request.files
+    const data = ctx.request.body
+    const res = await service.sysRole.roleImport({ data, files })
+    ctx.result(res)
+  }
+
+  async roleExport() {
+    const { ctx, service } = this
+    const data = ctx.request.body
+    const res = await service.sysRole.roleExport(data)
+    ctx.result(res)
+  }
 }
 
 module.exports = SysRoleController

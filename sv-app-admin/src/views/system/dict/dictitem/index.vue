@@ -11,6 +11,7 @@
           批量删除
         </el-button>
         <div style="flex: 1"></div>
+        <ExcelTool ref="excelToolRef" class="mr-12" @onTool="onExcelTool" @confirmUpload="excelUpload"></ExcelTool>
         <el-button circle :icon="RefreshRight" @click="refresh" title="刷新"></el-button>
         <el-button circle :icon="showFilter ? View : Hide" @click="showFilter = !showFilter" :title="showFilter ? '隐藏筛选' : '显示筛选'"></el-button>
       </div>
@@ -68,11 +69,13 @@ import { ref, onMounted, computed } from 'vue'
 import TableFilter from './components/TableFilter.vue'
 import TableForm from './components/TableForm.vue'
 import TablePagination from '@/components/TablePagination/index.vue'
-import { dictitemList, dictitemAdd, dictitemUpdate, dictitemDelete, dictitemBatchDelete } from '@/api/dict'
+import ExcelTool from '@/components/ExcelTool/ExcelTool.vue'
+import { dictitemList, dictitemAdd, dictitemUpdate, dictitemDelete, dictitemBatchDelete, dictitemImport, dictitemExport, dictitemExcelTemplate } from '@/api/dict/dictitem'
 import { RefreshRight, Plus, EditPen, Delete, View, Hide } from '@element-plus/icons-vue'
 import { ElNotification, ElMessageBox, ElMessage } from 'element-plus'
 import { isTruthy, timeFormat } from '@/utils'
 import { useRoute } from 'vue-router'
+import { useSaveFile } from '@/hooks/useSaveFile'
 
 const route = useRoute()
 const dictType = computed(() => route.params.id) // 字典类型
@@ -211,6 +214,37 @@ function handleSizeChange(e) {
 function handleCurrentChange(e) {
   dataParams.value.pagenum = e
   handleTable(dataParams.value)
+}
+
+// excel工具
+const excelToolRef = ref()
+async function onExcelTool(e) {
+  switch (e) {
+    case 'import':
+      // 打开导入文件面板
+      excelToolRef.value.openUpload()
+      break
+    case 'export':
+      // 在当前筛选条件下进行全量导出
+      const params = Object.assign({ ...dataParams.value }, { pagenum: 1, pagesize: -1 })
+      const exportRes = await dictitemExport(params)
+      useSaveFile().start(exportRes, '字典项列表.xlsx')
+      break
+    case 'template':
+      const templateRes = await dictitemExcelTemplate()
+      useSaveFile().start(templateRes, '字典项模板.xlsx')
+      break
+  }
+}
+
+// 确认导入
+async function excelUpload() {
+  const upRes = await excelToolRef.value.upload(dictitemImport, 'files')
+  if (upRes.success) {
+    ElNotification({ title: 'Success', message: upRes?.msg, type: 'success' })
+    refresh()
+  }
+  excelToolRef.value.closeUpload()
 }
 </script>
 

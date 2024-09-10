@@ -50,6 +50,27 @@ class SysMenuController extends Controller {
     const res = await service.sysMenu.menuBatchDelete(data)
     ctx.result(res)
   }
+
+  async menuExcelTemplate() {
+    const { ctx, service } = this
+    const res = await service.sysMenu.menuExcelTemplate()
+    ctx.result(res)
+  }
+
+  async menuImport() {
+    const { ctx, service } = this
+    const files = ctx.request.files
+    const data = ctx.request.body
+    const res = await service.sysMenu.menuImport({ data, files })
+    ctx.result(res)
+  }
+
+  async menuExport() {
+    const { ctx, service } = this
+    const data = ctx.request.body
+    const res = await service.sysMenu.menuExport(data)
+    ctx.result(res)
+  }
 }
 
 module.exports = SysMenuController

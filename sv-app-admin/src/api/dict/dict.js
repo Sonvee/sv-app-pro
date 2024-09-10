@@ -49,61 +49,31 @@ export function dictBatchDelete(data) {
   })
 }
 
-// 字典项
-
-export function dictitemList(data) {
+// 导入 导出 模版
+export function dictImport(data) {
   return request({
-    url: '/sys/dictitemList',
-    method: 'post',
-    data
-  })
-}
-
-export function dictitemListByRedis(data) {
-  return request({
-    url: '/sys/dictitemListByRedis',
+    url: '/sys/dictImport',
     method: 'post',
     data,
-    cancel: false
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
   })
 }
 
-export function dictitemAdd(data) {
+export function dictExport(data) {
   return request({
-    url: '/sys/dictitemAdd',
+    url: '/sys/dictExport',
     method: 'post',
-    data
+    data,
+    responseType: 'blob' // 指定响应类型为二进制数据
   })
 }
 
-export function dictitemUpdate(data) {
+export function dictExcelTemplate() {
   return request({
-    url: '/sys/dictitemUpdate',
-    method: 'post',
-    data
-  })
-}
-
-export function dictitemDelete(data) {
-  return request({
-    url: '/sys/dictitemDelete',
-    method: 'post',
-    data
-  })
-}
-
-export function dictitemBatchAdd(data) {
-  return request({
-    url: '/sys/dictitemBatchAdd',
-    method: 'post',
-    data
-  })
-}
-
-export function dictitemBatchDelete(data) {
-  return request({
-    url: '/sys/dictitemBatchDelete',
-    method: 'post',
-    data
+    url: '/sys/dictExcelTemplate',
+    method: 'get',
+    responseType: 'blob' // 指定响应类型为二进制数据
   })
 }

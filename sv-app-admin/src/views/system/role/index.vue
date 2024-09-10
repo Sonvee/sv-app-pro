@@ -9,6 +9,7 @@
         <el-button type="primary" plain :icon="Plus" v-permission="['sys:role:add']" @click="add">新增</el-button>
         <el-button type="danger" plain :icon="Delete" v-permission="['sys:role:batchdelete']" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
         <div style="flex: 1"></div>
+        <ExcelTool ref="excelToolRef" class="mr-12" @onTool="onExcelTool" @confirmUpload="excelUpload"></ExcelTool>
         <el-button circle :icon="RefreshRight" v-permission="['sys:role:query']" @click="refresh" title="刷新"></el-button>
         <el-button circle :icon="showFilter ? View : Hide" @click="showFilter = !showFilter" :title="showFilter ? '隐藏筛选' : '显示筛选'"></el-button>
       </div>
@@ -68,10 +69,12 @@ import TableFilter from './components/TableFilter.vue'
 import TableForm from './components/TableForm.vue'
 import TableTransfer from './components/TableTransfer.vue'
 import TablePagination from '@/components/TablePagination/index.vue'
-import { roleList, roleAdd, roleUpdate, roleDelete, roleBatchDelete } from '@/api/user/role'
+import ExcelTool from '@/components/ExcelTool/ExcelTool.vue'
+import { roleList, roleAdd, roleUpdate, roleDelete, roleBatchDelete, roleImport, roleExport, roleExcelTemplate } from '@/api/user/role'
 import { RefreshRight, Plus, EditPen, Delete, View, Hide, Setting } from '@element-plus/icons-vue'
 import { ElNotification, ElMessageBox, ElMessage } from 'element-plus'
 import { isTruthy, timeFormat } from '@/utils'
+import { useSaveFile } from '@/hooks/useSaveFile'
 
 const dataParams = ref({ pagenum: 1, pagesize: 20 })
 const tableData = ref([])
@@ -214,6 +217,37 @@ function handleSizeChange(e) {
 function handleCurrentChange(e) {
   dataParams.value.pagenum = e
   handleTable(dataParams.value)
+}
+
+// excel工具
+const excelToolRef = ref()
+async function onExcelTool(e) {
+  switch (e) {
+    case 'import':
+      // 打开导入文件面板
+      excelToolRef.value.openUpload()
+      break
+    case 'export':
+      // 在当前筛选条件下进行全量导出
+      const params = Object.assign({ ...dataParams.value }, { pagenum: 1, pagesize: -1 })
+      const exportRes = await roleExport(params)
+      useSaveFile().start(exportRes, '角色列表.xlsx')
+      break
+    case 'template':
+      const templateRes = await roleExcelTemplate()
+      useSaveFile().start(templateRes, '角色模板.xlsx')
+      break
+  }
+}
+
+// 确认导入
+async function excelUpload() {
+  const upRes = await excelToolRef.value.upload(roleImport, 'files')
+  if (upRes.success) {
+    ElNotification({ title: 'Success', message: upRes?.msg, type: 'success' })
+    refresh()
+  }
+  excelToolRef.value.closeUpload()
 }
 </script>
 

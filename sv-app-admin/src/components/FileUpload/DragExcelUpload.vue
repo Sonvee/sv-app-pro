@@ -15,6 +15,7 @@
   >
     <el-icon class="el-icon--upload"><upload-filled /></el-icon>
     <div class="el-upload__text">将文件拖到此处，或 <em>点击上传</em></div>
+    <div class="el-upload__tip">导入数据之前建议先做好数据备份</div>
     <template #tip>
       <div class="flex-hc mt-10">
         <el-checkbox v-model="cover" label="是否覆盖已存在数据" />
@@ -69,20 +70,20 @@ function handleExceed() {
 /**
  * 手动上传文件
  * @param {Function} apiFunc api接口函数
- * @param {String} filed 上传文件字段名
+ * @param {String} field 上传文件字段名
  * @param {Object} params 上传参数
  */
-async function upload(apiFunc, filed, params) {
+async function upload(apiFunc, field, params) {
   let fd = new FormData()
 
-  const fileds = Object.keys(params).filter((item) => item !== filed) // 其他参数
-  fileds.forEach((item) => {
+  const fields = Object.keys(params).filter((item) => item !== field) // 其他参数
+  fields.forEach((item) => {
     fd.append(item, params[item])
   })
   // 文件资源列表
-  const resource = params[filed]
+  const resource = params[field]
   resource.forEach((item) => {
-    fd.append(filed, item.raw)
+    fd.append(field, item.raw)
   })
   const uploadRes = await apiFunc(fd)
   if (!uploadRes.success) throw new Error('上传失败')

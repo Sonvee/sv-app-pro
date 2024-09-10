@@ -6,7 +6,7 @@
 
 <script setup name="DictSelect">
 import { ref, watchEffect } from 'vue'
-import { dictitemList, dictitemListByRedis } from '@/api/dict'
+import { dictitemList, dictitemListByRedis } from '@/api/dict/dictitem'
 import { isTruthy } from '@/utils'
 import { useDictStore } from '@/store/dict'
 

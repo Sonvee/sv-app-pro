@@ -48,3 +48,32 @@ export function menuBatchDelete(data) {
     data
   })
 }
+
+// 导入 导出 模版
+export function menuImport(data) {
+  return request({
+    url: '/sys/menuImport',
+    method: 'post',
+    data,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
+
+export function menuExport(data) {
+  return request({
+    url: '/sys/menuExport',
+    method: 'post',
+    data,
+    responseType: 'blob' // 指定响应类型为二进制数据
+  })
+}
+
+export function menuExcelTemplate() {
+  return request({
+    url: '/sys/menuExcelTemplate',
+    method: 'get',
+    responseType: 'blob' // 指定响应类型为二进制数据
+  })
+}

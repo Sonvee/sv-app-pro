@@ -10,6 +10,7 @@
         <el-button type="danger" plain :icon="Delete" v-permission="['sys:dict:batchdelete']" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
         <div style="flex: 1"></div>
         <el-button circle @click="updateCache" title="更新本地字典缓存"><i class="sv-icons-storage text-xs"></i></el-button>
+        <ExcelTool ref="excelToolRef" class="mr-12 ml-12" @onTool="onExcelTool" @confirmUpload="excelUpload"></ExcelTool>
         <el-button circle :icon="RefreshRight" @click="refresh" title="刷新"></el-button>
         <el-button circle :icon="showFilter ? View : Hide" @click="showFilter = !showFilter" :title="showFilter ? '隐藏筛选' : '显示筛选'"></el-button>
       </div>
@@ -66,12 +67,14 @@ import { ref, onMounted } from 'vue'
 import TableFilter from './components/TableFilter.vue'
 import TableForm from './components/TableForm.vue'
 import TablePagination from '@/components/TablePagination/index.vue'
-import { dictList, dictAdd, dictUpdate, dictDelete, dictBatchDelete } from '@/api/dict'
+import ExcelTool from '@/components/ExcelTool/ExcelTool.vue'
+import { dictList, dictAdd, dictUpdate, dictDelete, dictBatchDelete, dictImport, dictExport, dictExcelTemplate } from '@/api/dict/dict'
 import { RefreshRight, Plus, EditPen, Delete, View, Hide, Setting } from '@element-plus/icons-vue'
 import { ElNotification, ElMessageBox, ElMessage } from 'element-plus'
 import { isTruthy, timeFormat } from '@/utils'
 import { useDictStore } from '@/store/dict'
 import { useRouter } from 'vue-router'
+import { useSaveFile } from '@/hooks/useSaveFile'
 
 const router = useRouter()
 
@@ -224,6 +227,37 @@ function editDictitem(row) {
 
 function updateCache() {
   useDictStore().clearDict()
+}
+
+// excel工具
+const excelToolRef = ref()
+async function onExcelTool(e) {
+  switch (e) {
+    case 'import':
+      // 打开导入文件面板
+      excelToolRef.value.openUpload()
+      break
+    case 'export':
+      // 在当前筛选条件下进行全量导出
+      const params = Object.assign({ ...dataParams.value }, { pagenum: 1, pagesize: -1 })
+      const exportRes = await dictExport(params)
+      useSaveFile().start(exportRes, '字典列表.xlsx')
+      break
+    case 'template':
+      const templateRes = await dictExcelTemplate()
+      useSaveFile().start(templateRes, '字典模板.xlsx')
+      break
+  }
+}
+
+// 确认导入
+async function excelUpload() {
+  const upRes = await excelToolRef.value.upload(dictImport, 'files')
+  if (upRes.success) {
+    ElNotification({ title: 'Success', message: upRes?.msg, type: 'success' })
+    refresh()
+  }
+  excelToolRef.value.closeUpload()
 }
 </script>
 

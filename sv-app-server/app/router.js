@@ -61,6 +61,9 @@ module.exports = (app) => {
   router.post('/user/roleDelete', controller.sysRole.roleDelete)
   router.post('/user/roleBatchAdd', controller.sysRole.roleBatchAdd)
   router.post('/user/roleBatchDelete', controller.sysRole.roleBatchDelete)
+  router.get('/user/roleExcelTemplate', controller.sysRole.roleExcelTemplate)
+  router.post('/user/roleImport', controller.sysRole.roleImport)
+  router.post('/user/roleExport', controller.sysRole.roleExport)
 
   // 权限
   router.post('/user/permissionList', controller.sysPermission.permissionList)
@@ -71,6 +74,7 @@ module.exports = (app) => {
   router.post('/user/permissionBatchDelete', controller.sysPermission.permissionBatchDelete)
   router.get('/user/permissionExcelTemplate', controller.sysPermission.permissionExcelTemplate)
   router.post('/user/permissionImport', controller.sysPermission.permissionImport)
+  router.post('/user/permissionExport', controller.sysPermission.permissionExport)
 
   // 菜单
   router.post('/sys/menuList', controller.sysMenu.menuList)
@@ -80,6 +84,9 @@ module.exports = (app) => {
   router.post('/sys/menuDelete', controller.sysMenu.menuDelete)
   router.post('/sys/menuBatchAdd', controller.sysMenu.menuBatchAdd)
   router.post('/sys/menuBatchDelete', controller.sysMenu.menuBatchDelete)
+  router.get('/sys/menuExcelTemplate', controller.sysMenu.menuExcelTemplate)
+  router.post('/sys/menuImport', controller.sysMenu.menuImport)
+  router.post('/sys/menuExport', controller.sysMenu.menuExport)
 
   // 字典
   router.post('/sys/dictList', controller.sysDict.dictList)
@@ -88,7 +95,11 @@ module.exports = (app) => {
   router.post('/sys/dictDelete', controller.sysDict.dictDelete)
   router.post('/sys/dictBatchAdd', controller.sysDict.dictBatchAdd)
   router.post('/sys/dictBatchDelete', controller.sysDict.dictBatchDelete)
+  router.get('/sys/dictExcelTemplate', controller.sysDict.dictExcelTemplate)
+  router.post('/sys/dictImport', controller.sysDict.dictImport)
+  router.post('/sys/dictExport', controller.sysDict.dictExport)
 
+  // 字典项
   router.post('/sys/dictitemList', controller.sysDictitem.dictitemList)
   router.post('/sys/dictitemListByRedis', controller.sysDictitem.dictitemListByRedis)
   router.post('/sys/dictitemAdd', controller.sysDictitem.dictitemAdd)
@@ -96,6 +107,9 @@ module.exports = (app) => {
   router.post('/sys/dictitemDelete', controller.sysDictitem.dictitemDelete)
   router.post('/sys/dictitemBatchAdd', controller.sysDictitem.dictitemBatchAdd)
   router.post('/sys/dictitemBatchDelete', controller.sysDictitem.dictitemBatchDelete)
+  router.get('/sys/dictitemExcelTemplate', controller.sysDictitem.dictitemExcelTemplate)
+  router.post('/sys/dictitemImport', controller.sysDictitem.dictitemImport)
+  router.post('/sys/dictitemExport', controller.sysDictitem.dictitemExport)
 
   // 日志
   router.post('/sys/logList', controller.sysLog.logList)

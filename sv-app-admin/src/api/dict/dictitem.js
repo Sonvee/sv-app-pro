@@ -1,65 +1,68 @@
 import request from '@/config/request/request.js'
 
-export function roleList(data) {
+// 字典项
+
+export function dictitemList(data) {
   return request({
-    url: '/user/roleList',
+    url: '/sys/dictitemList',
     method: 'post',
     data
   })
 }
 
-export function findPermissionByRole(data) {
+export function dictitemListByRedis(data) {
   return request({
-    url: '/user/findPermissionByRole',
+    url: '/sys/dictitemListByRedis',
+    method: 'post',
+    data,
+    cancel: false
+  })
+}
+
+export function dictitemAdd(data) {
+  return request({
+    url: '/sys/dictitemAdd',
     method: 'post',
     data
   })
 }
 
-export function roleAdd(data) {
+export function dictitemUpdate(data) {
   return request({
-    url: '/user/roleAdd',
+    url: '/sys/dictitemUpdate',
     method: 'post',
     data
   })
 }
 
-export function roleUpdate(data) {
+export function dictitemDelete(data) {
   return request({
-    url: '/user/roleUpdate',
+    url: '/sys/dictitemDelete',
     method: 'post',
     data
   })
 }
 
-export function roleDelete(data) {
+export function dictitemBatchAdd(data) {
   return request({
-    url: '/user/roleDelete',
+    url: '/sys/dictitemBatchAdd',
     method: 'post',
     data
   })
 }
 
-export function roleBatchAdd(data) {
+export function dictitemBatchDelete(data) {
   return request({
-    url: '/user/roleBatchAdd',
-    method: 'post',
-    data
-  })
-}
-
-export function roleBatchDelete(data) {
-  return request({
-    url: '/user/roleBatchDelete',
+    url: '/sys/dictitemBatchDelete',
     method: 'post',
     data
   })
 }
 
 // 导入 导出 模版
-export function roleImport(data) {
+export function dictitemImport(data) {
   return request({
-    url: '/user/roleImport',
+    url: '/sys/dictitemImport',
     method: 'post',
     data,
     headers: {
@@ -68,18 +71,18 @@ export function roleImport(data) {
   })
 }
 
-export function roleExport(data) {
+export function dictitemExport(data) {
   return request({
-    url: '/user/roleExport',
+    url: '/sys/dictitemExport',
     method: 'post',
     data,
     responseType: 'blob' // 指定响应类型为二进制数据
   })
 }
 
-export function roleExcelTemplate() {
+export function dictitemExcelTemplate() {
   return request({
-    url: '/user/roleExcelTemplate',
+    url: '/sys/dictitemExcelTemplate',
     method: 'get',
     responseType: 'blob' // 指定响应类型为二进制数据
   })
