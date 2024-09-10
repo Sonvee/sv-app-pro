@@ -11,7 +11,7 @@
           批量删除
         </el-button>
         <div style="flex: 1"></div>
-        <ExcelTool ref="excelToolRef" class="mr-12" @onTool="onExcelTool" @confirmUpload="excelUpload"></ExcelTool>
+        <ExcelTool ref="excelToolRef" class="mr-12" v-permission="['sys:permission:excel']" @onTool="onExcelTool" @confirmUpload="excelUpload"></ExcelTool>
         <el-button circle :icon="RefreshRight" v-permission="['sys:permission:query']" @click="refresh" title="刷新"></el-button>
         <el-button circle :icon="showFilter ? View : Hide" @click="showFilter = !showFilter" :title="showFilter ? '隐藏筛选' : '显示筛选'"></el-button>
       </div>

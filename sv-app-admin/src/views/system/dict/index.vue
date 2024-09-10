@@ -10,7 +10,7 @@
         <el-button type="danger" plain :icon="Delete" v-permission="['sys:dict:batchdelete']" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
         <div style="flex: 1"></div>
         <el-button circle @click="updateCache" title="更新本地字典缓存"><i class="sv-icons-storage text-xs"></i></el-button>
-        <ExcelTool ref="excelToolRef" class="mr-12 ml-12" @onTool="onExcelTool" @confirmUpload="excelUpload"></ExcelTool>
+        <ExcelTool ref="excelToolRef" class="mr-12 ml-12" v-permission="['sys:dict:excel']" @onTool="onExcelTool" @confirmUpload="excelUpload"></ExcelTool>
         <el-button circle :icon="RefreshRight" @click="refresh" title="刷新"></el-button>
         <el-button circle :icon="showFilter ? View : Hide" @click="showFilter = !showFilter" :title="showFilter ? '隐藏筛选' : '显示筛选'"></el-button>
       </div>
