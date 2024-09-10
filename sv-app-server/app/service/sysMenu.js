@@ -1,10 +1,10 @@
-'use strict';
+'use strict'
 
-const { isTruthy, removeNode } = require('../utils');
-const { batchAdd, batchDelete } = require('../utils/batch');
-const useExcel = require('../utils/excel');
+const { isTruthy, removeNode } = require('../utils')
+const { batchAdd, batchDelete } = require('../utils/batch')
+const useExcel = require('../utils/excel')
 
-const Service = require('egg').Service;
+const Service = require('egg').Service
 
 class SysMenuService extends Service {
   /**
@@ -13,28 +13,28 @@ class SysMenuService extends Service {
    * @return {Array} 处理后的菜单列表
    */
   menuPermissionHandler(list) {
-    const { ctx, app } = this;
-    let result = list;
+    const { ctx, app } = this
+    let result = list
     // 菜单权限过滤
-    const roles = ctx.userInfo?.role || [];
-    const permissions = ctx.userInfo?.permission || [];
+    const roles = ctx.userInfo?.role || []
+    const permissions = ctx.userInfo?.permission || []
     if (!roles.includes('admin')) {
-      let removeMenu = [];
-      removeMenu = list.filter(menu => {
+      let removeMenu = []
+      removeMenu = list.filter((menu) => {
         if (!isTruthy(menu.permissions, 'arr')) {
           // 开放型菜单不做处理直接返回
-          return false;
+          return false
         }
         // 获取所有不符合权限的菜单对象
-        return menu.permissions.some(item => !permissions.includes(item));
-      });
+        return menu.permissions.some((item) => !permissions.includes(item))
+      })
       // 获取所有不符合权限的菜单name
-      removeMenu = removeMenu.map(item => item.name);
+      removeMenu = removeMenu.map((item) => item.name)
       // 删除权限不符合的节点与其子节点
-      const { nodes } = removeNode(list, removeMenu);
-      result = nodes;
+      const { nodes } = removeNode(list, removeMenu)
+      result = nodes
     }
-    return result;
+    return result
   }
 
   /**
@@ -44,37 +44,44 @@ class SysMenuService extends Service {
    * @property {String} data.title - 路由标题
    */
   async menuList(data) {
-    const { ctx, app } = this;
+    const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('open');
+    ctx.checkAuthority('open')
 
     // 查询条件处理
-    const conditions = {};
+    const conditions = {}
 
     // 查询条件
-    if (isTruthy(data.name)) conditions.name = data.name;
-    if (isTruthy(data.title)) conditions['meta.title'] = { $regex: data.title, $options: 'i' }; // 模糊查询
+    if (isTruthy(data.name)) conditions.name = data.name
+    if (isTruthy(data.title)) conditions['meta.title'] = { $regex: data.title, $options: 'i' } // 模糊查询
 
     // 数据库连接
-    const db = app.model.SysMenu;
+    const db = app.model.SysMenu
 
     // 查询
-    let query = db.find(conditions);
+    let query = db.find(conditions)
 
     // 排序：1升序，-1降序
-    query = query.sort({ sort: 1 });
+    query = query.sort({ sort: 1 })
+
+    /**
+     * 开启 Lean
+     * @tutorial https://mongoosejs.com/docs/tutorials/lean.html
+     * @tutorial https://runebook.dev/zh/docs/mongoose/tutorials/lean
+     */
+    query = query.lean()
 
     // 处理查询结果
-    let res = await query.exec();
+    let res = await query.exec()
 
     // 菜单权限过滤
-    res = this.menuPermissionHandler(res);
+    res = this.menuPermissionHandler(res)
 
     return {
       data: res,
-      msg: '列表获取成功',
-    };
+      msg: '列表获取成功'
+    }
   }
 
   /**
@@ -82,30 +89,30 @@ class SysMenuService extends Service {
    * @description redis缓存中是菜单全列表，再根据权限自动过滤，在源menuList更新时需要及时更新redis缓存
    */
   async authMenuList() {
-    const { ctx, app } = this;
+    const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('open');
+    ctx.checkAuthority('open')
 
-    const menuRedis = await app.redis.get('menu:admin:menulist');
-    let menuList = [];
+    const menuRedis = await app.redis.get('menu:admin:menulist')
+    let menuList = []
 
     if (menuRedis) {
       // 权限过滤
-      menuList = this.menuPermissionHandler(JSON.parse(menuRedis));
+      menuList = this.menuPermissionHandler(JSON.parse(menuRedis))
     } else {
       // 获取全菜单列表
-      const menuRes = await this.menuList({});
+      const menuRes = await this.menuList({})
       // 缓存全菜单列表
-      await app.redis.set('menu:admin:menulist', JSON.stringify(menuRes.data));
+      await app.redis.set('menu:admin:menulist', JSON.stringify(menuRes.data))
       // 权限过滤
-      menuList = this.menuPermissionHandler(menuRes.data);
+      menuList = this.menuPermissionHandler(menuRes.data)
     }
 
     return {
       data: menuList,
-      msg: '菜单获取成功',
-    };
+      msg: '菜单获取成功'
+    }
   }
 
   /**
@@ -122,37 +129,37 @@ class SysMenuService extends Service {
    * @property {Object} data.meta - 路由元信息 详见model/sysMenu
    */
   async menuAdd(data) {
-    const { ctx, app } = this;
+    const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', [ 'sys:menu:add' ]);
+    ctx.checkAuthority('permission', ['sys:menu:add'])
 
     // 参数处理
-    delete data.menu_id; // 去除部分参数
+    delete data.menu_id // 去除部分参数
 
     // 参数校验
-    if (!isTruthy(data.name)) ctx.throw(400, { msg: 'name 必填' });
-    if (!isTruthy(data.path)) ctx.throw(400, { msg: 'path 必填' });
+    if (!isTruthy(data.name)) ctx.throw(400, { msg: 'name 必填' })
+    if (!isTruthy(data.path)) ctx.throw(400, { msg: 'path 必填' })
 
     // 查询条件处理
-    const conditions = { name: data.name };
+    const conditions = { name: data.name }
 
     // 数据库连接
-    const db = app.model.SysMenu;
+    const db = app.model.SysMenu
 
     // 查询
-    const one = await db.findOne(conditions);
-    if (one) ctx.throw(400, { msg: '新增项已存在' });
+    const one = await db.findOne(conditions)
+    if (one) ctx.throw(400, { msg: '新增项已存在' })
 
-    const res = await db.create(data);
+    const res = await db.create(data)
 
     // 删除redis缓存
-    app.redis.del('menu:admin:menulist');
+    app.redis.del('menu:admin:menulist')
 
     return {
       data: res,
-      msg: '新增成功',
-    };
+      msg: '新增成功'
+    }
   }
 
   /**
@@ -169,40 +176,40 @@ class SysMenuService extends Service {
    * @property {Object} data.meta - 路由元信息
    */
   async menuUpdate(data) {
-    const { ctx, app } = this;
+    const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', [ 'sys:menu:update' ]);
+    ctx.checkAuthority('permission', ['sys:menu:update'])
 
     // 参数校验
-    if (!isTruthy(data.menu_id)) ctx.throw(400, { msg: 'menu_id 必填' });
-    if (!isTruthy(data.name)) ctx.throw(400, { msg: 'name 必填' });
-    if (!isTruthy(data.path)) ctx.throw(400, { msg: 'path 必填' });
+    if (!isTruthy(data.menu_id)) ctx.throw(400, { msg: 'menu_id 必填' })
+    if (!isTruthy(data.name)) ctx.throw(400, { msg: 'name 必填' })
+    if (!isTruthy(data.path)) ctx.throw(400, { msg: 'path 必填' })
 
     // 查询条件处理
-    const conditions = { menu_id: data.menu_id };
+    const conditions = { menu_id: data.menu_id }
 
     // 数据库连接
-    const db = app.model.SysMenu;
+    const db = app.model.SysMenu
 
     // 查询
-    const one = await db.findOne(conditions);
-    if (!one) ctx.throw(400, { msg: '更新项不存在' });
+    const one = await db.findOne(conditions)
+    if (!one) ctx.throw(400, { msg: '更新项不存在' })
 
-    const res = await db.findOneAndUpdate(conditions, data, { new: true });
+    const res = await db.findOneAndUpdate(conditions, data, { new: true })
 
     // 父级name更新，子级parent_name同步更新
     if (data.name !== one.name) {
-      await db.updateMany({ parent_name: one.name }, { $set: { parent_name: data.name } });
+      await db.updateMany({ parent_name: one.name }, { $set: { parent_name: data.name } })
     }
 
     // 删除redis缓存
-    app.redis.del('menu:admin:menulist');
+    app.redis.del('menu:admin:menulist')
 
     return {
       data: res,
-      msg: '更新成功',
-    };
+      msg: '更新成功'
+    }
   }
 
   /**
@@ -211,23 +218,23 @@ class SysMenuService extends Service {
    * @param {String} data.name - 路由 name
    */
   async menuDelete(data) {
-    const { ctx, app } = this;
+    const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', [ 'sys:menu:delete' ]);
+    ctx.checkAuthority('permission', ['sys:menu:delete'])
 
     // 参数校验
-    if (!isTruthy(data.name)) ctx.throw(400, { msg: 'name 必填' });
+    if (!isTruthy(data.name)) ctx.throw(400, { msg: 'name 必填' })
 
     // 查询条件处理
-    const conditions = { name: data.name };
+    const conditions = { name: data.name }
 
     // 数据库连接
-    const db = app.model.SysMenu;
+    const db = app.model.SysMenu
 
     // 查询
-    const one = await db.findOne(conditions);
-    if (!one) ctx.throw(400, { msg: '删除项不存在或已被删除' });
+    const one = await db.findOne(conditions)
+    if (!one) ctx.throw(400, { msg: '删除项不存在或已被删除' })
 
     /*
     // 需要先查询菜单全量
@@ -241,15 +248,15 @@ class SysMenuService extends Service {
     */
 
     // 不做子节点同步删除，只做单点删除，父级删除后 子级会流落（无父级节点会自动挂载至根节点）
-    const res = await db.deleteOne({ name: one.name });
+    const res = await db.deleteOne({ name: one.name })
 
     // 删除redis缓存
-    app.redis.del('menu:admin:menulist');
+    app.redis.del('menu:admin:menulist')
 
     return {
       data: res,
-      msg: '删除成功',
-    };
+      msg: '删除成功'
+    }
   }
 
   /**
@@ -259,35 +266,35 @@ class SysMenuService extends Service {
    * @param {Boolean} data.cover - 是否覆盖 默认false
    */
   async menuBatchAdd(data) {
-    const { ctx, app } = this;
+    const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', [ 'sys:menu:batchadd' ]);
+    ctx.checkAuthority('permission', ['sys:menu:batchadd'])
 
     // 参数处理
     data = Object.assign(
       {
         list: [],
-        cover: false, // 是否覆盖
+        cover: false // 是否覆盖
       },
       data
-    );
+    )
 
     // 参数校验
-    if (!Array.isArray(data.list)) ctx.throw(400, { msg: 'list 必须是数组' });
-    if (!isTruthy(data.list, 'arr')) ctx.throw(400, { msg: 'list 为空' });
+    if (!Array.isArray(data.list)) ctx.throw(400, { msg: 'list 必须是数组' })
+    if (!isTruthy(data.list, 'arr')) ctx.throw(400, { msg: 'list 为空' })
 
     // 数据库连接
-    const db = app.model.SysMenu;
+    const db = app.model.SysMenu
 
     // 主键
-    const primaryKey = 'name';
+    const primaryKey = 'name'
 
     // 批量添加
-    const res = await batchAdd(ctx, db, data, primaryKey);
+    const res = await batchAdd(ctx, db, data, primaryKey)
 
     // 删除redis缓存
-    app.redis.del('menu:admin:menulist');
+    app.redis.del('menu:admin:menulist')
 
     let msg = data.cover ? '批量覆盖添加成功' : '批量增量添加成功'
     if (!isTruthy(res?.data, 'arrobj')) msg += ' - 无有效数据项添加'
@@ -305,38 +312,38 @@ class SysMenuService extends Service {
    * @param {Array} data.list - 批量删除项
    */
   async menuBatchDelete(data) {
-    const { ctx, app } = this;
+    const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', [ 'sys:menu:batchdelete' ]);
+    ctx.checkAuthority('permission', ['sys:menu:batchdelete'])
 
     // 参数处理
     data = Object.assign(
       {
-        list: [], // 需要删除的记录的ID列表
+        list: [] // 需要删除的记录的ID列表
       },
       data
-    );
+    )
 
     // 参数校验
-    if (!Array.isArray(data.list)) ctx.throw(400, { msg: 'list 必须是数组' });
-    if (!isTruthy(data.list)) ctx.throw(400, { msg: 'list 为空' });
+    if (!Array.isArray(data.list)) ctx.throw(400, { msg: 'list 必须是数组' })
+    if (!isTruthy(data.list)) ctx.throw(400, { msg: 'list 为空' })
 
     // 数据库连接
-    const db = app.model.SysMenu;
+    const db = app.model.SysMenu
     // 主键
-    const primaryKey = 'name';
+    const primaryKey = 'name'
 
     // 批量删除
-    const deletedCount = await batchDelete(ctx, db, data, primaryKey);
+    const deletedCount = await batchDelete(ctx, db, data, primaryKey)
 
     // 删除redis缓存
-    app.redis.del('menu:admin:menulist');
+    app.redis.del('menu:admin:menulist')
 
     return {
       msg: '批量删除成功',
-      tip: `共删除${deletedCount}条记录`,
-    };
+      tip: `共删除${deletedCount}条记录`
+    }
   }
 
   /**
@@ -348,40 +355,88 @@ class SysMenuService extends Service {
     // 权限校验
     ctx.checkAuthority('permission', ['sys:menu:excel'])
 
-    // {
-    //   "meta": {
-    //     "isOpen": false,
-    //     "icon": "admin-icons-doc",
-    //     "title": "操作日志",
-    //     "isLink": "",
-    //     "activeMenu": "",
-    //     "isHide": false,
-    //     "isSub": false,
-    //     "isFull": false,
-    //     "isAffix": false,
-    //     "isKeepAlive": false
-    //   },
-    //   "name": "operationlog",
-    //   "path": "/system/logger/operationlog",
-    //   "component": "/system/logger/operationlog/index",
-    //   "parent_name": "logger",
-    //   "sort": 562,
-    //   "redirect": "",
-    //   "permissions": ["sys:log:query"]
-    // },
-
+    // 表头列（顺序严格）
     const columns = [
       { header: '序号', key: 'sort', width: 10, style: { alignment: { horizontal: 'center' } } },
-      { header: '测试ID', key: 'menu_id', width: 40 },
-      { header: '测试名称', key: 'menu_name', width: 40 },
-      { header: '状态', key: 'status', width: 10, style: { alignment: { horizontal: 'center' } } },
-      { header: '备注', key: 'remark', width: 40 }
+      { header: '路由标识', key: 'name', width: 20 },
+      { header: '父级路由标识', key: 'parent_name', width: 20 },
+      { header: '图标', key: 'meta.icon', width: 40 },
+      { header: '路由标题', key: 'meta.title', width: 30 },
+      { header: '路由访问路径', key: 'path', width: 40 },
+      { header: '视图文件路径', key: 'component', width: 40 },
+      { header: '路由重定向地址', key: 'redirect', width: 40 },
+      { header: '外链地址', key: 'meta.isLink', width: 40 },
+      { header: '高亮菜单', key: 'meta.activeMenu', width: 40 },
+      { header: '是否缓存', key: 'meta.isKeepAlive', width: 20, style: { alignment: { horizontal: 'center' } } },
+      { header: '是否隐藏', key: 'meta.isHide', width: 20, style: { alignment: { horizontal: 'center' } } },
+      { header: '是否子详情页面', key: 'meta.isSub', width: 20, style: { alignment: { horizontal: 'center' } } },
+      { header: '是否全屏', key: 'meta.isFull', width: 20, style: { alignment: { horizontal: 'center' } } },
+      { header: '是否固定', key: 'meta.isAffix', width: 20, style: { alignment: { horizontal: 'center' } } },
+      { header: '是否无需登录', key: 'meta.isOpen', width: 20, style: { alignment: { horizontal: 'center' } } }
     ]
 
     // 填充数据
     const tableData = [
-      { sort: 0, menu_id: 'text_0', menu_name: '测试0', status: 1, remark: '测试备注0' },
-      { sort: 1, menu_id: 'text_1', menu_name: '测试1', status: 1, remark: '测试备注1' }
+      {
+        name: 'home',
+        path: '/home',
+        component: '/home/index',
+        parent_name: '',
+        sort: 0,
+        redirect: '',
+        meta: {
+          isOpen: false,
+          icon: 'uni-icons-home-filled',
+          title: '首页',
+          isLink: '',
+          activeMenu: '',
+          isHide: false,
+          isSub: false,
+          isFull: false,
+          isAffix: true,
+          isKeepAlive: true
+        }
+      },
+      {
+        name: 'system',
+        path: '/system',
+        component: '',
+        parent_name: '',
+        sort: 500,
+        redirect: '/system/user',
+        meta: {
+          isOpen: false,
+          icon: 'admin-icons-fl-xitong',
+          title: '系统模块',
+          isLink: '',
+          activeMenu: '',
+          isHide: false,
+          isSub: false,
+          isFull: false,
+          isAffix: false,
+          isKeepAlive: true
+        }
+      },
+      {
+        name: 'menu',
+        path: '/system/menu',
+        component: '/system/menu/index',
+        parent_name: 'system',
+        sort: 540,
+        redirect: '',
+        meta: {
+          isOpen: false,
+          icon: 'admin-icons-manager-menu',
+          title: '菜单管理',
+          isLink: '',
+          activeMenu: '',
+          isHide: false,
+          isSub: false,
+          isFull: false,
+          isAffix: false,
+          isKeepAlive: true
+        }
+      }
     ]
 
     try {
@@ -414,24 +469,33 @@ class SysMenuService extends Service {
     // 表头：column对应列，name对应名称，field对应字段键名（严格对应列匹配）
     const header = [
       { column: 'A', name: '序号', field: 'sort' },
-      { column: 'B', name: '测试ID', field: 'menu_id' },
-      { column: 'C', name: '测试名称', field: 'menu_name' },
-      { column: 'D', name: '状态', field: 'status' },
-      { column: 'E', name: '备注', field: 'remark' }
+      { column: 'B', name: '路由标识', field: 'name' },
+      { column: 'C', name: '父级路由标识', field: 'parent_name' },
+      { column: 'D', name: '图标', field: 'meta.icon' },
+      { column: 'E', name: '路由标题', field: 'meta.title' },
+      { column: 'F', name: '路由访问路径', field: 'path' },
+      { column: 'G', name: '视图文件路径', field: 'component' },
+      { column: 'H', name: '路由重定向地址', field: 'redirect' },
+      { column: 'I', name: '外链地址', field: 'meta.isLink' },
+      { column: 'J', name: '高亮菜单', field: 'meta.activeMenu' },
+      { column: 'K', name: '是否缓存', field: 'meta.isKeepAlive' },
+      { column: 'L', name: '是否隐藏', field: 'meta.isHide' },
+      { column: 'M', name: '是否子详情页面', field: 'meta.isSub' },
+      { column: 'N', name: '是否全屏', field: 'meta.isFull' },
+      { column: 'O', name: '是否固定', field: 'meta.isAffix' },
+      { column: 'P', name: '是否无需登录', field: 'meta.isOpen' }
     ]
     // 解析成JSON数据
     const jsondata = await useExcel().readExcelFilesToJson(files, header)
-    console.log('jsondata :>> ', jsondata);
-
 
     // 导入数据
-    // const addParams = {
-    //   list: jsondata,
-    //   cover: isTruthy(data.cover, 'strbo') // 经过formdata处理后会自动转为字符串，需要解析一下
-    // }
-    // const impRes = await this.menuBatchAdd(addParams)
+    const addParams = {
+      list: jsondata,
+      cover: isTruthy(data.cover, 'strbo') // 经过formdata处理后会自动转为字符串，需要解析一下
+    }
+    const impRes = await this.menuBatchAdd(addParams)
 
-    // return impRes
+    return impRes
   }
 
   /**
@@ -446,12 +510,24 @@ class SysMenuService extends Service {
 
     const listRes = await this.menuList(data)
 
+    // 表头列（顺序严格）
     const columns = [
       { header: '序号', key: 'sort', width: 10, style: { alignment: { horizontal: 'center' } } },
-      { header: '测试ID', key: 'menu_id', width: 40 },
-      { header: '测试名称', key: 'menu_name', width: 40 },
-      { header: '状态', key: 'status', width: 10, style: { alignment: { horizontal: 'center' } } },
-      { header: '备注', key: 'remark', width: 40 }
+      { header: '路由标识', key: 'name', width: 20 },
+      { header: '父级路由标识', key: 'parent_name', width: 20 },
+      { header: '图标', key: 'meta.icon', width: 40 },
+      { header: '路由标题', key: 'meta.title', width: 30 },
+      { header: '路由访问路径', key: 'path', width: 40 },
+      { header: '视图文件路径', key: 'component', width: 40 },
+      { header: '路由重定向地址', key: 'redirect', width: 40 },
+      { header: '外链地址', key: 'meta.isLink', width: 40 },
+      { header: '高亮菜单', key: 'meta.activeMenu', width: 40 },
+      { header: '是否缓存', key: 'meta.isKeepAlive', width: 20, style: { alignment: { horizontal: 'center' } } },
+      { header: '是否隐藏', key: 'meta.isHide', width: 20, style: { alignment: { horizontal: 'center' } } },
+      { header: '是否子详情页面', key: 'meta.isSub', width: 20, style: { alignment: { horizontal: 'center' } } },
+      { header: '是否全屏', key: 'meta.isFull', width: 20, style: { alignment: { horizontal: 'center' } } },
+      { header: '是否固定', key: 'meta.isAffix', width: 20, style: { alignment: { horizontal: 'center' } } },
+      { header: '是否无需登录', key: 'meta.isOpen', width: 20, style: { alignment: { horizontal: 'center' } } }
     ]
 
     // 填充数据
@@ -471,4 +547,4 @@ class SysMenuService extends Service {
   }
 }
 
-module.exports = SysMenuService;
+module.exports = SysMenuService

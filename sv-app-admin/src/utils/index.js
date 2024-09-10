@@ -246,7 +246,7 @@ export function isTruthy(value, type = '') {
   }
   // strbo模式下仅'true'或true为真，其他皆为假
   if (type.includes('strbo') && value !== 'true' && value !== true) {
-    result = false;
+    result = false
   }
 
   return result
@@ -258,10 +258,25 @@ export function isTruthy(value, type = '') {
  * @returns {String} 类型
  */
 export function isType(val) {
-  if (val === null) return 'null'
-  if (isNaN(val)) return 'NaN'
-  if (typeof val !== 'object') return typeof val
-  else return Object.prototype.toString.call(val).slice(8, -1).toLocaleLowerCase()
+  const type = Object.prototype.toString.call(val)
+  switch (type) {
+    case '[object Boolean]':
+      return 'boolean'
+    case '[object Number]':
+      return isNaN(val) ? 'NaN' : 'number' // 检测NaN
+    case '[object String]':
+      return 'string'
+    case '[object Function]':
+      return 'function'
+    case '[object Array]':
+      return 'array'
+    case '[object Null]':
+      return 'null' // 特殊处理null
+    case '[object Undefined]':
+      return 'undefined' // 特殊处理undefined
+    default:
+      return 'object' // 包括Date, RegExp, Error等都视为object
+  }
 }
 
 /**

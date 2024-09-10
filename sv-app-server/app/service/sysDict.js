@@ -258,6 +258,7 @@ class SysDictService extends Service {
     // 权限校验
     ctx.checkAuthority('permission', ['sys:dict:excel'])
 
+    // 表头列（顺序严格）
     const columns = [
       { header: '序号', key: 'sort', width: 10, style: { alignment: { horizontal: 'center' } } },
       { header: '字典ID', key: 'dict_id', width: 40 },
@@ -332,6 +333,7 @@ class SysDictService extends Service {
 
     const listRes = await this.dictList(data)
 
+    // 表头列（顺序严格）
     const columns = [
       { header: '序号', key: 'sort', width: 10, style: { alignment: { horizontal: 'center' } } },
       { header: '字典ID', key: 'dict_id', width: 40 },

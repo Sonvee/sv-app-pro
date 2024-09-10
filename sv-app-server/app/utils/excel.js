@@ -1,5 +1,5 @@
 const ExcelJS = require('exceljs')
-const { isTruthy } = require('.')
+const { isType } = require('./index')
 
 /**
  * 创建excel工作表（常规）
@@ -14,7 +14,7 @@ const { isTruthy } = require('.')
  * @returns {Promise} buffer - 二进制文件
  */
 async function createWorkSheet(ctx, options) {
-  const {
+  let {
     sheetName = 'Sheet1', // 工作表名称
     sheetOption, // 工作表配置
     columns, // 表头
@@ -42,11 +42,14 @@ async function createWorkSheet(ctx, options) {
   header.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'f8f8f8' } }
   header.alignment = { vertical: 'middle', horizontal: 'center' }
   header.border = {
-    top: { style: 'thin', color: { argb: 'e6e6e6' } },
-    left: { style: 'thin', color: { argb: 'e6e6e6' } },
-    bottom: { style: 'thin', color: { argb: 'e6e6e6' } },
-    right: { style: 'thin', color: { argb: 'e6e6e6' } }
+    top: { style: 'thin', color: { argb: 'd4d4d4' } },
+    left: { style: 'thin', color: { argb: 'd4d4d4' } },
+    bottom: { style: 'thin', color: { argb: 'd4d4d4' } },
+    right: { style: 'thin', color: { argb: 'd4d4d4' } }
   }
+
+  // 数据对象扁平化处理，需要在查询时开启lean，否则扁平的不是data数据而是mongoose文档
+  data = flattenProperties(data)
 
   // 填充数据
   data.forEach((rowData) => {
@@ -99,6 +102,9 @@ async function readExcelFileToJson(filepath, header) {
     Array.prototype.push.apply(excelData, parseSheetData) // 直接追加数据而不创建新数组
   }
 
+  // 数据格式化（Boolean，Number 类型还原）
+  excelData = formatPropertyType(excelData)
+
   return excelData
 }
 
@@ -129,8 +135,10 @@ async function readExcelFilesToJson(files, header) {
  * @returns {Array} 转换后的数据
  */
 function transformDataByHeader(data, header) {
-  const head = data.shift() // 移除表头行（第一行）的同时获取表头
+  // 移除表头行（第一行）的同时获取表头
+  const head = data.shift()
 
+  // 表头验证
   const valid = validateHeader(header, head)
   if (!valid) return [] // 如果表头不匹配，则返回空数组
 
@@ -154,11 +162,19 @@ function transformDataByHeader(data, header) {
  * @returns {Boolean} 是否通过验证
  */
 function validateHeader(expectedHeaders, dataHeaders) {
+  // 去除实际表头中可能存在的制表符
+  for (let key in dataHeaders) {
+    if (dataHeaders.hasOwnProperty(key)) {
+      dataHeaders[key] = dataHeaders[key].trim()
+    }
+  }
+
   // 创建一个映射存储预期的列标识符到其详情的映射
   const expectedHeaderMap = {}
   expectedHeaders.forEach((header) => {
     expectedHeaderMap[header.column] = header
   })
+
   // 遍历数据中的表头对象
   for (const key in dataHeaders) {
     // 忽略键后面的数字，并提取出基本的列标识符（如'A1' -> 'A'）
@@ -168,8 +184,70 @@ function validateHeader(expectedHeaders, dataHeaders) {
       return false // 如果有任何一项不符合，则返回false
     }
   }
+
   // 如果所有项都符合，则返回true
   return true
+}
+
+/**
+ * 扁平化对象型数组
+ * @param {Array} array 要扁平化对象的数组
+ * @returns 扁平化对象后的数组
+ */
+function flattenProperties(array) {
+  const flattenObject = (obj, prefix = '') => {
+    return Object.keys(obj).reduce((acc, key) => {
+      if (typeof obj[key] === 'object' && !Array.isArray(obj[key]) && obj[key] !== null) {
+        return { ...acc, ...flattenObject(obj[key], prefix ? `${prefix}.${key}` : key) }
+      } else {
+        return { ...acc, [prefix ? `${prefix}.${key}` : key]: obj[key] }
+      }
+    }, {})
+  }
+
+  return array.map((item) => {
+    const newItem = {}
+    Object.keys(item).forEach((key) => {
+      if (typeof item[key] === 'object' && item[key] !== null) {
+        Object.assign(newItem, flattenObject(item[key], key))
+      } else {
+        newItem[key] = item[key]
+      }
+    })
+    return newItem
+  })
+}
+
+/**
+ * 格式化数组中的对象，将字符串形式的布尔值和数字转换为相应的类型。
+ * @param {Array<Object>} array - 需要格式化的数组
+ * @returns {Array<Object>} 格式化后的数组
+ */
+function formatPropertyType(array) {
+  return array.map((item) => {
+    const newItem = {}
+
+    for (let key in item) {
+      let value = item[key]
+
+      // 判断是否为布尔值字符串
+      if (value === 'true') {
+        value = true
+      } else if (value === 'false') {
+        value = false
+      }
+
+      // 判断是否为数字字符串
+      else if (!isNaN(value) && !isNaN(parseFloat(value))) {
+        value = parseFloat(value)
+      }
+
+      // 设置新的键值对
+      newItem[key] = value
+    }
+
+    return newItem
+  })
 }
 
 const useExcel = () => {

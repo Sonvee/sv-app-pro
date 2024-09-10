@@ -324,6 +324,7 @@ class SysDictitemService extends Service {
     // 权限校验
     ctx.checkAuthority('permission', ['sys:dictitem:excel'])
 
+    // 表头列（顺序严格）
     const columns = [
       { header: '序号', key: 'sort', width: 10, style: { alignment: { horizontal: 'center' } } },
       { header: '字典类型', key: 'dict_type', width: 40 },
@@ -402,6 +403,7 @@ class SysDictitemService extends Service {
 
     const listRes = await this.dictitemList(data)
 
+    // 表头列（顺序严格）
     const columns = [
       { header: '序号', key: 'sort', width: 10, style: { alignment: { horizontal: 'center' } } },
       { header: '字典类型', key: 'dict_type', width: 40 },

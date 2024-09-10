@@ -12,8 +12,8 @@
           <el-input v-model="formData.name" placeholder="请输入路由标识" clearable />
         </el-form-item>
 
-        <el-form-item prop="parent_name" label="父级路由name">
-          <el-input v-model="formData.parent_name" disabled placeholder="请输入父级路由name" clearable />
+        <el-form-item prop="parent_name" label="父级路由标识">
+          <el-input v-model="formData.parent_name" disabled placeholder="请输入父级路由标识" clearable />
         </el-form-item>
 
         <el-form-item prop="sort" label="序号">
@@ -121,7 +121,7 @@ const formBase = {
   path: '', // 路由访问路径
   component: '', // 视图文件路径
   redirect: '', // 路由重定向地址
-  parent_name: '', // 父级路由 name
+  parent_name: '', // 父级路由标识
   sort: 0, // 排序
   permission: [], // 权限
   meta: {

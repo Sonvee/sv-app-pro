@@ -1,9 +1,10 @@
-'use strict';
+'use strict'
 
-const Service = require('egg').Service;
-const crypto = require('crypto');
-const { generateRandomCode, isTruthy, judgePlatform } = require('../utils');
-const useRegExp = require('../utils/regexp');
+const Service = require('egg').Service
+const crypto = require('crypto')
+const { generateRandomCode, isTruthy } = require('../utils')
+const useRegExp = require('../utils/regexp')
+const useUAParser = require('../utils/ua')
 
 class SysLoginService extends Service {
   /**
@@ -13,10 +14,10 @@ class SysLoginService extends Service {
    * @param {Object} one - 用户对象
    */
   async loginSuccess(db, conditions, one) {
-    const { ctx, app } = this;
+    const { ctx, app } = this
 
     // 根据role获取权限列表
-    const permissionRes = await ctx.service.sysRole.findPermissionByRole(one.role);
+    const permissionRes = await ctx.service.sysRole.findPermissionByRole(one.role)
 
     // jwt数据
     const jwtData = {
@@ -26,19 +27,19 @@ class SysLoginService extends Service {
       email: one.email,
       role: one.role,
       permission: permissionRes.data,
-      status: one.status,
-    };
+      status: one.status
+    }
 
     // 更新token
-    const token = app.jwt.sign(jwtData, app.config.jwt.secret, { expiresIn: app.config.jwt.expires });
+    const token = app.jwt.sign(jwtData, app.config.jwt.secret, { expiresIn: app.config.jwt.expires })
 
     // 更新参数
     const updatedata = {
       token,
       login_date: Date.now(),
       login_ip: ctx.request.ip, // IP地址
-      login_platform: judgePlatform(ctx),
-    };
+      login_platform: useUAParser().judgePlatform(ctx)
+    }
 
     // 移除部分无需返回字段
     const projection = {
@@ -49,13 +50,13 @@ class SysLoginService extends Service {
       wx_session_key: 0,
       realname_auth: 0,
       created_date: 0,
-      updated_date: 0,
-    };
+      updated_date: 0
+    }
 
     // 查找更新数据
-    const res = await db.findOneAndUpdate(conditions, updatedata, { new: true, projection });
+    const res = await db.findOneAndUpdate(conditions, updatedata, { new: true, projection })
 
-    return { res, token };
+    return { res, token }
   }
 
   /**
@@ -66,65 +67,65 @@ class SysLoginService extends Service {
    * @property {String} data.captcha - 验证码
    */
   async login(data) {
-    const { ctx, app } = this;
+    const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('open');
+    ctx.checkAuthority('open')
 
     // 参数处理
     data = Object.assign(
       {
         username: '',
         password: '',
-        captcha: '',
+        captcha: ''
       },
       data
-    );
+    )
 
     // 参数校验
-    if (!isTruthy(data.username)) ctx.throw(400, { msg: '请输入账号' });
-    if (!isTruthy(data.password)) ctx.throw(400, { msg: '请输入密码' });
-    if (!isTruthy(data.captcha)) ctx.throw(400, { msg: '请输入验证码' });
+    if (!isTruthy(data.username)) ctx.throw(400, { msg: '请输入账号' })
+    if (!isTruthy(data.password)) ctx.throw(400, { msg: '请输入密码' })
+    if (!isTruthy(data.captcha)) ctx.throw(400, { msg: '请输入验证码' })
 
     // 验证码
-    const ip = ctx.request.ip; // IP地址
-    const captcha_login = await app.redis.get(`captcha:${ip}:login:code`);
-    if (!isTruthy(captcha_login)) ctx.throw(400, { msg: '验证码已失效' });
-    if (data.captcha.toLowerCase() != captcha_login.toLowerCase()) ctx.throw(400, { msg: '验证码错误' });
+    const ip = ctx.request.ip // IP地址
+    const captcha_login = await app.redis.get(`captcha:${ip}:login:code`)
+    if (!isTruthy(captcha_login)) ctx.throw(400, { msg: '验证码已失效' })
+    if (data.captcha.toLowerCase() != captcha_login.toLowerCase()) ctx.throw(400, { msg: '验证码错误' })
 
     // 查询条件处理
-    const conditions = {};
+    const conditions = {}
 
     // 判断登录方式：用户名/手机号/邮箱
     if (useRegExp('phone').regexp.test(data.username)) {
-      conditions.phone = data.username;
+      conditions.phone = data.username
     } else if (useRegExp('email').regexp.test(data.username)) {
-      conditions.email = data.username;
+      conditions.email = data.username
     } else {
-      conditions.username = data.username;
+      conditions.username = data.username
     }
 
     // 数据库连接
-    const db = app.model.SysUser;
+    const db = app.model.SysUser
 
-    const one = await db.findOne(conditions);
-    if (!one) ctx.throw(400, { msg: '用户不存在' });
+    const one = await db.findOne(conditions)
+    if (!one) ctx.throw(400, { msg: '用户不存在' })
 
     // 密码校验
-    data.password = crypto.createHash('sha256').update(data.password).digest('hex');
-    if (data.password !== one.password) ctx.throw(400, { msg: '密码错误' });
+    data.password = crypto.createHash('sha256').update(data.password).digest('hex')
+    if (data.password !== one.password) ctx.throw(400, { msg: '密码错误' })
 
     // 状态校验
-    if (one.status !== 1) ctx.throw(400, { msg: '账号状态异常，请联系管理员' });
+    if (one.status !== 1) ctx.throw(400, { msg: '账号状态异常，请联系管理员' })
 
     // 通过校验，可以正常登录了
-    const loginSuccessRes = await this.loginSuccess(db, conditions, one);
+    const loginSuccessRes = await this.loginSuccess(db, conditions, one)
 
     return {
       data: loginSuccessRes.res,
       token: loginSuccessRes.token,
-      msg: '登录成功',
-    };
+      msg: '登录成功'
+    }
   }
 
   /**
@@ -134,32 +135,32 @@ class SysLoginService extends Service {
    * @property {String} data.captcha - 邮箱验证码
    */
   async loginByEmailer(data) {
-    const { ctx, app } = this;
+    const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('open');
+    ctx.checkAuthority('open')
 
     // 参数校验
-    if (!isTruthy(data.email)) ctx.throw(400, { msg: '请输入邮箱' });
-    if (!isTruthy(data.captcha)) ctx.throw(400, { msg: '请输入验证码' });
+    if (!isTruthy(data.email)) ctx.throw(400, { msg: '请输入邮箱' })
+    if (!isTruthy(data.captcha)) ctx.throw(400, { msg: '请输入验证码' })
 
     // 邮箱合法性校验
-    const emailRegExp = useRegExp('email');
-    if (!emailRegExp.regexp.test(data.email)) ctx.throw(400, { msg: emailRegExp.msg });
+    const emailRegExp = useRegExp('email')
+    if (!emailRegExp.regexp.test(data.email)) ctx.throw(400, { msg: emailRegExp.msg })
 
     // 验证码
-    const captcha_login = await app.redis.get(`emailcaptcha:${data.email}:login:code`);
-    if (!isTruthy(captcha_login)) ctx.throw(400, { msg: '邮箱验证码已失效' });
-    if (data.captcha.toLowerCase() != captcha_login.toLowerCase()) ctx.throw(400, { msg: '邮箱验证码错误' });
+    const captcha_login = await app.redis.get(`emailcaptcha:${data.email}:login:code`)
+    if (!isTruthy(captcha_login)) ctx.throw(400, { msg: '邮箱验证码已失效' })
+    if (data.captcha.toLowerCase() != captcha_login.toLowerCase()) ctx.throw(400, { msg: '邮箱验证码错误' })
 
     // 查询条件处理
-    const conditions = { email: data.email };
+    const conditions = { email: data.email }
 
     // 数据库连接
-    const db = app.model.SysUser;
+    const db = app.model.SysUser
 
     // 查询
-    let one = await db.findOne(conditions);
+    let one = await db.findOne(conditions)
 
     // 第一次登录，自动创建用户
     if (!one) {
@@ -167,37 +168,37 @@ class SysLoginService extends Service {
       const userInfo = {
         username: `user_${generateRandomCode(8)}`,
         email: data.email, // 初始化 email
-        role: [ 'user' ],
+        role: ['user'],
         status: 1,
         gender: 0,
         score: 0,
         my_invite_code: generateRandomCode(10), // 10位随机码
         register_ip: ctx.request.ip, // IP地址
         register_date: Date.now(),
-        register_platform: judgePlatform(ctx),
-      };
+        register_platform: useUAParser().judgePlatform(ctx)
+      }
 
       // 注册用户
-      await db.create(userInfo);
+      await db.create(userInfo)
 
       // 注册之后重新查询用户数据
-      one = await db.findOne(conditions);
+      one = await db.findOne(conditions)
     }
 
     // 状态校验
-    if (one.status !== 1) ctx.throw(400, { msg: '账号状态异常，请联系管理员' });
+    if (one.status !== 1) ctx.throw(400, { msg: '账号状态异常，请联系管理员' })
 
     // 正常登录
-    const loginSuccessRes = await this.loginSuccess(db, conditions, one);
+    const loginSuccessRes = await this.loginSuccess(db, conditions, one)
 
     // 删除redis缓存
-    app.redis.del(`emailcaptcha:${data.email}:login:code`);
+    app.redis.del(`emailcaptcha:${data.email}:login:code`)
 
     return {
       data: loginSuccessRes.res,
       token: loginSuccessRes.token,
-      msg: '登录成功',
-    };
+      msg: '登录成功'
+    }
   }
 
   /**
@@ -206,15 +207,15 @@ class SysLoginService extends Service {
    * @property {String} data.code - 微信小程序临时登录凭证 code
    */
   async loginByWechat(data) {
-    const { ctx, app } = this;
+    const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('open');
+    ctx.checkAuthority('open')
 
     // 参数校验
-    if (!isTruthy(data.code)) ctx.throw(400, { msg: 'code 必填' });
+    if (!isTruthy(data.code)) ctx.throw(400, { msg: 'code 必填' })
 
-    const wxurl = 'https://api.weixin.qq.com/sns/jscode2session';
+    const wxurl = 'https://api.weixin.qq.com/sns/jscode2session'
     const wxRes = await ctx.curl(wxurl, {
       method: 'GET',
       dataType: 'json',
@@ -223,16 +224,16 @@ class SysLoginService extends Service {
         appid: app.config.wechat.appid,
         secret: app.config.wechat.appsecret,
         js_code: data.code,
-        grant_type: 'authorization_code',
-      },
-    });
+        grant_type: 'authorization_code'
+      }
+    })
 
     // 授权失败
     if (wxRes.data.errmsg) {
       return {
         code: wxRes.data.errcode,
-        msg: wxRes.data.errmsg,
-      };
+        msg: wxRes.data.errmsg
+      }
     }
 
     /**
@@ -242,16 +243,16 @@ class SysLoginService extends Service {
      * @param unionid 用户在开放平台的唯一标识符，若当前小程序已绑定到微信开放平台账号下会返回
      * @description 将 session_key 与 openid 关联，生成自定义登录态
      */
-    const { session_key, openid, unionid } = wxRes.data;
+    const { session_key, openid, unionid } = wxRes.data
 
     // 查询条件处理
-    const conditions = { wx_openid: openid };
+    const conditions = { wx_openid: openid }
 
     // 数据库连接
-    const db = app.model.SysUser;
+    const db = app.model.SysUser
 
     // 查询
-    let one = await db.findOne(conditions);
+    let one = await db.findOne(conditions)
 
     // 第一次登录，自动创建用户
     if (!one) {
@@ -261,34 +262,34 @@ class SysLoginService extends Service {
         wx_openid: openid, // 初始化 wx_openid
         wx_unionid: unionid, // 初始化 wx_unionid
         wx_session_key: session_key, // 初始化 wx_session_key
-        role: [ 'user' ],
+        role: ['user'],
         status: 1,
         gender: 0,
         score: 0,
         my_invite_code: generateRandomCode(10), // 10位随机码
         register_ip: ctx.request.ip, // IP地址
         register_date: Date.now(),
-        register_platform: judgePlatform(ctx),
-      };
+        register_platform: useUAParser().judgePlatform(ctx)
+      }
 
       // 注册用户
-      await db.create(userInfo);
+      await db.create(userInfo)
 
       // 注册之后重新查询用户数据
-      one = await db.findOne(conditions);
+      one = await db.findOne(conditions)
     }
 
     // 状态校验
-    if (one.status !== 1) ctx.throw(400, { msg: '账号状态异常，请联系管理员' });
+    if (one.status !== 1) ctx.throw(400, { msg: '账号状态异常，请联系管理员' })
 
     // 正常登录
-    const loginSuccessRes = await this.loginSuccess(db, conditions, one);
+    const loginSuccessRes = await this.loginSuccess(db, conditions, one)
 
     return {
       data: loginSuccessRes.res,
       token: loginSuccessRes.token,
-      msg: '登录成功',
-    };
+      msg: '登录成功'
+    }
   }
 
   /**
@@ -297,26 +298,26 @@ class SysLoginService extends Service {
    * @property {String} data.username - 用户名
    */
   async logout(data) {
-    const { ctx, app } = this;
+    const { ctx, app } = this
 
     // 参数校验
-    if (!isTruthy(data.user_id)) ctx.throw(400, { msg: 'user_id 必填' });
+    if (!isTruthy(data.user_id)) ctx.throw(400, { msg: 'user_id 必填' })
 
     // 权限校验
-    ctx.checkAuthority('self', data.user_id);
+    ctx.checkAuthority('self', data.user_id)
 
     // 查询条件处理
-    const conditions = { user_id: data.user_id };
+    const conditions = { user_id: data.user_id }
 
     // 数据库连接
-    const db = app.model.SysUser;
+    const db = app.model.SysUser
 
     // 清空token
-    const res = await db.findOneAndUpdate(conditions, { token: '' }, { new: true });
+    const res = await db.findOneAndUpdate(conditions, { token: '' }, { new: true })
 
     return {
-      msg: '退出登录',
-    };
+      msg: '退出登录'
+    }
   }
 
   /**
@@ -328,10 +329,10 @@ class SysLoginService extends Service {
    * @property {Array} data.role - 角色 默认user，超级管理员默认admin，注册时只能是user/admin，后续可自行调整
    */
   async register(data) {
-    const { ctx, app } = this;
+    const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('open');
+    ctx.checkAuthority('open')
 
     // 参数处理
     data = Object.assign(
@@ -339,96 +340,96 @@ class SysLoginService extends Service {
         username: '',
         password: '',
         captcha: '',
-        role: [ 'user' ],
+        role: ['user']
       },
       data
-    );
+    )
 
     // 参数校验
-    if (!isTruthy(data.username)) ctx.throw(400, { msg: '请输入账号' });
-    if (!isTruthy(data.password)) ctx.throw(400, { msg: '请输入密码' });
-    if (!isTruthy(data.captcha)) ctx.throw(400, { msg: '请输入验证码' });
+    if (!isTruthy(data.username)) ctx.throw(400, { msg: '请输入账号' })
+    if (!isTruthy(data.password)) ctx.throw(400, { msg: '请输入密码' })
+    if (!isTruthy(data.captcha)) ctx.throw(400, { msg: '请输入验证码' })
 
     // 参数校验
     // 用户名合法性校验
-    const usernameRegExp = useRegExp('username');
-    if (!usernameRegExp.regexp.test(data.username)) ctx.throw(400, { msg: usernameRegExp.msg });
+    const usernameRegExp = useRegExp('username')
+    if (!usernameRegExp.regexp.test(data.username)) ctx.throw(400, { msg: usernameRegExp.msg })
     // 密码合法性校验
-    const passwordRegExp = useRegExp('password');
-    if (!passwordRegExp.regexp.test(data.password)) ctx.throw(400, { msg: passwordRegExp.msg });
+    const passwordRegExp = useRegExp('password')
+    if (!passwordRegExp.regexp.test(data.password)) ctx.throw(400, { msg: passwordRegExp.msg })
 
     // 验证码
-    const ip = ctx.request.ip; // IP地址
-    const captcha_register = await app.redis.get(`captcha:${ip}:register:code`);
-    if (!isTruthy(captcha_register)) ctx.throw(400, { msg: '验证码已失效' });
-    if (data.captcha.toLowerCase() != captcha_register.toLowerCase()) ctx.throw(400, { msg: '验证码错误' });
+    const ip = ctx.request.ip // IP地址
+    const captcha_register = await app.redis.get(`captcha:${ip}:register:code`)
+    if (!isTruthy(captcha_register)) ctx.throw(400, { msg: '验证码已失效' })
+    if (data.captcha.toLowerCase() != captcha_register.toLowerCase()) ctx.throw(400, { msg: '验证码错误' })
 
     // 注册时角色只能是user/admin
-    if (data.role[0] !== 'user' && data.role[0] !== 'admin') ctx.throw(400, { msg: 'role 传参错误' });
+    if (data.role[0] !== 'user' && data.role[0] !== 'admin') ctx.throw(400, { msg: 'role 传参错误' })
 
     // 查询条件处理
-    const conditions = { username: data.username };
+    const conditions = { username: data.username }
 
     // 数据库连接
-    const db = app.model.SysUser;
+    const db = app.model.SysUser
 
     // 注册管理员账号时需要校验，不允许重复注册admin
     if (data.role[0] == 'admin') {
-      const administrator = await db.findOne({ role: { $in: [ 'admin' ] } });
-      if (administrator) ctx.throw(400, { msg: '管理员账号已存在' });
+      const administrator = await db.findOne({ role: { $in: ['admin'] } })
+      if (administrator) ctx.throw(400, { msg: '管理员账号已存在' })
     }
 
     // 查询
-    const one = await db.findOne(conditions);
-    if (one) ctx.throw(400, { msg: '用户名已存在' });
+    const one = await db.findOne(conditions)
+    if (one) ctx.throw(400, { msg: '用户名已存在' })
 
     // 密码加密
-    data.password = crypto.createHash('sha256').update(data.password).digest('hex');
+    data.password = crypto.createHash('sha256').update(data.password).digest('hex')
 
     // 账号数据初始化
-    data.status = 1;
-    data.gender = 0;
-    data.score = 0;
-    data.my_invite_code = generateRandomCode(10); // 10位随机码
-    data.register_ip = ip;
-    data.register_date = Date.now();
-    data.register_platform = judgePlatform(ctx);
+    data.status = 1
+    data.gender = 0
+    data.score = 0
+    data.my_invite_code = generateRandomCode(10) // 10位随机码
+    data.register_ip = ip
+    data.register_date = Date.now()
+    data.register_platform = useUAParser().judgePlatform(ctx)
 
     // 注册用户
-    const res = await db.create(data);
+    const res = await db.create(data)
 
     // 注册成功之后自动登录
-    const loginSuccessRes = await this.loginSuccess(db, conditions, res);
+    const loginSuccessRes = await this.loginSuccess(db, conditions, res)
 
     return {
       data: loginSuccessRes.res,
       token: loginSuccessRes.token,
-      msg: '注册成功',
-    };
+      msg: '注册成功'
+    }
   }
 
   /**
    * 是否存在admin账号 get - 权限 open
    */
   async hasAdmin() {
-    const { ctx, app } = this;
+    const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('open');
+    ctx.checkAuthority('open')
 
     // 查询条件处理
-    const conditions = { role: { $in: [ 'admin' ] } };
+    const conditions = { role: { $in: ['admin'] } }
 
     // 数据库连接
-    const db = app.model.SysUser;
+    const db = app.model.SysUser
 
     // 查询
-    const administrator = await db.findOne(conditions);
+    const administrator = await db.findOne(conditions)
 
     return {
       data: !!administrator,
-      msg: administrator ? '已存在admin账号' : '尚无admin账号',
-    };
+      msg: administrator ? '已存在admin账号' : '尚无admin账号'
+    }
   }
 
   /**
@@ -437,26 +438,26 @@ class SysLoginService extends Service {
    * @property {String} data.user_id - 用户UID
    */
   async refreshToken(data) {
-    const { ctx, app } = this;
+    const { ctx, app } = this
 
     // 参数校验
-    if (!isTruthy(data.user_id)) ctx.throw(400, { msg: 'user_id 必填' });
+    if (!isTruthy(data.user_id)) ctx.throw(400, { msg: 'user_id 必填' })
 
     // 权限校验
-    ctx.checkAuthority('self', data.user_id);
+    ctx.checkAuthority('self', data.user_id)
 
     // 查询条件处理
-    const conditions = { user_id: data.user_id };
+    const conditions = { user_id: data.user_id }
 
     // 数据库连接
-    const db = app.model.SysUser;
+    const db = app.model.SysUser
 
     // 查询
-    const one = await db.findOne(conditions);
-    if (!one) ctx.throw(401, { msg: '用户不存在' });
+    const one = await db.findOne(conditions)
+    if (!one) ctx.throw(401, { msg: '用户不存在' })
 
     // 根据role获取权限列表
-    const permissionRes = await ctx.service.sysRole.findPermissionByRole(one.role);
+    const permissionRes = await ctx.service.sysRole.findPermissionByRole(one.role)
 
     // jwt数据
     const jwtData = {
@@ -466,19 +467,19 @@ class SysLoginService extends Service {
       email: one.email,
       role: one.role,
       permission: permissionRes.data,
-      status: one.status,
-    };
+      status: one.status
+    }
 
     // 更新token
-    const token = app.jwt.sign(jwtData, app.config.jwt.secret, { expiresIn: app.config.jwt.expires });
+    const token = app.jwt.sign(jwtData, app.config.jwt.secret, { expiresIn: app.config.jwt.expires })
 
-    const res = await db.findOneAndUpdate(conditions, { token }, { new: true });
+    const res = await db.findOneAndUpdate(conditions, { token }, { new: true })
 
     return {
       token,
       verify: jwtData,
-      msg: 'token更新成功',
-    };
+      msg: 'token更新成功'
+    }
   }
 
   /**
@@ -486,21 +487,21 @@ class SysLoginService extends Service {
    * @param {String} token - token
    */
   verifyToken(token) {
-    const { ctx, app } = this;
+    const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('open');
+    ctx.checkAuthority('open')
 
     // 参数校验
-    if (!token) ctx.throw(400, { msg: 'token 不能为空' });
+    if (!token) ctx.throw(400, { msg: 'token 不能为空' })
 
-    const tokenInfo = app.jwt.verify(token, app.config.jwt.secret);
+    const tokenInfo = app.jwt.verify(token, app.config.jwt.secret)
 
     return {
       data: tokenInfo,
-      msg: 'token解析成功',
-    };
+      msg: 'token解析成功'
+    }
   }
 }
 
-module.exports = SysLoginService;
+module.exports = SysLoginService

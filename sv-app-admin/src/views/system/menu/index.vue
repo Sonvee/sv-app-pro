@@ -299,7 +299,7 @@ async function excelUpload() {
     ElNotification({ title: 'Success', message: upRes?.msg, type: 'success' })
     refresh()
   }
-  // excelToolRef.value.closeUpload()
+  excelToolRef.value.closeUpload()
 }
 </script>
 
