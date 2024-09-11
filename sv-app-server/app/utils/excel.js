@@ -27,12 +27,19 @@ async function createWorkSheet(ctx, options) {
   // 添加一个新的工作表
   const worksheet = workbook.addWorksheet(sheetName, sheetOption)
 
+  // 表头字段类型
+  const columnsType = columns.reduce((acc, curr) => {
+    acc[curr.key] = curr.type
+    return acc
+  }, {})
+  
   // 所有列的全局默认样式
   columns.forEach((item) => {
     if (!item.style) item.style = {}
     if (!item.style.alignment) item.style.alignment = {}
     if (!item.style.alignment.vertical) item.style.alignment.vertical = 'middle'
   })
+  
   // 设置表头（列）
   worksheet.columns = columns
   // 给表头设置样式

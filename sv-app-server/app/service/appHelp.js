@@ -267,10 +267,10 @@ class AppHelpService extends Service {
 
     // 表头列（顺序严格）
     const columns = [
-      { header: '序号', key: 'sort', width: 10, style: { alignment: { horizontal: 'center' } } },
-      { header: '类型', key: 'type', width: 10, style: { alignment: { horizontal: 'center' } } },
+      { header: '序号', key: 'sort', width: 10, style: { alignment: { horizontal: 'center' } }, type: 'number' },
+      { header: '类型', key: 'type', width: 10, style: { alignment: { horizontal: 'center' } }, type: 'number' },
       { header: '名称', key: 'name', width: 40 },
-      { header: '内容', key: 'content', width: 80 }
+      { header: '内容', key: 'content', width: 80, type: 'richtext' }
     ]
 
     // 填充数据
@@ -337,10 +337,10 @@ class AppHelpService extends Service {
 
     // 表头列（顺序严格）
     const columns = [
-      { header: '序号', key: 'sort', width: 10, style: { alignment: { horizontal: 'center' } } },
-      { header: '类型', key: 'type', width: 10, style: { alignment: { horizontal: 'center' } } },
+      { header: '序号', key: 'sort', width: 10, style: { alignment: { horizontal: 'center' } }, type: 'number' },
+      { header: '类型', key: 'type', width: 10, style: { alignment: { horizontal: 'center' } }, type: 'number' },
       { header: '名称', key: 'name', width: 40 },
-      { header: '内容', key: 'content', width: 80 }
+      { header: '内容', key: 'content', width: 80, type: 'richtext' }
     ]
 
     // 填充数据
