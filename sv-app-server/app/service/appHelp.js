@@ -2,6 +2,7 @@
 
 const { isTruthy } = require('../utils')
 const { batchAdd, batchDelete } = require('../utils/batch')
+const useExcel = require('../utils/excel')
 
 const Service = require('egg').Service
 
@@ -54,6 +55,9 @@ class AppHelpService extends Service {
 
     // 页数
     const pages = pagesize > 0 ? Math.ceil(count / pagesize) : count > 0 ? 1 : 0
+
+    // 非聚合查询且可导出Excel的接口需开启Lean
+    query = query.lean()
 
     // 处理查询结果
     const res = await query.exec()
@@ -249,6 +253,109 @@ class AppHelpService extends Service {
     return {
       msg: '批量删除成功',
       tip: `共删除${deletedCount}条记录`
+    }
+  }
+
+  /**
+   * excel模板下载 get - 权限 permission
+   */
+  async helpExcelTemplate() {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['app:help:excel'])
+
+    // 表头列（顺序严格）
+    const columns = [
+      { header: '序号', key: 'sort', width: 10, style: { alignment: { horizontal: 'center' } } },
+      { header: '类型', key: 'type', width: 10, style: { alignment: { horizontal: 'center' } } },
+      { header: '名称', key: 'name', width: 40 },
+      { header: '内容', key: 'content', width: 80 }
+    ]
+
+    // 填充数据
+    const tableData = [{ sort: 0, type: 1, name: '这里填入标题名称', content: '<p>这里可以是富文本</p>' }]
+
+    try {
+      const options = { columns, data: tableData, fileName: 'help_excel_template' }
+      const buffer = await useExcel().createWorkSheet(ctx, options)
+
+      return {
+        type: 'buffer', // 注明类型为二进制文件
+        data: buffer
+      }
+    } catch (error) {
+      ctx.throw(500, { msg: '下载模板失败', errMsg: error.message })
+    }
+  }
+
+  /**
+   * excel导入 post - 权限 permission
+   * @param {Array<File>} files 用户上传的文件
+   * @param {Object} data 请求参数（经过FormData上传处理的参数像Boolean等类型会被自动转为字符串，需手动解析）
+   */
+  async helpImport({ data, files }) {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['app:help:excel'])
+
+    // 参数校验
+    if (!isTruthy(files, 'arrobj')) ctx.throw(400, { msg: 'files 为空' })
+
+    // 表头（严格对应列匹配）：column对应列，name对应名称，field对应字段键名，type对应类型（只标注number、boolean，其他按字符串处理）
+    const header = [
+      { column: 'A', name: '序号', field: 'sort', type: 'number' },
+      { column: 'B', name: '类型', field: 'type', type: 'number' },
+      { column: 'C', name: '名称', field: 'name' },
+      { column: 'D', name: '内容', field: 'content', type: 'richtext' }
+    ]
+    // 解析成JSON数据
+    const jsondata = await useExcel().readExcelFilesToJson(files, header)
+
+    // 导入数据
+    const addParams = {
+      list: jsondata,
+      cover: isTruthy(data.cover, 'strbo') // 经过formdata处理后会自动转为字符串，需要解析一下
+    }
+    const impRes = await this.helpBatchAdd(addParams)
+
+    return impRes
+  }
+
+  /**
+   * excel导出 post - 权限 permission
+   * @param {Object} data 请求参数
+   */
+  async helpExport(data) {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['app:help:excel'])
+
+    const listRes = await this.helpList(data)
+
+    // 表头列（顺序严格）
+    const columns = [
+      { header: '序号', key: 'sort', width: 10, style: { alignment: { horizontal: 'center' } } },
+      { header: '类型', key: 'type', width: 10, style: { alignment: { horizontal: 'center' } } },
+      { header: '名称', key: 'name', width: 40 },
+      { header: '内容', key: 'content', width: 80 }
+    ]
+
+    // 填充数据
+    const tableData = listRes.data
+
+    try {
+      const options = { columns, data: tableData, fileName: 'help_list' }
+      const buffer = await useExcel().createWorkSheet(ctx, options)
+
+      return {
+        type: 'buffer', // 注明类型为二进制文件
+        data: buffer
+      }
+    } catch (error) {
+      ctx.throw(500, { msg: '导出文件失败', errMsg: error.message })
     }
   }
 }

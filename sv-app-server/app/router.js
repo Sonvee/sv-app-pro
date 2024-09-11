@@ -51,7 +51,6 @@ module.exports = (app) => {
   router.post('/user/bindWechat', controller.sysUser.bindWechat)
   router.post('/user/userDeactivate', controller.sysUser.userDeactivate)
   router.post('/user/userDelete', controller.sysUser.userDelete)
-  router.post('/user/verifyVip', controller.sysUser.verifyVip)
 
   // 角色
   router.post('/user/roleList', controller.sysRole.roleList)
@@ -124,6 +123,7 @@ module.exports = (app) => {
   router.post('/file/releaseUpload', controller.file.releaseUpload)
   router.post('/file/releaseImageUpload', controller.file.releaseImageUpload)
   router.post('/file/feedbackImageUpload', controller.file.feedbackImageUpload)
+  router.post('/file/editorImgUpload', controller.file.editorImgUpload)
 
   // 缓存
   router.post('/cache/cacheKeyList', controller.sysCache.cacheKeyList)
@@ -153,6 +153,9 @@ module.exports = (app) => {
   router.post('/app/helpDelete', controller.appHelp.helpDelete)
   router.post('/app/helpBatchAdd', controller.appHelp.helpBatchAdd)
   router.post('/app/helpBatchDelete', controller.appHelp.helpBatchDelete)
+  router.get('/app/helpExcelTemplate', controller.appHelp.helpExcelTemplate)
+  router.post('/app/helpImport', controller.appHelp.helpImport)
+  router.post('/app/helpExport', controller.appHelp.helpExport)
 
   // 反馈
   router.post('/app/feedbackList', controller.appFeedback.feedbackList)

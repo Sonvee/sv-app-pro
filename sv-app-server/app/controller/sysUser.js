@@ -72,13 +72,6 @@ class SysUserController extends Controller {
     const res = await service.sysUser.userDelete(data)
     ctx.result(res)
   }
-
-  async verifyVip() {
-    const { ctx, service } = this
-    const data = ctx.request.body
-    const res = await service.sysUser.verifyVip(data)
-    ctx.result(res)
-  }
 }
 
 module.exports = SysUserController

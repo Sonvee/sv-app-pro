@@ -44,6 +44,27 @@ class AppHelpController extends Controller {
     const res = await service.appHelp.helpBatchDelete(data)
     ctx.result(res)
   }
+
+  async helpExcelTemplate() {
+    const { ctx, service } = this
+    const res = await service.appHelp.helpExcelTemplate()
+    ctx.result(res)
+  }
+
+  async helpImport() {
+    const { ctx, service } = this
+    const files = ctx.request.files
+    const data = ctx.request.body
+    const res = await service.appHelp.helpImport({ data, files })
+    ctx.result(res)
+  }
+
+  async helpExport() {
+    const { ctx, service } = this
+    const data = ctx.request.body
+    const res = await service.appHelp.helpExport(data)
+    ctx.result(res)
+  }
 }
 
 module.exports = AppHelpController

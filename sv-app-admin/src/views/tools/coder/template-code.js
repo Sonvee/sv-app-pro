@@ -638,6 +638,9 @@ class SysTestService extends Service {
     // 页数
     const pages = pagesize > 0 ? Math.ceil(count / pagesize) : count > 0 ? 1 : 0
 
+    // 开启 Lean
+    query = query.lean()
+    
     // 处理查询结果
     const res = await query.exec()
 

@@ -102,7 +102,7 @@ async function deleteFile() {
 }
 
 /**
- * 手动上传文件
+ * 手动上传单文件
  * @param {Function} apiFunc api接口函数
  * @param {Object} params 上传参数
  */

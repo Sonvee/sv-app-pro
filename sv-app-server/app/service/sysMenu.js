@@ -466,9 +466,9 @@ class SysMenuService extends Service {
     // 参数校验
     if (!isTruthy(files, 'arrobj')) ctx.throw(400, { msg: 'files 为空' })
 
-    // 表头：column对应列，name对应名称，field对应字段键名（严格对应列匹配）
+    // 表头（严格对应列匹配）：column对应列，name对应名称，field对应字段键名，type对应类型（只标注number、boolean，其他按字符串处理）
     const header = [
-      { column: 'A', name: '序号', field: 'sort' },
+      { column: 'A', name: '序号', field: 'sort', type: 'number' },
       { column: 'B', name: '路由标识', field: 'name' },
       { column: 'C', name: '父级路由标识', field: 'parent_name' },
       { column: 'D', name: '图标', field: 'meta.icon' },
@@ -478,12 +478,12 @@ class SysMenuService extends Service {
       { column: 'H', name: '路由重定向地址', field: 'redirect' },
       { column: 'I', name: '外链地址', field: 'meta.isLink' },
       { column: 'J', name: '高亮菜单', field: 'meta.activeMenu' },
-      { column: 'K', name: '是否缓存', field: 'meta.isKeepAlive' },
-      { column: 'L', name: '是否隐藏', field: 'meta.isHide' },
-      { column: 'M', name: '是否子详情页面', field: 'meta.isSub' },
-      { column: 'N', name: '是否全屏', field: 'meta.isFull' },
-      { column: 'O', name: '是否固定', field: 'meta.isAffix' },
-      { column: 'P', name: '是否无需登录', field: 'meta.isOpen' }
+      { column: 'K', name: '是否缓存', field: 'meta.isKeepAlive', type: 'boolean' },
+      { column: 'L', name: '是否隐藏', field: 'meta.isHide', type: 'boolean' },
+      { column: 'M', name: '是否子详情页面', field: 'meta.isSub', type: 'boolean' },
+      { column: 'N', name: '是否全屏', field: 'meta.isFull', type: 'boolean' },
+      { column: 'O', name: '是否固定', field: 'meta.isAffix', type: 'boolean' },
+      { column: 'P', name: '是否无需登录', field: 'meta.isOpen', type: 'boolean' }
     ]
     // 解析成JSON数据
     const jsondata = await useExcel().readExcelFilesToJson(files, header)

@@ -102,8 +102,8 @@ async function readExcelFileToJson(filepath, header) {
     Array.prototype.push.apply(excelData, parseSheetData) // 直接追加数据而不创建新数组
   }
 
-  // 数据格式化（Boolean，Number 类型还原）
-  excelData = formatPropertyType(excelData)
+  // 数据格式化（Boolean，Number等类型还原）
+  excelData = formatPropertyType(excelData, header)
 
   return excelData
 }
@@ -131,7 +131,7 @@ async function readExcelFilesToJson(files, header) {
 /**
  * 根据表头字段，将表格数据转换为JSON格式
  * @param {Array} data 要转换的数据
- * @param {Array} header 表头 [{ column: 'A', name: '序号', field: 'sort' }, ...]
+ * @param {Array} header 表头 [{ column: 'A', name: '序号', field: 'sort', type: 'number' }, ...]
  * @returns {Array} 转换后的数据
  */
 function transformDataByHeader(data, header) {
@@ -221,25 +221,29 @@ function flattenProperties(array) {
 /**
  * 格式化数组中的对象，将字符串形式的布尔值和数字转换为相应的类型。
  * @param {Array<Object>} array - 需要格式化的数组
+ * @param {Array<Object>} header - 表头携带类型
  * @returns {Array<Object>} 格式化后的数组
  */
-function formatPropertyType(array) {
+function formatPropertyType(array, header) {
   return array.map((item) => {
     const newItem = {}
 
     for (let key in item) {
       let value = item[key]
 
-      // 判断是否为布尔值字符串
-      if (value === 'true') {
-        value = true
-      } else if (value === 'false') {
-        value = false
-      }
+      // 查找key对应表头的类型
+      const type = header.find((h) => h.field === key)?.type
 
-      // 判断是否为数字字符串
-      else if (!isNaN(value) && !isNaN(parseFloat(value))) {
-        value = parseFloat(value)
+      switch (type) {
+        case 'number':
+          value = parseFloat(value)
+          break
+        case 'boolean':
+          value = value === 'true' ? true : false
+          break
+        default:
+          // 其他类型均不做处理
+          break
       }
 
       // 设置新的键值对

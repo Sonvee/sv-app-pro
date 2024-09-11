@@ -582,21 +582,6 @@ class SysUserService extends Service {
       msg: `${one.username || one.user_id} 删除成功`,
     };
   }
-
-  /**
-   * 用户VIP身份校验 post - 权限 self
-   * @param {Object} data - 请求参数
-   * @property {String} data.user_id - 用户uid
-   */
-  async verifyVip(data) {
-    const { ctx, app } = this;
-
-    // 参数校验
-    if (!isTruthy(data.user_id)) ctx.throw(400, { msg: 'user_id 必填' });
-
-    // 权限校验
-    ctx.checkAuthority('self', data.user_id);
-  }
 }
 
 module.exports = SysUserService;

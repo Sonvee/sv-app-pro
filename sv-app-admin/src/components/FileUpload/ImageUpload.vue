@@ -75,7 +75,7 @@ function closeViewer() {
 }
 
 /**
- * 手动上传文件
+ * 手动上传多文件
  * @param {Function} apiFunc api接口函数
  * @param {String} field 上传文件字段名
  * @param {Object} params 上传参数

@@ -47,3 +47,32 @@ export function helpBatchDelete(data) {
     data
   })
 }
+
+// 导入 导出 模版
+export function helpImport(data) {
+  return request({
+    url: '/app/helpImport',
+    method: 'post',
+    data,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
+
+export function helpExport(data) {
+  return request({
+    url: '/app/helpExport',
+    method: 'post',
+    data,
+    responseType: 'blob' // 指定响应类型为二进制数据
+  })
+}
+
+export function helpExcelTemplate() {
+  return request({
+    url: '/app/helpExcelTemplate',
+    method: 'get',
+    responseType: 'blob' // 指定响应类型为二进制数据
+  })
+}

@@ -12,6 +12,7 @@
 import { ref } from 'vue'
 import Vue3Tinymce from '@jsdawn/vue3-tinymce'
 import { useUserStore } from '@/store/user'
+import { editorImgUpload } from '@/api/file/upload';
 
 const props = defineProps({
   customStyle: {
@@ -45,24 +46,34 @@ const editorSetting = ref({
   statusbar: true, // 是否显示底部状态栏
   branding: false, // 默认会在右下角显示Tiny图标
 
-  // 开启组件拓展的 上传图片功能，工具栏 图片按钮 弹框中出现 `upload` 选项
-  custom_images_upload: true,
-  // 复用 图片上传 api 地址
-  images_upload_url: import.meta.env.VITE_API_URL + '/file/editorImgUpload',
-  // 上传成功回调函数，return 图片地址。默认 response.location
-  custom_images_upload_callback: (response) => {
-    return response.data.url
-  },
-  // 上传 api 请求头
-  custom_images_upload_header: { Authorization: 'Bearer ' + useUserStore().token },
-  // 上传 api 额外的参数。图片默认 file
-  custom_images_upload_param: {}
+  custom_images_upload: false, // 关闭自动上传，使用images_upload_handler自定义处理图片上传
+  images_upload_handler: async (blobInfo, success, failure) => {
+    const upRes = await upload(editorImgUpload, { file: blobInfo.blob() })
+    const imgUrl = upRes.data?.url
+    return imgUrl
+  }
 })
 
 // editor 初始化
 function initEditor(editor) {
   loading.value = false
   emits('init', editor)
+}
+
+/**
+ * 手动上传单文件
+ * @param {Function} apiFunc api接口函数
+ * @param {Object} params 上传参数
+ */
+async function upload(apiFunc, params) {
+  let fd = new FormData()
+  const fields = Object.keys(params)
+  fields.forEach((item) => {
+    fd.append(item, params[item])
+  })
+  const uploadRes = await apiFunc(fd)
+  if (!uploadRes.success) throw new Error('上传失败')
+  return uploadRes
 }
 </script>
 

@@ -65,6 +65,9 @@ class SysDictitemService extends Service {
     // 页数
     const pages = pagesize > 0 ? Math.ceil(count / pagesize) : count > 0 ? 1 : 0
 
+    // 非聚合查询且可导出Excel的接口需开启Lean
+    query = query.lean()
+
     // 处理查询结果
     const res = await query.exec()
 
@@ -368,14 +371,14 @@ class SysDictitemService extends Service {
     // 参数校验
     if (!isTruthy(files, 'arrobj')) ctx.throw(400, { msg: 'files 为空' })
 
-    // 表头：column对应列，name对应名称，field对应字段键名（严格对应列匹配）
+    // 表头（严格对应列匹配）：column对应列，name对应名称，field对应字段键名，type对应类型（只标注number、boolean，其他按字符串处理）
     const header = [
-      { column: 'A', name: '序号', field: 'sort' },
+      { column: 'A', name: '序号', field: 'sort', type: 'number' },
       { column: 'B', name: '字典类型', field: 'dict_type' },
       { column: 'C', name: '字典项键', field: 'label' },
       { column: 'D', name: '字典项值', field: 'value' },
       { column: 'E', name: '标签样式', field: 'action_style' },
-      { column: 'F', name: '状态', field: 'status' },
+      { column: 'F', name: '状态', field: 'status', type: 'number' },
       { column: 'G', name: '备注', field: 'remark' }
     ]
     // 解析成JSON数据
