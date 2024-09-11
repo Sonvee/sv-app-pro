@@ -1,5 +1,4 @@
 const ExcelJS = require('exceljs')
-const { isType } = require('./index')
 
 /**
  * 创建excel工作表（常规）
@@ -27,22 +26,16 @@ async function createWorkSheet(ctx, options) {
   // 添加一个新的工作表
   const worksheet = workbook.addWorksheet(sheetName, sheetOption)
 
-  // 表头字段类型
-  const columnsType = columns.reduce((acc, curr) => {
-    acc[curr.key] = curr.type
-    return acc
-  }, {})
-  
   // 所有列的全局默认样式
   columns.forEach((item) => {
     if (!item.style) item.style = {}
     if (!item.style.alignment) item.style.alignment = {}
     if (!item.style.alignment.vertical) item.style.alignment.vertical = 'middle'
   })
-  
+
   // 设置表头（列）
   worksheet.columns = columns
-  // 给表头设置样式
+  // 给表头行设置样式
   const header = worksheet.getRow(1)
   header.height = 24
   header.font = { name: '黑体', size: 12, color: { argb: 'ff0000' }, bold: true }
@@ -60,7 +53,8 @@ async function createWorkSheet(ctx, options) {
 
   // 填充数据
   data.forEach((rowData) => {
-    worksheet.addRow(rowData)
+    const handleRow = extractKeysPlus(columns, rowData)
+    worksheet.addRow(handleRow)
   })
 
   // 设置响应类型为Excel文件
@@ -226,7 +220,7 @@ function flattenProperties(array) {
 }
 
 /**
- * 格式化数组中的对象，将字符串形式的布尔值和数字转换为相应的类型。
+ * 格式化数组中的对象 - 导入时用
  * @param {Array<Object>} array - 需要格式化的数组
  * @param {Array<Object>} header - 表头携带类型
  * @returns {Array<Object>} 格式化后的数组
@@ -243,7 +237,7 @@ function formatPropertyType(array, header) {
 
       switch (type) {
         case 'number':
-          value = parseFloat(value)
+          value = Number(value)
           break
         case 'boolean':
           value = value === 'true' ? true : false
@@ -259,6 +253,37 @@ function formatPropertyType(array, header) {
 
     return newItem
   })
+}
+
+/**
+ * 对象提取拓展版 - 导出时用
+ * @param {Array} keys 要提取的键名数组，可携带对应类型 [{ key: 'sort', type: 'number' }, ...]
+ * @param {Object} obj 要提取的对象
+ * @returns {Object} 提取后的对象
+ */
+function extractKeysPlus(keys, obj) {
+  // 创建一个新的对象用于存储提取的结果
+  const extractedObj = {}
+
+  // 遍历keys数组
+  keys.forEach((item) => {
+    // 如果键存在于obj中，则将其添加到extractedObj中
+    if (obj.hasOwnProperty(item.key)) {
+      switch (item.type) {
+        case 'number':
+          extractedObj[item.key] = Number(obj[item.key])
+          break
+        case 'boolean':
+          extractedObj[item.key] = obj[item.key] == 'true' ? true : false
+          break
+        default:
+          extractedObj[item.key] = obj[item.key]
+          break
+      }
+    }
+  })
+
+  return extractedObj
 }
 
 const useExcel = () => {

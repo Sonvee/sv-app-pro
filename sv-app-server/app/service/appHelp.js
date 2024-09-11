@@ -270,7 +270,7 @@ class AppHelpService extends Service {
       { header: '序号', key: 'sort', width: 10, style: { alignment: { horizontal: 'center' } }, type: 'number' },
       { header: '类型', key: 'type', width: 10, style: { alignment: { horizontal: 'center' } }, type: 'number' },
       { header: '名称', key: 'name', width: 40 },
-      { header: '内容', key: 'content', width: 80, type: 'richtext' }
+      { header: '内容', key: 'content', width: 80 }
     ]
 
     // 填充数据
@@ -308,7 +308,7 @@ class AppHelpService extends Service {
       { column: 'A', name: '序号', field: 'sort', type: 'number' },
       { column: 'B', name: '类型', field: 'type', type: 'number' },
       { column: 'C', name: '名称', field: 'name' },
-      { column: 'D', name: '内容', field: 'content', type: 'richtext' }
+      { column: 'D', name: '内容', field: 'content' }
     ]
     // 解析成JSON数据
     const jsondata = await useExcel().readExcelFilesToJson(files, header)
@@ -340,7 +340,7 @@ class AppHelpService extends Service {
       { header: '序号', key: 'sort', width: 10, style: { alignment: { horizontal: 'center' } }, type: 'number' },
       { header: '类型', key: 'type', width: 10, style: { alignment: { horizontal: 'center' } }, type: 'number' },
       { header: '名称', key: 'name', width: 40 },
-      { header: '内容', key: 'content', width: 80, type: 'richtext' }
+      { header: '内容', key: 'content', width: 80 }
     ]
 
     // 填充数据

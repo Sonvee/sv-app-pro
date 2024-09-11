@@ -142,7 +142,7 @@ function refresh() {
 // 多选
 const batchSelection = ref([])
 function handleSelectionChange(e) {
-  batchSelection.value = e.map((item) => item.name)
+  batchSelection.value = e.map((item) => item.help_id)
 }
 
 // 批量删除
@@ -234,7 +234,7 @@ async function excelUpload() {
     ElNotification({ title: 'Success', message: upRes?.msg, type: 'success' })
     refresh()
   }
-  // excelToolRef.value.closeUpload()
+  excelToolRef.value.closeUpload()
 }
 </script>
 

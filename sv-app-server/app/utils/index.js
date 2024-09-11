@@ -66,6 +66,27 @@ function assignOverride(target, source) {
 }
 
 /**
+ * 对象提取
+ * @param {Array} keys 要提取的键名数组
+ * @param {Object} obj 要提取的对象
+ * @returns {Object} 提取后的对象
+ */
+function extractKeys(keys, obj) {
+  // 创建一个新的对象用于存储提取的结果
+  const extractedObj = {}
+
+  // 遍历keys数组
+  keys.forEach((key) => {
+    // 如果键存在于obj中，则将其添加到extractedObj中
+    if (obj.hasOwnProperty(key)) {
+      extractedObj[key] = obj[key]
+    }
+  })
+
+  return extractedObj
+}
+
+/**
  * 判断值真假
  * 1. 默认常规判断
  * 2. type 含有 'zero' 时，数字0为真
@@ -202,6 +223,7 @@ module.exports = {
   generateRandomCode,
   arrayIncludesSubarray,
   assignOverride,
+  extractKeys,
   isTruthy,
   isType,
   removeNode,
