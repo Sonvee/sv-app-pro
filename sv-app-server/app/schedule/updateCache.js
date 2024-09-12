@@ -1,3 +1,7 @@
+/**
+ * cron 定时任务
+ * @tutorial https://cron.ciding.cc
+ */
 module.exports = app => {
   return {
     schedule: {

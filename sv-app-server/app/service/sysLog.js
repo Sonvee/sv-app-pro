@@ -220,7 +220,6 @@ class SysLogService extends Service {
    */
   async logExport(data) {
     const { ctx, app } = this
-    console.log('logExport :>> ', data)
 
     // 权限校验
     ctx.checkAuthority('permission', ['sys:log:excel'])
