@@ -114,7 +114,7 @@ export function getUrlWithParams() {
 /**
  * 时间日期格式化
  * @param {String} time 需要格式化的时间
- * @param {String} format 格式化规则 为timestamp将time转化为时间戳（毫秒）
+ * @param {String} format 格式化规则 为timestamp时会将time转化为时间戳（毫秒）
  */
 export function timeFormat(time, format = 'YYYY-MM-DD HH:mm:ss') {
   if (!time) return

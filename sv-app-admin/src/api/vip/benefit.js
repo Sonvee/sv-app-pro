@@ -47,3 +47,32 @@ export function benefitBatchDelete(data) {
     data
   })
 }
+
+// 导入 导出 模版
+export function benefitImport(data) {
+  return request({
+    url: '/vip/benefitImport',
+    method: 'post',
+    data,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
+
+export function benefitExport(data) {
+  return request({
+    url: '/vip/benefitExport',
+    method: 'post',
+    data,
+    responseType: 'blob' // 指定响应类型为二进制数据
+  })
+}
+
+export function benefitExcelTemplate() {
+  return request({
+    url: '/vip/benefitExcelTemplate',
+    method: 'get',
+    responseType: 'blob' // 指定响应类型为二进制数据
+  })
+}

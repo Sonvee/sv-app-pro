@@ -12,6 +12,7 @@ class SysPermissionService extends Service {
    * @param {Object} data - 请求参数
    * @property {String} data.permission_id - id
    * @property {String} data.permission_name - 名称
+   * @property {Number} data.status - 状态
    * @property {Number} data.pagesize - 每页条数
    * @property {Number} data.pagenum - 页码
    */
@@ -35,6 +36,7 @@ class SysPermissionService extends Service {
     // 查询条件
     if (isTruthy(data.permission_id)) conditions.permission_id = data.permission_id
     if (isTruthy(data.permission_name)) conditions.permission_name = { $regex: data.permission_name, $options: 'i' } // 模糊查询
+    if (isTruthy(data.status, 'zero')) conditions.status = data.status
 
     // 数据库连接
     const db = app.model.SysPermission
@@ -56,7 +58,7 @@ class SysPermissionService extends Service {
     // 页数
     const pages = pagesize > 0 ? Math.ceil(count / pagesize) : count > 0 ? 1 : 0
 
-    // 非聚合查询且可导出Excel的接口需开启Lean
+    // 开启lean（聚合查询无需开启）
     query = query.lean()
 
     // 处理查询结果
@@ -307,7 +309,7 @@ class SysPermissionService extends Service {
     // 参数校验
     if (!isTruthy(files, 'arrobj')) ctx.throw(400, { msg: 'files 为空' })
 
-    // 表头（严格对应列匹配）：column对应列，name对应名称，field对应字段键名，type对应类型（只标注number、boolean，其他按字符串处理）
+    // 表头（严格对应列匹配）：column对应列，name对应名称，field对应字段键名，type对应类型（只标注number、boolean、timestamp，其他按字符串处理）
     const header = [
       { column: 'A', name: '序号', field: 'sort', type: 'number' },
       { column: 'B', name: '权限ID', field: 'permission_id' },

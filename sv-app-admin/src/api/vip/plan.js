@@ -47,3 +47,32 @@ export function planBatchDelete(data) {
     data
   })
 }
+
+// 导入 导出 模版
+export function planImport(data) {
+  return request({
+    url: '/vip/planImport',
+    method: 'post',
+    data,
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}
+
+export function planExport(data) {
+  return request({
+    url: '/vip/planExport',
+    method: 'post',
+    data,
+    responseType: 'blob' // 指定响应类型为二进制数据
+  })
+}
+
+export function planExcelTemplate() {
+  return request({
+    url: '/vip/planExcelTemplate',
+    method: 'get',
+    responseType: 'blob' // 指定响应类型为二进制数据
+  })
+}

@@ -44,6 +44,27 @@ class VipPlanController extends Controller {
     const res = await service.vipPlan.planBatchDelete(data)
     ctx.result(res)
   }
+
+  async planExcelTemplate() {
+    const { ctx, service } = this
+    const res = await service.vipPlan.planExcelTemplate()
+    ctx.result(res)
+  }
+
+  async planImport() {
+    const { ctx, service } = this
+    const files = ctx.request.files
+    const data = ctx.request.body
+    const res = await service.vipPlan.planImport({ data, files })
+    ctx.result(res)
+  }
+
+  async planExport() {
+    const { ctx, service } = this
+    const data = ctx.request.body
+    const res = await service.vipPlan.planExport(data)
+    ctx.result(res)
+  }
 }
 
 module.exports = VipPlanController

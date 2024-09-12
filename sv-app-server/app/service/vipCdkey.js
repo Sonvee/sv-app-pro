@@ -1,6 +1,5 @@
 'use strict'
 
-const dayjs = require('dayjs')
 const { isTruthy } = require('../utils')
 const { createCdkey, validCdkey } = require('../utils/cdkey')
 const { batchDelete } = require('../utils/batch')
@@ -354,8 +353,8 @@ class VipCdkeyService extends Service {
     const subscribeData = {
       user_id: data.user_id, // 用户id
       subscription_plan: findCdkey.cdkey_plan, // 激活码绑定的套餐
-      subscription_date: Date.now(), // 订阅日期（时间戳 毫秒）
-      duration_time: valid_time, // 订阅持续时长（毫秒）
+      subscription_date: Date.now(), // 订阅日期 (时间戳 毫秒)
+      duration_time: valid_time, // 订阅持续时长 (毫秒)
       status: 0, // 待生效
       type: 1 // 激活码
     }

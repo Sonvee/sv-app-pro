@@ -44,6 +44,12 @@
       "remark": "",
       "sort": 16
     },
+    {
+      "permission_id": "sys:role:excel",
+      "permission_name": "角色excel工具",
+      "remark": "",
+      "sort": 17
+    },
 
     {
       "permission_id": "sys:permission:query",
@@ -223,6 +229,12 @@
       "remark": "",
       "sort": 64
     },
+    {
+      "permission_id": "sys:log:excel",
+      "permission_name": "日志excel工具",
+      "remark": "",
+      "sort": 67
+    },
 
     {
       "permission_id": "app:notice:add",
@@ -310,6 +322,12 @@
       "remark": "",
       "sort": 96
     },
+    {
+      "permission_id": "app:help:excel",
+      "permission_name": "帮助excel工具",
+      "remark": "",
+      "sort": 97
+    },
 
     {
       "permission_id": "app:release:add",
@@ -379,6 +397,12 @@
       "permission_name": "会员权益批量删除",
       "remark": "",
       "sort": 136
+    },
+    {
+      "permission_id": "vip:benefit:excel",
+      "permission_name": "会员权益excel工具",
+      "remark": "",
+      "sort": 137
     },
 
     {
@@ -453,6 +477,12 @@
       "permission_name": "会员套餐批量删除",
       "remark": "",
       "sort": 156
+    },
+    {
+      "permission_id": "vip:plan:excel",
+      "permission_name": "会员套餐excel工具",
+      "remark": "",
+      "sort": 157
     },
 
     {

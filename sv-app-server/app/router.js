@@ -115,6 +115,7 @@ module.exports = (app) => {
   router.post('/sys/logDelete', controller.sysLog.logDelete)
   router.post('/sys/logBatchDelete', controller.sysLog.logBatchDelete)
   router.post('/sys/logClear', controller.sysLog.logClear)
+  router.post('/sys/logExport', controller.sysLog.logExport)
 
   // 文件
   router.post('/file/avatarUpload', controller.file.avatarUpload)
@@ -172,14 +173,20 @@ module.exports = (app) => {
   router.post('/vip/planDelete', controller.vipPlan.planDelete)
   router.post('/vip/planBatchAdd', controller.vipPlan.planBatchAdd)
   router.post('/vip/planBatchDelete', controller.vipPlan.planBatchDelete)
+  router.get('/vip/planExcelTemplate', controller.vipPlan.planExcelTemplate)
+  router.post('/vip/planImport', controller.vipPlan.planImport)
+  router.post('/vip/planExport', controller.vipPlan.planExport)
 
-  // 会员特权
+  // 会员权益
   router.post('/vip/benefitList', controller.vipBenefit.benefitList)
   router.post('/vip/benefitAdd', controller.vipBenefit.benefitAdd)
   router.post('/vip/benefitUpdate', controller.vipBenefit.benefitUpdate)
   router.post('/vip/benefitDelete', controller.vipBenefit.benefitDelete)
   router.post('/vip/benefitBatchAdd', controller.vipBenefit.benefitBatchAdd)
   router.post('/vip/benefitBatchDelete', controller.vipBenefit.benefitBatchDelete)
+  router.get('/vip/benefitExcelTemplate', controller.vipBenefit.benefitExcelTemplate)
+  router.post('/vip/benefitImport', controller.vipBenefit.benefitImport)
+  router.post('/vip/benefitExport', controller.vipBenefit.benefitExport)
 
   // 激活码
   router.post('/vip/cdkeyList', controller.vipCdkey.cdkeyList)

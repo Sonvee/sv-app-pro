@@ -28,6 +28,11 @@
         </el-table-column>
         <el-table-column prop="remark" label="备注" min-width="300" show-overflow-tooltip></el-table-column>
         <el-table-column prop="dict_type" label="字典类型" min-width="200" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="status" label="状态" align="center" width="100" show-overflow-tooltip>
+          <template #default="scope">
+            <DictTag :dictList="dictStatus" :value="scope.row.status"></DictTag>
+          </template>
+        </el-table-column>
         <el-table-column
           prop="created_date"
           label="创建时间"
@@ -69,16 +74,23 @@ import { ref, onMounted, computed } from 'vue'
 import TableFilter from './components/TableFilter.vue'
 import TableForm from './components/TableForm.vue'
 import TablePagination from '@/components/TablePagination/index.vue'
+import DictTag from '@/components/DictType/DictTag.vue'
 import ExcelTool from '@/components/ExcelTool/ExcelTool.vue'
 import { dictitemList, dictitemAdd, dictitemUpdate, dictitemDelete, dictitemBatchDelete, dictitemImport, dictitemExport, dictitemExcelTemplate } from '@/api/dict/dictitem'
 import { RefreshRight, Plus, EditPen, Delete, View, Hide } from '@element-plus/icons-vue'
 import { ElNotification, ElMessageBox, ElMessage } from 'element-plus'
 import { isTruthy, timeFormat } from '@/utils'
 import { useRoute } from 'vue-router'
+import { useDictStore } from '@/store/dict'
 import { useSaveFile } from '@/hooks/useSaveFile'
 
+// 路由相关
 const route = useRoute()
 const dictType = computed(() => route.params.id) // 字典类型
+
+const dictStore = useDictStore()
+dictStore.initDict(['dict_sys_status']) // 初始化字典
+const dictStatus = computed(() => dictStore.getDict('dict_sys_status'))
 
 const dataParams = ref({ dict_type: dictType.value, pagenum: 1, pagesize: 20 })
 const tableData = ref([])

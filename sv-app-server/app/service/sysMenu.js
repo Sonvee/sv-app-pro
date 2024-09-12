@@ -466,7 +466,7 @@ class SysMenuService extends Service {
     // 参数校验
     if (!isTruthy(files, 'arrobj')) ctx.throw(400, { msg: 'files 为空' })
 
-    // 表头（严格对应列匹配）：column对应列，name对应名称，field对应字段键名，type对应类型（只标注number、boolean，其他按字符串处理）
+    // 表头（严格对应列匹配）：column对应列，name对应名称，field对应字段键名，type对应类型（只标注number、boolean、timestamp，其他按字符串处理）
     const header = [
       { column: 'A', name: '序号', field: 'sort', type: 'number' },
       { column: 'B', name: '路由标识', field: 'name' },

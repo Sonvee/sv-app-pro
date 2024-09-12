@@ -4,7 +4,7 @@ import { useAuthStore } from '@/store/auth'
 import { LOGIN_URL } from '@/config'
 import { initDynamicRouter } from './modules/dynamicRouter'
 import { staticRouter, errorRouter } from './modules/staticRouter'
-import NProgress from '@/config/nprogress'
+import { useNprogress } from '@/hooks/useNprogress'
 
 /**
  * @description 📚 路由参数配置简介
@@ -41,7 +41,7 @@ router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore()
   
   // 1.NProgress 开始
-  NProgress.start()
+  useNprogress().start()
   
   // 2.动态设置标题
   const title = import.meta.env.VITE_GLOB_APP_TITLE
@@ -98,7 +98,7 @@ export const resetRouter = () => {
  * @description 路由跳转错误
  * */
 router.onError((error) => {
-  NProgress.done()
+  useNprogress().done()
   console.warn('路由错误', error.message)
 })
 
@@ -106,7 +106,7 @@ router.onError((error) => {
  * @description 路由跳转结束
  * */
 router.afterEach(() => {
-  NProgress.done()
+  useNprogress().done()
 })
 
 export default router

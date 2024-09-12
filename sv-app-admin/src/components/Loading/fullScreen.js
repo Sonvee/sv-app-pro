@@ -10,7 +10,7 @@ const startLoading = () => {
   loadingInstance = ElLoading.service({
     fullscreen: true,
     lock: true,
-    text: 'Loading',
+    text: '加载中',
     background: 'rgba(0, 0, 0, 0.7)'
   })
 }
@@ -36,7 +36,7 @@ export const showFullScreenLoading = () => {
 /**
  * @description 隐藏全屏加载
  * */
-export const tryHideFullScreenLoading = () => {
+export const hideFullScreenLoading = () => {
   if (needLoadingRequestCount <= 0) return
   needLoadingRequestCount--
   if (needLoadingRequestCount === 0) {

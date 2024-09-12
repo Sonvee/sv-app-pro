@@ -44,6 +44,27 @@ class VipBenefitController extends Controller {
     const res = await service.vipBenefit.benefitBatchDelete(data)
     ctx.result(res)
   }
+
+  async benefitExcelTemplate() {
+    const { ctx, service } = this
+    const res = await service.vipBenefit.benefitExcelTemplate()
+    ctx.result(res)
+  }
+
+  async benefitImport() {
+    const { ctx, service } = this
+    const files = ctx.request.files
+    const data = ctx.request.body
+    const res = await service.vipBenefit.benefitImport({ data, files })
+    ctx.result(res)
+  }
+
+  async benefitExport() {
+    const { ctx, service } = this
+    const data = ctx.request.body
+    const res = await service.vipBenefit.benefitExport(data)
+    ctx.result(res)
+  }
 }
 
 module.exports = VipBenefitController

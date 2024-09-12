@@ -47,7 +47,8 @@ a {
 
 /* nprogress */
 #nprogress .bar {
-  background: var(--el-color-primary) !important;
+  background: var(--el-color-primary);
+  z-index: 999999;
 }
 #nprogress .spinner-icon {
   border-top-color: var(--el-color-primary) !important;

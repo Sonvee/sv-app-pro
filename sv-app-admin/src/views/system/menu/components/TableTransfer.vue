@@ -1,18 +1,10 @@
 <template>
-  <el-dialog v-model="show" :title="title" width="740" align-center>
+  <el-dialog v-model="show" :title="title" width="740" align-center destroy-on-close>
     <div class="flex-vhc">
-      <el-transfer
-        v-model="permissionDistribution"
-        :data="permissions"
-        :props="{
-          key: 'permission_id',
-          label: 'permission_name'
-        }"
-        :titles="['待分配', '已分配']"
-        :button-texts="['撤消', '分配']"
-        filterable
-        filter-placeholder="权限检索"
-      />
+      <el-transfer v-model="permissionDistribution" :data="permissions" :props="{
+        key: 'permission_id',
+        label: 'permission_name'
+      }" :titles="['待分配', '已分配']" :button-texts="['撤消', '分配']" filterable filter-placeholder="权限检索" />
     </div>
     <template #footer>
       <el-button @click="close">取消</el-button>
@@ -40,7 +32,7 @@ const permissions = ref([])
 const permissionDistribution = ref([])
 
 // 数据
-handleTable({ pagesize: -1 })
+handleTable({ pagesize: -1, status: 1 })
 async function handleTable(params) {
   const res = await permissionList(params)
   permissions.value = res.data || []

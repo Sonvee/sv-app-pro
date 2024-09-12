@@ -30,6 +30,13 @@ class SysLogController extends Controller {
     const res = await service.sysLog.logClear(data)
     ctx.result(res)
   }
+
+  async logExport() {
+    const { ctx, service } = this
+    const data = ctx.request.body
+    const res = await service.sysLog.logExport(data)
+    ctx.result(res)
+  }
 }
 
 module.exports = SysLogController

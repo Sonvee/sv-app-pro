@@ -27,6 +27,11 @@ module.exports = app => {
       sort: {
         type: Number,
       },
+      // 状态 - 0禁用 1启用
+      status: {
+        type: Number,
+        default: 1,
+      },
       // 自动生成字段
       created_date: {
         type: Number,

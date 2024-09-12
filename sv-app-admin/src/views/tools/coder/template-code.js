@@ -20,6 +20,11 @@ const table = `> 表格页面 index.vue
         <el-table-column type="selection" align="center" width="50" fixed="left" />
         <el-table-column prop="test_id" label="ID" width="200" show-overflow-tooltip></el-table-column>
         <el-table-column prop="test_name" label="名称" min-width="300" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="status" label="状态" align="center" width="100" show-overflow-tooltip>
+          <template #default="scope">
+            <DictTag :dictList="dictStatus" :value="scope.row.status"></DictTag>
+          </template>
+        </el-table-column>
         <el-table-column prop="created_date" label="创建时间" align="center" width="180" sortable :formatter="(row) => timeFormat(row.created_date)" show-overflow-tooltip></el-table-column>
         <el-table-column prop="updated_date" label="更新时间" align="center" width="180" sortable :formatter="(row) => timeFormat(row.updated_date)" show-overflow-tooltip></el-table-column>
         <el-table-column label="操作" align="center" width="160" fixed="right">
@@ -40,16 +45,22 @@ const table = `> 表格页面 index.vue
 </template>
 
 <script setup name="test">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import TableFilter from './components/TableFilter.vue'
 import TableForm from './components/TableForm.vue'
 import TablePagination from '@/components/TablePagination/index.vue'
+import DictTag from '@/components/DictType/DictTag.vue'
 import ExcelTool from '@/components/ExcelTool/ExcelTool.vue'
 import { testList, testAdd, testUpdate, testDelete, testBatchDelete, testImport, testExport, testExcelTemplate } from '@/api/test'
 import { RefreshRight, Plus, EditPen, Delete, View, Hide } from '@element-plus/icons-vue'
 import { ElNotification, ElMessageBox, ElMessage } from 'element-plus'
 import { isTruthy, timeFormat } from '@/utils'
+import { useDictStore } from '@/store/dict'
 import { useSaveFile } from '@/hooks/useSaveFile'
+
+const dictStore = useDictStore()
+dictStore.initDict(['dict_sys_status']) // 初始化字典
+const dictStatus = computed(() => dictStore.getDict('dict_sys_status'))
 
 const dataParams = ref({ pagenum: 1, pagesize: 20 })
 const tableData = ref([])
@@ -235,6 +246,9 @@ const filter = `> 筛选栏 TableFilter.vue
       <el-form-item prop="test_name" label="名称">
         <el-input v-model.trim="filterForm.test_name" placeholder="请输入名称" clearable style="width: 150px" />
       </el-form-item>
+      <el-form-item prop="status" label="状态">
+        <DictSelect v-model="filterForm.status" dictType="dict_sys_status" formatNumber placeholder="请选择状态" style="width: 150px"></DictSelect>
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" v-permission="['sys:test:query']" @click="submit">搜索</el-button>
         <el-button type="danger" @click="reset">重置</el-button>
@@ -245,6 +259,7 @@ const filter = `> 筛选栏 TableFilter.vue
 
 <script setup>
 import { ref } from 'vue'
+import DictSelect from '@/components/DictType/DictSelect.vue'
 
 const emits = defineEmits(['submit'])
 
@@ -252,7 +267,8 @@ const filterFormRef = ref()
 // 过滤条件表单
 const filterForm = ref({
   test_id: '',
-  test_name: ''
+  test_name: '',
+  status: null
 })
 
 // 提交
@@ -286,6 +302,9 @@ const form = `> 表单 TableForm.vue
         <el-form-item prop="test_name" label="名称" required>
           <el-input v-model="formData.test_name" placeholder="请输入名称" clearable />
         </el-form-item>
+        <el-form-item prop="status" label="状态">
+          <el-switch v-model="formData.status" inline-prompt :active-value="1" :inactive-value="0" :active-icon="Check" :inactive-icon="Close" />
+        </el-form-item>
       </el-form>
     </template>
     <template #footer>
@@ -299,6 +318,7 @@ const form = `> 表单 TableForm.vue
 import { ref, watchEffect } from 'vue'
 import { assignOverride } from '@/utils'
 import { ElNotification } from 'element-plus'
+import { Check, Close } from '@element-plus/icons-vue'
 import { cloneDeep, isEqual } from 'lodash-es'
 
 const props = defineProps({
@@ -318,6 +338,7 @@ const emits = defineEmits(['submit'])
 const formBase = {
   test_id: '', // 主键
   test_name: '',
+  status: 1
 }
 // 表单数据
 const formData = ref(formBase)
@@ -470,13 +491,20 @@ module.exports = (app) => {
 
   const SysTestSchema = new mongoose.Schema(
     {
+      // 主键 - id
       test_id: {
         type: String,
         unique: true,
         required: true
       },
+      // 名称
       test_name: {
         type: String
+      },
+      // 状态 - 0禁用 1启用
+      status: {
+        type: Number,
+        default: 1,
       },
       // 自动生成字段
       created_date: {
@@ -594,6 +622,7 @@ class SysTestService extends Service {
    * @param {Object} data - 请求参数
    * @property {String} data.test_id - id
    * @property {String} data.test_name - 名称
+   * @property {Number} data.status - 状态
    * @property {Number} data.pagesize - 每页条数
    * @property {Number} data.pagenum - 页码
    */
@@ -617,6 +646,7 @@ class SysTestService extends Service {
     // 查询条件
     if (isTruthy(data.test_id)) conditions.test_id = data.test_id
     if (isTruthy(data.test_name)) conditions.test_name = { $regex: data.test_name, $options: 'i' } // 模糊查询
+    if (isTruthy(data.status, 'zero')) conditions.status = data.status
 
     // 数据库连接
     const db = app.model.SysTest
@@ -638,7 +668,7 @@ class SysTestService extends Service {
     // 页数
     const pages = pagesize > 0 ? Math.ceil(count / pagesize) : count > 0 ? 1 : 0
 
-    // 开启 Lean
+    // 开启lean（聚合查询无需开启）
     query = query.lean()
     
     // 处理查询结果
@@ -846,12 +876,12 @@ class SysTestService extends Service {
     // 权限校验
     ctx.checkAuthority('permission', ['sys:test:excel'])
 
-    // 表头列（顺序严格）
+    // 表头（严格对应列匹配）：column对应列，name对应名称，field对应字段键名，type对应类型（只标注number、boolean，其他按字符串处理）
     const columns = [
-      { header: '序号', key: 'sort', width: 10, style: { alignment: { horizontal: 'center' } } },
+      { header: '序号', key: 'sort', width: 10, style: { alignment: { horizontal: 'center' } }, type: 'number' },
       { header: '测试ID', key: 'test_id', width: 40 },
       { header: '测试名称', key: 'test_name', width: 40 },
-      { header: '状态', key: 'status', width: 10, style: { alignment: { horizontal: 'center' } } },
+      { header: '状态', key: 'status', width: 10, style: { alignment: { horizontal: 'center' } }, type: 'number' },
       { header: '备注', key: 'remark', width: 40 }
     ]
 
@@ -888,12 +918,12 @@ class SysTestService extends Service {
     // 参数校验
     if (!isTruthy(files, 'arrobj')) ctx.throw(400, { msg: 'files 为空' })
 
-    // 表头：column对应列，name对应名称，field对应字段键名（严格对应列匹配）
+    // 表头（严格对应列匹配）：column对应列，name对应名称，field对应字段键名，type对应类型（只标注number、boolean，其他按字符串处理）
     const header = [
-      { column: 'A', name: '序号', field: 'sort' },
+      { column: 'A', name: '序号', field: 'sort', type: 'number' },
       { column: 'B', name: '测试ID', field: 'test_id' },
       { column: 'C', name: '测试名称', field: 'test_name' },
-      { column: 'D', name: '状态', field: 'status' },
+      { column: 'D', name: '状态', field: 'status', type: 'number' },
       { column: 'E', name: '备注', field: 'remark' }
     ]
     // 解析成JSON数据
@@ -923,10 +953,10 @@ class SysTestService extends Service {
 
     // 表头列（顺序严格）
     const columns = [
-      { header: '序号', key: 'sort', width: 10, style: { alignment: { horizontal: 'center' } } },
+      { header: '序号', key: 'sort', width: 10, style: { alignment: { horizontal: 'center' } }, type: 'number' },
       { header: '测试ID', key: 'test_id', width: 40 },
       { header: '测试名称', key: 'test_name', width: 40 },
-      { header: '状态', key: 'status', width: 10, style: { alignment: { horizontal: 'center' } } },
+      { header: '状态', key: 'status', width: 10, style: { alignment: { horizontal: 'center' } }, type: 'number' },
       { header: '备注', key: 'remark', width: 40 }
     ]
 

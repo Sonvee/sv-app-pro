@@ -1,5 +1,6 @@
 <template>
-  <el-drawer class="sv-el-drawer" v-bind="$attrs" ref="tableFormRef" @open="openDrawer" @close="closeDrawer" destroy-on-close :close-on-click-modal="false">
+  <el-drawer class="sv-el-drawer" v-bind="$attrs" ref="tableFormRef" @open="openDrawer" @close="closeDrawer"
+    destroy-on-close :close-on-click-modal="false">
     <template #header>
       <h3>{{ formMode == 'add' ? '新增' : '编辑' }}</h3>
     </template>
@@ -21,21 +22,27 @@
           <el-input v-model="formData.description" type="textarea" :autosize="{ minRows: 4 }" placeholder="请输入套餐描述" />
         </el-form-item>
         <el-form-item prop="benefits" label="权益">
-          <DictSelect v-model="formData.benefits" :dictApi="benefitList" labelName="benefit_name" valueName="benefit_id" multiple placeholder="请选择权益"></DictSelect>
+          <DictSelect v-model="formData.benefits" :dictApi="benefitList" labelName="benefit_name" valueName="benefit_id"
+            multiple placeholder="请选择权益"></DictSelect>
         </el-form-item>
-        <el-form-item prop="price" label="价格（分）">
+        <el-form-item prop="price" label="价格 (分)">
           <el-input-number v-model="formData.price" :min="0" :step="1" step-strictly />
           <span class="ml-8 text-cyan">=&nbsp;{{ convertFenToYuan(formData.price) }}&nbsp;元</span>
         </el-form-item>
-        <el-form-item prop="discount" label="折扣（分）">
+        <el-form-item prop="discount" label="折扣 (分)">
           <el-input-number v-model="formData.discount" :min="0" :step="1" step-strictly />
           <span class="ml-8 text-cyan">=&nbsp;{{ convertFenToYuan(formData.discount) }}&nbsp;元</span>
         </el-form-item>
-        <el-form-item prop="valid_day" label="有效期（天）">
+        <el-form-item prop="valid_day" label="有效期 (天)">
           <el-input-number v-model="formData.valid_day" :min="0" :step="1" step-strictly />
         </el-form-item>
         <el-form-item prop="style" label="样式">
-          <el-color-picker v-model="formData.style" :predefine="['#409EFF', '#67C23A', '#E6A23C', '#F56C6C', '#909399']" />
+          <el-color-picker v-model="formData.style"
+            :predefine="['#409EFF', '#67C23A', '#E6A23C', '#F56C6C', '#909399']" />
+        </el-form-item>
+        <el-form-item prop="status" label="状态">
+          <el-switch v-model="formData.status" inline-prompt :active-value="1" :inactive-value="0" :active-icon="Check"
+            :inactive-icon="Close" />
         </el-form-item>
       </el-form>
     </template>
@@ -51,6 +58,7 @@ import { ref, watchEffect } from 'vue'
 import { assignOverride, convertFenToYuan } from '@/utils'
 import { ElNotification } from 'element-plus'
 import { cloneDeep, isEqual } from 'lodash-es'
+import { Check, Close } from '@element-plus/icons-vue'
 import DictSelect from '@/components/DictType/DictSelect.vue'
 import { benefitList } from '@/api/vip/benefit'
 
@@ -78,7 +86,8 @@ const formBase = {
   price: 0,
   discount: 0,
   valid_day: 0,
-  style: ''
+  style: '',
+  status: 1
 }
 // 表单数据
 const formData = ref(formBase)
@@ -102,7 +111,7 @@ function openDrawer() {
 }
 
 // 抽屉关闭回调
-function closeDrawer() {}
+function closeDrawer() { }
 
 // 关闭抽屉
 function cancel() {

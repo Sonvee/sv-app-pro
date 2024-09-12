@@ -7,12 +7,15 @@
       <!-- 工具栏 -->
       <div class="table-control">
         <el-button type="primary" plain :icon="Plus" v-permission="['sys:dict:add']" @click="add">新增</el-button>
-        <el-button type="danger" plain :icon="Delete" v-permission="['sys:dict:batchdelete']" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
+        <el-button type="danger" plain :icon="Delete" v-permission="['sys:dict:batchdelete']"
+          :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
         <div style="flex: 1"></div>
-        <el-button circle @click="updateCache" title="更新本地字典缓存"><i class="sv-icons-storage text-xs"></i></el-button>
-        <ExcelTool ref="excelToolRef" class="mr-12 ml-12" v-permission="['sys:dict:excel']" @onTool="onExcelTool" @confirmUpload="excelUpload"></ExcelTool>
+        <el-button circle @click="updateCache" title="清除字典本地缓存"><i class="sv-icons-storage text-xs"></i></el-button>
+        <ExcelTool ref="excelToolRef" class="mr-12 ml-12" v-permission="['sys:dict:excel']" @onTool="onExcelTool"
+          @confirmUpload="excelUpload"></ExcelTool>
         <el-button circle :icon="RefreshRight" @click="refresh" title="刷新"></el-button>
-        <el-button circle :icon="showFilter ? View : Hide" @click="showFilter = !showFilter" :title="showFilter ? '隐藏筛选' : '显示筛选'"></el-button>
+        <el-button circle :icon="showFilter ? View : Hide" @click="showFilter = !showFilter"
+          :title="showFilter ? '隐藏筛选' : '显示筛选'"></el-button>
       </div>
       <!-- 数据表格 -->
       <el-table v-loading="loading" :data="tableData" border @selection-change="handleSelectionChange">
@@ -26,36 +29,30 @@
             <el-button type="primary" plain :icon="Setting" circle @click="editDictitem(scope.row)"></el-button>
           </template>
         </el-table-column>
-        <el-table-column
-          prop="created_date"
-          label="创建时间"
-          align="center"
-          width="180"
-          sortable
-          :formatter="(row) => timeFormat(row.created_date)"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column
-          prop="updated_date"
-          label="更新时间"
-          align="center"
-          width="180"
-          sortable
-          :formatter="(row) => timeFormat(row.updated_date)"
-          show-overflow-tooltip
-        ></el-table-column>
+        <el-table-column prop="status" label="状态" align="center" width="100" show-overflow-tooltip>
+          <template #default="scope">
+            <DictTag :dictList="dictStatus" :value="scope.row.status"></DictTag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="created_date" label="创建时间" align="center" width="180" sortable
+          :formatter="(row) => timeFormat(row.created_date)" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="updated_date" label="更新时间" align="center" width="180" sortable
+          :formatter="(row) => timeFormat(row.updated_date)" show-overflow-tooltip></el-table-column>
 
         <el-table-column label="操作" align="center" width="160" fixed="right">
           <template #default="scope">
             <el-button-group>
-              <el-button text type="primary" :icon="EditPen" v-permission="['sys:dict:update']" @click="edit(scope.row)">编辑</el-button>
-              <el-button text type="danger" :icon="Delete" v-permission="['sys:dict:delete']" @click="del(scope.row)">删除</el-button>
+              <el-button text type="primary" :icon="EditPen" v-permission="['sys:dict:update']"
+                @click="edit(scope.row)">编辑</el-button>
+              <el-button text type="danger" :icon="Delete" v-permission="['sys:dict:delete']"
+                @click="del(scope.row)">删除</el-button>
             </el-button-group>
           </template>
         </el-table-column>
       </el-table>
       <!-- 分页 -->
-      <TablePagination :pagingParams="dataParams" :total="total" @update:page-size="handleSizeChange" @update:current-page="handleCurrentChange"></TablePagination>
+      <TablePagination :pagingParams="dataParams" :total="total" @update:page-size="handleSizeChange"
+        @update:current-page="handleCurrentChange"></TablePagination>
     </div>
     <!-- 弹窗 -->
     <TableForm v-model="showForm" :form-init="formInit" :form-mode="formMode" @submit="submitForm"></TableForm>
@@ -63,18 +60,23 @@
 </template>
 
 <script setup name="dict">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import TableFilter from './components/TableFilter.vue'
 import TableForm from './components/TableForm.vue'
 import TablePagination from '@/components/TablePagination/index.vue'
+import DictTag from '@/components/DictType/DictTag.vue'
 import ExcelTool from '@/components/ExcelTool/ExcelTool.vue'
 import { dictList, dictAdd, dictUpdate, dictDelete, dictBatchDelete, dictImport, dictExport, dictExcelTemplate } from '@/api/dict/dict'
 import { RefreshRight, Plus, EditPen, Delete, View, Hide, Setting } from '@element-plus/icons-vue'
 import { ElNotification, ElMessageBox, ElMessage } from 'element-plus'
 import { isTruthy, timeFormat } from '@/utils'
-import { useDictStore } from '@/store/dict'
 import { useRouter } from 'vue-router'
+import { useDictStore } from '@/store/dict'
 import { useSaveFile } from '@/hooks/useSaveFile'
+
+const dictStore = useDictStore()
+dictStore.initDict(['dict_sys_status']) // 初始化字典
+const dictStatus = computed(() => dictStore.getDict('dict_sys_status'))
 
 const router = useRouter()
 
@@ -137,7 +139,7 @@ function del(row) {
       })
       refresh()
     })
-    .catch(() => {})
+    .catch(() => { })
 }
 
 // 刷新
@@ -173,7 +175,7 @@ function batchDelete() {
       })
       refresh()
     })
-    .catch(() => {})
+    .catch(() => { })
 }
 
 // 提交表单
@@ -227,6 +229,7 @@ function editDictitem(row) {
 
 function updateCache() {
   useDictStore().clearDict()
+  ElNotification({ title: 'Success', message: '清除字典本地缓存成功', type: 'success' })
 }
 
 // excel工具

@@ -21,6 +21,7 @@ module.exports = app => {
         type: Number,
         default: 0,
       },
+      // 状态 - 0禁用 1启用
       status: {
         type: Number,
         default: 1,

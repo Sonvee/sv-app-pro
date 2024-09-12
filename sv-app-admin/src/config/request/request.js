@@ -2,7 +2,7 @@ import axios from 'axios'
 import { useUserStore } from '@/store/user'
 import { checkStatus } from './checkStatus'
 import { AxiosCanceler } from './axiosCancel'
-import { showFullScreenLoading, tryHideFullScreenLoading } from '@/components/Loading/fullScreen'
+import { showFullScreenLoading, hideFullScreenLoading } from '@/components/Loading/fullScreen'
 import { LOGIN_URL } from '@/config'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import router from '@/router'
@@ -52,7 +52,7 @@ service.interceptors.response.use(
 
     const userStore = useUserStore()
     axiosCanceler.removePending(config)
-    config.loading && tryHideFullScreenLoading()
+    config.loading && hideFullScreenLoading()
 
     // 登录失效
     if (data.code == 401) {
@@ -80,7 +80,7 @@ service.interceptors.response.use(
   },
   (error) => {
     const { response } = error
-    tryHideFullScreenLoading()
+    hideFullScreenLoading()
     // 请求超时 && 网络错误单独判断，没有 response
     if (error.message.indexOf('timeout') !== -1) ElMessage.error('请求超时！请您稍后重试')
     if (error.message.indexOf('Network Error') !== -1) ElMessage.error('网络错误！请您稍后重试')

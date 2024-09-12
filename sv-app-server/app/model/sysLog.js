@@ -48,7 +48,7 @@ module.exports = app => {
       request_params: {
         type: Object,
       },
-      // 消耗时长（毫秒）
+      // 消耗时长 (毫秒)
       costtime: {
         type: Number,
       },

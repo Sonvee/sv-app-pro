@@ -23,6 +23,9 @@
         <el-form-item prop="remark" label="备注">
           <el-input v-model="formData.remark" type="textarea" :autosize="{ minRows: 4 }" placeholder="请输入备注" />
         </el-form-item>
+        <el-form-item prop="status" label="状态">
+          <el-switch v-model="formData.status" inline-prompt :active-value="1" :inactive-value="0" :active-icon="Check" :inactive-icon="Close" />
+        </el-form-item>
       </el-form>
     </template>
     <template #footer>
@@ -38,6 +41,7 @@ import DictSelect from '@/components/DictType/DictSelect.vue'
 import { actionStyle } from '@/components/DictType/staticDict.js'
 import { assignOverride } from '@/utils'
 import { ElNotification } from 'element-plus'
+import { Check, Close } from '@element-plus/icons-vue'
 import { cloneDeep, isEqual } from 'lodash-es'
 
 const props = defineProps({
@@ -61,7 +65,8 @@ const formBase = {
   value: '',
   sort: 0,
   remark: '',
-  action_style: ''
+  action_style: '',
+  status: 1
 }
 // 表单数据
 const formData = ref(formBase)

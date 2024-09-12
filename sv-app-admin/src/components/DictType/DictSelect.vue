@@ -30,7 +30,8 @@ const props = defineProps({
     type: Object,
     default: () => {
       return {
-        pagesize: -1
+        pagesize: -1, // 默认不分页
+        status: 1, // 状态（1为启用状态，默认只筛选启用项，若数据项状态非停启用模式，则需覆盖该参数）
       }
     }
   },

@@ -12,6 +12,7 @@ class SysRoleService extends Service {
    * @param {Object} data - 请求参数
    * @property {Array|String} data.role_id - id
    * @property {String} data.role_name - 名称
+   * @property {Number} data.status - 状态
    * @property {Number} data.pagesize - 每页条数
    * @property {Number} data.pagenum - 页码
    * @param {Boolean} limit - 是否开启权限约束 默认开启
@@ -36,6 +37,7 @@ class SysRoleService extends Service {
     // 查询条件
     if (isTruthy(data.role_id, 'arr')) conditions.role_id = Array.isArray(data.role_id) ? { $in: data.role_id } : data.role_id // 支持多选
     if (isTruthy(data.role_name)) conditions.role_name = { $regex: data.role_name, $options: 'i' } // 模糊查询
+    if (isTruthy(data.status, 'zero')) conditions.status = data.status
 
     // 数据库连接
     const db = app.model.SysRole
@@ -75,7 +77,7 @@ class SysRoleService extends Service {
     // 页数
     const pages = pagesize > 0 ? Math.ceil(count / pagesize) : count > 0 ? 1 : 0
 
-    // 聚合查询无需开启Lean
+    // 聚合查询无需开启lean
 
     // 处理查询结果
     const res = await query.exec()
@@ -107,7 +109,8 @@ class SysRoleService extends Service {
     if (typeof role !== 'string' && !Array.isArray(role)) ctx.throw(400, { msg: 'role 参数类型有误' })
 
     // 查询操作
-    const { data: listdata } = await this.roleList({ role_id: role }, false) // 由于roleList设有权限，需要手动关闭约束
+    const roleRes = await this.roleList({ role_id: role }, false) // 由于roleList设有权限，需要手动关闭约束
+    const listdata = roleRes.data.filter((item) => item.status == 1) // 筛选状态为1启用的角色
     // 获取所有权限并去重
     const allPermissions = listdata.flatMap((item) => item.permissions)
     const uniquePermissions = [...new Set(allPermissions)]
@@ -356,7 +359,7 @@ class SysRoleService extends Service {
     // 参数校验
     if (!isTruthy(files, 'arrobj')) ctx.throw(400, { msg: 'files 为空' })
 
-    // 表头（严格对应列匹配）：column对应列，name对应名称，field对应字段键名，type对应类型（只标注number、boolean，其他按字符串处理）
+    // 表头（严格对应列匹配）：column对应列，name对应名称，field对应字段键名，type对应类型（只标注number、boolean、timestamp，其他按字符串处理）
     const header = [
       { column: 'A', name: '序号', field: 'sort', type: 'number' },
       { column: 'B', name: '角色ID', field: 'role_id' },

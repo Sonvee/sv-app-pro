@@ -1,3 +1,5 @@
+const dayjs = require("dayjs")
+
 /**
  * 生成随机码
  * @param {number} length 码长度
@@ -219,6 +221,20 @@ function multipleJudgment(origin, conditions = [], result = []) {
   return origin
 }
 
+/**
+ * 时间日期格式化
+ * @param {String} time 需要格式化的时间
+ * @param {String} format 格式化规则 为timestamp时会将time转化为时间戳 (毫秒)
+ */
+function timeFormat(time, format = 'YYYY-MM-DD HH:mm:ss') {
+  if (!time) return
+  if (format === 'timestamp') {
+    return dayjs(time).valueOf()
+  }
+  time = Number(time) // 转化为时间戳数字
+  return dayjs(time).format(format)
+}
+
 module.exports = {
   generateRandomCode,
   arrayIncludesSubarray,
@@ -227,5 +243,6 @@ module.exports = {
   isTruthy,
   isType,
   removeNode,
-  multipleJudgment
+  multipleJudgment,
+  timeFormat
 }

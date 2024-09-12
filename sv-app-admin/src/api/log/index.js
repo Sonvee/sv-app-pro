@@ -54,3 +54,13 @@ export function logClear(data) {
     data
   })
 }
+
+// 导出
+export function logExport(data) {
+  return request({
+    url: '/sys/logExport',
+    method: 'post',
+    data,
+    responseType: 'blob' // 指定响应类型为二进制数据
+  })
+}

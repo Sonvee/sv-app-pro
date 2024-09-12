@@ -7,10 +7,14 @@
       <!-- 工具栏 -->
       <div class="table-control">
         <el-button type="primary" plain :icon="Plus" v-permission="['vip:plan:add']" @click="add">新增</el-button>
-        <el-button type="danger" plain :icon="Delete" v-permission="['vip:plan:batchdelete']" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
+        <el-button type="danger" plain :icon="Delete" v-permission="['vip:plan:batchdelete']"
+          :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
         <div style="flex: 1"></div>
+        <ExcelTool ref="excelToolRef" class="mr-12" v-permission="['vip:plan:excel']" @onTool="onExcelTool"
+          @confirmUpload="excelUpload"></ExcelTool>
         <el-button circle :icon="RefreshRight" @click="refresh" title="刷新"></el-button>
-        <el-button circle :icon="showFilter ? View : Hide" @click="showFilter = !showFilter" :title="showFilter ? '隐藏筛选' : '显示筛选'"></el-button>
+        <el-button circle :icon="showFilter ? View : Hide" @click="showFilter = !showFilter"
+          :title="showFilter ? '隐藏筛选' : '显示筛选'"></el-button>
       </div>
       <!-- 数据表格 -->
       <el-table v-loading="loading" :data="tableData" border @selection-change="handleSelectionChange">
@@ -20,28 +24,30 @@
         <el-table-column prop="plan_name" label="套餐名称" min-width="200" show-overflow-tooltip></el-table-column>
         <el-table-column prop="abbreviation" label="套餐简称" width="120" show-overflow-tooltip></el-table-column>
         <el-table-column prop="description" label="套餐描述" min-width="300" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="price" label="定价（分）" min-width="200" show-overflow-tooltip>
+        <el-table-column prop="price" label="定价 (分)" min-width="200" show-overflow-tooltip>
           <template #default="scope">
             {{ scope.row.price }}&nbsp;分
             <span class="text-cyan">&nbsp;=&nbsp;{{ convertFenToYuan(scope.row.price) }}&nbsp;元</span>
           </template>
         </el-table-column>
-        <el-table-column prop="discount" label="折扣（分）" min-width="200" show-overflow-tooltip>
+        <el-table-column prop="discount" label="折扣 (分)" min-width="200" show-overflow-tooltip>
           <template #default="scope">
             {{ scope.row.discount }}&nbsp;分
             <span class="text-cyan">&nbsp;=&nbsp;{{ convertFenToYuan(scope.row.discount) }}&nbsp;元</span>
           </template>
         </el-table-column>
-        <el-table-column label="售价（分）" min-width="200" show-overflow-tooltip>
+        <el-table-column label="售价 (分)" min-width="200" show-overflow-tooltip>
           <template #default="scope">
             {{ scope.row.price - scope.row.discount }}&nbsp;分
-            <span class="text-cyan">&nbsp;=&nbsp;{{ convertFenToYuan(scope.row.price - scope.row.discount) }}&nbsp;元</span>
+            <span class="text-cyan">&nbsp;=&nbsp;{{ convertFenToYuan(scope.row.price - scope.row.discount)
+              }}&nbsp;元</span>
           </template>
         </el-table-column>
-        <el-table-column prop="valid_day" label="套餐有效期（天）" min-width="200" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="valid_day" label="套餐有效期 (天)" min-width="200" show-overflow-tooltip></el-table-column>
         <el-table-column prop="benefits" label="权益" min-width="300" show-overflow-tooltip>
           <template #default="scope">
-            <i v-for="item in scope.row.benefits_detail" :key="item.benefit_id" :class="item.icon" class="text-xl mr-8" :title="item.benefit_name"></i>
+            <i v-for="item in scope.row.benefits_detail" :key="item.benefit_id" :class="item.icon" class="text-xl mr-8"
+              :title="item.benefit_name"></i>
           </template>
         </el-table-column>
         <el-table-column prop="style" label="样式" align="center" width="140" show-overflow-tooltip>
@@ -51,36 +57,31 @@
             </i>
           </template>
         </el-table-column>
-        <el-table-column prop="subscribed_count" label="订阅数量" align="center" width="140" show-overflow-tooltip></el-table-column>
-        <el-table-column
-          prop="created_date"
-          label="创建时间"
-          align="center"
-          width="180"
-          sortable
-          :formatter="(row) => timeFormat(row.created_date)"
-          show-overflow-tooltip
-        ></el-table-column>
-        <el-table-column
-          prop="updated_date"
-          label="更新时间"
-          align="center"
-          width="180"
-          sortable
-          :formatter="(row) => timeFormat(row.updated_date)"
-          show-overflow-tooltip
-        ></el-table-column>
+        <el-table-column prop="subscribed_count" label="订阅数量" align="center" width="140"
+          show-overflow-tooltip></el-table-column>
+        <el-table-column prop="status" label="状态" align="center" width="100" show-overflow-tooltip>
+          <template #default="scope">
+            <DictTag :dictList="dictStatus" :value="scope.row.status"></DictTag>
+          </template>
+        </el-table-column>
+        <el-table-column prop="created_date" label="创建时间" align="center" width="180" sortable
+          :formatter="(row) => timeFormat(row.created_date)" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="updated_date" label="更新时间" align="center" width="180" sortable
+          :formatter="(row) => timeFormat(row.updated_date)" show-overflow-tooltip></el-table-column>
         <el-table-column label="操作" align="center" width="160" fixed="right">
           <template #default="scope">
             <el-button-group>
-              <el-button text type="primary" :icon="EditPen" v-permission="['vip:plan:update']" @click="edit(scope.row)">编辑</el-button>
-              <el-button text type="danger" :icon="Delete" v-permission="['vip:plan:delete']" @click="del(scope.row)">删除</el-button>
+              <el-button text type="primary" :icon="EditPen" v-permission="['vip:plan:update']"
+                @click="edit(scope.row)">编辑</el-button>
+              <el-button text type="danger" :icon="Delete" v-permission="['vip:plan:delete']"
+                @click="del(scope.row)">删除</el-button>
             </el-button-group>
           </template>
         </el-table-column>
       </el-table>
       <!-- 分页 -->
-      <TablePagination :pagingParams="dataParams" :total="total" @update:page-size="handleSizeChange" @update:current-page="handleCurrentChange"></TablePagination>
+      <TablePagination :pagingParams="dataParams" :total="total" @update:page-size="handleSizeChange"
+        @update:current-page="handleCurrentChange"></TablePagination>
     </div>
     <!-- 弹窗 -->
     <TableForm v-model="showForm" :form-init="formInit" :form-mode="formMode" @submit="submitForm"></TableForm>
@@ -88,14 +89,22 @@
 </template>
 
 <script setup name="plan">
-import { ref, onMounted } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import TableFilter from './components/TableFilter.vue'
 import TableForm from './components/TableForm.vue'
 import TablePagination from '@/components/TablePagination/index.vue'
-import { planList, planAdd, planUpdate, planDelete, planBatchDelete } from '@/api/vip/plan'
+import DictTag from '@/components/DictType/DictTag.vue'
+import ExcelTool from '@/components/ExcelTool/ExcelTool.vue'
+import { planList, planAdd, planUpdate, planDelete, planBatchDelete, planImport, planExport, planExcelTemplate } from '@/api/vip/plan'
 import { RefreshRight, Plus, EditPen, Delete, View, Hide } from '@element-plus/icons-vue'
 import { ElNotification, ElMessageBox, ElMessage } from 'element-plus'
 import { convertFenToYuan, isTruthy, timeFormat } from '@/utils'
+import { useDictStore } from '@/store/dict'
+import { useSaveFile } from '@/hooks/useSaveFile'
+
+const dictStore = useDictStore()
+dictStore.initDict(['dict_sys_status']) // 初始化字典
+const dictStatus = computed(() => dictStore.getDict('dict_sys_status'))
 
 const dataParams = ref({ pagenum: 1, pagesize: 20 })
 const tableData = ref([])
@@ -156,7 +165,7 @@ function del(row) {
       })
       refresh()
     })
-    .catch(() => {})
+    .catch(() => { })
 }
 
 // 刷新
@@ -192,7 +201,7 @@ function batchDelete() {
       })
       refresh()
     })
-    .catch(() => {})
+    .catch(() => { })
 }
 
 // 提交表单
@@ -231,6 +240,37 @@ function handleSizeChange(e) {
 function handleCurrentChange(e) {
   dataParams.value.pagenum = e
   handleTable(dataParams.value)
+}
+
+// excel工具
+const excelToolRef = ref()
+async function onExcelTool(e) {
+  switch (e) {
+    case 'import':
+      // 打开导入文件面板
+      excelToolRef.value.openUpload()
+      break
+    case 'export':
+      // 在当前筛选条件下进行全量导出
+      const params = Object.assign({ ...dataParams.value }, { pagenum: 1, pagesize: -1 })
+      const exportRes = await planExport(params)
+      useSaveFile().start(exportRes, '会员套餐列表.xlsx')
+      break
+    case 'template':
+      const templateRes = await planExcelTemplate()
+      useSaveFile().start(templateRes, '会员套餐模板.xlsx')
+      break
+  }
+}
+
+// 确认导入
+async function excelUpload() {
+  const upRes = await excelToolRef.value.upload(planImport, 'files')
+  if (upRes.success) {
+    ElNotification({ title: 'Success', message: upRes?.msg, type: 'success' })
+    refresh()
+  }
+  excelToolRef.value.closeUpload()
 }
 </script>
 

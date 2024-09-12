@@ -13,6 +13,7 @@ class SysDictitemService extends Service {
    * @property {String} data.dict_type - 字典类型
    * @property {String} data.label - 键
    * @property {String} data.value - 值
+   * @property {Number} data.status - 状态
    * @property {Number} data.pagesize - 每页条数
    * @property {Number} data.pagenum - 页码
    */
@@ -44,6 +45,7 @@ class SysDictitemService extends Service {
     if (isTruthy(data.dict_type)) conditions.dict_type = data.dict_type
     if (isTruthy(data.label)) conditions.label = { $regex: data.label, $options: 'i' } // 模糊查询
     if (isTruthy(data.value)) conditions.value = { $regex: data.value, $options: 'i' } // 模糊查询
+    if (isTruthy(data.status, 'zero')) conditions.status = data.status
 
     // 数据库连接
     const db = app.model.SysDictitem
@@ -65,7 +67,7 @@ class SysDictitemService extends Service {
     // 页数
     const pages = pagesize > 0 ? Math.ceil(count / pagesize) : count > 0 ? 1 : 0
 
-    // 非聚合查询且可导出Excel的接口需开启Lean
+    // 开启lean（聚合查询无需开启）
     query = query.lean()
 
     // 处理查询结果
@@ -98,16 +100,26 @@ class SysDictitemService extends Service {
     if (!isTruthy(data.dict_type)) ctx.throw(400, { msg: 'dict_type 必填' })
 
     const dictRedis = await app.redis.get(`dict:${data.dict_type}`)
+
+    // 直接从Redis中取
     if (dictRedis) {
       return {
         data: JSON.parse(dictRedis),
         msg: 'Redis字典列表获取成功'
       }
     }
+
+    // 请求列表
+    // 先查询字典状态
+    const onedict = await app.model.SysDict.findOne({ dict_id: data.dict_type })
+    if (!onedict) ctx.throw(400, { msg: `字典 ${data.dict_type} 不存在` })
+    if (onedict.status != 1) ctx.throw(400, { msg: `字典 ${data.dict_type} 状态异常` })
+
     data.pagesize = -1
-    const { data: res } = await this.dictitemList(data)
+    data.status = 1
+    const dictitemRes = await this.dictitemList(data)
     return {
-      data: res,
+      data: dictitemRes.data,
       msg: '字典列表获取成功'
     }
   }
@@ -371,7 +383,7 @@ class SysDictitemService extends Service {
     // 参数校验
     if (!isTruthy(files, 'arrobj')) ctx.throw(400, { msg: 'files 为空' })
 
-    // 表头（严格对应列匹配）：column对应列，name对应名称，field对应字段键名，type对应类型（只标注number、boolean，其他按字符串处理）
+    // 表头（严格对应列匹配）：column对应列，name对应名称，field对应字段键名，type对应类型（只标注number、boolean、timestamp，其他按字符串处理）
     const header = [
       { column: 'A', name: '序号', field: 'sort', type: 'number' },
       { column: 'B', name: '字典类型', field: 'dict_type' },

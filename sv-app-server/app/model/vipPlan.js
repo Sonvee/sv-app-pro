@@ -31,7 +31,7 @@ module.exports = (app) => {
       discount: {
         type: Number
       },
-      // 套餐有效期（天）
+      // 套餐有效期 (天)
       valid_day: {
         type: Number
       },
@@ -51,6 +51,11 @@ module.exports = (app) => {
       // 排序
       sort: {
         type: Number
+      },
+      // 状态 - 0禁用 1启用
+      status: {
+        type: Number,
+        default: 1,
       },
       // 自动生成字段
       created_date: {

@@ -42,7 +42,7 @@
         </el-table-column>
         <el-table-column prop="status" label="状态" align="center" width="100" show-overflow-tooltip>
           <template #default="scope">
-            <DictTag :dictList="dictNoticeStatus" :value="scope.row.status"></DictTag>
+            <DictTag :dictList="dictStatus" :value="scope.row.status"></DictTag>
           </template>
         </el-table-column>
         <el-table-column prop="publish_timerange" label="公布时间范围" align="center" width="320" show-overflow-tooltip>
@@ -96,7 +96,7 @@ import { useDictStore } from '@/store/dict'
 const dictStore = useDictStore()
 dictStore.initDict(['dict_sys_notice_type', 'dict_sys_status']) // 初始化字典
 const dictNoticeType = computed(() => dictStore.getDict('dict_sys_notice_type'))
-const dictNoticeStatus = computed(() => dictStore.getDict('dict_sys_status'))
+const dictStatus = computed(() => dictStore.getDict('dict_sys_status'))
 
 const dataParams = ref({ pagenum: 1, pagesize: 20 })
 const tableData = ref([])

@@ -1,4 +1,5 @@
 const ExcelJS = require('exceljs')
+const { timeFormat } = require('./index')
 
 /**
  * 创建excel工作表（常规）
@@ -242,6 +243,9 @@ function formatPropertyType(array, header) {
         case 'boolean':
           value = value === 'true' ? true : false
           break
+        case 'timestamp':
+          extractedObj[item.key] = timeFormat(obj[item.key], 'timestamp')
+          break
         default:
           // 其他类型均不做处理
           break
@@ -275,6 +279,9 @@ function extractKeysPlus(keys, obj) {
           break
         case 'boolean':
           extractedObj[item.key] = obj[item.key] == 'true' ? true : false
+          break
+        case 'timestamp':
+          extractedObj[item.key] = timeFormat(obj[item.key], 'YYYY-MM-DD HH:mm:ss')
           break
         default:
           extractedObj[item.key] = obj[item.key]

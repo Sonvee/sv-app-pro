@@ -30,7 +30,7 @@ module.exports = (app) => {
       start_date: {
         type: Number
       },
-      // 订阅持续时长（毫秒）
+      // 订阅持续时长 (毫秒)
       duration_time: {
         type: Number
       },

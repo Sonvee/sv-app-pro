@@ -6,11 +6,16 @@
     <div class="card table-container">
       <!-- 工具栏 -->
       <div class="table-control">
-        <el-button type="danger" plain :icon="Delete" v-permission="['sys:log:batchdelete']" :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
-        <el-button type="danger" plain v-permission="['sys:log:clear']" @click="clear"><i class="sv-icons-clear text-xs mr-4"></i>清空</el-button>
+        <el-button type="danger" plain :icon="Delete" v-permission="['sys:log:batchdelete']"
+          :disabled="!isTruthy(batchSelection, 'arr')" @click="batchDelete">批量删除</el-button>
+        <el-button type="danger" plain v-permission="['sys:log:clear']" @click="clear"><i
+            class="sv-icons-clear text-xs mr-4"></i>清空</el-button>
         <div style="flex: 1"></div>
+        <ExcelTool ref="excelToolRef" class="mr-12" :tools="['export']" v-permission="['sys:log:excel']"
+          @onTool="onExcelTool"></ExcelTool>
         <el-button circle :icon="RefreshRight" v-permission="['sys:log:query']" @click="refresh" title="刷新"></el-button>
-        <el-button circle :icon="showFilter ? View : Hide" @click="showFilter = !showFilter" :title="showFilter ? '隐藏筛选' : '显示筛选'"></el-button>
+        <el-button circle :icon="showFilter ? View : Hide" @click="showFilter = !showFilter"
+          :title="showFilter ? '隐藏筛选' : '显示筛选'"></el-button>
       </div>
       <!-- 数据表格 -->
       <el-table v-loading="loading" :data="tableData" border @selection-change="handleSelectionChange">
@@ -25,32 +30,32 @@
         <el-table-column prop="operator_location" label="归属地" width="160" show-overflow-tooltip></el-table-column>
         <el-table-column prop="request_url" label="API" width="240" show-overflow-tooltip></el-table-column>
         <el-table-column prop="request_msg" label="请求信息" width="240" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="request_method" label="请求方式" align="center" width="120" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="request_status" label="请求状态" align="center" width="120" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="costtime" label="请求耗时(ms)" align="center" width="120" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="userAgent.browser.name" label="浏览器" align="center" width="160" show-overflow-tooltip></el-table-column>
-        <el-table-column prop="userAgent.os.name" label="操作系统" align="center" width="160" show-overflow-tooltip></el-table-column>
+        <el-table-column prop="request_method" label="请求方式" align="center" width="120"
+          show-overflow-tooltip></el-table-column>
+        <el-table-column prop="request_status" label="请求状态" align="center" width="120"
+          show-overflow-tooltip></el-table-column>
+        <el-table-column prop="costtime" label="请求耗时 (ms)" align="center" width="120"
+          show-overflow-tooltip></el-table-column>
+        <el-table-column prop="userAgent.browser.name" label="浏览器" align="center" width="160"
+          show-overflow-tooltip></el-table-column>
+        <el-table-column prop="userAgent.os.name" label="操作系统" align="center" width="160"
+          show-overflow-tooltip></el-table-column>
         <el-table-column prop="userAgent.ua" label="ua" min-width="240" show-overflow-tooltip></el-table-column>
-        <el-table-column
-          prop="created_date"
-          label="操作时间"
-          align="center"
-          width="180"
-          sortable
-          :formatter="(row) => timeFormat(row.created_date)"
-          show-overflow-tooltip
-        ></el-table-column>
+        <el-table-column prop="created_date" label="操作时间" align="center" width="180" sortable
+          :formatter="(row) => timeFormat(row.created_date)" show-overflow-tooltip></el-table-column>
 
         <el-table-column label="操作" align="center" width="120" fixed="right">
           <template #default="scope">
             <el-button-group>
-              <el-button text type="danger" :icon="Delete" v-permission="['sys:log:delete']" @click="del(scope.row)">删除</el-button>
+              <el-button text type="danger" :icon="Delete" v-permission="['sys:log:delete']"
+                @click="del(scope.row)">删除</el-button>
             </el-button-group>
           </template>
         </el-table-column>
       </el-table>
       <!-- 分页 -->
-      <TablePagination :pagingParams="dataParams" :total="total" @update:page-size="handleSizeChange" @update:current-page="handleCurrentChange"></TablePagination>
+      <TablePagination :pagingParams="dataParams" :total="total" @update:page-size="handleSizeChange"
+        @update:current-page="handleCurrentChange"></TablePagination>
     </div>
   </div>
 </template>
@@ -59,10 +64,13 @@
 import { ref, onMounted } from 'vue'
 import TableFilter from './components/TableFilter.vue'
 import TablePagination from '@/components/TablePagination/index.vue'
-import { logList, logDelete, logBatchDelete, logClear } from '@/api/log'
+import ExcelTool from '@/components/ExcelTool/ExcelTool.vue'
+import { logList, logDelete, logBatchDelete, logClear, logExport } from '@/api/log'
 import { RefreshRight, Plus, EditPen, Delete, View, Hide } from '@element-plus/icons-vue'
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { isTruthy, timeFormat } from '@/utils'
+import { useSaveFile } from '@/hooks/useSaveFile'
+import { useNprogress } from '@/hooks/useNprogress'
 
 const dataParams = ref({ log_type: 'operation', pagenum: 1, pagesize: 20 })
 const tableData = ref([])
@@ -106,7 +114,7 @@ function del(row) {
       })
       refresh()
     })
-    .catch(() => {})
+    .catch(() => { })
 }
 
 function clear() {
@@ -124,7 +132,7 @@ function clear() {
       })
       refresh()
     })
-    .catch(() => {})
+    .catch(() => { })
 }
 
 // 刷新
@@ -160,7 +168,7 @@ function batchDelete() {
       })
       refresh()
     })
-    .catch(() => {})
+    .catch(() => { })
 }
 
 // 分页
@@ -171,6 +179,21 @@ function handleSizeChange(e) {
 function handleCurrentChange(e) {
   dataParams.value.pagenum = e
   handleTable(dataParams.value)
+}
+
+// excel工具
+const excelToolRef = ref()
+async function onExcelTool(e) {
+  useNprogress().start()
+  switch (e) {
+    case 'export':
+      // 在当前筛选条件下进行全量导出
+      const params = Object.assign({ ...dataParams.value }, { pagenum: 1, pagesize: -1 })
+      const exportRes = await logExport(params)
+      useSaveFile().start(exportRes, '操作日志.xlsx')
+      break
+  }
+  useNprogress().done()
 }
 </script>
 

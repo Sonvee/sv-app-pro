@@ -20,6 +20,9 @@
         <el-form-item prop="description" label="权益描述">
           <el-input v-model="formData.description" type="textarea" :autosize="{ minRows: 4 }" placeholder="请输入权益描述" />
         </el-form-item>
+        <el-form-item prop="status" label="状态">
+          <el-switch v-model="formData.status" inline-prompt :active-value="1" :inactive-value="0" :active-icon="Check" :inactive-icon="Close" />
+        </el-form-item>
       </el-form>
     </template>
     <template #footer>
@@ -33,6 +36,7 @@
 import { ref, watchEffect } from 'vue'
 import { assignOverride } from '@/utils'
 import { ElNotification } from 'element-plus'
+import { Check, Close } from '@element-plus/icons-vue'
 import { cloneDeep, isEqual } from 'lodash-es'
 import IconSelect from '@/components/IconSelect/IconSelect.vue'
 
@@ -55,7 +59,8 @@ const formBase = {
   benefit_name: '',
   sort: 0,
   icon: '',
-  description: ''
+  description: '',
+  status: 1
 }
 // 表单数据
 const formData = ref(formBase)
