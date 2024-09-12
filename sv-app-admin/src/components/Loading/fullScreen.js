@@ -10,7 +10,7 @@ const startLoading = () => {
   loadingInstance = ElLoading.service({
     fullscreen: true,
     lock: true,
-    text: '加载中',
+    text: 'Loading',
     background: 'rgba(0, 0, 0, 0.7)'
   })
 }
