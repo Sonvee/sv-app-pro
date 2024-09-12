@@ -83,6 +83,7 @@ import { isTruthy, timeFormat } from '@/utils'
 import { useRoute } from 'vue-router'
 import { useDictStore } from '@/store/dict'
 import { useSaveFile } from '@/hooks/useSaveFile'
+import { useNprogress } from '@/hooks/useNprogress'
 
 // 路由相关
 const route = useRoute()
@@ -231,6 +232,7 @@ function handleCurrentChange(e) {
 // excel工具
 const excelToolRef = ref()
 async function onExcelTool(e) {
+  useNprogress().start()
   switch (e) {
     case 'import':
       // 打开导入文件面板
@@ -247,15 +249,18 @@ async function onExcelTool(e) {
       useSaveFile().start(templateRes, '字典项模板.xlsx')
       break
   }
+  useNprogress().done()
 }
 
 // 确认导入
 async function excelUpload() {
+  useNprogress().start()
   const upRes = await excelToolRef.value.upload(dictitemImport, 'files')
   if (upRes.success) {
     ElNotification({ title: 'Success', message: upRes?.msg, type: 'success' })
     refresh()
   }
+  useNprogress().done()
   excelToolRef.value.closeUpload()
 }
 </script>

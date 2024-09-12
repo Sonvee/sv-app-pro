@@ -78,6 +78,7 @@ import { isTruthy, timeFormat } from '@/utils'
 import { useDictStore } from '@/store/dict'
 import { useRoute } from 'vue-router'
 import { useSaveFile } from '@/hooks/useSaveFile'
+import { useNprogress } from '@/hooks/useNprogress'
 
 const route = useRoute()
 const routeQuery = computed(() => route.query)
@@ -198,6 +199,7 @@ function handleCurrentChange(e) {
 // excel工具
 const excelToolRef = ref()
 async function onExcelTool(e) {
+  useNprogress().start()
   switch (e) {
     case 'export':
       // 在当前筛选条件下进行全量导出
@@ -206,6 +208,7 @@ async function onExcelTool(e) {
       useSaveFile().start(exportRes, '登录日志.xlsx')
       break
   }
+  useNprogress().done()
 }
 </script>
 

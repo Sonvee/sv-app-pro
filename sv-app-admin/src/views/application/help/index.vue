@@ -64,6 +64,7 @@ import { ElNotification, ElMessageBox, ElMessage } from 'element-plus'
 import { isTruthy, timeFormat } from '@/utils'
 import { useDictStore } from '@/store/dict'
 import { useSaveFile } from '@/hooks/useSaveFile'
+import { useNprogress } from '@/hooks/useNprogress'
 
 const dictStore = useDictStore()
 dictStore.initDict(['dict_app_help_type']) // 初始化字典
@@ -209,6 +210,7 @@ function handleCurrentChange(e) {
 // excel工具
 const excelToolRef = ref()
 async function onExcelTool(e) {
+  useNprogress().start()
   switch (e) {
     case 'import':
       // 打开导入文件面板
@@ -225,15 +227,18 @@ async function onExcelTool(e) {
       useSaveFile().start(templateRes, '帮助模板.xlsx')
       break
   }
+  useNprogress().done()
 }
 
 // 确认导入
 async function excelUpload() {
+  useNprogress().start()
   const upRes = await excelToolRef.value.upload(helpImport, 'files')
   if (upRes.success) {
     ElNotification({ title: 'Success', message: upRes?.msg, type: 'success' })
     refresh()
   }
+  useNprogress().done()
   excelToolRef.value.closeUpload()
 }
 </script>
