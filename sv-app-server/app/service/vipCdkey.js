@@ -242,21 +242,22 @@ class VipCdkeyService extends Service {
 
   /**
    * cdkey失效检测 post - 权限 permission
+   * @param {Boolean} limit - 是否开启权限约束 默认开启
    */
-  async cdkeyCheck(data) {
+  async cdkeyCheck(data, limit = true) {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['vip:cdkey:check'])
+    if (limit) ctx.checkAuthority('permission', ['vip:cdkey:check'])
 
     // 查询条件处理
-    const conditions = { valid_date: { $lt: Date.now() }, status: { $ne: 2 } }
+    const conditions = { valid_date: { $lt: Date.now() }, status: { $ne: 2 } } // 查找出已过期但是状态未更新成已失效的项
 
     // 数据库连接
     const db = app.model.VipCdkey
 
     // 批量更新为失效
-    const res = await db.updateMany(conditions, { $set: { status: 2 } })
+    const res = await db.updateMany(conditions, { $set: { status: 2 } }) // 将这些项的状态更新成已失效
 
     return {
       data: res,

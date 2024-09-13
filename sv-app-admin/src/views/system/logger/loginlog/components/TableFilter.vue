@@ -28,6 +28,17 @@
       <el-form-item prop="login_type" label="登录方式">
         <DictSelect v-model="filterForm.login_type" dictType="dict_sys_login_type" placeholder="请选择登录方式" style="width: 150px"></DictSelect>
       </el-form-item>
+      <el-form-item prop="time_range" label="操作时间">
+        <el-date-picker
+          v-model="filterForm.time_range"
+          type="datetimerange"
+          start-placeholder="开始时间"
+          end-placeholder="结束时间"
+          range-separator="~"
+          value-format="x"
+          style="width: 340px"
+        />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" v-permission="['sys:log:query']" @click="submit">搜索</el-button>
         <el-button type="danger" @click="reset">重置</el-button>
@@ -57,7 +68,8 @@ const filterForm = ref({
   request_method: '',
   request_url: '',
   request_status: null,
-  operator_username: ''
+  operator_username: '',
+  time_range: []
 })
 
 onMounted(() => {

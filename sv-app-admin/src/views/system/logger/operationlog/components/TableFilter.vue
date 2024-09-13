@@ -25,6 +25,17 @@
       <el-form-item prop="operator_username" label="操作人员">
         <el-input v-model.trim="filterForm.operator_username" placeholder="请输入操作人用户名" clearable style="width: 150px" />
       </el-form-item>
+      <el-form-item prop="time_range" label="操作时间">
+        <el-date-picker
+          v-model="filterForm.time_range"
+          type="datetimerange"
+          start-placeholder="开始时间"
+          end-placeholder="结束时间"
+          range-separator="~"
+          value-format="x"
+          style="width: 340px"
+        />
+      </el-form-item>
       <el-form-item>
         <el-button type="primary" v-permission="['sys:log:query']" @click="submit">搜索</el-button>
         <el-button type="danger" @click="reset">重置</el-button>
@@ -48,7 +59,8 @@ const filterForm = ref({
   request_method: '',
   request_url: '',
   request_status: null,
-  operator_username: ''
+  operator_username: '',
+  time_range: []
 })
 
 // 提交

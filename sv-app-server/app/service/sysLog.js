@@ -19,6 +19,7 @@ class SysLogService extends Service {
    * @property {String} data.request_url - 请求地址
    * @property {String} data.request_status - 请求状态（自动转换数字）
    * @property {String} data.operator_username - 操作人员用户名
+   * @property {Array} data.time_range - 操作时间范围
    * @property {Number} data.pagesize - 每页条数
    * @property {Number} data.pagenum - 页码
    */
@@ -52,6 +53,7 @@ class SysLogService extends Service {
     if (isTruthy(data.request_url)) conditions.request_url = { $regex: data.request_url, $options: 'i' } // 请求地址 模糊查询
     if (isTruthy(data.request_status, 'zero')) conditions.request_status = Number(data.request_status) // 请求状态（自动转换数字）
     if (isTruthy(data.operator_username)) conditions['operator_info.username'] = { $regex: data.operator_username, $options: 'i' } // 操作人员用户名 模糊查询
+    if (isTruthy(data.time_range, 'arr')) conditions.created_date = { $gte: data.time_range[0], $lte: data.time_range[1] } // 时间范围
 
     // 数据库连接
     const db = app.model.SysLog
@@ -189,18 +191,23 @@ class SysLogService extends Service {
    * 清空 post - 权限 permission
    * @param {Object} data - 请求参数
    * @property {String} data.log_type - 类型：login登录日志，operation操作日志
+   * @property {Array} data.time_range - 操作时间范围
+   * @param {Boolean} limit - 是否开启权限约束 默认开启
    */
-  async logClear(data) {
+  async logClear(data, limit = true) {
     const { ctx, app } = this
 
     // 权限校验
-    ctx.checkAuthority('permission', ['sys:log:clear'])
+    if (limit) ctx.checkAuthority('permission', ['sys:log:clear'])
 
     // 参数校验
     if (!isTruthy(data.log_type, 'zero')) ctx.throw(400, { msg: 'log_type 必填' })
 
     // 查询条件处理
     const conditions = { log_type: data.log_type }
+
+    // 参数校验
+    if (isTruthy(data.time_range, 'arr')) conditions.created_date = { $gte: data.time_range[0], $lte: data.time_range[1] } // 时间范围
 
     // 数据库连接
     const db = app.model.SysLog
