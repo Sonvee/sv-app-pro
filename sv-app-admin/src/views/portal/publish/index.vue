@@ -103,7 +103,9 @@
 
     <footer class="publish-footer">
       <p>本页由SV-Admin提供技术支持</p>
-      <p>备案信息 XXX-XXXXX-XXXX</p>
+      <span class="text-gray">Copyright © 2024 Sonve.</span>
+      <el-divider direction="vertical" />
+      <a href="https://beian.miit.gov.cn/" target="_blank">皖ICP备2023019657号-2</a>
     </footer>
   </div>
 </template>
