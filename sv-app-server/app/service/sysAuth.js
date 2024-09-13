@@ -39,7 +39,7 @@ class SysAuthService extends Service {
       fontSize: 50,
       color: true, // 验证码的字符是否有颜色，默认没有，如果设定了背景，则默认有
       background: 'transparent', // 验证码图片背景颜色
-      ignoreChars: '0Oo1LlIiJjTtabPpQq', // 验证码字符中排除指定容易混淆的字符
+      ignoreChars: '0Oo1LlIiJjTtabPpQqg', // 验证码字符中排除指定容易混淆的字符
     });
 
     // 缓存验证码
