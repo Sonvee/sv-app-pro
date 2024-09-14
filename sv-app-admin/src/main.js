@@ -3,9 +3,6 @@ import App from './App.vue'
 import router from './router'
 import './assets/styles/main.scss'
 
-// 添加 passive 阻止 touchstart 事件警告
-import 'default-passive-events'
-
 import { createPinia } from 'pinia'
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate'
 
