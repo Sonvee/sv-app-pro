@@ -205,6 +205,8 @@ module.exports = (app) => {
   router.post('/vip/subscriptionInfo', controller.vipSubscription.subscriptionInfo)
 
   // 百度统计
+  router.get('/analytics/getBaiduTokenCode', controller.baiduAnalytics.getBaiduTokenCode)
+  router.get('/analytics/getBaiduTokenByCode', controller.baiduAnalytics.getBaiduTokenByCode)
   router.get('/analytics/refreshBaiduToken', controller.baiduAnalytics.refreshBaiduToken)
   router.get('/analytics/getSiteList', controller.baiduAnalytics.getSiteList)
   router.get('/analytics/getTimeTrendRpt', controller.baiduAnalytics.getTimeTrendRpt)

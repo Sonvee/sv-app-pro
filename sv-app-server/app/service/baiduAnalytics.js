@@ -1,5 +1,7 @@
 'use strict'
 
+const { isTruthy } = require('../utils')
+
 const Service = require('egg').Service
 
 /**
@@ -7,6 +9,53 @@ const Service = require('egg').Service
  * @tutorial https://tongji.baidu.com/api/manual
  */
 class BaiduAnalyticsService extends Service {
+  /**
+   * 获取token验证码code
+   */
+  async getBaiduTokenCode(data) {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['sys:analytics:query'])
+
+    const url = `http://openapi.baidu.com/oauth/2.0/authorize?response_type=code&client_id=${app.config.baiduAnalytics.api_key}&redirect_uri=oob&scope=basic&display=popup`
+
+    return {
+      data: url
+    }
+  }
+
+  async getBaiduTokenByCode(data) {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['sys:analytics:query'])
+
+    // 参数校验
+    if (!isTruthy(data.code)) ctx.throw(400, { msg: 'code 必填' })
+
+    const url = 'http://openapi.baidu.com/oauth/2.0/token'
+    const res = await ctx.curl(url, {
+      method: 'GET',
+      dataType: 'json',
+      timeout: 60000,
+      data: {
+        grant_type: 'authorization_code',
+        code: data.code,
+        client_id: app.config.baiduAnalytics.api_key,
+        client_secret: app.config.baiduAnalytics.secret_key,
+        redirect_uri: 'oob'
+      }
+    })
+
+    if (res.status !== 200) ctx.throw(400, { msg: res.data.error_description, errMsg: res.data })
+
+    return {
+      data: res.data,
+      msg: '百度统计token获取成功，请保管好refresh_token和access_token'
+    }
+  }
+
   /**
    * 刷新百度统计token
    * @tutorial https://tongji.baidu.com/api/manual/Chapter2/openapi.html 如何获取refresh_token
@@ -65,6 +114,10 @@ class BaiduAnalyticsService extends Service {
         access_token: data.access_token
       }
     })
+
+    if (res.data.error_code) ctx.throw(400, { msg: res.data.error_msg, errMsg: res.data })
+
+    console.log('res :>> ', res)
 
     return {
       data: res.data,

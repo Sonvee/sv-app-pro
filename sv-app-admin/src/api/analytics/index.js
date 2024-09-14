@@ -1,5 +1,21 @@
 import request from '@/config/request/request.js'
 
+export function getBaiduTokenCode(params) {
+  return request({
+    url: '/analytics/getBaiduTokenCode',
+    method: 'get',
+    params
+  })
+}
+
+export function getBaiduTokenByCode(params) {
+  return request({
+    url: '/analytics/getBaiduTokenByCode',
+    method: 'get',
+    params
+  })
+}
+
 export function refreshBaiduToken(params) {
   return request({
     url: '/analytics/refreshBaiduToken',

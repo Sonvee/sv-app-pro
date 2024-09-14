@@ -86,9 +86,7 @@ module.exports = (appInfo) => {
    */
   config.baiduAnalytics = {
     api_key: 'GfFfqrkUiFg5UilWEIs2CVEHpRZvqqxa',
-    secret_key: '2yn7KHX9uzwr8ngBVCtlJeBJsVOUdXt0',
-    access_token: '121.7bb7d0b7a70caaafd47791c03c111f3d.YsWd7_A5kkKhgPELRyaWhBbSLFbS__VgUZc4T-x.Nqx8rg',
-    refresh_token: '122.5f87d14af980eaa78c7089bc761a985a.YHImct-c1GZmYfbZE-mQbdeuhXPPCnkxJd4J5eD.X_nqug'
+    secret_key: '2yn7KHX9uzwr8ngBVCtlJeBJsVOUdXt0'
   }
 
   // 自定义配置
