@@ -80,6 +80,17 @@ module.exports = (appInfo) => {
     appsecret: '13f2907fa847db3360cb1bfd8747608d'
   }
 
+  /**
+   * 百度统计api
+   * @tutorial https://tongji.baidu.com/api/manual/Chapter2/openapi.html
+   */
+  config.baiduAnalytics = {
+    api_key: 'GfFfqrkUiFg5UilWEIs2CVEHpRZvqqxa',
+    secret_key: '2yn7KHX9uzwr8ngBVCtlJeBJsVOUdXt0',
+    access_token: '121.7bb7d0b7a70caaafd47791c03c111f3d.YsWd7_A5kkKhgPELRyaWhBbSLFbS__VgUZc4T-x.Nqx8rg',
+    refresh_token: '122.5f87d14af980eaa78c7089bc761a985a.YHImct-c1GZmYfbZE-mQbdeuhXPPCnkxJd4J5eD.X_nqug'
+  }
+
   // 自定义配置
   const userConfig = {
     maxRequestThreshold: 60 // 每秒请求阈值，超过该值将会被自动封锁ip

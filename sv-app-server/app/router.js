@@ -25,8 +25,6 @@ module.exports = (app) => {
   router.post('/test/testforeignBatchAdd', controller.testForeign.testforeignBatchAdd)
   router.post('/test/testforeignBatchDelete', controller.testForeign.testforeignBatchDelete)
 
-  // 用户体系
-
   // 登录相关
   router.post('/user/login', controller.sysLogin.login)
   router.post('/user/loginByEmailer', controller.sysLogin.loginByEmailer)
@@ -205,4 +203,22 @@ module.exports = (app) => {
   router.post('/vip/subscriptionDelete', controller.vipSubscription.subscriptionDelete)
   router.post('/vip/subscriptionBatchDelete', controller.vipSubscription.subscriptionBatchDelete)
   router.post('/vip/subscriptionInfo', controller.vipSubscription.subscriptionInfo)
+
+  // 百度统计
+  router.get('/analytics/refreshBaiduToken', controller.baiduAnalytics.refreshBaiduToken)
+  router.get('/analytics/getSiteList', controller.baiduAnalytics.getSiteList)
+  router.get('/analytics/getTimeTrendRpt', controller.baiduAnalytics.getTimeTrendRpt)
+  router.get('/analytics/getDistrictRpt', controller.baiduAnalytics.getDistrictRpt)
+  router.get('/analytics/getCommonTrackRpt', controller.baiduAnalytics.getCommonTrackRpt)
+  router.get('/analytics/getTrendTime', controller.baiduAnalytics.getTrendTime)
+  router.get('/analytics/getTrendLatest', controller.baiduAnalytics.getTrendLatest)
+  router.get('/analytics/getSourceAll', controller.baiduAnalytics.getSourceAll)
+  router.get('/analytics/getSourceEngine', controller.baiduAnalytics.getSourceEngine)
+  router.get('/analytics/getSourceSearchword', controller.baiduAnalytics.getSourceSearchword)
+  router.get('/analytics/getSourceLink', controller.baiduAnalytics.getSourceLink)
+  router.get('/analytics/getVisitToppage', controller.baiduAnalytics.getVisitToppage)
+  router.get('/analytics/getVisitLandingpage', controller.baiduAnalytics.getVisitLandingpage)
+  router.get('/analytics/getVisitTopdomain', controller.baiduAnalytics.getVisitTopdomain)
+  router.get('/analytics/getVisitDistrict', controller.baiduAnalytics.getVisitDistrict)
+  router.get('/analytics/getVisitWorld', controller.baiduAnalytics.getVisitWorld)
 }
