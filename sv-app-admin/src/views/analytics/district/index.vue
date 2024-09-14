@@ -1,6 +1,5 @@
 <template>
-  <div class="page-container">
-  </div>
+  <div class="page-container">地域分布</div>
 </template>
 
 <script setup></script>

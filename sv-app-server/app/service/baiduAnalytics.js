@@ -9,6 +9,7 @@ const Service = require('egg').Service
 class BaiduAnalyticsService extends Service {
   /**
    * 刷新百度统计token
+   * @tutorial https://tongji.baidu.com/api/manual/Chapter2/openapi.html 如何获取refresh_token
    * @param {Object} data 请求参数
    * @property {String} data.refresh_token 使用refresh_token刷新获取新的refresh_token及access_token
    * @returns {Object} refresh_token(有效期十年)，access_token(有效期一个月)

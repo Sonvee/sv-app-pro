@@ -466,6 +466,90 @@
     {
       "meta": {
         "isOpen": false,
+        "icon": "admin-icons-tongji",
+        "title": "统计分析",
+        "isLink": "",
+        "activeMenu": "",
+        "isHide": false,
+        "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "analytics",
+      "path": "/analytics",
+      "component": "",
+      "parent_name": "",
+      "sort": 700,
+      "redirect": "/analytics/trend",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "isOpen": false,
+        "icon": "admin-icons-tongji",
+        "title": "统计概况",
+        "isLink": "",
+        "activeMenu": "",
+        "isHide": false,
+        "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "overview",
+      "path": "/analytics/overview",
+      "component": "/analytics/overview/index",
+      "parent_name": "analytics",
+      "sort": 710,
+      "redirect": "",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "isOpen": false,
+        "icon": "admin-icons-tongji",
+        "title": "趋势分析",
+        "isLink": "",
+        "activeMenu": "",
+        "isHide": false,
+        "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "trend",
+      "path": "/analytics/trend",
+      "component": "/analytics/trend/index",
+      "parent_name": "analytics",
+      "sort": 720,
+      "redirect": "",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "isOpen": false,
+        "icon": "admin-icons-tongji",
+        "title": "地域分布",
+        "isLink": "",
+        "activeMenu": "",
+        "isHide": false,
+        "isSub": false,
+        "isFull": false,
+        "isAffix": false,
+        "isKeepAlive": true
+      },
+      "name": "district",
+      "path": "/analytics/district",
+      "component": "/analytics/district/index",
+      "parent_name": "analytics",
+      "sort": 730,
+      "redirect": "",
+      "permissions": []
+    },
+    {
+      "meta": {
+        "isOpen": false,
         "icon": "admin-icons-dashboard",
         "title": "系统监控",
         "isLink": "",
@@ -480,50 +564,8 @@
       "path": "/monitor",
       "component": "",
       "parent_name": "",
-      "sort": 700,
-      "redirect": "/monitor/statistics",
-      "permissions": []
-    },
-    {
-      "meta": {
-        "isOpen": false,
-        "icon": "admin-icons-tongji",
-        "title": "统计管理",
-        "isLink": "",
-        "activeMenu": "",
-        "isHide": false,
-        "isSub": false,
-        "isFull": false,
-        "isAffix": false,
-        "isKeepAlive": true
-      },
-      "name": "statistics",
-      "path": "/monitor/statistics",
-      "component": "/monitor/statistics/index",
-      "parent_name": "monitor",
-      "sort": 710,
-      "redirect": "",
-      "permissions": []
-    },
-    {
-      "meta": {
-        "isOpen": false,
-        "icon": "admin-icons-qudaofenxi",
-        "title": "系统分析",
-        "isLink": "",
-        "activeMenu": "",
-        "isHide": false,
-        "isSub": false,
-        "isFull": false,
-        "isAffix": false,
-        "isKeepAlive": true
-      },
-      "name": "analysis",
-      "path": "/monitor/analysis",
-      "component": "/monitor/analysis/index",
-      "parent_name": "monitor",
-      "sort": 720,
-      "redirect": "",
+      "sort": 600,
+      "redirect": "/monitor/cache",
       "permissions": []
     },
     {
@@ -543,7 +585,7 @@
       "path": "/monitor/cache",
       "component": "",
       "parent_name": "monitor",
-      "sort": 730,
+      "sort": 610,
       "redirect": "/monitor/cache/redis",
       "permissions": []
     },
@@ -564,7 +606,7 @@
       "path": "/monitor/cache/redis",
       "component": "/monitor/cache/redis/index",
       "parent_name": "cache",
-      "sort": 731,
+      "sort": 611,
       "redirect": "",
       "permissions": ["sys:cache:query"]
     },
@@ -585,7 +627,7 @@
       "path": "/monitor/cache/local",
       "component": "/monitor/cache/local/index",
       "parent_name": "cache",
-      "sort": 732,
+      "sort": 612,
       "redirect": "",
       "permissions": []
     },
