@@ -1,6 +1,7 @@
 @import './common.scss';
 @import './theme.scss';
 @import './element-ui.scss';
+@import './animista.scss';
 @import '../fonts/font.scss';
 @import '../iconfont/sv-icons.css';
 @import '../iconfont/admin-icons.css';
@@ -137,7 +138,6 @@ a {
     }
   }
 }
-
 
 // 富文本
 .tox-tinymce-aux {

@@ -85,8 +85,8 @@ onBeforeUnmount(() => {
 
 <style scoped lang="scss">
 .el-main {
+  --el-main-padding: 10px;
   box-sizing: border-box;
-  padding: 10px;
   overflow-x: hidden;
   background-color: var(--el-bg-color-page);
 }
