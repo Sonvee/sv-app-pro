@@ -44,7 +44,7 @@ const fsbRef = ref()
 
 // 合并props中传入的配置项
 const opts = computed(() => {
-  const opt = Object.assign({ initialValue: { x: 0, y: 720 }, preventDefault: true }, props.options)
+  const opt = Object.assign({ initialValue: { x: 0, y: 0 }, preventDefault: true }, props.options)
   return opt
 })
 

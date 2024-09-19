@@ -592,5 +592,6 @@ export default [
   'sv-icons-upgrade-fill',
   'sv-icons-export-file',
   'sv-icons-import-file',
-  'sv-icons-download-templete'
+  'sv-icons-download-templete',
+  'sv-icons-ip'
 ]

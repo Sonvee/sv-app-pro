@@ -26,16 +26,16 @@
     <!-- 栅格布局 -->
     <el-row :gutter="10">
       <el-col :span="4">
-        <div class="card flex-col" style="height: 150px">
+        <div class="card flex-col data-card-140">
           <div>
-            统计分析数据来源：<a href="https://tongji.baidu.com" target="_blank">百度统计&nbsp;<i class="admin-icons-page-ent text-sm"></i></a>
+            统计分析数据来源：<a href="https://tongji.baidu.com" target="_blank">百度统计&nbsp;<i class="admin-icons-shijianfenxi text-sm"></i></a>
           </div>
           <a class="flex-vhc flex-sub padding-10" href="https://tongji.baidu.com" target="_blank">
             <img class="h-full" :src="svgbaidutongji" alt="" />
           </a>
           <div class="flex-vc">
             <span class="flex-shrink">当前站点：</span>
-            <el-select v-model="curSiteId" placeholder="Select">
+            <el-select v-model="curSiteId" placeholder="Select" @change="init">
               <el-option v-for="item in siteList" :key="item.site_id" :label="item.domain" :value="item.site_id" />
             </el-select>
           </div>
@@ -43,8 +43,8 @@
       </el-col>
       <!-- 浏览量(PV) -->
       <el-col :span="4">
-        <div class="card flex-col" style="height: 150px">
-          <i class="admin-icons-page-res outline-icon" style="color: #2f54eb"></i>
+        <div class="card flex-col data-card-140">
+          <i class="admin-icons-page-res outline-icon" style="color: #adc6ff99"></i>
           <div>
             <span class="text-xxl text-bold text-italic" style="color: #2f54eb">{{ outlineData['今日']?.pv_count }}</span>
             <span class="text-xs ml-10 text-gray">今日</span>
@@ -58,13 +58,13 @@
             <i v-else class="cuIcon-move text-bold ml-5 text-cyan"></i>
             <span class="text-xs ml-5 text-cyan">预计今日</span>
           </div>
-          <div class="text-sm" style="color: #1890ff; margin-top: auto">浏览量(PV)</div>
+          <div class="text-df" style="color: #1890ff; margin-top: auto">浏览量(PV)</div>
         </div>
       </el-col>
       <!-- 访客数(UV) -->
       <el-col :span="4">
-        <div class="card flex-col" style="height: 150px">
-          <i class="cuIcon-friend outline-icon" style="color: #2f54eb"></i>
+        <div class="card flex-col data-card-140">
+          <i class="cuIcon-friend outline-icon" style="color: #adc6ff99"></i>
           <div>
             <span class="text-xxl text-bold text-italic" style="color: #2f54eb">{{ outlineData['今日']?.visitor_count }}</span>
             <span class="text-xs ml-10 text-gray">今日</span>
@@ -78,13 +78,13 @@
             <i v-else class="cuIcon-move text-bold ml-5 text-cyan"></i>
             <span class="text-xs ml-5 text-cyan">预计今日</span>
           </div>
-          <div class="text-sm" style="color: #1890ff; margin-top: auto">访客数(UV)</div>
+          <div class="text-df" style="color: #1890ff; margin-top: auto">访客数(UV)</div>
         </div>
       </el-col>
       <!-- IP数 -->
       <el-col :span="4">
-        <div class="card flex-col" style="height: 150px">
-          <i class="sv-icons-github outline-icon" style="color: #2f54eb"></i>
+        <div class="card flex-col data-card-140">
+          <i class="sv-icons-ip outline-icon" style="color: #adc6ff99"></i>
           <div>
             <span class="text-xxl text-bold text-italic" style="color: #2f54eb">{{ outlineData['今日']?.ip_count }}</span>
             <span class="text-xs ml-10 text-gray">今日</span>
@@ -98,36 +98,67 @@
             <i v-else class="cuIcon-move text-bold ml-5 text-cyan"></i>
             <span class="text-xs ml-5 text-cyan">预计今日</span>
           </div>
-          <div class="text-sm" style="color: #1890ff; margin-top: auto">IP数</div>
+          <div class="text-df" style="color: #1890ff; margin-top: auto">IP数</div>
         </div>
       </el-col>
       <!-- 跳出率 -->
       <el-col :span="4">
-        <div class="card flex-col" style="height: 150px">
-          <i class="sv-icons-github outline-icon" style="color: #2f54eb"></i>
+        <div class="card flex-col data-card-140">
+          <i class="sv-icons-exit outline-icon" style="color: #adc6ff99"></i>
           <div>
             <span class="text-xxl text-bold text-italic" style="color: #2f54eb">{{ outlineData['今日']?.bounce_ratio }}%</span>
             <span class="text-xs ml-10 text-gray">今日</span>
-            <br />
-            <span class="text-xl ml-10" style="color: #69c0ff">{{ outlineData['昨日']?.bounce_ratio }}%</span>
-            <span class="text-xs ml-10 text-grey">昨日</span>
+            <div class="mt-10">
+              <span class="text-xl ml-10" style="color: #69c0ff">{{ outlineData['昨日']?.bounce_ratio }}%</span>
+              <span class="text-xs ml-10 text-grey">昨日</span>
+            </div>
           </div>
-          <div class="text-sm" style="color: #1890ff; margin-top: auto">跳出率</div>
+          <div class="text-df" style="color: #1890ff; margin-top: auto">跳出率</div>
         </div>
       </el-col>
       <!-- 平均访问时长 -->
       <el-col :span="4">
-        <div class="card flex-col" style="height: 150px">
-          <i class="sv-icons-github outline-icon" style="color: #2f54eb"></i>
+        <div class="card flex-col data-card-140">
+          <i class="admin-icons-page-ent outline-icon" style="color: #adc6ff99"></i>
           <div>
             <span class="text-xxl text-bold text-italic" style="color: #2f54eb">{{ timeFormat(outlineData['今日']?.avg_visit_time, 'ss') }}</span>
             <span class="text-xs ml-10 text-gray">今日</span>
-            <br />
-            <span class="text-xl ml-10" style="color: #69c0ff">{{ timeFormat(outlineData['昨日']?.avg_visit_time, 'ss') }}</span>
-            <span class="text-xs ml-10 text-grey">昨日</span>
+            <div class="mt-10">
+              <span class="text-xl ml-10" style="color: #69c0ff">{{ timeFormat(outlineData['昨日']?.avg_visit_time, 'ss') }}</span>
+              <span class="text-xs ml-10 text-grey">昨日</span>
+            </div>
           </div>
-          <div class="text-sm" style="color: #1890ff; margin-top: auto">平均访问时长</div>
+          <div class="text-df" style="color: #1890ff; margin-top: auto">平均访问时长</div>
         </div>
+      </el-col>
+    </el-row>
+    <el-row :gutter="10" class="mt-10">
+      <el-col :span="10">
+        <div class="card data-card-500">
+          <ChartContainer :option="chartOpt"></ChartContainer>
+        </div>
+      </el-col>
+      <el-col :span="14">
+        <div class="card data-card-500"></div>
+      </el-col>
+    </el-row>
+    <el-row :gutter="10" class="mt-10">
+      <el-col :span="8">
+        <div class="card data-card-400"></div>
+      </el-col>
+      <el-col :span="8">
+        <div class="card data-card-400"></div>
+      </el-col>
+      <el-col :span="8">
+        <div class="card data-card-400"></div>
+      </el-col>
+    </el-row>
+    <el-row :gutter="10" class="mt-10">
+      <el-col :span="12">
+        <div class="card data-card-600"></div>
+      </el-col>
+      <el-col :span="12">
+        <div class="card data-card-600"></div>
       </el-col>
     </el-row>
   </div>
@@ -136,13 +167,14 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import FloatSideButton from '@/components/FloatSideButton/FloatSideButton.vue'
+import ChartContainer from '@/components/ChartContainer/ChartContainer.vue'
 import { useAnalyticsStore } from '@/store/analytics'
 import { getBaiduTokenCode, getBaiduTokenByCode, refreshBaiduToken, getSiteList, getOutline } from '@/api/analytics'
 import { ElMessage } from 'element-plus'
 import { useClipboard } from '@vueuse/core'
-import svgbaidutongji from '@/assets/svgs/baidu_tongji.svg'
 import { transformOutline } from '@/utils/baidu_tongji'
 import { timeFormat } from '@/utils'
+import svgbaidutongji from '@/assets/svgs/baidu_tongji.svg'
 
 const analyticsStore = useAnalyticsStore()
 const refresh_token = computed(() => analyticsStore.getBaiduToken('refresh_token'))
@@ -231,7 +263,42 @@ async function queryOutline() {
   const res = await getOutline({ access_token: access_token.value, site_id: curSiteId.value })
   const resData = res.data?.result
   outlineData.value = transformOutline(resData)
-  console.log('getOutline res :>> ', outlineData.value)
+}
+
+const chartOpt = {
+  title: {
+    text: 'Referer of a Website',
+    subtext: 'Fake Data',
+    left: 'center'
+  },
+  tooltip: {
+    trigger: 'item'
+  },
+  legend: {
+    orient: 'vertical',
+    left: 'left'
+  },
+  series: [
+    {
+      name: 'Access From',
+      type: 'pie',
+      radius: '50%',
+      data: [
+        { value: 1048, name: 'Search Engine' },
+        { value: 735, name: 'Direct' },
+        { value: 580, name: 'Email' },
+        { value: 484, name: 'Union Ads' },
+        { value: 300, name: 'Video Ads' }
+      ],
+      emphasis: {
+        itemStyle: {
+          shadowBlur: 10,
+          shadowOffsetX: 0,
+          shadowColor: 'rgba(0, 0, 0, 0.5)'
+        }
+      }
+    }
+  ]
 }
 </script>
 
@@ -239,13 +306,29 @@ async function queryOutline() {
 .page-container {
   height: auto;
 
-  .outline-icon {
-    position: absolute;
-    bottom: -30%;
-    right: -20%;
-    font-size: 160px;
-    opacity: 0.2;
-    pointer-events: none;
+  .data-card-140 {
+    height: 140px;
+
+    .outline-icon {
+      position: absolute;
+      bottom: -30px;
+      right: -20px;
+      font-size: 160px;
+      opacity: 0.2;
+      pointer-events: none;
+    }
+  }
+
+  .data-card-400 {
+    height: 400px;
+  }
+
+  .data-card-500 {
+    height: 500px;
+  }
+
+  .data-card-600 {
+    height: 600px;
   }
 }
 </style>

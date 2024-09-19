@@ -20,6 +20,10 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.sv-icons-ip:before {
+  content: "\e682";
+}
+
 .sv-icons-export-file:before {
   content: "\e6c9";
 }
