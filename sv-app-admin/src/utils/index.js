@@ -113,16 +113,37 @@ export function getUrlWithParams() {
 
 /**
  * 时间日期格式化
- * @param {String} time 需要格式化的时间
- * @param {String} format 格式化规则 为timestamp时会将time转化为时间戳（毫秒）
+ * @param {String|Number} time 需要格式化的时间
+ * @param {String} format 格式化规则 为timestamp时会将time转化为时间戳(毫秒) | 为ss或ms时会将time(秒或毫秒)转化为hh:mm:ss格式
  */
 export function timeFormat(time, format = 'YYYY-MM-DD HH:mm:ss') {
-  if (!time) return
+  if (!time || !isNumeric(time)) return time
+
   if (format === 'timestamp') {
     return dayjs(time).valueOf()
   }
+  if (format === 'ss') {
+    time = time * 1000
+    return millisecondsToTime(time)
+  }
+  if (format === 'ms') {
+    return millisecondsToTime(time)
+  }
   time = Number(time) // 转化为时间戳数字
   return dayjs(time).format(format)
+}
+
+/**
+ * 将毫秒转化为时间
+ * @param {Number} milliseconds 毫秒
+ * @returns {String} hh:mm:ss 格式时间
+ */
+export function millisecondsToTime(milliseconds) {
+  const totalSeconds = Math.floor(milliseconds / 1000)
+  const hours = Math.floor(totalSeconds / 3600)
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+  const seconds = totalSeconds % 60
+  return [hours.toString().padStart(2, '0'), minutes.toString().padStart(2, '0'), seconds.toString().padStart(2, '0')].join(':')
 }
 
 /**
@@ -140,11 +161,15 @@ export function getTimeState() {
 }
 
 /**
- * 将毫秒转换为x天x小时x分钟
+ * 将毫秒或秒转换为x天x小时x分钟
  * @param {Number} ms 要转换的毫秒数
+ * @param {String} type 类型 毫秒ms(默认)|秒seconds
  * @returns 转换结果x天x小时x分钟，当x为0则该部分单位不显示，不足1分钟则显示秒，不足1秒则显示毫秒
  */
-export function durationFormat(ms) {
+export function durationFormat(ms, type = 'ms') {
+  if (!ms || !isNumeric(ms)) return ms
+
+  if (type == 'seconds') ms = ms * 1000 // 秒转毫秒
   // 定义各个时间单位对应的毫秒数
   const milliSecondsInSecond = 1000
   const milliSecondsInMinute = 60 * milliSecondsInSecond
@@ -280,11 +305,12 @@ export function isType(val) {
 }
 
 /**
- * 判断字符串型数字
- * @param {*} str 要判断的字符串
+ * 判断是否是数字
+ * @param {String|Number} str 要判断的变量
  * @returns {Boolean} 是否是字符串型数字
  */
 export function isNumeric(str) {
+  if (isType(str) == 'array') return false // 空数组会被转换为数字0，需要先排除
   const num = Number(str)
   return !Number.isNaN(num)
 }

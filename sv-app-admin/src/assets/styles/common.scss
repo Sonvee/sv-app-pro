@@ -689,3 +689,19 @@
   background-color: #ffffff;
   color: #666666;
 }
+
+// 旋转度
+@for $i from 0 through 180 {
+  // x轴旋转
+  .flip-x#{$i} {
+    transform: rotateX(#{$i}deg);
+  }
+  // y轴旋转
+  .flip-y#{$i} {
+    transform: rotateY(#{$i}deg);
+  }
+  // 普通旋转
+  .flip-#{$i} {
+    transform: rotate(#{$i}deg);
+  }
+}

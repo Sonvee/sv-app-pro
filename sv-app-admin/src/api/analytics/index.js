@@ -32,6 +32,14 @@ export function getSiteList(params) {
   })
 }
 
+export function getOutline(params) {
+  return request({
+    url: '/analytics/getOutline',
+    method: 'get',
+    params
+  })
+}
+
 export function getTimeTrendRpt(params) {
   return request({
     url: '/analytics/getTimeTrendRpt',

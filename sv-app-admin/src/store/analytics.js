@@ -4,24 +4,23 @@ import { ref } from 'vue'
 export const useAnalyticsStore = defineStore(
   'baidu-analytics',
   () => {
-    // 站点id
-    const site_id = ref('')
+    // 当前站点id
+    const curSiteId = ref('')
+
     // token
     const baiduToken = ref({
       refresh_token: '', // 有效期十年
       access_token: '' // 有效期一个月
     })
-
     function getBaiduToken(key) {
       return baiduToken.value[key]
     }
-
     function setBaiduToken(key, value) {
       baiduToken.value[key] = value
     }
 
     return {
-      site_id,
+      curSiteId,
       baiduToken,
       getBaiduToken,
       setBaiduToken

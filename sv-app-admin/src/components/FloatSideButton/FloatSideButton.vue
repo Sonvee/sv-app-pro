@@ -35,6 +35,8 @@ const props = defineProps({
   }
 })
 
+const emits = defineEmits(['change'])
+
 // 显示(展开) true / 隐藏(收起) false
 const show = defineModel({ type: Boolean, default: false })
 
@@ -47,7 +49,10 @@ const opts = computed(() => {
 })
 
 const { y } = useDraggable(fsbRef, opts.value)
-const x = ref(0) // 自定义x轴，不从useDraggable中取
+// 自定义x轴，不从useDraggable中取
+const x = computed(() => {
+  return show.value ? props.panelWidth : 0
+})
 
 // 按钮样式
 const fsbStyle = computed(() => {
@@ -71,11 +76,7 @@ const panelStyle = computed(() => {
 
 function onFsb() {
   show.value = !show.value
-  if (show.value) {
-    x.value = props.panelWidth
-  } else {
-    x.value = 0
-  }
+  emits('change', show.value)
 }
 </script>
 

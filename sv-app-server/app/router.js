@@ -209,6 +209,7 @@ module.exports = (app) => {
   router.get('/analytics/getBaiduTokenByCode', controller.baiduAnalytics.getBaiduTokenByCode)
   router.get('/analytics/refreshBaiduToken', controller.baiduAnalytics.refreshBaiduToken)
   router.get('/analytics/getSiteList', controller.baiduAnalytics.getSiteList)
+  router.get('/analytics/getOutline', controller.baiduAnalytics.getOutline)
   router.get('/analytics/getTimeTrendRpt', controller.baiduAnalytics.getTimeTrendRpt)
   router.get('/analytics/getDistrictRpt', controller.baiduAnalytics.getDistrictRpt)
   router.get('/analytics/getCommonTrackRpt', controller.baiduAnalytics.getCommonTrackRpt)

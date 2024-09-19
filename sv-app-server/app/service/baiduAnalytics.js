@@ -126,6 +126,39 @@ class BaiduAnalyticsService extends Service {
   }
 
   /**
+   * 报告数据 - 网站概况 (今日流量)
+   * @tutorial https://tongji.baidu.com/api/manual/Chapter1/getData.html
+   * @param {Object} data 请求参数
+   */
+  async getOutline(data) {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['sys:analytics:query'])
+
+    // 参数校验
+    if (!isTruthy(data.access_token)) ctx.throw(400, { msg: 'access_token 必填' })
+    if (!isTruthy(data.site_id)) ctx.throw(400, { msg: 'site_id 必填' })
+
+    const url = 'https://openapi.baidu.com/rest/2.0/tongji/report/getData'
+    const res = await ctx.curl(url, {
+      method: 'GET',
+      dataType: 'json',
+      timeout: 60000,
+      data: {
+        method: 'overview/getOutline',
+        access_token: data.access_token,
+        site_id: data.site_id,
+      }
+    })
+
+    return {
+      data: res.data,
+      msg: '获取今日流量数据成功'
+    }
+  }
+
+  /**
    * 报告数据 - 网站概况 (趋势数据)
    * @tutorial https://tongji.baidu.com/api/manual/Chapter1/overview_getTimeTrendRpt.html
    * @param {Object} data 请求参数
