@@ -44,7 +44,7 @@
       <!-- 浏览量(PV) -->
       <el-col :span="4">
         <div class="card flex-col" style="height: 150px">
-          <i class="sv-icons-github outline-icon" style="color: #2f54eb"></i>
+          <i class="admin-icons-page-res outline-icon" style="color: #2f54eb"></i>
           <div>
             <span class="text-xxl text-bold text-italic" style="color: #2f54eb">{{ outlineData['今日']?.pv_count }}</span>
             <span class="text-xs ml-10 text-gray">今日</span>
@@ -64,7 +64,7 @@
       <!-- 访客数(UV) -->
       <el-col :span="4">
         <div class="card flex-col" style="height: 150px">
-          <i class="sv-icons-github outline-icon" style="color: #2f54eb"></i>
+          <i class="cuIcon-friend outline-icon" style="color: #2f54eb"></i>
           <div>
             <span class="text-xxl text-bold text-italic" style="color: #2f54eb">{{ outlineData['今日']?.visitor_count }}</span>
             <span class="text-xs ml-10 text-gray">今日</span>
