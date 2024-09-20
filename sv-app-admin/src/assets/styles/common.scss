@@ -160,6 +160,10 @@
 
 .cursor-pointer {
   cursor: pointer;
+
+  &:active {
+    opacity: 0.9;
+  }
 }
 
 @for $i from 0 through 12 {
@@ -704,4 +708,8 @@
   .flip-#{$i} {
     transform: rotate(#{$i}deg);
   }
+}
+
+.color-primary {
+  color: var(--el-color-primary);
 }

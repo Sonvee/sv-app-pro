@@ -46,19 +46,19 @@
         <div class="card flex-col data-card-140">
           <i class="admin-icons-page-res outline-icon" style="color: #adc6ff99"></i>
           <div>
-            <span class="text-xxl text-bold text-italic" style="color: #2f54eb">{{ outlineData['今日']?.pv_count }}</span>
+            <span class="text-xxl text-bold text-italic color-primary">{{ outlineData['今日']?.pv_count }}</span>
             <span class="text-xs ml-10 text-gray">今日</span>
             <span class="text-xl ml-20" style="color: #69c0ff">{{ outlineData['昨日']?.pv_count }}</span>
             <span class="text-xs ml-10 text-grey">昨日</span>
           </div>
           <div>
             <span class="text-xxl text-bold text-italic" style="color: #597ef7">{{ outlineData['预计今日']?.pv_count.val }}</span>
-            <i v-if="outlineData['预计今日']?.pv_count.flag > 0" class="uni-icons-pulldown flip-x180 ml-5 text-bold slide-top-down text-green"></i>
-            <i v-else-if="outlineData['预计今日']?.pv_count.flag < 0" class="uni-icons-pulldown ml-5 text-bold slide-top-down text-red"></i>
-            <i v-else class="cuIcon-move text-bold ml-5 text-cyan"></i>
+            <i v-if="outlineData['预计今日']?.pv_count.flag > 0" class="sv-icons-top ml-5 text-bold slide-top-down text-green"></i>
+            <i v-else-if="outlineData['预计今日']?.pv_count.flag < 0" class="sv-icons-bottom ml-5 text-bold slide-top-down text-red"></i>
+            <i v-else class="sv-icons-middle text-bold ml-5 text-cyan"></i>
             <span class="text-xs ml-5 text-cyan">预计今日</span>
           </div>
-          <div class="text-df" style="color: #1890ff; margin-top: auto">浏览量(PV)</div>
+          <div class="text-df color-primary" style="margin-top: auto">浏览量(PV)</div>
         </div>
       </el-col>
       <!-- 访客数(UV) -->
@@ -66,19 +66,19 @@
         <div class="card flex-col data-card-140">
           <i class="cuIcon-friend outline-icon" style="color: #adc6ff99"></i>
           <div>
-            <span class="text-xxl text-bold text-italic" style="color: #2f54eb">{{ outlineData['今日']?.visitor_count }}</span>
+            <span class="text-xxl text-bold text-italic color-primary">{{ outlineData['今日']?.visitor_count }}</span>
             <span class="text-xs ml-10 text-gray">今日</span>
             <span class="text-xl ml-20" style="color: #69c0ff">{{ outlineData['昨日']?.visitor_count }}</span>
             <span class="text-xs ml-10 text-grey">昨日</span>
           </div>
           <div>
             <span class="text-xxl text-bold text-italic" style="color: #597ef7">{{ outlineData['预计今日']?.visitor_count.val }}</span>
-            <i v-if="outlineData['预计今日']?.visitor_count.flag > 0" class="uni-icons-pulldown flip-x180 ml-5 text-bold slide-top-down text-green"></i>
-            <i v-else-if="outlineData['预计今日']?.visitor_count.flag < 0" class="uni-icons-pulldown ml-5 text-bold slide-top-down text-red"></i>
-            <i v-else class="cuIcon-move text-bold ml-5 text-cyan"></i>
+            <i v-if="outlineData['预计今日']?.visitor_count.flag > 0" class="sv-icons-top ml-5 text-bold slide-top-down text-green"></i>
+            <i v-else-if="outlineData['预计今日']?.visitor_count.flag < 0" class="sv-icons-bottom ml-5 text-bold slide-top-down text-red"></i>
+            <i v-else class="sv-icons-middle text-bold ml-5 text-cyan"></i>
             <span class="text-xs ml-5 text-cyan">预计今日</span>
           </div>
-          <div class="text-df" style="color: #1890ff; margin-top: auto">访客数(UV)</div>
+          <div class="text-df color-primary" style="margin-top: auto">访客数(UV)</div>
         </div>
       </el-col>
       <!-- IP数 -->
@@ -86,19 +86,19 @@
         <div class="card flex-col data-card-140">
           <i class="sv-icons-ip outline-icon" style="color: #adc6ff99"></i>
           <div>
-            <span class="text-xxl text-bold text-italic" style="color: #2f54eb">{{ outlineData['今日']?.ip_count }}</span>
+            <span class="text-xxl text-bold text-italic color-primary">{{ outlineData['今日']?.ip_count }}</span>
             <span class="text-xs ml-10 text-gray">今日</span>
             <span class="text-xl ml-20" style="color: #69c0ff">{{ outlineData['昨日']?.ip_count }}</span>
             <span class="text-xs ml-10 text-grey">昨日</span>
           </div>
           <div>
             <span class="text-xxl text-bold text-italic" style="color: #597ef7">{{ outlineData['预计今日']?.ip_count.val }}</span>
-            <i v-if="outlineData['预计今日']?.ip_count.flag > 0" class="uni-icons-pulldown flip-x180 ml-5 text-bold slide-top-down text-green"></i>
-            <i v-else-if="outlineData['预计今日']?.ip_count.flag < 0" class="uni-icons-pulldown ml-5 text-bold slide-top-down text-red"></i>
-            <i v-else class="cuIcon-move text-bold ml-5 text-cyan"></i>
+            <i v-if="outlineData['预计今日']?.ip_count.flag > 0" class="sv-icons-top ml-5 text-bold slide-top-down text-green"></i>
+            <i v-else-if="outlineData['预计今日']?.ip_count.flag < 0" class="sv-icons-bottom ml-5 text-bold slide-top-down text-red"></i>
+            <i v-else class="sv-icons-middle text-bold ml-5 text-cyan"></i>
             <span class="text-xs ml-5 text-cyan">预计今日</span>
           </div>
-          <div class="text-df" style="color: #1890ff; margin-top: auto">IP数</div>
+          <div class="text-df color-primary" style="margin-top: auto">IP数</div>
         </div>
       </el-col>
       <!-- 跳出率 -->
@@ -106,14 +106,14 @@
         <div class="card flex-col data-card-140">
           <i class="sv-icons-exit outline-icon" style="color: #adc6ff99"></i>
           <div>
-            <span class="text-xxl text-bold text-italic" style="color: #2f54eb">{{ outlineData['今日']?.bounce_ratio }}%</span>
+            <span class="text-xxl text-bold text-italic color-primary">{{ outlineData['今日']?.bounce_ratio }}%</span>
             <span class="text-xs ml-10 text-gray">今日</span>
             <div class="mt-10">
               <span class="text-xl ml-10" style="color: #69c0ff">{{ outlineData['昨日']?.bounce_ratio }}%</span>
               <span class="text-xs ml-10 text-grey">昨日</span>
             </div>
           </div>
-          <div class="text-df" style="color: #1890ff; margin-top: auto">跳出率</div>
+          <div class="text-df color-primary" style="margin-top: auto">跳出率</div>
         </div>
       </el-col>
       <!-- 平均访问时长 -->
@@ -121,21 +121,21 @@
         <div class="card flex-col data-card-140">
           <i class="admin-icons-page-ent outline-icon" style="color: #adc6ff99"></i>
           <div>
-            <span class="text-xxl text-bold text-italic" style="color: #2f54eb">{{ timeFormat(outlineData['今日']?.avg_visit_time, 'ss') }}</span>
+            <span class="text-xxl text-bold text-italic color-primary">{{ timeFormat(outlineData['今日']?.avg_visit_time, 'ss') }}</span>
             <span class="text-xs ml-10 text-gray">今日</span>
             <div class="mt-10">
               <span class="text-xl ml-10" style="color: #69c0ff">{{ timeFormat(outlineData['昨日']?.avg_visit_time, 'ss') }}</span>
               <span class="text-xs ml-10 text-grey">昨日</span>
             </div>
           </div>
-          <div class="text-df" style="color: #1890ff; margin-top: auto">平均访问时长</div>
+          <div class="text-df color-primary" style="margin-top: auto">平均访问时长</div>
         </div>
       </el-col>
     </el-row>
     <el-row :gutter="10" class="mt-10">
       <el-col :span="10">
         <div class="card data-card-500">
-          <ChartContainer :option="chartOpt"></ChartContainer>
+          <ChartFrame header :option="chartOpt" @select="onSelect"></ChartFrame>
         </div>
       </el-col>
       <el-col :span="14">
@@ -167,7 +167,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import FloatSideButton from '@/components/FloatSideButton/FloatSideButton.vue'
-import ChartContainer from '@/components/ChartContainer/ChartContainer.vue'
+import ChartFrame from '@/components/Chart/ChartFrame.vue'
 import { useAnalyticsStore } from '@/store/analytics'
 import { getBaiduTokenCode, getBaiduTokenByCode, refreshBaiduToken, getSiteList, getOutline } from '@/api/analytics'
 import { ElMessage } from 'element-plus'
@@ -175,6 +175,7 @@ import { useClipboard } from '@vueuse/core'
 import { transformOutline } from '@/utils/baidu_tongji'
 import { timeFormat } from '@/utils'
 import svgbaidutongji from '@/assets/svgs/baidu_tongji.svg'
+import { useCharts } from '@/hooks/useCharts'
 
 const analyticsStore = useAnalyticsStore()
 const refresh_token = computed(() => analyticsStore.getBaiduToken('refresh_token'))
@@ -265,40 +266,11 @@ async function queryOutline() {
   outlineData.value = transformOutline(resData)
 }
 
-const chartOpt = {
-  title: {
-    text: 'Referer of a Website',
-    subtext: 'Fake Data',
-    left: 'center'
-  },
-  tooltip: {
-    trigger: 'item'
-  },
-  legend: {
-    orient: 'vertical',
-    left: 'left'
-  },
-  series: [
-    {
-      name: 'Access From',
-      type: 'pie',
-      radius: '50%',
-      data: [
-        { value: 1048, name: 'Search Engine' },
-        { value: 735, name: 'Direct' },
-        { value: 580, name: 'Email' },
-        { value: 484, name: 'Union Ads' },
-        { value: 300, name: 'Video Ads' }
-      ],
-      emphasis: {
-        itemStyle: {
-          shadowBlur: 10,
-          shadowOffsetX: 0,
-          shadowColor: 'rgba(0, 0, 0, 0.5)'
-        }
-      }
-    }
-  ]
+const chartOpt = ref()
+chartOpt.value = useCharts().pie()
+
+function onSelect(e, type) {
+  console.log('onSelect :>> ', e, type)
 }
 </script>
 

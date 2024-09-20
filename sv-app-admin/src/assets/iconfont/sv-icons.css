@@ -20,6 +20,22 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.sv-icons-middle:before {
+  content: "\e6e6";
+}
+
+.sv-icons-middle-fill:before {
+  content: "\e76f";
+}
+
+.sv-icons-top:before {
+  content: "\e795";
+}
+
+.sv-icons-bottom:before {
+  content: "\e796";
+}
+
 .sv-icons-ip:before {
   content: "\e682";
 }
