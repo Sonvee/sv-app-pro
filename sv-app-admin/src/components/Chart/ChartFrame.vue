@@ -164,6 +164,8 @@ function onSelect(e, type) {
     .chart-main {
       flex-grow: 1;
       flex-shrink: 0;
+      border-radius: 6px;
+      overflow: hidden;
     }
 
     .chart-right-side {
