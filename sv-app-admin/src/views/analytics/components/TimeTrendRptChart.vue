@@ -1,0 +1,69 @@
+<template>
+  <ChartFrame header :option="chartOpt" :config="frameConfig" @select="onSelect"></ChartFrame>
+</template>
+
+<script setup>
+import { ref, onMounted, inject, watch } from 'vue'
+import ChartFrame from '@/components/Chart/ChartFrame.vue'
+import { useCharts } from '@/hooks/useCharts'
+import { timeTrendRpt } from '@/api/analytics'
+
+const tjOptions = inject('baidu_tongji_options')
+const frameConfig = ref({
+  title: '趋势数据',
+  datepicker: true, // 是否显示时间选择器
+  datetype: 'daterange', // 时间选择类型
+  daterange: tjOptions.overviewDateRange.value, // 时间选择范围
+  dropdown: true, // 是否显示下拉菜单
+  droplist: [
+    { label: '浏览量(PV)', value: 'pv_count' },
+    { label: '访客数(UV)', value: 'visitor_count' }
+  ], // 下拉菜单列表
+  selected: 'pv_count' // 当前所选的下拉菜单
+})
+const chartOpt = ref()
+
+// 联动总览日期
+watch(
+  () => tjOptions.overviewDateRange.value,
+  (newVal) => {
+    frameConfig.value.daterange = newVal
+    queryTimeTrendRpt({ metrics: frameConfig.value.selected, date_range: frameConfig.value.daterange })
+  }
+)
+
+onMounted(() => {
+  queryTimeTrendRpt({ metrics: frameConfig.value.selected, date_range: frameConfig.value.daterange })
+})
+
+async function queryTimeTrendRpt(data) {
+  const res = await timeTrendRpt({
+    access_token: tjOptions.access_token.value,
+    site_id: tjOptions.curSiteId.value,
+    ...data
+  })
+  const resData = res.data?.result
+  chartOpt.value = useCharts().line(
+    {
+      xAxis: { type: 'category', data: resData.items[0] },
+      yAxis: { type: 'value', name: frameConfig.value.selected == 'pv_count' ? '次' : '人' },
+      series: [{ type: 'line', name: frameConfig.value.selected == 'pv_count' ? '浏览量(PV)' : '访客数(UV)', data: resData.items[1].map((i) => (i[0] == '--' ? 0 : i[0])) }]
+    },
+    'series'
+  )
+}
+
+function onSelect(e, type) {
+  switch (type) {
+    case 'date':
+      frameConfig.value.daterange = e
+      break
+    case 'drop1':
+      frameConfig.value.selected = e.value
+      break
+  }
+  queryTimeTrendRpt({ metrics: frameConfig.value.selected, date_range: frameConfig.value.daterange })
+}
+</script>
+
+<style lang="scss" scoped></style>

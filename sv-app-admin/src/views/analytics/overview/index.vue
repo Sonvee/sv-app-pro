@@ -17,27 +17,38 @@
         </div>
         <el-input v-model="code" class="mb-2" size="small" clearable placeholder="无RT时需先获取code"></el-input>
         <div>
-          <el-button type="success" plain size="small" @click="createTokenCode">获取code</el-button>
+          <el-button type="success" plain size="small" @click="getTokenCode">获取code</el-button>
           <el-button v-if="refresh_token" type="primary" plain size="small" @click="refreshRtAt">刷新token</el-button>
-          <el-button v-else type="info" plain size="small" @click="createTokenByCode">获取token</el-button>
+          <el-button v-else type="info" plain size="small" @click="getTokenByCode">获取token</el-button>
         </div>
       </div>
     </FloatSideButton>
     <!-- 栅格布局 -->
     <el-row :gutter="10">
       <el-col :span="4">
-        <div class="card flex-col data-card-140">
-          <div>
-            统计分析数据来源：<a href="https://tongji.baidu.com" target="_blank">百度统计&nbsp;<i class="admin-icons-shijianfenxi text-sm"></i></a>
-          </div>
-          <a class="flex-vhc flex-sub padding-10" href="https://tongji.baidu.com" target="_blank">
-            <img class="h-full" :src="svgbaidutongji" alt="" />
-          </a>
-          <div class="flex-vc">
-            <span class="flex-shrink">当前站点：</span>
-            <el-select v-model="curSiteId" placeholder="Select" @change="init">
-              <el-option v-for="item in siteList" :key="item.site_id" :label="item.domain" :value="item.site_id" />
-            </el-select>
+        <div class="card flex-col data-card-140 bg-baidu-tongji">
+          <div class="flex-sub glass flex-col">
+            <div>
+              统计分析数据来源：<a href="https://tongji.baidu.com" target="_blank">百度统计&nbsp;<i class="admin-icons-shijianfenxi text-sm"></i></a>
+            </div>
+            <div class="flex-vc pt-10">
+              <span class="flex-shrink">当前站点：</span>
+              <el-select v-model="curSiteId" placeholder="Select" @change="init">
+                <el-option v-for="item in siteData" :key="item.site_id" :label="item.domain" :value="item.site_id" />
+              </el-select>
+            </div>
+            <div class="flex-vc pt-10">
+              <span class="flex-shrink">总览日期：</span>
+              <el-date-picker
+                v-model="overviewDateRange"
+                type="daterange"
+                start-placeholder="开始"
+                end-placeholder="结束"
+                range-separator="~"
+                value-format="x"
+                style="width: 240px"
+              />
+            </div>
           </div>
         </div>
       </el-col>
@@ -135,7 +146,7 @@
     <el-row :gutter="10" class="mt-10">
       <el-col :span="10">
         <div class="card data-card-500">
-          <ChartFrame header :option="chartOpt" @select="onSelect"></ChartFrame>
+          <TimeTrendRptChart></TimeTrendRptChart>
         </div>
       </el-col>
       <el-col :span="14">
@@ -158,24 +169,26 @@
         <div class="card data-card-600"></div>
       </el-col>
       <el-col :span="12">
-        <div class="card data-card-600"></div>
+        <div class="card data-card-600">
+          <DistrictRptChart></DistrictRptChart>
+        </div>
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, provide } from 'vue'
 import FloatSideButton from '@/components/FloatSideButton/FloatSideButton.vue'
-import ChartFrame from '@/components/Chart/ChartFrame.vue'
+import TimeTrendRptChart from '../components/TimeTrendRptChart.vue'
+import DistrictRptChart from '../components/DistrictRptChart.vue'
 import { useAnalyticsStore } from '@/store/analytics'
-import { getBaiduTokenCode, getBaiduTokenByCode, refreshBaiduToken, getSiteList, getOutline } from '@/api/analytics'
+import { baiduTokenCode, baiduTokenByCode, refreshBaiduToken, siteList, outline } from '@/api/analytics'
 import { ElMessage } from 'element-plus'
 import { useClipboard } from '@vueuse/core'
 import { transformOutline } from '@/utils/baidu_tongji'
 import { timeFormat } from '@/utils'
-import svgbaidutongji from '@/assets/svgs/baidu_tongji.svg'
-import { useCharts } from '@/hooks/useCharts'
+import dayjs from 'dayjs'
 
 const analyticsStore = useAnalyticsStore()
 const refresh_token = computed(() => analyticsStore.getBaiduToken('refresh_token'))
@@ -188,6 +201,8 @@ const curSiteId = computed({
     return analyticsStore.curSiteId
   }
 })
+const overviewDateRange = ref([dayjs().subtract(6, 'day').valueOf(), dayjs().valueOf()]) // 默认最近7天
+provide('baidu_tongji_options', { refresh_token, access_token, curSiteId, overviewDateRange })
 
 const code = ref('') // 获取token凭证
 
@@ -205,14 +220,14 @@ function onCopy(val) {
   copy(val)
   ElMessage({ type: 'success', message: '复制成功' })
 }
-async function createTokenCode() {
-  const codeRes = await getBaiduTokenCode()
+async function getTokenCode() {
+  const codeRes = await baiduTokenCode()
   const url = codeRes.data
   window.open(url)
 }
-async function createTokenByCode() {
+async function getTokenByCode() {
   if (!code.value) return ElMessage({ type: 'error', message: '请获取并输入code' })
-  const tokenRes = await getBaiduTokenByCode({ code: code.value })
+  const tokenRes = await baiduTokenByCode({ code: code.value })
   if (tokenRes.success) {
     const { refresh_token, access_token } = tokenRes.data
     analyticsStore.setBaiduToken('refresh_token', refresh_token)
@@ -246,10 +261,10 @@ async function refreshRtAt() {
  */
 
 // 站点列表
-const siteList = ref([])
+const siteData = ref([])
 async function querySiteList() {
-  const siteRes = await getSiteList({ access_token: access_token.value })
-  siteList.value = siteRes.data?.list || []
+  const siteRes = await siteList({ access_token: access_token.value })
+  siteData.value = siteRes.data?.list || []
 }
 
 // 初始化/刷新所有数据
@@ -261,22 +276,22 @@ async function init() {
 // 今日流量：取今日/昨日/预计今日数据
 const outlineData = ref({})
 async function queryOutline() {
-  const res = await getOutline({ access_token: access_token.value, site_id: curSiteId.value })
+  const res = await outline({ access_token: access_token.value, site_id: curSiteId.value })
   const resData = res.data?.result
-  outlineData.value = transformOutline(resData)
-}
-
-const chartOpt = ref()
-chartOpt.value = useCharts().pie()
-
-function onSelect(e, type) {
-  console.log('onSelect :>> ', e, type)
+  outlineData.value = transformOutline(resData) // 数据结构转化
 }
 </script>
 
 <style lang="scss" scoped>
 .page-container {
   height: auto;
+
+  .bg-baidu-tongji {
+    background-image: url('@/assets/svgs/baidu_tongji.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 100% 50%;
+  }
 
   .data-card-140 {
     height: 140px;

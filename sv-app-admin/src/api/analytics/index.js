@@ -1,16 +1,16 @@
 import request from '@/config/request/request.js'
 
-export function getBaiduTokenCode(params) {
+export function baiduTokenCode(params) {
   return request({
-    url: '/analytics/getBaiduTokenCode',
+    url: '/analytics/baiduTokenCode',
     method: 'get',
     params
   })
 }
 
-export function getBaiduTokenByCode(params) {
+export function baiduTokenByCode(params) {
   return request({
-    url: '/analytics/getBaiduTokenByCode',
+    url: '/analytics/baiduTokenByCode',
     method: 'get',
     params
   })
@@ -24,130 +24,130 @@ export function refreshBaiduToken(params) {
   })
 }
 
-export function getSiteList(params) {
+export function siteList(data) {
   return request({
-    url: '/analytics/getSiteList',
-    method: 'get',
-    params
+    url: '/analytics/siteList',
+    method: 'post',
+    data
   })
 }
 
-export function getOutline(params) {
+export function outline(data) {
   return request({
-    url: '/analytics/getOutline',
-    method: 'get',
-    params
+    url: '/analytics/outline',
+    method: 'post',
+    data
   })
 }
 
-export function getTimeTrendRpt(params) {
+export function timeTrendRpt(data) {
   return request({
-    url: '/analytics/getTimeTrendRpt',
-    method: 'get',
-    params
+    url: '/analytics/timeTrendRpt',
+    method: 'post',
+    data
   })
 }
 
-export function getDistrictRpt(params) {
+export function districtRpt(data) {
   return request({
-    url: '/analytics/getDistrictRpt',
-    method: 'get',
-    params
+    url: '/analytics/districtRpt',
+    method: 'post',
+    data
   })
 }
 
-export function getCommonTrackRpt(params) {
+export function commonTrackRpt(data) {
   return request({
-    url: '/analytics/getCommonTrackRpt',
-    method: 'get',
-    params
+    url: '/analytics/commonTrackRpt',
+    method: 'post',
+    data
   })
 }
 
-export function getTrendTime(params) {
+export function trendTime(data) {
   return request({
-    url: '/analytics/getTrendTime',
-    method: 'get',
-    params
+    url: '/analytics/trendTime',
+    method: 'post',
+    data
   })
 }
 
-export function getTrendLatest(params) {
+export function trendLatest(data) {
   return request({
-    url: '/analytics/getTrendLatest',
-    method: 'get',
-    params
+    url: '/analytics/trendLatest',
+    method: 'post',
+    data
   })
 }
 
-export function getSourceAll(params) {
+export function sourceAll(data) {
   return request({
-    url: '/analytics/getSourceAll',
-    method: 'get',
-    params
+    url: '/analytics/sourceAll',
+    method: 'post',
+    data
   })
 }
 
-export function getSourceEngine(params) {
+export function sourceEngine(data) {
   return request({
-    url: '/analytics/getSourceEngine',
-    method: 'get',
-    params
+    url: '/analytics/sourceEngine',
+    method: 'post',
+    data
   })
 }
 
-export function getSourceSearchword(params) {
+export function sourceSearchword(data) {
   return request({
-    url: '/analytics/getSourceSearchword',
-    method: 'get',
-    params
+    url: '/analytics/sourceSearchword',
+    method: 'post',
+    data
   })
 }
 
-export function getSourceLink(params) {
+export function sourceLink(data) {
   return request({
-    url: '/analytics/getSourceLink',
-    method: 'get',
-    params
+    url: '/analytics/sourceLink',
+    method: 'post',
+    data
   })
 }
 
-export function getVisitToppage(params) {
+export function visitToppage(data) {
   return request({
-    url: '/analytics/getVisitToppage',
-    method: 'get',
-    params
+    url: '/analytics/visitToppage',
+    method: 'post',
+    data
   })
 }
 
-export function getVisitLandingpage(params) {
+export function visitLandingpage(data) {
   return request({
-    url: '/analytics/getVisitLandingpage',
-    method: 'get',
-    params
+    url: '/analytics/visitLandingpage',
+    method: 'post',
+    data
   })
 }
 
-export function getVisitTopdomain(params) {
+export function visitTopdomain(data) {
   return request({
-    url: '/analytics/getVisitTopdomain',
-    method: 'get',
-    params
+    url: '/analytics/visitTopdomain',
+    method: 'post',
+    data
   })
 }
 
-export function getVisitDistrict(params) {
+export function visitDistrict(data) {
   return request({
-    url: '/analytics/getVisitDistrict',
-    method: 'get',
-    params
+    url: '/analytics/visitDistrict',
+    method: 'post',
+    data
   })
 }
 
-export function getVisitWorld(params) {
+export function visitWorld(data) {
   return request({
-    url: '/analytics/getVisitWorld',
-    method: 'get',
-    params
+    url: '/analytics/visitWorld',
+    method: 'post',
+    data
   })
 }

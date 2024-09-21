@@ -3,17 +3,17 @@
 const Controller = require('egg').Controller
 
 class BaiduAnalyticsController extends Controller {
-  async getBaiduTokenCode() {
+  async baiduTokenCode() {
     const { ctx, service } = this
     const data = ctx.request.query
-    const res = await service.baiduAnalytics.getBaiduTokenCode(data)
+    const res = await service.baiduAnalytics.baiduTokenCode(data)
     ctx.result(res)
   }
 
-  async getBaiduTokenByCode() {
+  async baiduTokenByCode() {
     const { ctx, service } = this
     const data = ctx.request.query
-    const res = await service.baiduAnalytics.getBaiduTokenByCode(data)
+    const res = await service.baiduAnalytics.baiduTokenByCode(data)
     ctx.result(res)
   }
 
@@ -24,115 +24,115 @@ class BaiduAnalyticsController extends Controller {
     ctx.result(res)
   }
 
-  async getSiteList() {
+  async siteList() {
     const { ctx, service } = this
-    const data = ctx.request.query
-    const res = await service.baiduAnalytics.getSiteList(data)
+    const data = ctx.request.body
+    const res = await service.baiduAnalytics.siteList(data)
     ctx.result(res)
   }
 
-  async getOutline() {
+  async outline() {
     const { ctx, service } = this
-    const data = ctx.request.query
-    const res = await service.baiduAnalytics.getOutline(data)
+    const data = ctx.request.body
+    const res = await service.baiduAnalytics.outline(data)
     ctx.result(res)
   }
 
-  async getTimeTrendRpt() {
+  async timeTrendRpt() {
     const { ctx, service } = this
-    const data = ctx.request.query
-    const res = await service.baiduAnalytics.getTimeTrendRpt(data)
+    const data = ctx.request.body
+    const res = await service.baiduAnalytics.timeTrendRpt(data)
     ctx.result(res)
   }
 
-  async getDistrictRpt() {
+  async districtRpt() {
     const { ctx, service } = this
-    const data = ctx.request.query
-    const res = await service.baiduAnalytics.getDistrictRpt(data)
+    const data = ctx.request.body
+    const res = await service.baiduAnalytics.districtRpt(data)
     ctx.result(res)
   }
 
-  async getCommonTrackRpt() {
+  async commonTrackRpt() {
     const { ctx, service } = this
-    const data = ctx.request.query
-    const res = await service.baiduAnalytics.getCommonTrackRpt(data)
+    const data = ctx.request.body
+    const res = await service.baiduAnalytics.commonTrackRpt(data)
     ctx.result(res)
   }
 
-  async getTrendTime() {
+  async trendTime() {
     const { ctx, service } = this
-    const data = ctx.request.query
-    const res = await service.baiduAnalytics.getTrendTime(data)
+    const data = ctx.request.body
+    const res = await service.baiduAnalytics.trendTime(data)
     ctx.result(res)
   }
 
-  async getTrendLatest() {
+  async trendLatest() {
     const { ctx, service } = this
-    const data = ctx.request.query
-    const res = await service.baiduAnalytics.getTrendLatest(data)
+    const data = ctx.request.body
+    const res = await service.baiduAnalytics.trendLatest(data)
     ctx.result(res)
   }
 
-  async getSourceAll() {
+  async sourceAll() {
     const { ctx, service } = this
-    const data = ctx.request.query
-    const res = await service.baiduAnalytics.getSourceAll(data)
+    const data = ctx.request.body
+    const res = await service.baiduAnalytics.sourceAll(data)
     ctx.result(res)
   }
 
-  async getSourceEngine() {
+  async sourceEngine() {
     const { ctx, service } = this
-    const data = ctx.request.query
-    const res = await service.baiduAnalytics.getSourceEngine(data)
+    const data = ctx.request.body
+    const res = await service.baiduAnalytics.sourceEngine(data)
     ctx.result(res)
   }
 
-  async getSourceSearchword() {
+  async sourceSearchword() {
     const { ctx, service } = this
-    const data = ctx.request.query
-    const res = await service.baiduAnalytics.getSourceSearchword(data)
+    const data = ctx.request.body
+    const res = await service.baiduAnalytics.sourceSearchword(data)
     ctx.result(res)
   }
 
-  async getSourceLink() {
+  async sourceLink() {
     const { ctx, service } = this
-    const data = ctx.request.query
-    const res = await service.baiduAnalytics.getSourceLink(data)
+    const data = ctx.request.body
+    const res = await service.baiduAnalytics.sourceLink(data)
     ctx.result(res)
   }
 
-  async getVisitToppage() {
+  async visitToppage() {
     const { ctx, service } = this
-    const data = ctx.request.query
-    const res = await service.baiduAnalytics.getVisitToppage(data)
+    const data = ctx.request.body
+    const res = await service.baiduAnalytics.visitToppage(data)
     ctx.result(res)
   }
 
-  async getVisitLandingpage() {
+  async visitLandingpage() {
     const { ctx, service } = this
-    const data = ctx.request.query
-    const res = await service.baiduAnalytics.getVisitLandingpage(data)
+    const data = ctx.request.body
+    const res = await service.baiduAnalytics.visitLandingpage(data)
     ctx.result(res)
   }
 
-  async getVisitTopdomain() {
+  async visitTopdomain() {
     const { ctx, service } = this
-    const data = ctx.request.query
-    const res = await service.baiduAnalytics.getVisitTopdomain(data)
+    const data = ctx.request.body
+    const res = await service.baiduAnalytics.visitTopdomain(data)
     ctx.result(res)
   }
 
-  async getVisitDistrict() {
+  async visitDistrict() {
     const { ctx, service } = this
-    const data = ctx.request.query
-    const res = await service.baiduAnalytics.getVisitDistrict(data)
+    const data = ctx.request.body
+    const res = await service.baiduAnalytics.visitDistrict(data)
     ctx.result(res)
   }
 
-  async getVisitWorld() {
+  async visitWorld() {
     const { ctx, service } = this
-    const data = ctx.request.query
-    const res = await service.baiduAnalytics.getVisitWorld(data)
+    const data = ctx.request.body
+    const res = await service.baiduAnalytics.visitWorld(data)
     ctx.result(res)
   }
 }

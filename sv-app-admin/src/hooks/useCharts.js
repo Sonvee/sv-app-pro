@@ -2,7 +2,7 @@
  * ECharts文档须知
  * @tutorial https://echarts.apache.org/examples/zh/index.html 示例
  * @tutorial https://echarts.apache.org/zh/option.html 配置项
- * @tutorial https://echarts.apache.org/handbook/zh/concepts/dataset 数据集
+ * @tutorial https://echarts.apache.org/handbook/zh/concepts/dataset 数据集 (重要)
  * ---------------
  * Vue-ECharts文档
  * @see https://github.com/ecomfe/vue-echarts/blob/HEAD/README.zh-Hans.md
@@ -12,20 +12,19 @@
  * 折线图
  * @param {Object} option 配置项
  * @see https://echarts.apache.org/zh/option.html
+ * @param {String} type 数据类型 dataset数据集(默认) | series系列
  * @returns {Object} 处理后的配置项
  */
-function line(option) {
+function line(option, type = 'dataset') {
   // 推荐使用数据集(dataset)处理数据
-  let defaultOption = {
+  let defaultDataset = {
     tooltip: {
       trigger: 'axis',
       axisPointer: {
         type: 'cross'
       }
     },
-    legend: {
-      data: ['电脑', '手机', '平板', '手表']
-    },
+    legend: {},
     dataset: {
       source: [
         { product: '2015年', 电脑: 43.3, 手机: 85.8, 平板: 93.7, 手表: 51.3 },
@@ -35,10 +34,40 @@ function line(option) {
     },
     xAxis: { type: 'category' },
     yAxis: { type: 'value' },
+    grid: [{ left: '8%', top: '40', right: '4%', bottom: '60' }],
     series: [{ type: 'line' }, { type: 'line' }, { type: 'line' }, { type: 'line' }]
   }
 
-  const result = Object.assign(defaultOption, option)
+  // 系列(series)处理数据
+  let defaultSeries = {
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'cross'
+      }
+    },
+    legend: {},
+    xAxis: {
+      type: 'category',
+      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    },
+    yAxis: { type: 'value' },
+    grid: [{ left: '8%', top: '40', right: '4%', bottom: '60' }],
+    series: [
+      {
+        name: 'Email',
+        type: 'line',
+        data: [120, 132, 101, 134, 90, 230, 210]
+      },
+      {
+        name: 'Union Ads',
+        type: 'line',
+        data: [220, 82, 191, 104, 290, 130, 310]
+      }
+    ]
+  }
+
+  const result = Object.assign(type == 'dataset' ? defaultDataset : defaultSeries, option)
   return result
 }
 
@@ -46,20 +75,19 @@ function line(option) {
  * 柱状图
  * @param {Object} option 配置项
  * @see https://echarts.apache.org/zh/option.html
+ * @param {String} type 数据类型 dataset数据集(默认) | series系列
  * @returns {Object} 处理后的配置项
  */
-function bar(option) {
+function bar(option, type = 'dataset') {
   // 推荐使用数据集(dataset)处理数据
-  let defaultOption = {
+  let defaultDataset = {
     tooltip: {
       trigger: 'axis',
       axisPointer: {
         type: 'cross'
       }
     },
-    legend: {
-      data: ['2015年', '2016年', '2017年']
-    },
+    legend: {},
     dataset: {
       dimensions: ['product', '2015年', '2016年', '2017年'],
       source: [
@@ -71,10 +99,40 @@ function bar(option) {
     },
     xAxis: { type: 'category' },
     yAxis: { type: 'value' },
+    grid: [{ left: '8%', top: '40', right: '4%', bottom: '60' }],
     series: [{ type: 'bar' }, { type: 'bar' }, { type: 'bar' }]
   }
 
-  const result = Object.assign(defaultOption, option)
+  // 系列(series)处理数据
+  let defaultSeries = {
+    tooltip: {
+      trigger: 'axis',
+      axisPointer: {
+        type: 'cross'
+      }
+    },
+    legend: {},
+    xAxis: {
+      type: 'category',
+      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    },
+    yAxis: { type: 'value' },
+    grid: [{ left: '8%', top: '40', right: '4%', bottom: '60' }],
+    series: [
+      {
+        name: 'Email',
+        type: 'bar',
+        data: [120, 132, 101, 134, 90, 230, 210]
+      },
+      {
+        name: 'Union Ads',
+        type: 'bar',
+        data: [220, 82, 191, 104, 290, 130, 310]
+      }
+    ]
+  }
+
+  const result = Object.assign(type == 'dataset' ? defaultDataset : defaultSeries, option)
   return result
 }
 
@@ -82,11 +140,12 @@ function bar(option) {
  * 饼图
  * @param {Object} option 配置项
  * @see https://echarts.apache.org/zh/option.html
+ * @param {String} type 数据类型 dataset数据集(默认) | series系列
  * @returns {Object} 处理后的配置项
  */
-function pie(option) {
+function pie(option, type = 'dataset') {
   // 推荐使用数据集(dataset)处理数据
-  let defaultOption = {
+  let defaultDataset = {
     tooltip: {
       trigger: 'item'
     },
@@ -99,21 +158,131 @@ function pie(option) {
         { name: '手表', value: 484 }
       ]
     },
+    series: [{ type: 'pie' }]
+  }
+
+  // 系列(series)处理数据
+  let defaultSeries = {
+    tooltip: {
+      trigger: 'item'
+    },
+    legend: {}
+  }
+
+  const result = Object.assign(type == 'dataset' ? defaultDataset : defaultSeries, option)
+  return result
+}
+
+/**
+ * 地图
+ * @param {Object} option 配置项
+ * @see https://echarts.apache.org/zh/option.html
+ * @param {String} type 数据类型 dataset数据集(默认) | series系列
+ * @returns {Object} 处理后的配置项
+ */
+function map(option, type = 'dataset') {
+  const tooltip = {
+    trigger: 'item',
+    formatter: (params) => {
+      if (!params.value) return
+      const cube = `<span style="display:inline-block;width:10px;height:10px;margin-right:5px;border-radius:50%;background:${params.color}"></span>`
+      return `<div>${params.name}<div>
+              <div>${cube}${params.seriesName}<b style="float:right;margin-left:20px;">${params.data.value}</b></div>
+              <div>${cube}占比<b style="float:right;margin-left:20px;">${params.data.ratio}%</b></div>`
+    }
+  }
+  const legend = { show: false }
+  const visualMap = {
+    min: 0,
+    max: 2000,
+    dimension: 'value'
+  }
+  const nameMap = {
+    北京市: '北京',
+    天津市: '天津',
+    河北省: '河北',
+    山西省: '山西',
+    内蒙古自治区: '内蒙古',
+    辽宁省: '辽宁',
+    吉林省: '吉林',
+    黑龙江省: '黑龙江',
+    上海市: '上海',
+    江苏省: '江苏',
+    浙江省: '浙江',
+    安徽省: '安徽',
+    福建省: '福建',
+    江西省: '江西',
+    山东省: '山东',
+    河南省: '河南',
+    湖北省: '湖北',
+    湖南省: '湖南',
+    广东省: '广东',
+    广西壮族自治区: '广西',
+    海南省: '海南',
+    重庆市: '重庆',
+    四川省: '四川',
+    贵州省: '贵州',
+    云南省: '云南',
+    西藏自治区: '西藏',
+    陕西省: '陕西',
+    甘肃省: '甘肃',
+    青海省: '青海',
+    宁夏回族自治区: '宁夏',
+    新疆维吾尔自治区: '新疆'
+  }
+
+  // 推荐使用数据集(dataset)处理数据
+  let defaultDataset = {
+    tooltip,
+    legend,
+    visualMap,
+    dataset: {
+      dimensions: ['name', 'value', 'ratio'],
+      source: [
+        { name: '上海市', value: 827, ratio: 92.4 },
+        { name: '江苏省', value: 50, ratio: 5.59 },
+        { name: '山东省', value: 13, ratio: 1.45 },
+        { name: '河南省', value: 2, ratio: 0.22 },
+        { name: '北京市', value: 2, ratio: 0.22 },
+        { name: '广东省', value: 1, ratio: 0.11 }
+      ]
+    },
     series: [
       {
-        type: 'pie',
-        emphasis: {
-          itemStyle: {
-            shadowBlur: 10,
-            shadowOffsetX: 0,
-            shadowColor: 'rgba(0, 0, 0, 0.5)'
-          }
-        }
+        type: 'map',
+        map: 'china',
+        zoom: 1.2,
+        name: '浏览量(PV)',
+        nameMap
       }
     ]
   }
 
-  const result = Object.assign(defaultOption, option)
+  // 系列(series)处理数据
+  let defaultSeries = {
+    tooltip,
+    legend,
+    visualMap,
+    series: [
+      {
+        type: 'map',
+        map: 'china',
+        zoom: 1.2,
+        name: '浏览量(PV)',
+        data: [
+          { name: '上海市', value: 827, ratio: 92.4 },
+          { name: '江苏省', value: 50, ratio: 5.59 },
+          { name: '山东省', value: 13, ratio: 1.45 },
+          { name: '河南省', value: 2, ratio: 0.22 },
+          { name: '北京市', value: 2, ratio: 0.22 },
+          { name: '广东省', value: 1, ratio: 0.11 }
+        ],
+        nameMap
+      }
+    ]
+  }
+
+  const result = Object.assign(type == 'dataset' ? defaultDataset : defaultSeries, option)
   return result
 }
 
@@ -125,6 +294,7 @@ export const useCharts = () => {
   return {
     line,
     bar,
-    pie
+    pie,
+    map
   }
 }

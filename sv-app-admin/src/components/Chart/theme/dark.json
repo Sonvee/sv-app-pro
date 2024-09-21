@@ -19,7 +19,9 @@
     },
     "symbolSize": "4",
     "symbol": "roundRect",
-    "smooth": true
+    "smooth": true,
+    "areaStyle": {},
+    "emphasis": { "focus": "series" }
   },
   "radar": {
     "itemStyle": {
@@ -42,6 +44,13 @@
     "itemStyle": {
       "borderWidth": "0",
       "borderColor": "#ccc"
+    },
+    "emphasis": {
+      "itemStyle": {
+        "shadowBlur": 10,
+        "shadowOffsetX": 0,
+        "shadowColor": "rgba(0, 0, 0, 0.5)"
+      }
     }
   },
   "scatter": {
@@ -107,22 +116,40 @@
     }
   },
   "map": {
+    "roam": true,
+    "showLegendSymbol": false,
     "itemStyle": {
-      "areaColor": "#f3f3f3",
-      "borderColor": "#999999",
+      "borderColor": "#141414",
+      "areaColor": "#414141",
       "borderWidth": 0.5
     },
     "label": {
-      "color": "#893448"
+      "show": false,
+      "fontSize": 12,
+      "color": "#eeeeee"
     },
     "emphasis": {
       "itemStyle": {
-        "areaColor": "rgba(255,178,72,1)",
-        "borderColor": "#eb8146",
-        "borderWidth": 1
+        "areaColor": "#8c8c8c",
+        "borderColor": "#ffffff",
+        "borderWidth": 0.5
       },
       "label": {
-        "color": "rgb(137,52,72)"
+        "show": true,
+        "fontSize": 12,
+        "color": "#ffffff"
+      }
+    },
+    "select": {
+      "itemStyle": {
+        "areaColor": "#595959",
+        "borderColor": "#ffffff",
+        "borderWidth": 0.5
+      },
+      "label": {
+        "show": true,
+        "fontSize": 12,
+        "color": "#dddddd"
       }
     }
   },
@@ -277,6 +304,9 @@
     }
   },
   "legend": {
+    "orient": "horizontal",
+    "left": "center",
+    "top": "bottom",
     "textStyle": {
       "color": "#eeeeee"
     }
@@ -329,7 +359,16 @@
     }
   },
   "visualMap": {
-    "color": ["#72ccff", "#87f7cf"]
+    "left": "left",
+    "orient": "vertical",
+    "inRange": {
+      "color": ["#EBF3FC", "#C6DDF7", "#90BCF0", "#5B9CE9", "#3385E3"]
+    },
+    "textStyle": {
+      "color": "#eeeeee"
+    },
+    "text": ["高", "低"],
+    "calculable": true
   },
   "dataZoom": {
     "backgroundColor": "rgba(255,255,255,0)",

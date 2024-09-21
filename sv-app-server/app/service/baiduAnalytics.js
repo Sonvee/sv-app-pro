@@ -1,6 +1,6 @@
 'use strict'
 
-const { isTruthy } = require('../utils')
+const { isTruthy, timeFormat } = require('../utils')
 
 const Service = require('egg').Service
 
@@ -12,7 +12,7 @@ class BaiduAnalyticsService extends Service {
   /**
    * 获取token验证码code
    */
-  async getBaiduTokenCode(data) {
+  async baiduTokenCode(data) {
     const { ctx, app } = this
 
     // 权限校验
@@ -25,7 +25,7 @@ class BaiduAnalyticsService extends Service {
     }
   }
 
-  async getBaiduTokenByCode(data) {
+  async baiduTokenByCode(data) {
     const { ctx, app } = this
 
     // 权限校验
@@ -96,7 +96,7 @@ class BaiduAnalyticsService extends Service {
    * @tutorial https://tongji.baidu.com/api/manual/Chapter1/getSiteList.html
    * @param {Object} data 请求参数
    */
-  async getSiteList(data) {
+  async siteList(data) {
     const { ctx, app } = this
 
     // 权限校验
@@ -117,8 +117,6 @@ class BaiduAnalyticsService extends Service {
 
     if (res.data.error_code) ctx.throw(400, { msg: res.data.error_msg, errMsg: res.data })
 
-    console.log('res :>> ', res)
-
     return {
       data: res.data,
       msg: '获取站点列表成功'
@@ -130,7 +128,7 @@ class BaiduAnalyticsService extends Service {
    * @tutorial https://tongji.baidu.com/api/manual/Chapter1/getData.html
    * @param {Object} data 请求参数
    */
-  async getOutline(data) {
+  async outline(data) {
     const { ctx, app } = this
 
     // 权限校验
@@ -148,7 +146,7 @@ class BaiduAnalyticsService extends Service {
       data: {
         method: 'overview/getOutline',
         access_token: data.access_token,
-        site_id: data.site_id,
+        site_id: data.site_id
       }
     })
 
@@ -163,7 +161,7 @@ class BaiduAnalyticsService extends Service {
    * @tutorial https://tongji.baidu.com/api/manual/Chapter1/overview_getTimeTrendRpt.html
    * @param {Object} data 请求参数
    */
-  async getTimeTrendRpt(data) {
+  async timeTrendRpt(data) {
     const { ctx, app } = this
 
     // 权限校验
@@ -172,6 +170,7 @@ class BaiduAnalyticsService extends Service {
     // 参数校验
     if (!isTruthy(data.access_token)) ctx.throw(400, { msg: 'access_token 必填' })
     if (!isTruthy(data.site_id)) ctx.throw(400, { msg: 'site_id 必填' })
+    if (!isTruthy(data.metrics)) ctx.throw(400, { msg: 'metrics 必填' })
     if (!isTruthy(data.date_range, 'arr')) ctx.throw(400, { msg: 'date_range 必填' })
 
     const url = 'https://openapi.baidu.com/rest/2.0/tongji/report/getData'
@@ -183,9 +182,15 @@ class BaiduAnalyticsService extends Service {
         method: 'overview/getTimeTrendRpt',
         access_token: data.access_token,
         site_id: data.site_id,
-        start_date: data.date_range[0],
-        end_date: data.date_range[1],
-        metrics: data?.metrics
+        metrics: data.metrics,
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        // 可选基本参数
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        order: data?.order,
+        start_index: data?.start_index,
+        max_results: data?.max_results
       }
     })
 
@@ -200,7 +205,7 @@ class BaiduAnalyticsService extends Service {
    * @tutorial https://tongji.baidu.com/api/manual/Chapter1/overview_getDistrictRpt.html
    * @param {Object} data 请求参数
    */
-  async getDistrictRpt(data) {
+  async districtRpt(data) {
     const { ctx, app } = this
 
     // 权限校验
@@ -209,6 +214,7 @@ class BaiduAnalyticsService extends Service {
     // 参数校验
     if (!isTruthy(data.access_token)) ctx.throw(400, { msg: 'access_token 必填' })
     if (!isTruthy(data.site_id)) ctx.throw(400, { msg: 'site_id 必填' })
+    if (!isTruthy(data.metrics)) ctx.throw(400, { msg: 'metrics 必填' })
     if (!isTruthy(data.date_range, 'arr')) ctx.throw(400, { msg: 'date_range 必填' })
 
     const url = 'https://openapi.baidu.com/rest/2.0/tongji/report/getData'
@@ -220,9 +226,15 @@ class BaiduAnalyticsService extends Service {
         method: 'overview/getDistrictRpt',
         access_token: data.access_token,
         site_id: data.site_id,
-        start_date: data.date_range[0],
-        end_date: data.date_range[1],
-        metrics: data?.metrics
+        metrics: data.metrics,
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        // 可选基本参数
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        order: data?.order,
+        start_index: data?.start_index,
+        max_results: data?.max_results
       }
     })
 
@@ -237,7 +249,7 @@ class BaiduAnalyticsService extends Service {
    * @tutorial https://tongji.baidu.com/api/manual/Chapter1/trend_time_a.html
    * @param {Object} data 请求参数
    */
-  async getTrendTime(data) {
+  async trendTime(data) {
     const { ctx, app } = this
 
     // 权限校验
@@ -246,6 +258,7 @@ class BaiduAnalyticsService extends Service {
     // 参数校验
     if (!isTruthy(data.access_token)) ctx.throw(400, { msg: 'access_token 必填' })
     if (!isTruthy(data.site_id)) ctx.throw(400, { msg: 'site_id 必填' })
+    if (!isTruthy(data.metrics)) ctx.throw(400, { msg: 'metrics 必填' })
     if (!isTruthy(data.date_range, 'arr')) ctx.throw(400, { msg: 'date_range 必填' })
 
     const url = 'https://openapi.baidu.com/rest/2.0/tongji/report/getData'
@@ -257,9 +270,16 @@ class BaiduAnalyticsService extends Service {
         method: 'trend/time/a',
         access_token: data.access_token,
         site_id: data.site_id,
-        start_date: data.date_range[0],
-        end_date: data.date_range[1],
-        metrics: data?.metrics,
+        metrics: data.metrics,
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        // 可选基本参数
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        order: data?.order,
+        start_index: data?.start_index,
+        max_results: data?.max_results,
+        // 其他参数
         gran: data.gran,
         source: data?.source,
         clientDevice: data?.clientDevice,
@@ -279,7 +299,7 @@ class BaiduAnalyticsService extends Service {
    * @tutorial https://tongji.baidu.com/api/manual/Chapter1/trend_latest_a.html
    * @param {Object} data 请求参数
    */
-  async getTrendLatest(data) {
+  async trendLatest(data) {
     const { ctx, app } = this
 
     // 权限校验
@@ -288,6 +308,7 @@ class BaiduAnalyticsService extends Service {
     // 参数校验
     if (!isTruthy(data.access_token)) ctx.throw(400, { msg: 'access_token 必填' })
     if (!isTruthy(data.site_id)) ctx.throw(400, { msg: 'site_id 必填' })
+    if (!isTruthy(data.metrics)) ctx.throw(400, { msg: 'metrics 必填' })
     if (!isTruthy(data.date_range, 'arr')) ctx.throw(400, { msg: 'date_range 必填' })
 
     const url = 'https://openapi.baidu.com/rest/2.0/tongji/report/getData'
@@ -299,11 +320,16 @@ class BaiduAnalyticsService extends Service {
         method: 'trend/latest/a',
         access_token: data.access_token,
         site_id: data.site_id,
-        start_date: data.date_range[0],
-        end_date: data.date_range[1],
-        metrics: data?.metrics,
-        order: 'visit_pages,desc',
-        max_results: '100',
+        metrics: data.metrics,
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        // 可选基本参数
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        order: data?.order,
+        start_index: data?.start_index,
+        max_results: data?.max_results,
+        // 其他参数
         source: data?.source,
         clientDevice: data?.clientDevice,
         area: data?.area,
@@ -322,7 +348,7 @@ class BaiduAnalyticsService extends Service {
    * @tutorial https://tongji.baidu.com/api/manual/Chapter1/source_all_a.html
    * @param {Object} data 请求参数
    */
-  async getSourceAll(data) {
+  async sourceAll(data) {
     const { ctx, app } = this
 
     // 权限校验
@@ -331,6 +357,7 @@ class BaiduAnalyticsService extends Service {
     // 参数校验
     if (!isTruthy(data.access_token)) ctx.throw(400, { msg: 'access_token 必填' })
     if (!isTruthy(data.site_id)) ctx.throw(400, { msg: 'site_id 必填' })
+    if (!isTruthy(data.metrics)) ctx.throw(400, { msg: 'metrics 必填' })
     if (!isTruthy(data.date_range, 'arr')) ctx.throw(400, { msg: 'date_range 必填' })
 
     const url = 'https://openapi.baidu.com/rest/2.0/tongji/report/getData'
@@ -342,9 +369,15 @@ class BaiduAnalyticsService extends Service {
         method: 'source/all/a',
         access_token: data.access_token,
         site_id: data.site_id,
-        start_date: data.date_range[0],
-        end_date: data.date_range[1],
-        metrics: data?.metrics
+        metrics: data.metrics,
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        // 可选基本参数
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        order: data?.order,
+        start_index: data?.start_index,
+        max_results: data?.max_results
       }
     })
 
@@ -359,7 +392,7 @@ class BaiduAnalyticsService extends Service {
    * @tutorial https://tongji.baidu.com/api/manual/Chapter1/source_engine_a.html
    * @param {Object} data 请求参数
    */
-  async getSourceEngine(data) {
+  async sourceEngine(data) {
     const { ctx, app } = this
 
     // 权限校验
@@ -368,6 +401,7 @@ class BaiduAnalyticsService extends Service {
     // 参数校验
     if (!isTruthy(data.access_token)) ctx.throw(400, { msg: 'access_token 必填' })
     if (!isTruthy(data.site_id)) ctx.throw(400, { msg: 'site_id 必填' })
+    if (!isTruthy(data.metrics)) ctx.throw(400, { msg: 'metrics 必填' })
     if (!isTruthy(data.date_range, 'arr')) ctx.throw(400, { msg: 'date_range 必填' })
 
     const url = 'https://openapi.baidu.com/rest/2.0/tongji/report/getData'
@@ -379,9 +413,15 @@ class BaiduAnalyticsService extends Service {
         method: 'source/engine/a',
         access_token: data.access_token,
         site_id: data.site_id,
-        start_date: data.date_range[0],
-        end_date: data.date_range[1],
-        metrics: data?.metrics
+        metrics: data.metrics,
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        // 可选基本参数
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        order: data?.order,
+        start_index: data?.start_index,
+        max_results: data?.max_results
       }
     })
 
@@ -396,7 +436,7 @@ class BaiduAnalyticsService extends Service {
    * @tutorial https://tongji.baidu.com/api/manual/Chapter1/source_searchword_a.html
    * @param {Object} data 请求参数
    */
-  async getSourceSearchword(data) {
+  async sourceSearchword(data) {
     const { ctx, app } = this
 
     // 权限校验
@@ -405,6 +445,7 @@ class BaiduAnalyticsService extends Service {
     // 参数校验
     if (!isTruthy(data.access_token)) ctx.throw(400, { msg: 'access_token 必填' })
     if (!isTruthy(data.site_id)) ctx.throw(400, { msg: 'site_id 必填' })
+    if (!isTruthy(data.metrics)) ctx.throw(400, { msg: 'metrics 必填' })
     if (!isTruthy(data.date_range, 'arr')) ctx.throw(400, { msg: 'date_range 必填' })
 
     const url = 'https://openapi.baidu.com/rest/2.0/tongji/report/getData'
@@ -416,9 +457,15 @@ class BaiduAnalyticsService extends Service {
         method: 'source/searchword/a',
         access_token: data.access_token,
         site_id: data.site_id,
-        start_date: data.date_range[0],
-        end_date: data.date_range[1],
-        metrics: data?.metrics
+        metrics: data.metrics,
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        // 可选基本参数
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        order: data?.order,
+        start_index: data?.start_index,
+        max_results: data?.max_results
       }
     })
 
@@ -433,7 +480,7 @@ class BaiduAnalyticsService extends Service {
    * @tutorial https://tongji.baidu.com/api/manual/Chapter1/source_link_a.html
    * @param {Object} data 请求参数
    */
-  async getSourceLink(data) {
+  async sourceLink(data) {
     const { ctx, app } = this
 
     // 权限校验
@@ -442,6 +489,7 @@ class BaiduAnalyticsService extends Service {
     // 参数校验
     if (!isTruthy(data.access_token)) ctx.throw(400, { msg: 'access_token 必填' })
     if (!isTruthy(data.site_id)) ctx.throw(400, { msg: 'site_id 必填' })
+    if (!isTruthy(data.metrics)) ctx.throw(400, { msg: 'metrics 必填' })
     if (!isTruthy(data.date_range, 'arr')) ctx.throw(400, { msg: 'date_range 必填' })
 
     const url = 'https://openapi.baidu.com/rest/2.0/tongji/report/getData'
@@ -453,9 +501,15 @@ class BaiduAnalyticsService extends Service {
         method: 'source/link/a',
         access_token: data.access_token,
         site_id: data.site_id,
-        start_date: data.date_range[0],
-        end_date: data.date_range[1],
-        metrics: data?.metrics
+        metrics: data.metrics,
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        // 可选基本参数
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        order: data?.order,
+        start_index: data?.start_index,
+        max_results: data?.max_results
       }
     })
 
@@ -470,7 +524,7 @@ class BaiduAnalyticsService extends Service {
    * @tutorial https://tongji.baidu.com/api/manual/Chapter1/visit_toppage_a.html
    * @param {Object} data 请求参数
    */
-  async getVisitToppage(data) {
+  async visitToppage(data) {
     const { ctx, app } = this
 
     // 权限校验
@@ -479,6 +533,7 @@ class BaiduAnalyticsService extends Service {
     // 参数校验
     if (!isTruthy(data.access_token)) ctx.throw(400, { msg: 'access_token 必填' })
     if (!isTruthy(data.site_id)) ctx.throw(400, { msg: 'site_id 必填' })
+    if (!isTruthy(data.metrics)) ctx.throw(400, { msg: 'metrics 必填' })
     if (!isTruthy(data.date_range, 'arr')) ctx.throw(400, { msg: 'date_range 必填' })
 
     const url = 'https://openapi.baidu.com/rest/2.0/tongji/report/getData'
@@ -490,9 +545,15 @@ class BaiduAnalyticsService extends Service {
         method: 'visit/toppage/a',
         access_token: data.access_token,
         site_id: data.site_id,
-        start_date: data.date_range[0],
-        end_date: data.date_range[1],
-        metrics: data?.metrics
+        metrics: data.metrics,
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        // 可选基本参数
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        order: data?.order,
+        start_index: data?.start_index,
+        max_results: data?.max_results
       }
     })
 
@@ -507,7 +568,7 @@ class BaiduAnalyticsService extends Service {
    * @tutorial https://tongji.baidu.com/api/manual/Chapter1/visit_landingpage_a.html
    * @param {Object} data 请求参数
    */
-  async getVisitLandingpage(data) {
+  async visitLandingpage(data) {
     const { ctx, app } = this
 
     // 权限校验
@@ -516,6 +577,7 @@ class BaiduAnalyticsService extends Service {
     // 参数校验
     if (!isTruthy(data.access_token)) ctx.throw(400, { msg: 'access_token 必填' })
     if (!isTruthy(data.site_id)) ctx.throw(400, { msg: 'site_id 必填' })
+    if (!isTruthy(data.metrics)) ctx.throw(400, { msg: 'metrics 必填' })
     if (!isTruthy(data.date_range, 'arr')) ctx.throw(400, { msg: 'date_range 必填' })
 
     const url = 'https://openapi.baidu.com/rest/2.0/tongji/report/getData'
@@ -527,9 +589,15 @@ class BaiduAnalyticsService extends Service {
         method: 'visit/landingpage/a',
         access_token: data.access_token,
         site_id: data.site_id,
-        start_date: data.date_range[0],
-        end_date: data.date_range[1],
-        metrics: data?.metrics
+        metrics: data.metrics,
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        // 可选基本参数
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        order: data?.order,
+        start_index: data?.start_index,
+        max_results: data?.max_results
       }
     })
 
@@ -544,7 +612,7 @@ class BaiduAnalyticsService extends Service {
    * @tutorial https://tongji.baidu.com/api/manual/Chapter1/visit_topdomain_a.html
    * @param {Object} data 请求参数
    */
-  async getVisitTopdomain(data) {
+  async visitTopdomain(data) {
     const { ctx, app } = this
 
     // 权限校验
@@ -553,6 +621,7 @@ class BaiduAnalyticsService extends Service {
     // 参数校验
     if (!isTruthy(data.access_token)) ctx.throw(400, { msg: 'access_token 必填' })
     if (!isTruthy(data.site_id)) ctx.throw(400, { msg: 'site_id 必填' })
+    if (!isTruthy(data.metrics)) ctx.throw(400, { msg: 'metrics 必填' })
     if (!isTruthy(data.date_range, 'arr')) ctx.throw(400, { msg: 'date_range 必填' })
 
     const url = 'https://openapi.baidu.com/rest/2.0/tongji/report/getData'
@@ -564,9 +633,15 @@ class BaiduAnalyticsService extends Service {
         method: 'visit/topdomain/a',
         access_token: data.access_token,
         site_id: data.site_id,
-        start_date: data.date_range[0],
-        end_date: data.date_range[1],
-        metrics: data?.metrics
+        metrics: data.metrics,
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        // 可选基本参数
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        order: data?.order,
+        start_index: data?.start_index,
+        max_results: data?.max_results
       }
     })
 
@@ -581,7 +656,7 @@ class BaiduAnalyticsService extends Service {
    * @tutorial https://tongji.baidu.com/api/manual/Chapter1/visit_district_a.html
    * @param {Object} data 请求参数
    */
-  async getVisitDistrict(data) {
+  async visitDistrict(data) {
     const { ctx, app } = this
 
     // 权限校验
@@ -590,6 +665,7 @@ class BaiduAnalyticsService extends Service {
     // 参数校验
     if (!isTruthy(data.access_token)) ctx.throw(400, { msg: 'access_token 必填' })
     if (!isTruthy(data.site_id)) ctx.throw(400, { msg: 'site_id 必填' })
+    if (!isTruthy(data.metrics)) ctx.throw(400, { msg: 'metrics 必填' })
     if (!isTruthy(data.date_range, 'arr')) ctx.throw(400, { msg: 'date_range 必填' })
 
     const url = 'https://openapi.baidu.com/rest/2.0/tongji/report/getData'
@@ -601,9 +677,15 @@ class BaiduAnalyticsService extends Service {
         method: 'visit/district/a',
         access_token: data.access_token,
         site_id: data.site_id,
-        start_date: data.date_range[0],
-        end_date: data.date_range[1],
-        metrics: data?.metrics
+        metrics: data.metrics,
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        // 可选基本参数
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        order: data?.order,
+        start_index: data?.start_index,
+        max_results: data?.max_results
       }
     })
 
@@ -618,7 +700,7 @@ class BaiduAnalyticsService extends Service {
    * @tutorial https://tongji.baidu.com/api/manual/Chapter1/visit_world_a.html
    * @param {Object} data 请求参数
    */
-  async getVisitWorld(data) {
+  async visitWorld(data) {
     const { ctx, app } = this
 
     // 权限校验
@@ -627,6 +709,7 @@ class BaiduAnalyticsService extends Service {
     // 参数校验
     if (!isTruthy(data.access_token)) ctx.throw(400, { msg: 'access_token 必填' })
     if (!isTruthy(data.site_id)) ctx.throw(400, { msg: 'site_id 必填' })
+    if (!isTruthy(data.metrics)) ctx.throw(400, { msg: 'metrics 必填' })
     if (!isTruthy(data.date_range, 'arr')) ctx.throw(400, { msg: 'date_range 必填' })
 
     const url = 'https://openapi.baidu.com/rest/2.0/tongji/report/getData'
@@ -638,9 +721,15 @@ class BaiduAnalyticsService extends Service {
         method: 'visit/world/a',
         access_token: data.access_token,
         site_id: data.site_id,
-        start_date: data.date_range[0],
-        end_date: data.date_range[1],
-        metrics: data?.metrics
+        metrics: data.metrics,
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        // 可选基本参数
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        order: data?.order,
+        start_index: data?.start_index,
+        max_results: data?.max_results
       }
     })
 

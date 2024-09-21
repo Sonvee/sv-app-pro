@@ -5,20 +5,37 @@
 <script setup>
 import { ref, computed, provide } from 'vue'
 import { useGlobalStore } from '@/store/global'
-import { use, registerTheme } from 'echarts/core'
+import { use, registerTheme, registerMap } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { UniversalTransition } from 'echarts/features'
-import { LineChart, BarChart, PieChart } from 'echarts/charts'
-import { TitleComponent, TooltipComponent, LegendComponent, GridComponent, DatasetComponent } from 'echarts/components'
+import { LineChart, BarChart, PieChart, MapChart } from 'echarts/charts'
+import { TitleComponent, TooltipComponent, LegendComponent, GridComponent, DatasetComponent, GeoComponent, VisualMapComponent } from 'echarts/components'
 import VChart, { THEME_KEY } from 'vue-echarts'
 import lightChart from './theme/light.json'
 import darkChart from './theme/dark.json'
+import chinaGeo from './geo/china.json'
 
-use([CanvasRenderer, TitleComponent, TooltipComponent, LegendComponent, GridComponent, DatasetComponent, UniversalTransition, LineChart, BarChart, PieChart])
+use([
+  CanvasRenderer,
+  TitleComponent,
+  TooltipComponent,
+  LegendComponent,
+  GridComponent,
+  DatasetComponent,
+  GeoComponent,
+  VisualMapComponent,
+  UniversalTransition,
+  LineChart,
+  BarChart,
+  PieChart,
+  MapChart
+])
 
 // 注册自定义主题
 registerTheme('light', lightChart)
 registerTheme('dark', darkChart)
+// 注册中国地图
+registerMap('china', chinaGeo)
 
 const theme = computed(() => (useGlobalStore().isDark ? 'dark' : 'light'))
 

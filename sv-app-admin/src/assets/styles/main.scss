@@ -145,3 +145,27 @@ a {
 .tox-tinymce-aux {
   z-index: 99999 !important;
 }
+
+/* 保持宽高比并填充容器，但可能会裁剪部分图片 */
+.bg-img-cover {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+/* 保持宽高比并填充容器，且不会裁剪图片，但图片可能不会完全填满容器 */
+.bg-img-contain {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+}
+/* 填充满容器，但图片可能会变形 */
+.bg-img-full {
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 100% 100%;
+}
+
+.glass {
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px) brightness(96%);
+}
