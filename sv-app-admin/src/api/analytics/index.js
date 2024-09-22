@@ -72,6 +72,14 @@ export function trendTime(data) {
   })
 }
 
+export function visitorType(data) {
+  return request({
+    url: '/analytics/visitorType',
+    method: 'post',
+    data
+  })
+}
+
 export function trendLatest(data) {
   return request({
     url: '/analytics/trendLatest',

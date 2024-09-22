@@ -144,13 +144,15 @@
       </el-col>
     </el-row>
     <el-row :gutter="10" class="mt-10">
-      <el-col :span="10">
+      <el-col :span="14">
         <div class="card data-card-500">
           <TimeTrendRptChart></TimeTrendRptChart>
         </div>
       </el-col>
-      <el-col :span="14">
-        <div class="card data-card-500"></div>
+      <el-col :span="10">
+        <div class="card data-card-500">
+          <VisitorTypeChart></VisitorTypeChart>
+        </div>
       </el-col>
     </el-row>
     <el-row :gutter="10" class="mt-10">
@@ -191,6 +193,7 @@ import DistrictRptChart from '../components/DistrictRptChart.vue'
 import SourceSiteChart from '../components/SourceSiteChart.vue'
 import LandingPageChart from '../components/LandingPageChart.vue'
 import VisitPageChart from '../components/VisitPageChart.vue'
+import VisitorTypeChart from '../components/VisitorTypeChart.vue'
 import { useAnalyticsStore } from '@/store/analytics'
 import { baiduTokenCode, baiduTokenByCode, refreshBaiduToken, siteList, outline } from '@/api/analytics'
 import { ElMessage } from 'element-plus'

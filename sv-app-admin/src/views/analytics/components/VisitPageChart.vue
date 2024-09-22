@@ -35,7 +35,6 @@ async function queryVisitPage(data) {
   const res = await visitPage({
     access_token: tjOptions.access_token.value,
     site_id: tjOptions.curSiteId.value,
-    metrics: 'pv_count', // 只有pv_count
     max_results: 10,
     ...data
   })

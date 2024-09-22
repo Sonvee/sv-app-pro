@@ -339,6 +339,48 @@ class BaiduAnalyticsService extends Service {
   }
 
   /**
+   * 报告数据 - 实时访客(新老访客)
+   * @param {Object} data 请求参数
+   */
+  async visitorType(data) {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['sys:analytics:query'])
+
+    // 参数校验
+    if (!isTruthy(data.access_token)) ctx.throw(400, { msg: 'access_token 必填' })
+    if (!isTruthy(data.site_id)) ctx.throw(400, { msg: 'site_id 必填' })
+    if (!isTruthy(data.date_range, 'arr')) ctx.throw(400, { msg: 'date_range 必填' })
+
+    const url = 'https://openapi.baidu.com/rest/2.0/tongji/report/getData'
+    const res = await ctx.curl(url, {
+      method: 'GET',
+      dataType: 'json',
+      timeout: 60000,
+      data: {
+        method: 'overview/getVisitorType',
+        access_token: data.access_token,
+        site_id: data.site_id,
+        metrics: data.metrics,
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        // 可选基本参数
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        order: data?.order,
+        start_index: data?.start_index,
+        max_results: data?.max_results
+      }
+    })
+
+    return {
+      data: res.data,
+      msg: '获取新老访客数据成功'
+    }
+  }
+
+  /**
    * 报告数据 - 实时访客
    * @tutorial https://tongji.baidu.com/api/manual/Chapter1/trend_latest_a.html
    * @param {Object} data 请求参数
@@ -401,7 +443,6 @@ class BaiduAnalyticsService extends Service {
     // 参数校验
     if (!isTruthy(data.access_token)) ctx.throw(400, { msg: 'access_token 必填' })
     if (!isTruthy(data.site_id)) ctx.throw(400, { msg: 'site_id 必填' })
-    if (!isTruthy(data.metrics)) ctx.throw(400, { msg: 'metrics 必填' })
     if (!isTruthy(data.date_range, 'arr')) ctx.throw(400, { msg: 'date_range 必填' })
 
     const url = 'https://openapi.baidu.com/rest/2.0/tongji/report/getData'
@@ -642,7 +683,6 @@ class BaiduAnalyticsService extends Service {
     // 参数校验
     if (!isTruthy(data.access_token)) ctx.throw(400, { msg: 'access_token 必填' })
     if (!isTruthy(data.site_id)) ctx.throw(400, { msg: 'site_id 必填' })
-    if (!isTruthy(data.metrics)) ctx.throw(400, { msg: 'metrics 必填' })
     if (!isTruthy(data.date_range, 'arr')) ctx.throw(400, { msg: 'date_range 必填' })
 
     const url = 'https://openapi.baidu.com/rest/2.0/tongji/report/getData'
@@ -730,7 +770,6 @@ class BaiduAnalyticsService extends Service {
     // 参数校验
     if (!isTruthy(data.access_token)) ctx.throw(400, { msg: 'access_token 必填' })
     if (!isTruthy(data.site_id)) ctx.throw(400, { msg: 'site_id 必填' })
-    if (!isTruthy(data.metrics)) ctx.throw(400, { msg: 'metrics 必填' })
     if (!isTruthy(data.date_range, 'arr')) ctx.throw(400, { msg: 'date_range 必填' })
 
     const url = 'https://openapi.baidu.com/rest/2.0/tongji/report/getData'
@@ -935,6 +974,8 @@ class BaiduAnalyticsService extends Service {
       msg: '获取地域分布(按国家)数据成功'
     }
   }
+
+  
 }
 
 module.exports = BaiduAnalyticsService

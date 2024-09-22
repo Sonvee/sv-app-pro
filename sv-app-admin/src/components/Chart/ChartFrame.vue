@@ -38,6 +38,7 @@
       </div>
       <div class="chart-main">
         <ChartContainer v-if="chartMain" :option="option"></ChartContainer>
+        <slot v-else name="chartMain"></slot>
       </div>
       <div class="chart-right-side" v-if="rightSide">
         <slot name="rightSide"></slot>
