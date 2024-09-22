@@ -55,10 +55,10 @@ async function queryTimeTrendRpt(data) {
 
 function onSelect(e, type) {
   switch (type) {
-    case 'date':
+    case 'datepicker':
       frameConfig.value.daterange = e
       break
-    case 'drop1':
+    case 'dropdown':
       frameConfig.value.selected = e.value
       break
   }

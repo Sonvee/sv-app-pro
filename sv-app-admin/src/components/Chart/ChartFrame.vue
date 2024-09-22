@@ -5,14 +5,17 @@
         <!-- 头部插槽默认内容 -->
         <div class="flex-vc">
           <i class="title-cube"></i>
-          <span class="text-df text-bold text-line-1">{{ frameConfig.title }}</span>
+          <span class="text-lg text-bold text-line-1">{{ frameConfig.title }}</span>
           <span class="text-xs text-gray text-line-1" v-if="frameConfig.subtitle"><el-divider direction="vertical" />{{ frameConfig.subtitle }}</span>
-          <i class="cuIcon-roundright text-lg cursor-pointer" style="margin-left: auto" @click="onMore"></i>
-        </div>
-        <div class="flex-vc justify-between plr-15">
+          <!-- 下拉菜单选择器 -->
+          <div class="flex-vc ml-20" v-if="frameConfig.dropdown">
+            <!-- <span class="text-xs text-cyan">类型：</span> -->
+            <SelectDropdown v-model="curSelected" :list="frameConfig.droplist" @select="onSelect($event, 'dropdown')"></SelectDropdown>
+          </div>
+          <div class="flex-sub"></div>
           <!-- 时间选择器 -->
-          <div class="flex-vc mt-20" v-if="frameConfig.datepicker">
-            <span class="text-sm">时间：</span>
+          <div class="flex-vc mr-20" v-if="frameConfig.datepicker">
+            <!-- <span class="text-xs text-cyan">时间：</span> -->
             <el-date-picker
               v-model="curDaterange"
               :type="frameConfig.datetype"
@@ -21,19 +24,12 @@
               range-separator="~"
               value-format="x"
               style="width: 240px"
-              @change="onSelect($event, 'date')"
+              @change="onSelect($event, 'datepicker')"
             />
           </div>
-          <!-- 下拉菜单选择器 -->
-          <div class="flex-vc mt-20" v-if="frameConfig.dropdown">
-            <span class="text-sm">类型：</span>
-            <SelectDropdown v-model="curSelected" :list="frameConfig.droplist" @select="onSelect($event, 'drop1')"></SelectDropdown>
-          </div>
-          <div class="flex-vc mt-20" v-if="frameConfig.dropdown2">
-            <span class="text-sm">对比：</span>
-            <SelectDropdown v-model="curSelected2" :list="frameConfig.droplist2" @select="onSelect($event, 'drop2')"></SelectDropdown>
-          </div>
+          <i class="cuIcon-roundright text-lg cursor-pointer" @click="onMore"></i>
         </div>
+        <el-divider style="margin: 10px 0 0 0;" />
       </slot>
     </div>
     <div class="chart-body">
@@ -104,14 +100,7 @@ const frameConfig = computed(() => {
       { label: '浏览量(PV)', value: 'pv_count' },
       { label: '访客数(UV)', value: 'visitor_count' }
     ], // 下拉菜单列表
-    selected: 'pv_count', // 当前所选的下拉菜单
-    dropdown2: false, // 是否显示下拉菜单2
-    droplist2: [
-      { label: '昨日', value: 'day' },
-      { label: '上周', value: 'week' },
-      { label: '上个月', value: 'month' }
-    ], // 下拉菜单列表2
-    selected2: 'day' // 当前所选的下拉菜单2
+    selected: 'pv_count' // 当前所选的下拉菜单
   }
   const result = Object.assign(defaultConfig, props.config)
   return result
@@ -132,7 +121,6 @@ watch(
 )
 // 当前下拉菜单
 const curSelected = ref(frameConfig.value.selected)
-const curSelected2 = ref(frameConfig.value.selected2)
 function onSelect(e, type) {
   emits('select', e, type)
 }

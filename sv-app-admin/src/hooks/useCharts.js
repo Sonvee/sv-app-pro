@@ -197,6 +197,7 @@ function map(option, type = 'dataset') {
     max: 2000,
     dimension: 'value'
   }
+  // DataV上的GeoJson需要名称映射
   const nameMap = {
     北京市: '北京',
     天津市: '天津',

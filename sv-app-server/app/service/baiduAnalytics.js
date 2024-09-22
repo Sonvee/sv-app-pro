@@ -245,6 +245,50 @@ class BaiduAnalyticsService extends Service {
   }
 
   /**
+   * 报告数据 - 网站概况 (来源网站、搜索词、入口页面、受访页面 - 总览)
+   * @tutorial https://tongji.baidu.com/api/manual/Chapter1/overview_getCommonTrackRpt.html
+   * @param {Object} data 请求参数
+   */
+  async commonTrackRpt(data) {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['sys:analytics:query'])
+
+    // 参数校验
+    if (!isTruthy(data.access_token)) ctx.throw(400, { msg: 'access_token 必填' })
+    if (!isTruthy(data.site_id)) ctx.throw(400, { msg: 'site_id 必填' })
+    if (!isTruthy(data.metrics)) ctx.throw(400, { msg: 'metrics 必填' })
+    if (!isTruthy(data.date_range, 'arr')) ctx.throw(400, { msg: 'date_range 必填' })
+
+    const url = 'https://openapi.baidu.com/rest/2.0/tongji/report/getData'
+    const res = await ctx.curl(url, {
+      method: 'GET',
+      dataType: 'json',
+      timeout: 60000,
+      data: {
+        method: 'overview/getCommonTrackRpt',
+        access_token: data.access_token,
+        site_id: data.site_id,
+        metrics: data.metrics,
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        // 可选基本参数
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        order: data?.order,
+        start_index: data?.start_index,
+        max_results: data?.max_results
+      }
+    })
+
+    return {
+      data: res.data,
+      msg: '获取趋势数据成功'
+    }
+  }
+
+  /**
    * 报告数据 - 趋势分析
    * @tutorial https://tongji.baidu.com/api/manual/Chapter1/trend_time_a.html
    * @param {Object} data 请求参数
@@ -377,7 +421,11 @@ class BaiduAnalyticsService extends Service {
         end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
         order: data?.order,
         start_index: data?.start_index,
-        max_results: data?.max_results
+        max_results: data?.max_results,
+        // 其他参数
+        viewType: data?.viewType,
+        clientDevice: data?.clientDevice,
+        visitor: data?.visitor
       }
     })
 
@@ -421,7 +469,11 @@ class BaiduAnalyticsService extends Service {
         end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
         order: data?.order,
         start_index: data?.start_index,
-        max_results: data?.max_results
+        max_results: data?.max_results,
+        // 其他参数
+        clientDevice: data?.clientDevice,
+        area: data?.area,
+        visitor: data?.visitor
       }
     })
 
@@ -465,7 +517,11 @@ class BaiduAnalyticsService extends Service {
         end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
         order: data?.order,
         start_index: data?.start_index,
-        max_results: data?.max_results
+        max_results: data?.max_results,
+        // 其他参数
+        source: data?.source,
+        clientDevice: data?.clientDevice,
+        visitor: data?.visitor
       }
     })
 
@@ -509,7 +565,12 @@ class BaiduAnalyticsService extends Service {
         end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
         order: data?.order,
         start_index: data?.start_index,
-        max_results: data?.max_results
+        max_results: data?.max_results,
+        // 其他参数
+        viewType: data?.viewType,
+        domainType: data?.domainType,
+        clientDevice: data?.clientDevice,
+        visitor: data?.visitor
       }
     })
 

@@ -1,6 +1,6 @@
 <template>
   <el-dropdown v-bind="$attrs" trigger="click" @command="dropdownCommand" @visible-change="visibleChange">
-    <span class="cursor-pointer">
+    <span class="cursor-pointer text-xs">
       {{ curLabel || '请选择' }}
       <i :class="[isDropdown ? 'trans-up' : 'trans-down']" class="uni-icons-down"></i>
     </span>

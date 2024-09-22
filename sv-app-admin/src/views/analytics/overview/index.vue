@@ -155,7 +155,9 @@
     </el-row>
     <el-row :gutter="10" class="mt-10">
       <el-col :span="8">
-        <div class="card data-card-400"></div>
+        <div class="card data-card-400">
+          <SourceSearchwordChart></SourceSearchwordChart>
+        </div>
       </el-col>
       <el-col :span="8">
         <div class="card data-card-400"></div>
@@ -182,6 +184,7 @@ import { ref, computed, onMounted, provide } from 'vue'
 import FloatSideButton from '@/components/FloatSideButton/FloatSideButton.vue'
 import TimeTrendRptChart from '../components/TimeTrendRptChart.vue'
 import DistrictRptChart from '../components/DistrictRptChart.vue'
+import SourceSearchwordChart from '../components/SourceSearchwordChart.vue'
 import { useAnalyticsStore } from '@/store/analytics'
 import { baiduTokenCode, baiduTokenByCode, refreshBaiduToken, siteList, outline } from '@/api/analytics'
 import { ElMessage } from 'element-plus'

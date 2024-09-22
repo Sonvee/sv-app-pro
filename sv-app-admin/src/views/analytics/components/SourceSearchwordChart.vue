@@ -6,11 +6,11 @@
 import { ref, onMounted, inject, watch } from 'vue'
 import ChartFrame from '@/components/Chart/ChartFrame.vue'
 import { useCharts } from '@/hooks/useCharts'
-import { districtRpt } from '@/api/analytics'
+import { sourceSearchword } from '@/api/analytics'
 
 const tjOptions = inject('baidu_tongji_options')
 const frameConfig = ref({
-  title: '地域分布',
+  title: '趋势数据',
   datepicker: true, // 是否显示时间选择器
   datetype: 'daterange', // 时间选择类型
   daterange: tjOptions.overviewDateRange.value, // 时间选择范围
@@ -21,7 +21,6 @@ const frameConfig = ref({
   ], // 下拉菜单列表
   selected: 'pv_count' // 当前所选的下拉菜单
 })
-
 const chartOpt = ref()
 
 // 联动总览日期
@@ -29,35 +28,29 @@ watch(
   () => tjOptions.overviewDateRange.value,
   (newVal) => {
     frameConfig.value.daterange = newVal
-    queryDistrictRpt({ metrics: frameConfig.value.selected, date_range: frameConfig.value.daterange })
+    querySourceSearchword({ metrics: frameConfig.value.selected, date_range: frameConfig.value.daterange })
   }
 )
 
 onMounted(() => {
-  queryDistrictRpt({ metrics: frameConfig.value.selected, date_range: frameConfig.value.daterange })
+  querySourceSearchword({ metrics: frameConfig.value.selected, date_range: frameConfig.value.daterange })
 })
 
-async function queryDistrictRpt(data) {
-  const res = await districtRpt({
+async function querySourceSearchword(data) {
+  const res = await sourceSearchword({
     access_token: tjOptions.access_token.value,
     site_id: tjOptions.curSiteId.value,
     ...data
   })
   const resData = res.data?.result
-  const sourceData = resData.items[0].map((item, index) => {
-    return {
-      name: item[0],
-      value: resData.items[1][index][0],
-      ratio: resData.items[1][index][1]
-    }
-  })
-  chartOpt.value = useCharts().map({
-    dataset: {
-      dimensions: ['name', 'value', 'ratio'],
-      source: sourceData
-    }
-  })
-  chartOpt.value.series[0].name = frameConfig.value.selected == 'pv_count' ? '浏览量(PV)' : '访客数(UV)'
+  chartOpt.value = useCharts().line(
+    {
+      xAxis: { type: 'category', data: resData.items[0] },
+      yAxis: { type: 'value', name: frameConfig.value.selected == 'pv_count' ? '次' : '人' },
+      series: [{ type: 'line', name: frameConfig.value.selected == 'pv_count' ? '浏览量(PV)' : '访客数(UV)', data: resData.items[1].map((i) => (i[0] == '--' ? 0 : i[0])) }]
+    },
+    'series'
+  )
 }
 
 function onSelect(e, type) {
@@ -69,7 +62,7 @@ function onSelect(e, type) {
       frameConfig.value.selected = e.value
       break
   }
-  queryDistrictRpt({ metrics: frameConfig.value.selected, date_range: frameConfig.value.daterange })
+  querySourceSearchword({ metrics: frameConfig.value.selected, date_range: frameConfig.value.daterange })
 }
 </script>
 
