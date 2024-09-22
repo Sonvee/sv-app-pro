@@ -388,7 +388,55 @@ class BaiduAnalyticsService extends Service {
   }
 
   /**
-   * 报告数据 - 全部来源
+   * 报告数据 - 全部来源(来源网站) overview版 (metrics只有一个pv_count指标)
+   * @tutorial https://tongji.baidu.com/api/manual/Chapter1/overview_getCommonTrackRpt.html
+   * @param {Object} data 请求参数
+   */
+  async sourceSite(data) {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['sys:analytics:query'])
+
+    // 参数校验
+    if (!isTruthy(data.access_token)) ctx.throw(400, { msg: 'access_token 必填' })
+    if (!isTruthy(data.site_id)) ctx.throw(400, { msg: 'site_id 必填' })
+    if (!isTruthy(data.metrics)) ctx.throw(400, { msg: 'metrics 必填' })
+    if (!isTruthy(data.date_range, 'arr')) ctx.throw(400, { msg: 'date_range 必填' })
+
+    const url = 'https://openapi.baidu.com/rest/2.0/tongji/report/getData'
+    const res = await ctx.curl(url, {
+      method: 'GET',
+      dataType: 'json',
+      timeout: 60000,
+      data: {
+        method: 'overview/getSourceSite',
+        access_token: data.access_token,
+        site_id: data.site_id,
+        metrics: data.metrics,
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        // 可选基本参数
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        order: data?.order,
+        start_index: data?.start_index,
+        max_results: data?.max_results,
+        // 其他参数
+        viewType: data?.viewType,
+        clientDevice: data?.clientDevice,
+        visitor: data?.visitor
+      }
+    })
+
+    return {
+      data: res.data,
+      msg: '获取来源网站数据成功'
+    }
+  }
+
+  /**
+   * 报告数据 - 全部来源(来源网站) source版
    * @tutorial https://tongji.baidu.com/api/manual/Chapter1/source_all_a.html
    * @param {Object} data 请求参数
    */
@@ -581,7 +629,51 @@ class BaiduAnalyticsService extends Service {
   }
 
   /**
-   * 报告数据 - 受访页面
+   * 报告数据 - 受访页面 overview版 (metrics只有一个pv_count指标)
+   * @tutorial https://tongji.baidu.com/api/manual/Chapter1/overview_getCommonTrackRpt.html
+   * @param {Object} data 请求参数
+   */
+  async visitPage(data) {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['sys:analytics:query'])
+
+    // 参数校验
+    if (!isTruthy(data.access_token)) ctx.throw(400, { msg: 'access_token 必填' })
+    if (!isTruthy(data.site_id)) ctx.throw(400, { msg: 'site_id 必填' })
+    if (!isTruthy(data.metrics)) ctx.throw(400, { msg: 'metrics 必填' })
+    if (!isTruthy(data.date_range, 'arr')) ctx.throw(400, { msg: 'date_range 必填' })
+
+    const url = 'https://openapi.baidu.com/rest/2.0/tongji/report/getData'
+    const res = await ctx.curl(url, {
+      method: 'GET',
+      dataType: 'json',
+      timeout: 60000,
+      data: {
+        method: 'overview/getVisitPage',
+        access_token: data.access_token,
+        site_id: data.site_id,
+        metrics: data.metrics,
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        // 可选基本参数
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        order: data?.order,
+        start_index: data?.start_index,
+        max_results: data?.max_results
+      }
+    })
+
+    return {
+      data: res.data,
+      msg: '获取受访页面数据成功'
+    }
+  }
+
+  /**
+   * 报告数据 - 受访页面 visit版
    * @tutorial https://tongji.baidu.com/api/manual/Chapter1/visit_toppage_a.html
    * @param {Object} data 请求参数
    */
@@ -625,7 +717,51 @@ class BaiduAnalyticsService extends Service {
   }
 
   /**
-   * 报告数据 - 入口页面
+   * 报告数据 - 入口页面 overview版 (metrics只有一个pv_count指标)
+   * @tutorial https://tongji.baidu.com/api/manual/Chapter1/overview_getCommonTrackRpt.html
+   * @param {Object} data 请求参数
+   */
+  async landingPage(data) {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['sys:analytics:query'])
+
+    // 参数校验
+    if (!isTruthy(data.access_token)) ctx.throw(400, { msg: 'access_token 必填' })
+    if (!isTruthy(data.site_id)) ctx.throw(400, { msg: 'site_id 必填' })
+    if (!isTruthy(data.metrics)) ctx.throw(400, { msg: 'metrics 必填' })
+    if (!isTruthy(data.date_range, 'arr')) ctx.throw(400, { msg: 'date_range 必填' })
+
+    const url = 'https://openapi.baidu.com/rest/2.0/tongji/report/getData'
+    const res = await ctx.curl(url, {
+      method: 'GET',
+      dataType: 'json',
+      timeout: 60000,
+      data: {
+        method: 'overview/getLandingPage',
+        access_token: data.access_token,
+        site_id: data.site_id,
+        metrics: data.metrics,
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        // 可选基本参数
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        order: data?.order,
+        start_index: data?.start_index,
+        max_results: data?.max_results
+      }
+    })
+
+    return {
+      data: res.data,
+      msg: '获取入口页面数据成功'
+    }
+  }
+
+  /**
+   * 报告数据 - 入口页面 visit版
    * @tutorial https://tongji.baidu.com/api/manual/Chapter1/visit_landingpage_a.html
    * @param {Object} data 请求参数
    */

@@ -73,6 +73,13 @@ class BaiduAnalyticsController extends Controller {
     ctx.result(res)
   }
 
+  async sourceSite() {
+    const { ctx, service } = this
+    const data = ctx.request.body
+    const res = await service.baiduAnalytics.sourceSite(data)
+    ctx.result(res)
+  }
+
   async sourceAll() {
     const { ctx, service } = this
     const data = ctx.request.body
@@ -101,10 +108,24 @@ class BaiduAnalyticsController extends Controller {
     ctx.result(res)
   }
 
+  async visitPage() {
+    const { ctx, service } = this
+    const data = ctx.request.body
+    const res = await service.baiduAnalytics.visitPage(data)
+    ctx.result(res)
+  }
+
   async visitToppage() {
     const { ctx, service } = this
     const data = ctx.request.body
     const res = await service.baiduAnalytics.visitToppage(data)
+    ctx.result(res)
+  }
+
+  async landingPage() {
+    const { ctx, service } = this
+    const data = ctx.request.body
+    const res = await service.baiduAnalytics.landingPage(data)
     ctx.result(res)
   }
 

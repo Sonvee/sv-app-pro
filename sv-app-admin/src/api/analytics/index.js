@@ -80,6 +80,14 @@ export function trendLatest(data) {
   })
 }
 
+export function sourceSite(data) {
+  return request({
+    url: '/analytics/sourceSite',
+    method: 'post',
+    data
+  })
+}
+
 export function sourceAll(data) {
   return request({
     url: '/analytics/sourceAll',
@@ -112,9 +120,25 @@ export function sourceLink(data) {
   })
 }
 
+export function visitPage(data) {
+  return request({
+    url: '/analytics/visitPage',
+    method: 'post',
+    data
+  })
+}
+
 export function visitToppage(data) {
   return request({
     url: '/analytics/visitToppage',
+    method: 'post',
+    data
+  })
+}
+
+export function landingPage(data) {
+  return request({
+    url: '/analytics/landingPage',
     method: 'post',
     data
   })

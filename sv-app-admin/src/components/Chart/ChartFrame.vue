@@ -23,13 +23,13 @@
               end-placeholder="结束"
               range-separator="~"
               value-format="x"
-              style="width: 240px"
+              style="width: 220px"
               @change="onSelect($event, 'datepicker')"
             />
           </div>
           <i class="cuIcon-roundright text-lg cursor-pointer" @click="onMore"></i>
         </div>
-        <el-divider style="margin: 10px 0 0 0;" />
+        <el-divider style="margin: 10px 0 0 0" />
       </slot>
     </div>
     <div class="chart-body">
@@ -37,7 +37,7 @@
         <slot name="leftSide"></slot>
       </div>
       <div class="chart-main">
-        <ChartContainer :option="option"></ChartContainer>
+        <ChartContainer v-if="chartMain" :option="option"></ChartContainer>
       </div>
       <div class="chart-right-side" v-if="rightSide">
         <slot name="rightSide"></slot>
@@ -70,6 +70,10 @@ const props = defineProps({
   rightSide: {
     type: Boolean,
     default: false
+  },
+  chartMain: {
+    type: Boolean,
+    default: true
   },
   config: {
     type: Object,

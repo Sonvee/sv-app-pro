@@ -16,43 +16,42 @@
  * @returns {Object} 处理后的配置项
  */
 function line(option, type = 'dataset') {
+  const tooltip = {
+    trigger: 'axis',
+    axisPointer: {
+      type: 'cross'
+    }
+  }
+  const legend = {}
+  const grid = [{ left: '4%', top: '40', right: '20', bottom: '40', containLabel: true }]
+
   // 推荐使用数据集(dataset)处理数据
   let defaultDataset = {
-    tooltip: {
-      trigger: 'axis',
-      axisPointer: {
-        type: 'cross'
-      }
-    },
-    legend: {},
+    tooltip,
+    legend,
+    grid,
+    xAxis: { type: 'category' },
+    yAxis: { type: 'value' },
+    series: [{ type: 'line' }, { type: 'line' }, { type: 'line' }, { type: 'line' }],
     dataset: {
       source: [
         { product: '2015年', 电脑: 43.3, 手机: 85.8, 平板: 93.7, 手表: 51.3 },
         { product: '2016年', 电脑: 83.1, 手机: 73.4, 平板: 55.1, 手表: 56.2 },
         { product: '2017年', 电脑: 86.4, 手机: 65.2, 平板: 82.5, 手表: 74.9 }
       ]
-    },
-    xAxis: { type: 'category' },
-    yAxis: { type: 'value' },
-    grid: [{ left: '8%', top: '40', right: '4%', bottom: '60' }],
-    series: [{ type: 'line' }, { type: 'line' }, { type: 'line' }, { type: 'line' }]
+    }
   }
 
   // 系列(series)处理数据
   let defaultSeries = {
-    tooltip: {
-      trigger: 'axis',
-      axisPointer: {
-        type: 'cross'
-      }
-    },
-    legend: {},
+    tooltip,
+    legend,
+    grid,
     xAxis: {
       type: 'category',
       data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
     },
     yAxis: { type: 'value' },
-    grid: [{ left: '8%', top: '40', right: '4%', bottom: '60' }],
     series: [
       {
         name: 'Email',
@@ -79,15 +78,23 @@ function line(option, type = 'dataset') {
  * @returns {Object} 处理后的配置项
  */
 function bar(option, type = 'dataset') {
+  const tooltip = {
+    trigger: 'axis',
+    axisPointer: {
+      type: 'shadow'
+    }
+  }
+  const legend = {}
+  const grid = [{ left: '4%', top: '40', right: '20', bottom: '40', containLabel: true }]
+
   // 推荐使用数据集(dataset)处理数据
   let defaultDataset = {
-    tooltip: {
-      trigger: 'axis',
-      axisPointer: {
-        type: 'cross'
-      }
-    },
-    legend: {},
+    tooltip,
+    legend,
+    grid,
+    xAxis: { type: 'category' },
+    yAxis: { type: 'value' },
+    series: [{ type: 'bar' }, { type: 'bar' }, { type: 'bar' }],
     dataset: {
       dimensions: ['product', '2015年', '2016年', '2017年'],
       source: [
@@ -96,37 +103,38 @@ function bar(option, type = 'dataset') {
         { product: '平板', '2015年': 86.4, '2016年': 65.2, '2017年': 82.5 },
         { product: '手表', '2015年': 72.4, '2016年': 53.9, '2017年': 39.1 }
       ]
-    },
-    xAxis: { type: 'category' },
-    yAxis: { type: 'value' },
-    grid: [{ left: '8%', top: '40', right: '4%', bottom: '60' }],
-    series: [{ type: 'bar' }, { type: 'bar' }, { type: 'bar' }]
+    }
   }
 
   // 系列(series)处理数据
   let defaultSeries = {
-    tooltip: {
-      trigger: 'axis',
-      axisPointer: {
-        type: 'cross'
-      }
-    },
-    legend: {},
+    tooltip,
+    legend,
+    grid,
     xAxis: {
       type: 'category',
       data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
     },
     yAxis: { type: 'value' },
-    grid: [{ left: '8%', top: '40', right: '4%', bottom: '60' }],
     series: [
       {
         name: 'Email',
         type: 'bar',
+        label: {
+          show: true,
+          // position: 'left',
+          valueAnimation: true
+        },
         data: [120, 132, 101, 134, 90, 230, 210]
       },
       {
         name: 'Union Ads',
         type: 'bar',
+        label: {
+          show: true,
+          // position: 'left',
+          valueAnimation: true
+        },
         data: [220, 82, 191, 104, 290, 130, 310]
       }
     ]
@@ -144,12 +152,16 @@ function bar(option, type = 'dataset') {
  * @returns {Object} 处理后的配置项
  */
 function pie(option, type = 'dataset') {
+  const tooltip = {
+    trigger: 'item'
+  }
+  const legend = {}
+
   // 推荐使用数据集(dataset)处理数据
   let defaultDataset = {
-    tooltip: {
-      trigger: 'item'
-    },
-    legend: {},
+    tooltip,
+    legend,
+    series: [{ type: 'pie' }],
     dataset: {
       source: [
         { name: '电脑', value: 1048 },
@@ -157,16 +169,13 @@ function pie(option, type = 'dataset') {
         { name: '平板', value: 580 },
         { name: '手表', value: 484 }
       ]
-    },
-    series: [{ type: 'pie' }]
+    }
   }
 
   // 系列(series)处理数据
   let defaultSeries = {
-    tooltip: {
-      trigger: 'item'
-    },
-    legend: {}
+    tooltip,
+    legend
   }
 
   const result = Object.assign(type == 'dataset' ? defaultDataset : defaultSeries, option)
@@ -237,6 +246,15 @@ function map(option, type = 'dataset') {
     tooltip,
     legend,
     visualMap,
+    series: [
+      {
+        type: 'map',
+        map: 'china',
+        zoom: 1.2,
+        name: '浏览量(PV)',
+        nameMap
+      }
+    ],
     dataset: {
       dimensions: ['name', 'value', 'ratio'],
       source: [
@@ -247,16 +265,7 @@ function map(option, type = 'dataset') {
         { name: '北京市', value: 2, ratio: 0.22 },
         { name: '广东省', value: 1, ratio: 0.11 }
       ]
-    },
-    series: [
-      {
-        type: 'map',
-        map: 'china',
-        zoom: 1.2,
-        name: '浏览量(PV)',
-        nameMap
-      }
-    ]
+    }
   }
 
   // 系列(series)处理数据
@@ -270,6 +279,7 @@ function map(option, type = 'dataset') {
         map: 'china',
         zoom: 1.2,
         name: '浏览量(PV)',
+        nameMap,
         data: [
           { name: '上海市', value: 827, ratio: 92.4 },
           { name: '江苏省', value: 50, ratio: 5.59 },
@@ -277,8 +287,7 @@ function map(option, type = 'dataset') {
           { name: '河南省', value: 2, ratio: 0.22 },
           { name: '北京市', value: 2, ratio: 0.22 },
           { name: '广东省', value: 1, ratio: 0.11 }
-        ],
-        nameMap
+        ]
       }
     ]
   }
