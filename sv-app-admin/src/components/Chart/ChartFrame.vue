@@ -23,7 +23,7 @@
               end-placeholder="结束"
               range-separator="~"
               value-format="x"
-              style="width: 220px"
+              :style="{ width: frameConfig.datetype == 'datetimerange' ? '330px' : '220px' }"
               @change="onSelect($event, 'datepicker')"
             />
           </div>
@@ -155,14 +155,14 @@ function onSelect(e, type) {
   .chart-body {
     flex: 1;
     display: flex;
+    overflow: auto;
 
     .chart-left-side {
       margin-right: var(--chart-frame-margin);
     }
 
     .chart-main {
-      flex-grow: 1;
-      flex-shrink: 0;
+      flex: 1;
       border-radius: 6px;
       overflow: hidden;
     }

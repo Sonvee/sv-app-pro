@@ -32,13 +32,13 @@
               统计分析数据来源：<a href="https://tongji.baidu.com" target="_blank">百度统计&nbsp;<i class="admin-icons-shijianfenxi text-sm"></i></a>
             </div>
             <div class="flex-vc pt-10">
-              <span class="flex-shrink">当前站点：</span>
+              <span class="flex-shrink text-sm text-cyan">站点：</span>
               <el-select v-model="curSiteId" placeholder="Select" @change="init">
                 <el-option v-for="item in siteData" :key="item.site_id" :label="item.domain" :value="item.site_id" />
               </el-select>
             </div>
             <div class="flex-vc pt-10">
-              <span class="flex-shrink">总览日期：</span>
+              <span class="flex-shrink text-sm text-cyan">日期：</span>
               <el-date-picker
                 v-model="overviewDateRange"
                 type="daterange"
@@ -174,7 +174,9 @@
     </el-row>
     <el-row :gutter="10" class="mt-10">
       <el-col :span="12">
-        <div class="card data-card-600"></div>
+        <div class="card data-card-600">
+          <TrendLatestChart></TrendLatestChart>
+        </div>
       </el-col>
       <el-col :span="12">
         <div class="card data-card-600">
@@ -194,6 +196,7 @@ import SourceSiteChart from '../components/SourceSiteChart.vue'
 import LandingPageChart from '../components/LandingPageChart.vue'
 import VisitPageChart from '../components/VisitPageChart.vue'
 import VisitorTypeChart from '../components/VisitorTypeChart.vue'
+import TrendLatestChart from '../components/TrendLatestChart.vue'
 import { useAnalyticsStore } from '@/store/analytics'
 import { baiduTokenCode, baiduTokenByCode, refreshBaiduToken, siteList, outline } from '@/api/analytics'
 import { ElMessage } from 'element-plus'
@@ -213,7 +216,7 @@ const curSiteId = computed({
     return analyticsStore.curSiteId
   }
 })
-const overviewDateRange = ref([dayjs().subtract(6, 'day').valueOf(), dayjs().valueOf()]) // 默认最近7天
+const overviewDateRange = ref([dayjs().subtract(6, 'day').startOf('day').valueOf(), dayjs().endOf('day').valueOf()]) // 默认最近7天
 provide('baidu_tongji_options', { refresh_token, access_token, curSiteId, overviewDateRange })
 
 const code = ref('') // 获取token凭证

@@ -502,6 +502,12 @@
       "permission_name": "会员订阅批量删除",
       "remark": "",
       "sort": 166
+    },
+    {
+      "permission_id": "sys:analytics:query",
+      "permission_name": "统计分析查询",
+      "remark": "",
+      "sort": 171
     }
   ],
   "msg": "权限列表",

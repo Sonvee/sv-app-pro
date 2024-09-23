@@ -482,7 +482,7 @@
       "parent_name": "",
       "sort": 700,
       "redirect": "/analytics/trend",
-      "permissions": []
+      "permissions": ["sys:analytics:query"]
     },
     {
       "meta": {
@@ -502,48 +502,6 @@
       "component": "/analytics/overview/index",
       "parent_name": "analytics",
       "sort": 710,
-      "redirect": "",
-      "permissions": []
-    },
-    {
-      "meta": {
-        "isOpen": false,
-        "icon": "admin-icons-tongji",
-        "title": "趋势分析",
-        "isLink": "",
-        "activeMenu": "",
-        "isHide": false,
-        "isSub": false,
-        "isFull": false,
-        "isAffix": false,
-        "isKeepAlive": true
-      },
-      "name": "trend",
-      "path": "/analytics/trend",
-      "component": "/analytics/trend/index",
-      "parent_name": "analytics",
-      "sort": 720,
-      "redirect": "",
-      "permissions": []
-    },
-    {
-      "meta": {
-        "isOpen": false,
-        "icon": "admin-icons-tongji",
-        "title": "地域分布",
-        "isLink": "",
-        "activeMenu": "",
-        "isHide": false,
-        "isSub": false,
-        "isFull": false,
-        "isAffix": false,
-        "isKeepAlive": true
-      },
-      "name": "district",
-      "path": "/analytics/district",
-      "component": "/analytics/district/index",
-      "parent_name": "analytics",
-      "sort": 730,
       "redirect": "",
       "permissions": []
     },

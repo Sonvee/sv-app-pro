@@ -21,7 +21,11 @@
     "symbol": "roundRect",
     "smooth": true,
     "areaStyle": {},
-    "emphasis": { "focus": "series" }
+    "emphasis": { "focus": "series" },
+    "label": {
+      "show": true,
+      "position": "top"
+    }
   },
   "radar": {
     "itemStyle": {
@@ -308,7 +312,13 @@
     "left": "center",
     "top": "bottom",
     "textStyle": {
-      "color": "#eeeeee"
+      "color": "#eeeeee",
+      "rich": {
+        "a": {
+          "verticalAlign": "middle"
+        }
+      },
+      "padding": [0, 0, -3, 0]
     }
   },
   "tooltip": {

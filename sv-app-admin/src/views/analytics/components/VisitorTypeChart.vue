@@ -7,6 +7,7 @@ import { ref, onMounted, inject, watch } from 'vue'
 import ChartFrame from '@/components/Chart/ChartFrame.vue'
 import { useCharts } from '@/hooks/useCharts'
 import { visitorType } from '@/api/analytics'
+import { timeFormat } from '@/utils'
 
 const tjOptions = inject('baidu_tongji_options')
 const frameConfig = ref({
@@ -38,24 +39,41 @@ async function queryVisitorType(data) {
   })
   const resData = res.data?.result
 
-  const newVisitor = { name: '新访客', ...resData.newVisitor }
-  const oldVisitor = { name: '老访客', ...resData.oldVisitor }
+  const newVisitor = {
+    name: '新访客',
+    value: resData.newVisitor.visitor_count,
+    ...resData.newVisitor,
+    itemStyle: { opacity: 0.8 }
+  }
+  const oldVisitor = {
+    name: '老访客',
+    value: resData.oldVisitor.visitor_count,
+    ...resData.oldVisitor,
+    itemStyle: { opacity: 0.8 }
+  }
   const sourceData = [newVisitor, oldVisitor]
-  chartOpt.value = useCharts().pie3D()
-
-  // chartOpt.value = useCharts().pie({
-  //   series: {
-  //     type: 'pie',
-  //     radius: ['40%', '70%'],
-  //     padAngle: 1,
-  //     itemStyle: { borderRadius: 6 },
-  //     emphasis: { label: { fontSize: 14 } }
-  //   },
-  //   dataset: {
-  //     dimensions: ['name', 'pv_count'],
-  //     source: sourceData
-  //   }
-  // })
+  const tooltip = {
+    trigger: 'item',
+    formatter: (params) => {
+      if (!params.value) return
+      const item = sourceData[params.seriesIndex]
+      const cube = `<span style="display:inline-block;width:10px;height:10px;margin-right:5px;border-radius:50%;background:${params.color}"></span>`
+      return `<div>新老访客<div>
+              <div>${cube}${params.seriesName}<b style="float:right;margin-left:20px;">${item.value}</b></div>
+              <div>${cube}占比<b style="float:right;margin-left:20px;">${item.ratio}%</b></div>
+              <div>${cube}浏览量<b style="float:right;margin-left:20px;">${item.pv_count}</b></div>
+              <div>${cube}跳出率<b style="float:right;margin-left:20px;">${item.bounce_ratio}%</b></div>
+              <div>${cube}平均访问时长<b style="float:right;margin-left:20px;">${timeFormat(item.avg_visit_time, 'ss')}</b></div>
+              <div>${cube}平均访问页数<b style="float:right;margin-left:20px;">${item.avg_visit_pages}</b></div>`
+    }
+  }
+  chartOpt.value = useCharts().pie3D({
+    tooltip,
+    legend: { left: 'left', orient: 'vertical' },
+    dataset: {
+      source: sourceData
+    }
+  })
 }
 
 function onSelect(e, type) {

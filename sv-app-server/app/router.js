@@ -213,6 +213,7 @@ module.exports = (app) => {
   router.post('/analytics/timeTrendRpt', controller.baiduAnalytics.timeTrendRpt)
   router.post('/analytics/districtRpt', controller.baiduAnalytics.districtRpt)
   router.post('/analytics/commonTrackRpt', controller.baiduAnalytics.commonTrackRpt)
+  router.post('/analytics/overviewAge', controller.baiduAnalytics.overviewAge)
   router.post('/analytics/trendTime', controller.baiduAnalytics.trendTime)
   router.post('/analytics/visitorType', controller.baiduAnalytics.visitorType)
   router.post('/analytics/trendLatest', controller.baiduAnalytics.trendLatest)

@@ -18,6 +18,7 @@
     "axios": "^1.7.2",
     "dayjs": "^1.11.11",
     "echarts": "^5.5.1",
+    "echarts-gl": "^2.0.9",
     "element-plus": "^2.8.3",
     "lodash-es": "^4.17.21",
     "md-editor-v3": "^4.17.4",

@@ -21,7 +21,11 @@
     "symbol": "roundRect",
     "smooth": true,
     "areaStyle": {},
-    "emphasis": { "focus": "series" }
+    "emphasis": { "focus": "series" },
+    "label": {
+      "show": true,
+      "position": "top"
+    }
   },
   "radar": {
     "itemStyle": {

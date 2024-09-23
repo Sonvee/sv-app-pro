@@ -64,6 +64,14 @@ export function commonTrackRpt(data) {
   })
 }
 
+export function overviewAge(data) {
+  return request({
+    url: '/analytics/overviewAge',
+    method: 'post',
+    data
+  })
+}
+
 export function trendTime(data) {
   return request({
     url: '/analytics/trendTime',

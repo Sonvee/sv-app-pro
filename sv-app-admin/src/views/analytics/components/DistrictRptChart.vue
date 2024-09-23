@@ -44,7 +44,7 @@ async function queryDistrictRpt(data) {
     ...data
   })
   const resData = res.data?.result
-  const sourceData = resData.items[0].map((item, index) => {
+  const sourceData = resData.items[0]?.map((item, index) => {
     return {
       name: item[0],
       value: resData.items[1][index][0],
@@ -54,7 +54,7 @@ async function queryDistrictRpt(data) {
   chartOpt.value = useCharts().map({
     dataset: {
       dimensions: ['name', 'value', 'ratio'],
-      source: sourceData
+      source: sourceData || []
     }
   })
   chartOpt.value.series[0].name = frameConfig.value.selected == 'pv_count' ? '浏览量(PV)' : '访客数(UV)'

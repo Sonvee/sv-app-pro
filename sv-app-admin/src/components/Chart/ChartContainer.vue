@@ -9,6 +9,8 @@ import { use, registerTheme, registerMap } from 'echarts/core'
 import { CanvasRenderer } from 'echarts/renderers'
 import { UniversalTransition } from 'echarts/features'
 import { LineChart, BarChart, PieChart, MapChart } from 'echarts/charts'
+import { Bar3DChart, SurfaceChart } from 'echarts-gl/charts'
+import { Grid3DComponent } from 'echarts-gl/components'
 import { TitleComponent, TooltipComponent, LegendComponent, GridComponent, DatasetComponent, GeoComponent, VisualMapComponent } from 'echarts/components'
 import VChart, { THEME_KEY } from 'vue-echarts'
 import lightChart from './theme/light.json'
@@ -25,6 +27,9 @@ use([
   GeoComponent,
   VisualMapComponent,
   UniversalTransition,
+  Grid3DComponent,
+  Bar3DChart,
+  SurfaceChart,
   LineChart,
   BarChart,
   PieChart,

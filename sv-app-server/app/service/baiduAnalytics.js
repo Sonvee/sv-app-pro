@@ -25,6 +25,12 @@ class BaiduAnalyticsService extends Service {
     }
   }
 
+  /**
+   * 根据code获取token
+   * @description 正常情况只需获取一次，之后请使用refreshBaiduToken更新token
+   * @param {Object} data 请求参数
+   * @property {String} data.code 用于获取token的code
+   */
   async baiduTokenByCode(data) {
     const { ctx, app } = this
 
@@ -183,11 +189,11 @@ class BaiduAnalyticsService extends Service {
         access_token: data.access_token,
         site_id: data.site_id,
         metrics: data.metrics,
-        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
-        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDDHHmmss'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDDHHmmss'),
         // 可选基本参数
-        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
-        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDDHHmmss'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDDHHmmss'),
         order: data?.order,
         start_index: data?.start_index,
         max_results: data?.max_results
@@ -227,11 +233,11 @@ class BaiduAnalyticsService extends Service {
         access_token: data.access_token,
         site_id: data.site_id,
         metrics: data.metrics,
-        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
-        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDDHHmmss'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDDHHmmss'),
         // 可选基本参数
-        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
-        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDDHHmmss'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDDHHmmss'),
         order: data?.order,
         start_index: data?.start_index,
         max_results: data?.max_results
@@ -271,11 +277,11 @@ class BaiduAnalyticsService extends Service {
         access_token: data.access_token,
         site_id: data.site_id,
         metrics: data.metrics,
-        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
-        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDDHHmmss'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDDHHmmss'),
         // 可选基本参数
-        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
-        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDDHHmmss'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDDHHmmss'),
         order: data?.order,
         start_index: data?.start_index,
         max_results: data?.max_results
@@ -285,6 +291,48 @@ class BaiduAnalyticsService extends Service {
     return {
       data: res.data,
       msg: '获取趋势数据成功'
+    }
+  }
+
+  /**
+   * 报告数据 - 访客属性 (年龄分布)
+   * @param {Object} data 请求参数
+   */
+  async overviewAge(data) {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['sys:analytics:query'])
+
+    // 参数校验
+    if (!isTruthy(data.access_token)) ctx.throw(400, { msg: 'access_token 必填' })
+    if (!isTruthy(data.site_id)) ctx.throw(400, { msg: 'site_id 必填' })
+    if (!isTruthy(data.date_range, 'arr')) ctx.throw(400, { msg: 'date_range 必填' })
+
+    const url = 'https://openapi.baidu.com/rest/2.0/tongji/report/getData'
+    const res = await ctx.curl(url, {
+      method: 'GET',
+      dataType: 'json',
+      timeout: 60000,
+      data: {
+        method: 'overview/getAge',
+        access_token: data.access_token,
+        site_id: data.site_id,
+        metrics: data?.metrics,
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDDHHmmss'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDDHHmmss'),
+        // 可选基本参数
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDDHHmmss'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDDHHmmss'),
+        order: data?.order,
+        start_index: data?.start_index,
+        max_results: data?.max_results
+      }
+    })
+
+    return {
+      data: res.data,
+      msg: '获取访客属性年龄分布数据成功'
     }
   }
 
@@ -315,11 +363,11 @@ class BaiduAnalyticsService extends Service {
         access_token: data.access_token,
         site_id: data.site_id,
         metrics: data.metrics,
-        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
-        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDDHHmmss'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDDHHmmss'),
         // 可选基本参数
-        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
-        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDDHHmmss'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDDHHmmss'),
         order: data?.order,
         start_index: data?.start_index,
         max_results: data?.max_results,
@@ -339,7 +387,7 @@ class BaiduAnalyticsService extends Service {
   }
 
   /**
-   * 报告数据 - 实时访客(新老访客)
+   * 报告数据 - 实时访客 (新老访客)
    * @param {Object} data 请求参数
    */
   async visitorType(data) {
@@ -362,12 +410,12 @@ class BaiduAnalyticsService extends Service {
         method: 'overview/getVisitorType',
         access_token: data.access_token,
         site_id: data.site_id,
-        metrics: data.metrics,
-        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
-        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        metrics: data?.metrics,
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDDHHmmss'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDDHHmmss'),
         // 可选基本参数
-        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
-        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDDHHmmss'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDDHHmmss'),
         order: data?.order,
         start_index: data?.start_index,
         max_results: data?.max_results
@@ -407,11 +455,11 @@ class BaiduAnalyticsService extends Service {
         access_token: data.access_token,
         site_id: data.site_id,
         metrics: data.metrics,
-        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
-        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDDHHmmss'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDDHHmmss'),
         // 可选基本参数
-        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
-        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDDHHmmss'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDDHHmmss'),
         order: data?.order,
         start_index: data?.start_index,
         max_results: data?.max_results,
@@ -454,12 +502,12 @@ class BaiduAnalyticsService extends Service {
         method: 'overview/getSourceSite',
         access_token: data.access_token,
         site_id: data.site_id,
-        metrics: data.metrics,
-        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
-        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        metrics: data?.metrics,
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDDHHmmss'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDDHHmmss'),
         // 可选基本参数
-        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
-        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDDHHmmss'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDDHHmmss'),
         order: data?.order,
         start_index: data?.start_index,
         max_results: data?.max_results,
@@ -503,11 +551,11 @@ class BaiduAnalyticsService extends Service {
         access_token: data.access_token,
         site_id: data.site_id,
         metrics: data.metrics,
-        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
-        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDDHHmmss'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDDHHmmss'),
         // 可选基本参数
-        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
-        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDDHHmmss'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDDHHmmss'),
         order: data?.order,
         start_index: data?.start_index,
         max_results: data?.max_results,
@@ -551,11 +599,11 @@ class BaiduAnalyticsService extends Service {
         access_token: data.access_token,
         site_id: data.site_id,
         metrics: data.metrics,
-        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
-        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDDHHmmss'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDDHHmmss'),
         // 可选基本参数
-        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
-        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDDHHmmss'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDDHHmmss'),
         order: data?.order,
         start_index: data?.start_index,
         max_results: data?.max_results,
@@ -599,11 +647,11 @@ class BaiduAnalyticsService extends Service {
         access_token: data.access_token,
         site_id: data.site_id,
         metrics: data.metrics,
-        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
-        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDDHHmmss'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDDHHmmss'),
         // 可选基本参数
-        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
-        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDDHHmmss'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDDHHmmss'),
         order: data?.order,
         start_index: data?.start_index,
         max_results: data?.max_results,
@@ -647,11 +695,11 @@ class BaiduAnalyticsService extends Service {
         access_token: data.access_token,
         site_id: data.site_id,
         metrics: data.metrics,
-        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
-        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDDHHmmss'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDDHHmmss'),
         // 可选基本参数
-        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
-        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDDHHmmss'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDDHHmmss'),
         order: data?.order,
         start_index: data?.start_index,
         max_results: data?.max_results,
@@ -694,12 +742,12 @@ class BaiduAnalyticsService extends Service {
         method: 'overview/getVisitPage',
         access_token: data.access_token,
         site_id: data.site_id,
-        metrics: data.metrics,
-        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
-        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        metrics: data?.metrics,
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDDHHmmss'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDDHHmmss'),
         // 可选基本参数
-        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
-        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDDHHmmss'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDDHHmmss'),
         order: data?.order,
         start_index: data?.start_index,
         max_results: data?.max_results
@@ -739,11 +787,11 @@ class BaiduAnalyticsService extends Service {
         access_token: data.access_token,
         site_id: data.site_id,
         metrics: data.metrics,
-        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
-        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDDHHmmss'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDDHHmmss'),
         // 可选基本参数
-        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
-        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDDHHmmss'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDDHHmmss'),
         order: data?.order,
         start_index: data?.start_index,
         max_results: data?.max_results
@@ -781,12 +829,12 @@ class BaiduAnalyticsService extends Service {
         method: 'overview/getLandingPage',
         access_token: data.access_token,
         site_id: data.site_id,
-        metrics: data.metrics,
-        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
-        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        metrics: data?.metrics,
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDDHHmmss'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDDHHmmss'),
         // 可选基本参数
-        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
-        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDDHHmmss'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDDHHmmss'),
         order: data?.order,
         start_index: data?.start_index,
         max_results: data?.max_results
@@ -826,11 +874,11 @@ class BaiduAnalyticsService extends Service {
         access_token: data.access_token,
         site_id: data.site_id,
         metrics: data.metrics,
-        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
-        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDDHHmmss'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDDHHmmss'),
         // 可选基本参数
-        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
-        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDDHHmmss'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDDHHmmss'),
         order: data?.order,
         start_index: data?.start_index,
         max_results: data?.max_results
@@ -870,11 +918,11 @@ class BaiduAnalyticsService extends Service {
         access_token: data.access_token,
         site_id: data.site_id,
         metrics: data.metrics,
-        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
-        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDDHHmmss'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDDHHmmss'),
         // 可选基本参数
-        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
-        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDDHHmmss'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDDHHmmss'),
         order: data?.order,
         start_index: data?.start_index,
         max_results: data?.max_results
@@ -914,11 +962,11 @@ class BaiduAnalyticsService extends Service {
         access_token: data.access_token,
         site_id: data.site_id,
         metrics: data.metrics,
-        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
-        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDDHHmmss'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDDHHmmss'),
         // 可选基本参数
-        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
-        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDDHHmmss'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDDHHmmss'),
         order: data?.order,
         start_index: data?.start_index,
         max_results: data?.max_results
@@ -958,11 +1006,11 @@ class BaiduAnalyticsService extends Service {
         access_token: data.access_token,
         site_id: data.site_id,
         metrics: data.metrics,
-        start_date: timeFormat(data.date_range[0], 'YYYYMMDD'),
-        end_date: timeFormat(data.date_range[1], 'YYYYMMDD'),
+        start_date: timeFormat(data.date_range[0], 'YYYYMMDDHHmmss'),
+        end_date: timeFormat(data.date_range[1], 'YYYYMMDDHHmmss'),
         // 可选基本参数
-        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDD'),
-        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDD'),
+        start_date2: timeFormat(data?.date_range2 && data?.date_range2[0], 'YYYYMMDDHHmmss'),
+        end_date2: timeFormat(data?.date_range2 && data?.date_range2[1], 'YYYYMMDDHHmmss'),
         order: data?.order,
         start_index: data?.start_index,
         max_results: data?.max_results

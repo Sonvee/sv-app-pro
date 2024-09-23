@@ -59,6 +59,13 @@ class BaiduAnalyticsController extends Controller {
     ctx.result(res)
   }
 
+  async overviewAge() {
+    const { ctx, service } = this
+    const data = ctx.request.body
+    const res = await service.baiduAnalytics.overviewAge(data)
+    ctx.result(res)
+  }
+
   async trendTime() {
     const { ctx, service } = this
     const data = ctx.request.body

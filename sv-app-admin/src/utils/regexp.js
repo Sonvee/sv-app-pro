@@ -24,6 +24,26 @@ export function useRegExp(type) {
     version: {
       regexp: /^(\d+\.\d+\.\d+)(\.\w+)?$/,
       msg: '版本号格式应为num.num.num[.other]'
+    },
+    ipv4: {
+      regexp: /\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/,
+      msg: '包含ip地址',
+      mask: (str) => {
+        // 正则表达式匹配 IPv4 地址
+        const ipv4Regex = /\b((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/g
+        // 替换函数
+        const replaceWithMask = (match) => {
+          const parts = match.split('.')
+          return parts
+            .map((part) => {
+              const numStars = part.length // 计算部分的位数
+              return '*'.repeat(numStars) // 生成相应数量的星号
+            })
+            .join('.') // 重新组合成 IP 地址
+        }
+        // 返回替换后的字符串
+        return str.replace(ipv4Regex, replaceWithMask)
+      }
     }
   }
 
