@@ -86,6 +86,13 @@ class BaiduAnalyticsController extends Controller {
     const res = await service.baiduAnalytics.trendLatest(data)
     ctx.result(res)
   }
+  
+  async trendOnline() {
+    const { ctx, service } = this
+    const data = ctx.request.body
+    const res = await service.baiduAnalytics.trendOnline(data)
+    ctx.result(res)
+  }
 
   async sourceSite() {
     const { ctx, service } = this

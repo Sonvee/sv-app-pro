@@ -478,6 +478,40 @@ class BaiduAnalyticsService extends Service {
   }
 
   /**
+   * 报告数据 - 在线访客
+   * @param {Object} data 请求参数
+   */
+  async trendOnline(data) {
+    const { ctx, app } = this
+
+    // 权限校验
+    ctx.checkAuthority('permission', ['sys:analytics:query'])
+
+    // 参数校验
+    if (!isTruthy(data.access_token)) ctx.throw(400, { msg: 'access_token 必填' })
+    if (!isTruthy(data.site_id)) ctx.throw(400, { msg: 'site_id 必填' })
+    if (!isTruthy(data.metrics)) ctx.throw(400, { msg: 'metrics 必填' })
+
+    const url = 'https://openapi.baidu.com/rest/2.0/tongji/report/getData'
+    const res = await ctx.curl(url, {
+      method: 'GET',
+      dataType: 'json',
+      timeout: 60000,
+      data: {
+        method: 'trend/latest/f',
+        access_token: data.access_token,
+        site_id: data.site_id,
+        metrics: data.metrics,
+      }
+    })
+
+    return {
+      data: res.data,
+      msg: '获取在线访客数据成功'
+    }
+  }
+
+  /**
    * 报告数据 - 全部来源(来源网站) overview版 (metrics只有一个pv_count指标)
    * @tutorial https://tongji.baidu.com/api/manual/Chapter1/overview_getCommonTrackRpt.html
    * @param {Object} data 请求参数
@@ -1022,8 +1056,6 @@ class BaiduAnalyticsService extends Service {
       msg: '获取地域分布(按国家)数据成功'
     }
   }
-
-  
 }
 
 module.exports = BaiduAnalyticsService

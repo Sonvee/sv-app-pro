@@ -96,6 +96,15 @@ export function trendLatest(data) {
   })
 }
 
+export function trendOnline(data) {
+  return request({
+    url: '/analytics/trendOnline',
+    method: 'post',
+    data,
+    loading: false
+  })
+}
+
 export function sourceSite(data) {
   return request({
     url: '/analytics/sourceSite',

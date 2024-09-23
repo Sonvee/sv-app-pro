@@ -14,7 +14,7 @@
           </div>
           <div class="flex-sub"></div>
           <!-- 时间选择器 -->
-          <div class="flex-vc mr-20" v-if="frameConfig.datepicker">
+          <div class="flex-vc" v-if="frameConfig.datepicker">
             <!-- <span class="text-xs text-cyan">时间：</span> -->
             <el-date-picker
               v-model="curDaterange"
@@ -27,7 +27,7 @@
               @change="onSelect($event, 'datepicker')"
             />
           </div>
-          <i class="cuIcon-roundright text-lg cursor-pointer" @click="onMore"></i>
+          <i class="cuIcon-roundright ml-20 text-lg cursor-pointer" v-if="frameConfig.more" @click="onMore"></i>
         </div>
         <el-divider style="margin: 10px 0 0 0" />
       </slot>
@@ -96,7 +96,7 @@ const frameConfig = computed(() => {
   let defaultConfig = {
     title: '标题',
     subtitle: '',
-    more: true, // 是否显示更多
+    more: false, // 是否显示更多
     datepicker: false, // 是否显示时间选择器
     datetype: 'daterange', // 时间选择类型
     daterange: [], // 时间选择范围

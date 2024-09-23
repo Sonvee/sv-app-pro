@@ -1,5 +1,5 @@
 <template>
-  <ChartFrame header :chart-main="false" :config="frameConfig" @select="onSelect">
+  <ChartFrame header :chart-main="false" :config="frameConfig" @select="onSelect" @more="onMore">
     <template #chartMain>
       <el-table :data="tableOpt" style="height: 496px">
         <el-table-column type="index" align="center" width="40">
@@ -35,10 +35,15 @@ import { trendLatest } from '@/api/analytics'
 import { timeFormat } from '@/utils'
 import { useRegExp } from '@/utils/regexp'
 import { useUserStore } from '@/store/user'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const isAdmin = computed(() => useUserStore().userInfo.role?.includes('admin'))
 
 const tjOptions = inject('baidu_tongji_options')
 const frameConfig = ref({
   title: '实时访客',
+  more: true, // 是否显示更多
   datepicker: true, // 是否显示时间选择器
   datetype: 'datetimerange', // 时间选择类型
   daterange: tjOptions.overviewDateRange.value // 时间选择范围
@@ -85,23 +90,20 @@ async function queryTrendLatest(data) {
 // 分页
 function handleSizeChange(e) {
   pagingParams.value.pagesize = e
-  queryTrendLatest(pagingParams.value)
+  queryTrendLatest()
 }
 function handleCurrentChange(e) {
   pagingParams.value.pagenum = e
-  queryTrendLatest(pagingParams.value)
+  queryTrendLatest()
 }
 
 // 转换函数
-const isAdmin = computed(() => useUserStore().userInfo.role?.includes('admin'))
 function transformMetrics(array, metrics) {
   const obj = {}
   metrics.forEach((item, index) => {
     // 非admin角色时，ip地址敏感
-    if (item == 'access_page' && !isAdmin.value) {
-      if (useRegExp('ipv4').regexp.test(array[index])) {
-        array[index] = useRegExp('ipv4').mask(array[index])
-      }
+    if (item == 'access_page' && !isAdmin.value && useRegExp('ipv4').regexp.test(array[index])) {
+      array[index] = useRegExp('ipv4').mask(array[index])
     }
     if (index < array.length) {
       obj[item] = array[index]
@@ -120,6 +122,10 @@ function onSelect(e, type) {
       break
   }
   queryTrendLatest()
+}
+
+function onMore() {
+  router.push('/analytics/trendlatest')
 }
 </script>
 

@@ -3,10 +3,14 @@
 </template>
 
 <script setup>
-import { ref, onMounted, inject, watch } from 'vue'
+import { ref, onMounted, inject, watch, computed } from 'vue'
 import ChartFrame from '@/components/Chart/ChartFrame.vue'
 import { useCharts } from '@/hooks/useCharts'
 import { sourceSite } from '@/api/analytics'
+import { useUserStore } from '@/store/user'
+import { useRegExp } from '@/utils/regexp'
+
+const isAdmin = computed(() => useUserStore().userInfo.role?.includes('admin'))
 
 const tjOptions = inject('baidu_tongji_options')
 const frameConfig = ref({
@@ -23,23 +27,28 @@ watch(
   () => tjOptions.overviewDateRange.value,
   (newVal) => {
     frameConfig.value.daterange = newVal
-    querySourceSite({ date_range: frameConfig.value.daterange })
+    querySourceSite()
   }
 )
 
 onMounted(() => {
-  querySourceSite({ date_range: frameConfig.value.daterange })
+  querySourceSite()
 })
 
 async function querySourceSite(data) {
   const res = await sourceSite({
     access_token: tjOptions.access_token.value,
     site_id: tjOptions.curSiteId.value,
+    date_range: frameConfig.value.daterange,
     max_results: 10,
     ...data
   })
   const resData = res.data?.result
   const seriesData = resData.items.map((item) => {
+    // 非admin角色时，ip地址敏感
+    if (!isAdmin.value && useRegExp('ipv4').regexp.test(item[0])) {
+      item[0] = useRegExp('ipv4').mask(item[0])
+    }
     return {
       name: item[0],
       value: item[1],
@@ -91,7 +100,7 @@ function onSelect(e, type) {
       frameConfig.value.daterange = e
       break
   }
-  querySourceSite({ date_range: frameConfig.value.daterange })
+  querySourceSite()
 }
 </script>
 

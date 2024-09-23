@@ -187,7 +187,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup name="overview">
 import { ref, computed, onMounted, provide } from 'vue'
 import FloatSideButton from '@/components/FloatSideButton/FloatSideButton.vue'
 import TimeTrendRptChart from '../components/TimeTrendRptChart.vue'

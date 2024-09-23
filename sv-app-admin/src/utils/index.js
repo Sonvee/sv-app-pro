@@ -112,6 +112,14 @@ export function getUrlWithParams() {
 }
 
 /**
+ * 睡眠 延时
+ * @param {Object} ms 需要延时的毫秒数
+ */
+export function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+/**
  * 时间日期格式化
  * @param {String|Number} time 需要格式化的时间
  * @param {String} format 格式化规则 为timestamp时会将time转化为时间戳(毫秒) | 为ss或ms时会将time(秒或毫秒)转化为hh:mm:ss格式

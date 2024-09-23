@@ -23,18 +23,19 @@ watch(
   () => tjOptions.overviewDateRange.value,
   (newVal) => {
     frameConfig.value.daterange = newVal
-    queryVisitorType({ date_range: frameConfig.value.daterange })
+    queryVisitorType()
   }
 )
 
 onMounted(() => {
-  queryVisitorType({ date_range: frameConfig.value.daterange })
+  queryVisitorType()
 })
 
 async function queryVisitorType(data) {
   const res = await visitorType({
     access_token: tjOptions.access_token.value,
     site_id: tjOptions.curSiteId.value,
+    date_range: frameConfig.value.daterange,
     ...data
   })
   const resData = res.data?.result
@@ -82,7 +83,7 @@ function onSelect(e, type) {
       frameConfig.value.daterange = e
       break
   }
-  queryVisitorType({ date_range: frameConfig.value.daterange })
+  queryVisitorType()
 }
 </script>
 

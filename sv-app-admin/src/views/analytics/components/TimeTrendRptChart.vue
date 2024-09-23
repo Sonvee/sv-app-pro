@@ -28,18 +28,20 @@ watch(
   () => tjOptions.overviewDateRange.value,
   (newVal) => {
     frameConfig.value.daterange = newVal
-    queryTimeTrendRpt({ metrics: frameConfig.value.selected, date_range: frameConfig.value.daterange })
+    queryTimeTrendRpt()
   }
 )
 
 onMounted(() => {
-  queryTimeTrendRpt({ metrics: frameConfig.value.selected, date_range: frameConfig.value.daterange })
+  queryTimeTrendRpt()
 })
 
 async function queryTimeTrendRpt(data) {
   const res = await timeTrendRpt({
     access_token: tjOptions.access_token.value,
     site_id: tjOptions.curSiteId.value,
+    metrics: frameConfig.value.selected,
+    date_range: frameConfig.value.daterange,
     ...data
   })
   const resData = res.data?.result
@@ -62,7 +64,7 @@ function onSelect(e, type) {
       frameConfig.value.selected = e.value
       break
   }
-  queryTimeTrendRpt({ metrics: frameConfig.value.selected, date_range: frameConfig.value.daterange })
+  queryTimeTrendRpt()
 }
 </script>
 

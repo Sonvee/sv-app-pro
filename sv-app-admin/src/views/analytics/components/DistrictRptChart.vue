@@ -29,18 +29,20 @@ watch(
   () => tjOptions.overviewDateRange.value,
   (newVal) => {
     frameConfig.value.daterange = newVal
-    queryDistrictRpt({ metrics: frameConfig.value.selected, date_range: frameConfig.value.daterange })
+    queryDistrictRpt()
   }
 )
 
 onMounted(() => {
-  queryDistrictRpt({ metrics: frameConfig.value.selected, date_range: frameConfig.value.daterange })
+  queryDistrictRpt()
 })
 
 async function queryDistrictRpt(data) {
   const res = await districtRpt({
     access_token: tjOptions.access_token.value,
     site_id: tjOptions.curSiteId.value,
+    metrics: frameConfig.value.selected,
+    date_range: frameConfig.value.daterange,
     ...data
   })
   const resData = res.data?.result
@@ -69,7 +71,7 @@ function onSelect(e, type) {
       frameConfig.value.selected = e.value
       break
   }
-  queryDistrictRpt({ metrics: frameConfig.value.selected, date_range: frameConfig.value.daterange })
+  queryDistrictRpt()
 }
 </script>
 
