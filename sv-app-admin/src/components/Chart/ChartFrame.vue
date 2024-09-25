@@ -143,7 +143,7 @@ function onSelect(e, type) {
   .chart-header {
     margin-bottom: var(--chart-frame-margin);
 
-    .title-cube {
+    :deep(.title-cube) {
       width: 4px;
       height: 14px;
       border-radius: 2px;

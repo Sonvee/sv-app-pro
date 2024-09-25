@@ -3,7 +3,7 @@
     <el-row :gutter="10" class="mb-10">
       <el-col :span="4">
         <div class="card data-card-300">
-          {{ onlineNumber }}
+          <VisitorOnlineChart></VisitorOnlineChart>
         </div>
       </el-col>
       <el-col :span="20">
@@ -23,9 +23,8 @@
 import { ref, onMounted, computed, provide } from 'vue'
 import TableFilter from './components/TableFilter.vue'
 import TrendOnlineChart from '../components/TrendOnlineChart.vue'
-import { trendOnline } from '@/api/analytics'
+import VisitorOnlineChart from '../components/VisitorOnlineChart.vue'
 import { useAnalyticsStore } from '@/store/analytics'
-import mittBus from '@/utils/mittBus'
 
 const analyticsStore = useAnalyticsStore()
 const access_token = computed(() => analyticsStore.getBaiduToken('access_token'))
@@ -35,12 +34,7 @@ provide('baidu_tongji_options', { access_token, curSiteId })
 const dataParams = ref({ pagenum: 1, pagesize: 20 })
 const tableData = ref([])
 const total = ref(0)
-const onlineNumber = ref(0)
 const loading = ref(true)
-
-mittBus.on('e_online_number', (e) => {
-  onlineNumber.value = e
-})
 
 onMounted(() => {
   // handleTable(dataParams.value)

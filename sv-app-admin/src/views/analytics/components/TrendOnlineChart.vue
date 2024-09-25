@@ -13,7 +13,7 @@ import { sleep } from '@/utils'
 
 const tjOptions = inject('baidu_tongji_options')
 
-const cd = 10 // cd时间
+const cd = 60 // cd时间
 const countdownIns = new useCountdown(cd)
 
 const frameConfig = computed(() => {
