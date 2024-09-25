@@ -467,7 +467,14 @@ class BaiduAnalyticsService extends Service {
         source: data?.source,
         clientDevice: data?.clientDevice,
         area: data?.area,
-        visitor: data?.visitor
+        visitor: data?.visitor,
+        visitCount: data?.visitCount,
+        visitTime: data?.visitTime,
+        visitPage: data?.visitPage,
+        searchWord: data?.searchWord,
+        url: data?.url,
+        visitorId: data?.visitorId,
+        ip: data?.ip
       }
     })
 
@@ -501,7 +508,7 @@ class BaiduAnalyticsService extends Service {
         method: 'trend/latest/f',
         access_token: data.access_token,
         site_id: data.site_id,
-        metrics: data.metrics,
+        metrics: data.metrics
       }
     })
 

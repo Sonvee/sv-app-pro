@@ -1,0 +1,39 @@
+@font-face {
+  font-family: 'YouSheBiaoTiHei';
+  src: url('./YouSheBiaoTiHei.ttf');
+}
+
+@font-face {
+  font-family: 'MetroDF';
+  src: url('./MetroDF.ttf');
+}
+
+@font-face {
+  font-family: 'DIN';
+  src: url('./DIN.otf');
+}
+
+@font-face {
+  font-family: 'digifaw';
+  src: url('./digifaw.ttf');
+}
+
+.YouSheBiaoTiHei {
+  font-family: 'YouSheBiaoTiHei';
+}
+
+.MetroDF {
+  font-family: 'MetroDF';
+}
+
+.DIN {
+  font-family: 'DIN';
+}
+
+.digifaw {
+  font-family: 'digifaw';
+}
+
+.songti {
+  font-family: '宋体';
+}

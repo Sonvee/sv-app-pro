@@ -12,7 +12,9 @@
       <el-divider style="margin: 10px 0 0 0" />
     </template>
     <template #chartMain>
-      {{ onlineNumber }}
+      <div class="flex-col-vhc w-h-full">
+        <span class="text-xxsl color-primary YouSheBiaoTiHei">{{ onlineNumber }}</span>
+      </div>
     </template>
   </ChartFrame>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <div class="current-time">
+  <div class="current-time digifaw">
     {{ formattedTime }}
   </div>
 </template>
