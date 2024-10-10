@@ -12,9 +12,7 @@ node后端：eggjs
 
 管理端：http://app.admin.sonve.asia
 
-账号密码：
-master/master666
-visitior/visitior666
+账号密码：master/master666      visitior/visitior666
 
 客户端：http://app.client.sonve.asia
 
