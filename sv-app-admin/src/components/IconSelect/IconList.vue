@@ -51,7 +51,7 @@ function filterIcons() {
 .sv-icon-select {
   width: 100%;
   // height: 100%;
-  height: calc(100% - 38px);
+  height: calc(100% - 40px);
 
   .icon-list {
     margin-top: 12px;

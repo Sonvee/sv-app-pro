@@ -50,19 +50,20 @@ const opts = computed(() => {
 
 const { y } = useDraggable(fsbRef, opts.value)
 // 自定义x轴，不从useDraggable中取
-const x = computed(() => {
+const xAxis = computed(() => {
   return show.value ? props.panelWidth : 0
+})
+// 限制y范围在rangeY之间
+const yAxis = computed(() => {
+  return Math.min(Math.max(y.value, props.rangeY[0]), props.rangeY[1])
 })
 
 // 按钮样式
 const fsbStyle = computed(() => {
-  // 限制y范围在rangeY之间
-  y.value = Math.min(Math.max(y.value, props.rangeY[0]), props.rangeY[1])
-
   return {
-    right: `${x.value}px`,
-    top: `${y.value}px`
-    // transform: `translateY(${y.value}px)` // 使用 top 会不断刷新 dom 元素，可使用 transform 以优化性能（可能会偏移）
+    right: `${xAxis.value}px`,
+    top: `${yAxis.value}px`
+    // transform: `translateY(${yAxis.value}px)` // 使用 top 会不断刷新 dom 元素，可使用 transform 以优化性能（可能会偏移）
   }
 })
 // 面板样式

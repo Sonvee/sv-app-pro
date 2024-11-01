@@ -2,12 +2,12 @@
   <div class="page-container">
     <el-row :gutter="10" class="mb-10">
       <el-col :span="4">
-        <div class="card data-card-300">
+        <div class="card data-card-30">
           <VisitorOnlineChart></VisitorOnlineChart>
         </div>
       </el-col>
       <el-col :span="20">
-        <div class="card data-card-300">
+        <div class="card data-card-30">
           <TrendOnlineChart></TrendOnlineChart>
         </div>
       </el-col>
@@ -127,7 +127,7 @@ function transformMetrics(array, metrics) {
 </script>
 
 <style lang="scss" scoped>
-.data-card-300 {
-  height: 300px;
+.data-card-30 {
+  height: 25vh;
 }
 </style>

@@ -1,7 +1,12 @@
 // 页面添加水印效果
-function setWatermark(str) {
-  const id = 'sv-global-watermark'
-  if (document.getElementById(id) !== null) document.body.removeChild(document.getElementById(id))
+function setWatermark(domid, markid, str) {
+  let targetDom
+  if (domid == 'body') {
+    targetDom = document.body
+  } else {
+    targetDom = document.getElementById(domid)
+  }
+  if (document.getElementById(markid) !== null) targetDom.removeChild(document.getElementById(markid)) // 水印不允许重复
   const can = document.createElement('canvas')
   can.width = 200
   can.height = 130
@@ -12,17 +17,19 @@ function setWatermark(str) {
   cans.textBaseline = 'middle'
   cans.fillText(str, can.width / 10, can.height / 2)
   const div = document.createElement('div')
-  div.id = id
+  div.id = markid
   div.style.pointerEvents = 'none'
-  div.style.top = '0px'
-  div.style.left = '0px'
-  div.style.position = 'fixed'
-  div.style.zIndex = '10000000'
-  div.style.width = `${document.documentElement.clientWidth}px`
-  div.style.height = `${document.documentElement.clientHeight}px`
+  div.style.width = '100%'
+  div.style.height = '100%'
+  div.style.position = 'absolute'
+  div.style.top = '0'
+  div.style.left = '0'
+  div.style.right = '0'
+  div.style.bottom = '0'
+  div.style.zIndex = '8'
   div.style.background = `url(${can.toDataURL('image/png')}) left top repeat`
-  document.body.appendChild(div)
-  return id
+  targetDom.appendChild(div)
+  return markid
 }
 
 /**
@@ -31,16 +38,29 @@ function setWatermark(str) {
  * @method del 删除水印
  */
 export function useWatermark() {
-  // 设置水印
-  const set = (str) => {
-    let id = setWatermark(str)
-    if (document.getElementById(id) === null) id = setWatermark(str)
+  /**
+   * 设置水印
+   * @param {String} str 水印文字
+   * @param {String} domid 指定dom盒子id，默认body节点
+   * @param {String} markid 水印id 唯一
+   */
+  const set = (str = 'SV-Admin1', domid = 'body', markid = 'sv-global-watermark') => {
+    setWatermark(domid, markid, str)
   }
 
-  // 删除水印
-  const del = () => {
-    let id = 'sv-global-watermark'
-    if (document.getElementById(id) !== null) document.body.removeChild(document.getElementById(id))
+  /**
+   * 删除水印
+   * @param {String} domid 指定dom盒子id，默认body节点
+   * @param {String} markid 水印id 唯一
+   */
+  const del = (domid = 'body', markid = 'sv-global-watermark') => {
+    let targetDom
+    if (domid == 'body') {
+      targetDom = document.body
+    } else {
+      targetDom = document.getElementById(domid)
+    }
+    if (document.getElementById(markid) !== null) targetDom.removeChild(document.getElementById(markid))
   }
 
   return {
